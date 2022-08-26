@@ -5,6 +5,11 @@ import { SET_ERROR, USER_IS_AUTH, LOADING, LOGIN_IS_SUCCESS, SET_USER, LOGOUT } 
 import { setCookie } from 'cookies-next';
 
 const baseUrl = '/auth/local/signin';
+const removeAuthData = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  setCookie('token', '', buildCookieOption(0));
+};
 
 export const authUser = (loginData: LoginData): AppThunkAction => {
   return async dispatch => {
@@ -53,11 +58,45 @@ export const authUser = (loginData: LoginData): AppThunkAction => {
 
 export const logout = (): AppThunkAction => {
   return dispatch => {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      setCookie('token', '', buildCookieOption(0));
-    }
+    if (typeof window !== 'undefined') removeAuthData();
     dispatch(actionBody(LOGOUT));
+  };
+};
+
+export const authenticate = (): AppThunkAction => {
+  return async dispatch => {
+    // Execute if is in the client
+    if (typeof window !== 'undefined') {
+      // Get data from localstorage
+      const token = localStorage.getItem('token');
+      const user = localStorage.getItem('user');
+      let isAuthenticated = false;
+
+      // Mount a themporaly user data
+      if (user) dispatch(actionBody(SET_USER, JSON.parse(user)));
+
+      // request to authenticate
+      if (token) {
+        axios.defaults.headers.common.Authorization = `Beare ${token}`;
+        try {
+          const res = await axios.get('/auth/local/is-authenticated');
+          const { ok, user: newUserData } = res.data as AuthResponse;
+
+          if (ok && user) {
+            dispatch(actionBody(SET_USER, newUserData));
+            dispatch(actionBody(USER_IS_AUTH, true));
+            isAuthenticated = true;
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
+      if (!isAuthenticated) {
+        removeAuthData();
+        dispatch(actionBody(LOGOUT));
+      }
+    }
+    //
   };
 };
