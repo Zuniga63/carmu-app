@@ -23,7 +23,7 @@ const Login: NextPage = () => {
 
   useEffect(() => {
     if (isAuth) router.push('/');
-  }, []);
+  }, [isAuth]);
 
   useEffect(() => {
     if (loginIsSuccess) {
