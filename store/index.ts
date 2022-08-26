@@ -2,8 +2,9 @@ import { legacy_createStore as createStore, combineReducers, applyMiddleware } f
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunkMiddleware from 'redux-thunk';
 import { createWrapper } from 'next-redux-wrapper';
+import AuthReducer from './reducers/Auth';
 
-const rootReducer = combineReducers({});
+const rootReducer = combineReducers({ AuthReducer });
 export type RootState = ReturnType<typeof rootReducer>;
 
 export const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunkMiddleware)));
