@@ -22,7 +22,8 @@ module.exports = {
         'yellow-light': '#f1c40f',
         dark: '#212529',
         light: '#f8f9fa',
-        header: '#161b22'
+        header: '#161b22',
+        'btn-bg': '#21262d'
       }
     }
   },

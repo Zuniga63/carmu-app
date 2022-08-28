@@ -3,6 +3,7 @@ import { useMediaQuery } from '@mantine/hooks';
 import { Drawer } from '@mantine/core';
 import BrandLogo from './BrandLogo';
 import BurgerToggle from './BurgerToggle';
+import NavLinks from './NavLinks';
 
 interface Props {
   opened: boolean;
@@ -31,7 +32,9 @@ export default function NavDrawer({ opened, toggle }: Props) {
             <BurgerToggle opened={opened} onClick={close} />
           </nav>
         </header>
-        <div className="relative h-full overflow-y-auto bg-defaul-body pb-40">foo</div>
+        <div className="relative h-full overflow-y-auto bg-defaul-body pb-40">
+          <NavLinks close={close} />
+        </div>
       </>
     </Drawer>
   );

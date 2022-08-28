@@ -8,7 +8,6 @@ import { authUser } from 'store/reducers/Auth/creators';
 import AuthenticationCard from 'components/AuthenticationCard';
 import { TextInput, PasswordInput, Alert, Notification, Button } from '@mantine/core';
 import { IconAt, IconLock, IconEyeOff, IconEyeCheck, IconAlertCircle } from '@tabler/icons';
-import { toast } from 'react-toastify';
 import brandLogo from 'public/images/logo_62601199d793d.png';
 import Image from 'next/image';
 
@@ -20,24 +19,12 @@ const Login: NextPage = () => {
   //---------------------------------------------------------------------------
   // AUTH STATE
   //---------------------------------------------------------------------------
-  const { loading, error, loginIsSuccess, isAuth, user } = useAppSelector(state => state.AuthReducer);
+  const { loading, error, loginIsSuccess, isAuth } = useAppSelector(state => state.AuthReducer);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (isAuth) router.push('/');
   }, [isAuth]);
-
-  useEffect(() => {
-    if (loginIsSuccess) {
-      const message = (
-        <span>
-          ¡Bienvenido <strong className="font-bold">{user?.name}</strong>!
-        </span>
-      );
-      toast.success(message, { position: 'top-right' });
-      router.push('/');
-    }
-  }, [loginIsSuccess]);
 
   useEffect(() => {
     if (error) setPassword('');
