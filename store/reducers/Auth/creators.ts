@@ -51,7 +51,7 @@ export const authUser = (loginData: LoginData): AppThunkAction => {
       dispatch(actionBody(LOADING, false));
       setTimeout(() => {
         dispatch(actionBody(LOGIN_IS_SUCCESS, false));
-      }, 2000);
+      }, 10000);
     }
   };
 };

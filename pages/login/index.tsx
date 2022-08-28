@@ -7,8 +7,9 @@ import { authUser } from 'store/reducers/Auth/creators';
 
 import AuthenticationCard from 'components/AuthenticationCard';
 import { TextInput, PasswordInput, Alert, Notification, Button } from '@mantine/core';
-import { IconAt, IconLock, IconEyeOff, IconEyeCheck, IconAlertCircle, IconBuildingStore } from '@tabler/icons';
-import { toast } from 'react-toastify';
+import { IconAt, IconLock, IconEyeOff, IconEyeCheck, IconAlertCircle } from '@tabler/icons';
+import brandLogo from 'public/images/logo_62601199d793d.png';
+import Image from 'next/image';
 
 const Login: NextPage = () => {
   const [email, setEmail] = useState('');
@@ -18,24 +19,12 @@ const Login: NextPage = () => {
   //---------------------------------------------------------------------------
   // AUTH STATE
   //---------------------------------------------------------------------------
-  const { loading, error, loginIsSuccess, isAuth, user } = useAppSelector(state => state.AuthReducer);
+  const { loading, error, loginIsSuccess, isAuth } = useAppSelector(state => state.AuthReducer);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (isAuth) router.push('/');
   }, [isAuth]);
-
-  useEffect(() => {
-    if (loginIsSuccess) {
-      const message = (
-        <span>
-          ¡Bienvenido <strong className="font-bold">{user?.name}</strong>!
-        </span>
-      );
-      toast.success(message, { position: 'top-right' });
-      router.push('/');
-    }
-  }, [loginIsSuccess]);
 
   useEffect(() => {
     if (error) setPassword('');
@@ -45,16 +34,17 @@ const Login: NextPage = () => {
     e.preventDefault();
     const data: LoginData = { email, password };
     dispatch(authUser(data));
-    console.log(email, password);
   };
 
   return (
     <AuthenticationCard>
-      <div className="rounded-full bg-white p-4 text-gray-600">
-        <IconBuildingStore size={64} />
-      </div>
       <div className="mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg">
         <form onSubmit={onSubmit}>
+          <header className="mb-4">
+            <figure className="mx-auto block w-1/2">
+              <Image src={brandLogo} alt="Carmú Logo" />
+            </figure>
+          </header>
           <div className="mb-2">
             <TextInput
               value={email}
@@ -104,11 +94,11 @@ const Login: NextPage = () => {
             </div>
           )}
 
-          <div className="mt-4 flex items-center justify-end">
+          <footer className="mt-4 flex items-center justify-end">
             <Button type="submit" variant="outline" disabled={loading || loginIsSuccess}>
               Iniciar Sesión
             </Button>
-          </div>
+          </footer>
         </form>
       </div>
     </AuthenticationCard>
