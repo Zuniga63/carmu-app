@@ -12,6 +12,22 @@ export interface IImage {
   type: string;
   url: string;
 }
+
+export interface IValidationErrors {
+  [key?: string]: {
+    name: string;
+    message: string;
+    kind: string;
+    path: string;
+    value: unknown;
+  };
+}
+
+export interface IValidationErrorResponse {
+  ok: boolean;
+  message: string;
+  validationErrors: IValidationErrors;
+}
 //-----------------------------------------------------------------------------
 // TYPES OF REDUX AND REDUX THUNK
 //-----------------------------------------------------------------------------
@@ -54,4 +70,45 @@ interface AuthResponse {
 export interface LoginData {
   email: string;
   password: string;
+}
+
+//-----------------------------------------------------------------------------
+// CATEGORY PAGE
+//-----------------------------------------------------------------------------
+export interface Category {
+  id: string;
+  mainCategory?: string;
+  name: string;
+  slug: string;
+  description?: string;
+  image?: IImage;
+  level: number;
+  order: number;
+  isEnabled: boolean;
+  products: string[];
+  subcategories: string[];
+  urlSlug: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ICategoryDeleteResponse {
+  category: Category;
+}
+
+export interface ICategoryPageState {
+  categories: Category[];
+  categoryToUpdate: Category | undefined;
+  categoryToDelete: Category | undefined;
+  categoryDeleted: Category | undefined;
+  formOpened: boolean;
+  storeIsSuccess: boolean;
+  updateIsSuccess: boolean;
+  deleteIsFinished: boolean;
+  storeNewOrderIsSuccess: boolean;
+  storeError: unknown;
+  storeNewOrderError: unknown;
+  updateError: unknown;
+  deleteError: unknown;
+  formIsLoading: boolean;
 }
