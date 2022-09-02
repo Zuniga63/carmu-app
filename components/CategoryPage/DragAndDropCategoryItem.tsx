@@ -4,7 +4,7 @@ import { IconArrowsMove, IconBox, IconCategory2, IconEditCircle, IconTrash } fro
 import { Category } from 'types';
 import { Button } from '@mantine/core';
 import { useAppDispatch } from 'store/hooks';
-import { confirmCategoryToDelete, showCategoryForm } from 'store/reducers/CategoryPage/creators';
+import { destroyCategory, showCategoryForm } from 'store/reducers/CategoryPage/creators';
 
 interface Props {
   provided: DraggableProvided;
@@ -47,7 +47,7 @@ export default function DragAndDropCategoryItem({ provided, category }: Props) {
           size="xs"
           color="red"
           leftIcon={<IconTrash size={16} />}
-          onClick={() => dispatch(confirmCategoryToDelete(category))}
+          onClick={() => dispatch(destroyCategory(category))}
         >
           <span className="text-xs">Eliminar</span>
         </Button>
