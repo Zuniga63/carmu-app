@@ -49,26 +49,26 @@ export default function CategoryDragAndDrop({
         <p className="text-center text-sm text-gray-400">{description}</p>
       </header>
 
-      {isBrowser && (
-        <DragDropContext onDragEnd={dragEndHanler}>
-          <Droppable droppableId="mainCategories">
-            {droppableProvided => (
-              <ul
-                {...droppableProvided.droppableProps}
-                ref={droppableProvided.innerRef}
-                className="scrollbar max-h-80 min-h-[100px] overflow-y-auto border-x border-header px-4 py-4"
-              >
-                {categories.map((item, index) => (
-                  <Draggable key={item.id} draggableId={item.id} index={index}>
-                    {draggableProvided => <DragAndDropCategoryItem provided={draggableProvided} category={item} />}
-                  </Draggable>
-                ))}
-                {droppableProvided.placeholder}
-              </ul>
-            )}
-          </Droppable>
-        </DragDropContext>
-      )}
+      <div className="min-h-[100px] border-x border-header px-4 py-4">
+        {isBrowser && (
+          <DragDropContext onDragEnd={dragEndHanler}>
+            <div className="scrollbar max-h-80 overflow-y-auto">
+              <Droppable droppableId="mainCategories">
+                {droppableProvided => (
+                  <ul {...droppableProvided.droppableProps} ref={droppableProvided.innerRef}>
+                    {categories.map((item, index) => (
+                      <Draggable key={item.id} draggableId={item.id} index={index}>
+                        {draggableProvided => <DragAndDropCategoryItem provided={draggableProvided} category={item} />}
+                      </Draggable>
+                    ))}
+                    {droppableProvided.placeholder}
+                  </ul>
+                )}
+              </Droppable>
+            </div>
+          </DragDropContext>
+        )}
+      </div>
 
       <footer className="flex min-h-[40px] items-center justify-end gap-x-2 rounded-b-md border-x border-b border-dark bg-header px-4 py-2">
         {newOrderSaved && <span className="text-xs text-gray-500">Guardado.</span>}
