@@ -1,10 +1,9 @@
+import { Socket } from 'socket.io-client';
 import { Category, IAction, ICategoryPageState } from 'types';
 import {
   ADD_MAIN_CATEGORY,
-  CANCEL_CETAGORY_DELETE,
-  CONFIRM_CATEGORY_TO_DELETE,
-  DELETE_CATEGORY_ERROR,
-  DELETE_IS_FINISHED,
+  CONNECT_TO_WEB_SOCKET,
+  DISCONNECT_TO_WEB_SOCKET,
   FORM_IS_LOADING,
   HIDE_FORM,
   MOUNT_CATEGORY_TO_UPDATE,
@@ -20,19 +19,16 @@ import {
 } from './actions';
 
 const initialState: ICategoryPageState = {
+  socket: undefined,
   categories: [],
   formOpened: false,
   categoryToUpdate: undefined,
-  categoryToDelete: undefined,
-  categoryDeleted: undefined,
   storeIsSuccess: false,
   storeNewOrderIsSuccess: false,
   updateIsSuccess: false,
-  deleteIsFinished: false,
   storeError: null,
   storeNewOrderError: null,
   updateError: null,
-  deleteError: null,
   formIsLoading: false,
 };
 
@@ -121,20 +117,6 @@ export default function CategoryPageReducer(state = initialState, action: IActio
         updateError: action.payload,
       };
     }
-    case CONFIRM_CATEGORY_TO_DELETE: {
-      return {
-        ...state,
-        categoryDeleted: undefined,
-        categoryToDelete: action.payload as Category,
-      };
-    }
-    case CANCEL_CETAGORY_DELETE: {
-      return {
-        ...state,
-        categoryDeleted: undefined,
-        categoryToDelete: undefined,
-      };
-    }
     case REMOVE_MAIN_CATEGORY: {
       const categoryDeleted = action.payload as Category;
       const newList = state.categories
@@ -146,21 +128,20 @@ export default function CategoryPageReducer(state = initialState, action: IActio
 
       return {
         ...state,
-        categoryDeleted,
         categories: newList,
       };
     }
-    case DELETE_IS_FINISHED: {
+    case CONNECT_TO_WEB_SOCKET: {
       return {
         ...state,
-        deleteIsFinished: action.payload as boolean,
-        categoryToDelete: undefined,
+        socket: action.payload as Socket,
       };
     }
-    case DELETE_CATEGORY_ERROR: {
+    case DISCONNECT_TO_WEB_SOCKET: {
+      if (state.socket) state.socket.disconnect();
       return {
         ...state,
-        deleteError: action.payload,
+        socket: undefined,
       };
     }
     default:

@@ -4,15 +4,10 @@ import { Category } from 'types';
 import { useEffect } from 'react';
 import CategoryDragAndDrop from 'components/CategoryPage/CategoryDragAndDrop';
 import CategoryForm from 'components/CategoryPage/CategoryForm';
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
-import { toast } from 'react-toastify';
-import { AxiosError } from 'axios';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import {
-  cancelCategoryToDelete,
-  destroyCategory,
-  fetchCategories,
+  connectToSocket,
+  disconnectWebSocket,
   setCategories,
   showCategoryForm,
   storeCategoriesOrder,
@@ -25,70 +20,18 @@ interface Props {
 }
 
 const Categories: NextPage<Props> = ({ data }: Props) => {
-  // const [categories, setCategories] = useState(data.categories);
-  const {
-    categories,
-    storeNewOrderIsSuccess: mainOrderSaved,
-    categoryToDelete,
-    categoryDeleted,
-    deleteError,
-    deleteIsFinished,
-  } = useAppSelector(state => state.CategoryPageReducer);
-  const MySwal = withReactContent(Swal);
+  const { categories, storeNewOrderIsSuccess: mainOrderSaved } = useAppSelector(state => state.CategoryPageReducer);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    dispatch(connectToSocket());
     dispatch(setCategories(data.categories));
+
+    return () => {
+      console.log('page dismount');
+      dispatch(disconnectWebSocket());
+    };
   }, []);
-
-  useEffect(() => {
-    if (categoryToDelete) {
-      const message = /*html */ `La categoría "<strong>${categoryToDelete.name}</strong>" será eliminada permanentemente y no puede revertirse.`;
-
-      MySwal.fire({
-        title: <strong>¿Desea elimiar esta categoría?</strong>,
-        html: message,
-        showCancelButton: true,
-        cancelButtonText: 'Cancelar',
-        confirmButtonText: 'Si, eliminala.',
-        backdrop: true,
-        icon: 'warning',
-        showLoaderOnConfirm: true,
-        preConfirm: async () => {
-          await Promise.all([dispatch(destroyCategory(categoryToDelete.id))]);
-        },
-        allowOutsideClick: () => !MySwal.isLoading(),
-      }).then(result => {
-        if (result.isDismissed) dispatch(cancelCategoryToDelete());
-      });
-    } else if (MySwal.isVisible()) {
-      MySwal.close();
-    }
-  }, [categoryToDelete]);
-
-  useEffect(() => {
-    if (deleteIsFinished) {
-      if (categoryDeleted) {
-        MySwal.fire({
-          title: <strong>¡Categoría Eliminada!</strong>,
-          html: /* html */ `La categoría <strong>${categoryDeleted.name}</strong> fue eliminada con éxito.`,
-          icon: 'success',
-        });
-      } else if (deleteError) {
-        if (deleteError instanceof AxiosError) {
-          const { response } = deleteError;
-          if (response?.status === 404) dispatch(fetchCategories());
-          MySwal.fire({
-            title: '¡Ops, algo salio mal!',
-            text: response?.data.message,
-            icon: 'error',
-          });
-        } else {
-          toast.error('¡Ops!, algo salio muy mal.');
-        }
-      }
-    }
-  }, [deleteIsFinished]);
 
   const saveNewMainCategoryOrder = (newList: Category[]) => {
     dispatch(storeCategoriesOrder(newList));

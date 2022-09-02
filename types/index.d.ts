@@ -1,5 +1,6 @@
 import { AnyAction } from 'redux';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
+import { Socket } from 'socket.io-client';
 
 //-----------------------------------------------------------------------------
 // GENERAL TYPES
@@ -97,18 +98,15 @@ export interface ICategoryDeleteResponse {
 }
 
 export interface ICategoryPageState {
+  socket: undefined | Socket;
   categories: Category[];
   categoryToUpdate: Category | undefined;
-  categoryToDelete: Category | undefined;
-  categoryDeleted: Category | undefined;
   formOpened: boolean;
   storeIsSuccess: boolean;
   updateIsSuccess: boolean;
-  deleteIsFinished: boolean;
   storeNewOrderIsSuccess: boolean;
   storeError: unknown;
   storeNewOrderError: unknown;
   updateError: unknown;
-  deleteError: unknown;
   formIsLoading: boolean;
 }

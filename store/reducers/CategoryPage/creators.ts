@@ -1,12 +1,12 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
+import Swal from 'sweetalert2';
+import { io, Socket } from 'socket.io-client';
 import { AppThunkAction, Category } from 'types';
 import { actionBody } from 'utils';
 import {
   ADD_MAIN_CATEGORY,
-  CANCEL_CETAGORY_DELETE,
-  CONFIRM_CATEGORY_TO_DELETE,
-  DELETE_CATEGORY_ERROR,
-  DELETE_IS_FINISHED,
+  CONNECT_TO_WEB_SOCKET,
+  DISCONNECT_TO_WEB_SOCKET,
   FORM_IS_LOADING,
   HIDE_FORM,
   MOUNT_CATEGORY_TO_UPDATE,
@@ -22,6 +22,19 @@ import {
 } from './actions';
 
 const headers = { 'Content-Type': 'multipart/form-data' };
+const clientRoom = 'categoryPage';
+const event = {
+  newCategory: 'newCategory',
+  updateCategory: 'updateCategory',
+  deleteCategory: 'deleteCategory',
+  reorderCategory: 'reorderCategory',
+};
+let socket: Socket;
+
+const emitSocketEvent = (name: string, payload: unknown) => {
+  const eventName = `${clientRoom}:${name}`;
+  if (socket) socket.emit(eventName, payload);
+};
 
 export const setCategories = (categories: Category[]): AppThunkAction => {
   return dispatch => {
@@ -71,8 +84,10 @@ export const storeNewCategory = (formData: FormData): AppThunkAction => {
 
     try {
       const res = await axios.post(url, formData, { headers });
-      dispatch(actionBody(ADD_MAIN_CATEGORY, res.data.category));
+      const { category } = res.data;
+      dispatch(actionBody(ADD_MAIN_CATEGORY, category));
       dispatch(actionBody(STORE_IS_SUCCESS, true));
+      emitSocketEvent(event.newCategory, category);
 
       setTimeout(() => {
         dispatch(actionBody(STORE_IS_SUCCESS, false));
@@ -95,8 +110,10 @@ export const updateCategory = (categoryToUpdate: Category, formData: FormData): 
 
     try {
       const res = await axios.put(url, formData, { headers });
-      dispatch(actionBody(UPDATE_MAIN_CATEGORY, res.data.category));
+      const { category } = res.data;
+      dispatch(actionBody(UPDATE_MAIN_CATEGORY, category));
       dispatch(actionBody(UPDATE_IS_SUCCESS, true));
+      emitSocketEvent(event.updateCategory, category);
 
       setTimeout(() => {
         dispatch(actionBody(UPDATE_IS_SUCCESS, false));
@@ -109,27 +126,96 @@ export const updateCategory = (categoryToUpdate: Category, formData: FormData): 
   };
 };
 
-export const confirmCategoryToDelete = (categoryToDelete: Category): AppThunkAction => {
-  return dispatch => {
-    dispatch(actionBody(CONFIRM_CATEGORY_TO_DELETE, categoryToDelete));
-  };
-};
-
-export const cancelCategoryToDelete = (): AppThunkAction => dispatch => dispatch(actionBody(CANCEL_CETAGORY_DELETE));
-
-export const destroyCategory = (categoryId: string): AppThunkAction => {
+export const destroyCategory = (categoryToDelete: Category): AppThunkAction => {
   return async dispatch => {
-    const url = `/categories/${categoryId}`;
-    dispatch(actionBody(DELETE_IS_FINISHED, false));
-    dispatch(actionBody(DELETE_CATEGORY_ERROR, null));
-    try {
-      const res = await axios.delete(url);
-      dispatch(actionBody(REMOVE_MAIN_CATEGORY, res.data.category));
-    } catch (error) {
-      dispatch(actionBody(DELETE_CATEGORY_ERROR, error));
-    } finally {
-      dispatch(actionBody(DELETE_IS_FINISHED, true));
-      setTimeout(() => dispatch(actionBody(DELETE_IS_FINISHED, false)), 2000);
+    const url = `/categories/${categoryToDelete.id}`;
+
+    const message = /*html */ `La categoría "<strong>${categoryToDelete.name}</strong>" será eliminada permanentemente y no puede revertirse.`;
+
+    const result = await Swal.fire({
+      title: '<strong>¿Desea elimiar esta categoría?</strong>',
+      html: message,
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Si, eliminala.',
+      backdrop: true,
+      icon: 'warning',
+      showLoaderOnConfirm: true,
+      preConfirm: async () => {
+        const result: { ok: boolean; message: string | undefined; categoryDeleted: unknown } = {
+          ok: false,
+          message: undefined,
+          categoryDeleted: undefined,
+        };
+
+        try {
+          const res = await axios.delete(url);
+          const { category } = res.data;
+
+          dispatch(actionBody(REMOVE_MAIN_CATEGORY, category));
+          emitSocketEvent(event.deleteCategory, category);
+          result.ok = true;
+          result.categoryDeleted = category;
+        } catch (error) {
+          if (error instanceof AxiosError) {
+            const { response } = error;
+            if (response?.status === 404) dispatch(fetchCategories());
+            result.message = response?.data.message;
+          } else {
+            console.log(error);
+          }
+        }
+        return result;
+      },
+      allowOutsideClick: () => !Swal.isLoading(),
+    });
+
+    if (result.isConfirmed && result.value) {
+      const { ok, categoryDeleted, message } = result.value;
+      if (ok) {
+        Swal.fire({
+          title: '<strong>¡Categoría Eliminada!</strong>',
+          html: /* html */ `La categoría <strong>${
+            (categoryDeleted as Category).name
+          }</strong> fue eliminada con éxito.`,
+          icon: 'success',
+        });
+      } else {
+        Swal.fire({
+          title: '¡Ops, algo salio mal!',
+          text: message,
+          icon: 'error',
+        });
+      }
     }
   };
 };
+
+export const connectToSocket = (): AppThunkAction => {
+  return dispath => {
+    if (process.env.NEXT_PUBLIC_URL_API) {
+      socket = io(process.env.NEXT_PUBLIC_URL_API);
+      socket.emit('joinToCategoryRoom');
+
+      // New category
+      socket.on(`server:${event.newCategory}`, (newCategory: Category) => {
+        dispath(actionBody(ADD_MAIN_CATEGORY, newCategory));
+      });
+
+      // Update
+      socket.on(`server:${event.updateCategory}`, (categoryToUpdate: Category) => {
+        dispath(actionBody(UPDATE_MAIN_CATEGORY, categoryToUpdate));
+      });
+
+      // Delete
+      socket.on(`server:${event.deleteCategory}`, (categoryToDelete: Category) => {
+        dispath(actionBody(REMOVE_MAIN_CATEGORY, categoryToDelete));
+      });
+
+      // Close websocket
+      dispath(actionBody(CONNECT_TO_WEB_SOCKET, socket));
+    }
+  };
+};
+
+export const disconnectWebSocket = (): AppThunkAction => dispatch => dispatch(actionBody(DISCONNECT_TO_WEB_SOCKET));
