@@ -144,7 +144,7 @@ export default function CategoryForm() {
       padding={0}
       size={largeScreen ? 'md' : '100%'}
       withCloseButton={false}
-      position="right"
+      position="left"
     >
       <>
         <header className="sticky top-0 z-fixed bg-header text-gray-200">
