@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { IconDashboard } from '@tabler/icons';
+import { IconDashboard, IconCategory } from '@tabler/icons';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -15,6 +15,13 @@ export default function NavLinks({ close }: Props) {
       path: '/',
       active: false,
       icon: <IconDashboard size={32} stroke={1.5} className="flex-shrink-0" />
+    },
+    {
+      id: 2,
+      name: 'Categorías',
+      path: '/admin/categories',
+      active: false,
+      icon: <IconCategory size={32} stroke={1.5} className="flex-shrink-0" />
     }
   ]);
 
