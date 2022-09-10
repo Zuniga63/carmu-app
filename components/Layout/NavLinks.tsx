@@ -14,15 +14,15 @@ export default function NavLinks({ close }: Props) {
       name: 'Dashboard',
       path: '/',
       active: false,
-      icon: <IconDashboard size={32} stroke={1.5} className="flex-shrink-0" />
+      icon: <IconDashboard size={32} stroke={1.5} className="flex-shrink-0" />,
     },
     {
       id: 2,
       name: 'Categorías',
       path: '/admin/categories',
       active: false,
-      icon: <IconCategory size={32} stroke={1.5} className="flex-shrink-0" />
-    }
+      icon: <IconCategory size={32} stroke={1.5} className="flex-shrink-0" />,
+    },
   ]);
 
   const router = useRouter();

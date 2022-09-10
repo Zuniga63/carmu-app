@@ -13,5 +13,5 @@ export const actionBody = (type: string, payload?: unknown): IAction => ({ type,
 export const buildCookieOption = (duration = 1) => ({
   path: '/',
   sameSite: true,
-  maxAge: 60 * 60 * 24 * duration
+  maxAge: 60 * 60 * 24 * duration,
 });

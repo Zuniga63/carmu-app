@@ -11,5 +11,5 @@ module.exports = {
   '**/*.(ts|tsx)': () => 'yarn tsc --noEmit',
 
   // Lint & Prettify TS and JS files
-  '*.{js,jsx,ts,tsx}': [buildEslintCommand, buildPrettierCommand]
+  '*.{js,jsx,ts,tsx}': [buildEslintCommand, buildPrettierCommand],
 };
