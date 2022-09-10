@@ -53,11 +53,22 @@ export const fetchCategories = (): AppThunkAction => {
   };
 };
 
-export const storeCategoriesOrder = (newList: Category[], mainCategory?: Category): AppThunkAction => {
+export const storeCategoriesOrder = (
+  newList: Category[],
+  original: Category[],
+  mainCategory?: Category
+): AppThunkAction => {
   return async dispatch => {
-    // ! Code for managmen subcategories
-    dispatch(actionBody(SET_CATEGORIES, newList));
-    dispatch(actionBody(STORE_NEW_ORDER_IS_SUCCESS, true));
+    try {
+      dispatch(actionBody(SET_CATEGORIES, newList));
+
+      const requestData = { mainCategory, categoryIds: newList.map(item => item.id) };
+      await axios.post('/categories/update-order', requestData);
+      dispatch(actionBody(STORE_NEW_ORDER_IS_SUCCESS, true));
+    } catch (error) {
+      dispatch(actionBody(SET_CATEGORIES, original));
+      console.log(error);
+    }
     setTimeout(() => {
       dispatch(actionBody(STORE_NEW_ORDER_IS_SUCCESS, false));
     }, 2000);

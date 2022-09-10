@@ -28,13 +28,12 @@ const Categories: NextPage<Props> = ({ data }: Props) => {
     dispatch(setCategories(data.categories));
 
     return () => {
-      console.log('page dismount');
       dispatch(disconnectWebSocket());
     };
   }, []);
 
   const saveNewMainCategoryOrder = (newList: Category[]) => {
-    dispatch(storeCategoriesOrder(newList));
+    dispatch(storeCategoriesOrder(newList, categories.slice()));
   };
 
   return (
