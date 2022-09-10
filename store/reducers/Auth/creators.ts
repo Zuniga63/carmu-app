@@ -30,6 +30,7 @@ export const authUser = (loginData: LoginData): AppThunkAction => {
           localStorage.setItem('token', token);
           localStorage.setItem('user', JSON.stringify(user));
           setCookie('token', token, buildCookieOption());
+          axios.defaults.headers.common.Authorization = `Bearer ${token}`;
         }
       }
     } catch (error) {
@@ -77,7 +78,7 @@ export const authenticate = (): AppThunkAction => {
 
       // request to authenticate
       if (token) {
-        axios.defaults.headers.common.Authorization = `Beare ${token}`;
+        axios.defaults.headers.common.Authorization = `Bearer ${token}`;
         try {
           const res = await axios.get('/auth/local/is-authenticated');
           const { ok, user: newUserData } = res.data as AuthResponse;
