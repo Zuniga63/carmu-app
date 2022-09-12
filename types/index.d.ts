@@ -1,3 +1,4 @@
+import { Dayjs } from 'dayjs';
 import { AnyAction } from 'redux';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { Socket } from 'socket.io-client';
@@ -109,4 +110,47 @@ export interface ICategoryPageState {
   storeNewOrderError: unknown;
   updateError: unknown;
   formIsLoading: boolean;
+}
+//-----------------------------------------------------------------------------
+// BOXES PAGE
+//-----------------------------------------------------------------------------
+export interface ICashier {
+  id: string;
+  name: string;
+}
+
+export interface IBox {
+  id: string;
+  cashier?: ICashier;
+  users: string[];
+  name: string;
+  cashierName?: string;
+  base: number;
+  balance?: number;
+  openBox?: string; // string Date
+  closed?: string; // string Date
+  transactions?: string[];
+  closingRecords?: string[];
+  createdAt: strig; // string Date
+  updatedAt: string; // string Date
+}
+
+export interface IBoxWithDayjs extends IBox {
+  openBox?: Dayjs;
+  closed?: Dayjs;
+  neverUsed: boolean;
+  createdAt: Dayjs;
+  updatedAt: Dayjs;
+  createIsSameUpdate: boolean;
+  dateRefreshRate?: number;
+}
+
+export interface IMainBox {
+  name: string;
+  balance: number;
+}
+
+export interface IBoxPageState {
+  boxes: IBoxWithDayjs[];
+  maiBox: IMainBox | null;
 }
