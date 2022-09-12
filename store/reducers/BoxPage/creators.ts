@@ -1,9 +1,11 @@
+import axios, { AxiosError } from 'axios';
 import dayjs, { Dayjs } from 'dayjs';
+import Swal from 'sweetalert2';
 import { AppThunkAction, IBox, IBoxWithDayjs, IMainBox } from 'types';
 import { actionBody } from 'utils';
-import { SET_BOXES, SET_MAIN_BOX } from './actions';
+import { REMOVE_BOX, SET_BOXES, SET_MAIN_BOX } from './actions';
 
-const nomalizeBox = (box: IBox): IBoxWithDayjs => {
+const normalizeBox = (box: IBox): IBoxWithDayjs => {
   const now = dayjs();
   const timeUnit = 'minutes';
   const timeDiffs: number[] = [];
@@ -41,7 +43,7 @@ const nomalizeBox = (box: IBox): IBoxWithDayjs => {
 };
 
 export const setBoxes = (boxes: IBox[]): AppThunkAction => {
-  const normalizeBoxes = boxes.map(box => nomalizeBox(box));
+  const normalizeBoxes = boxes.map(box => normalizeBox(box));
   return dispatch => {
     dispatch(actionBody(SET_BOXES, normalizeBoxes));
   };
@@ -50,5 +52,71 @@ export const setBoxes = (boxes: IBox[]): AppThunkAction => {
 export const setMainBox = (mainBox: IMainBox | null): AppThunkAction => {
   return dispatch => {
     dispatch(actionBody(SET_MAIN_BOX, mainBox));
+  };
+};
+
+export const fetchBoxes = (): AppThunkAction => {
+  return async dispatch => {
+    try {
+      const res = await axios.get<{ boxes: IBox[]; mainBox: IMainBox | null }>('/boxes');
+      dispatch(setBoxes(res.data.boxes));
+      dispatch(setMainBox(res.data.mainBox));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const destroyBox = (boxToDelete: IBoxWithDayjs): AppThunkAction => {
+  return async dispatch => {
+    const url = `/boxes/${boxToDelete.id}`;
+    const message = /*html */ `La caja "<strong>${boxToDelete.name}</strong>" será eliminada permanentemente y esta acción no puede revertirse.`;
+
+    const result = await Swal.fire({
+      title: '<strong>¿Desea eliminar la caja?',
+      html: message,
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Si, ¡Eliminala!',
+      backdrop: true,
+      icon: 'warning',
+      showLoaderOnConfirm: true,
+      preConfirm: async () => {
+        const result = { ok: false, message: '' };
+        try {
+          const res = await axios.delete(url);
+          result.ok = true;
+          result.message = `La caja <strong>${res.data.cashbox.name}</strong> fue eliminada con éxito.`;
+          dispatch(actionBody(REMOVE_BOX, boxToDelete));
+        } catch (error) {
+          if (error instanceof AxiosError) {
+            const { response } = error;
+            if (response?.status === 404) await dispatch(fetchBoxes());
+            result.message = response?.data.message;
+          } else {
+            console.log(error);
+          }
+        }
+
+        return result;
+      },
+    });
+
+    if (result.isConfirmed && result.value) {
+      const { ok, message } = result.value;
+      if (ok) {
+        Swal.fire({
+          title: '<strong>¡Caja Eliminada!</strong>',
+          html: message,
+          icon: 'success',
+        });
+      } else {
+        Swal.fire({
+          title: '¡Ops, algo salio mal!',
+          text: message,
+          icon: 'error',
+        });
+      }
+    }
   };
 };

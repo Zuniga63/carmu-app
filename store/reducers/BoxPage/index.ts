@@ -1,5 +1,5 @@
 import { IAction, IBoxPageState, IBoxWithDayjs, IMainBox } from 'types';
-import { SET_BOXES, SET_MAIN_BOX } from './actions';
+import { REMOVE_BOX, SET_BOXES, SET_MAIN_BOX } from './actions';
 
 const initialState: IBoxPageState = {
   boxes: [],
@@ -18,6 +18,15 @@ export default function BoxPageReducer(state = initialState, action: IAction): I
       return {
         ...state,
         maiBox: action.payload as IMainBox | null,
+      };
+    }
+    case REMOVE_BOX: {
+      const boxDeleted = action.payload as IBoxWithDayjs;
+      const newList = state.boxes.filter(box => box.id !== boxDeleted.id);
+
+      return {
+        ...state,
+        boxes: newList,
       };
     }
     default: {
