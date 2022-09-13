@@ -1,4 +1,5 @@
 import BoxList from 'components/BoxPage/BoxList';
+import CreateForm from 'components/BoxPage/CreateForm';
 import Layout from 'components/Layout';
 import { GetServerSideProps, NextPage } from 'next';
 import { useEffect } from 'react';
@@ -48,11 +49,14 @@ const BoxesPage: NextPage<Props> = ({ data }: Props) => {
     dispatch(setMainBox(data.mainBox));
   }, []);
   return (
-    <Layout title="Cajas">
-      <div className="flex px-4 py-2 text-white">
-        <BoxList />
-      </div>
-    </Layout>
+    <>
+      <Layout title="Cajas">
+        <div className="flex px-4 py-2 text-white">
+          <BoxList />
+        </div>
+      </Layout>
+      <CreateForm />
+    </>
   );
 };
 

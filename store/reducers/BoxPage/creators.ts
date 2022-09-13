@@ -3,7 +3,17 @@ import dayjs, { Dayjs } from 'dayjs';
 import Swal from 'sweetalert2';
 import { AppThunkAction, IBox, IBoxWithDayjs, IMainBox } from 'types';
 import { actionBody } from 'utils';
-import { REMOVE_BOX, SET_BOXES, SET_MAIN_BOX } from './actions';
+import {
+  ADD_BOX,
+  CLOSE_CREATE_BOX_FORM,
+  OPEN_CREATE_BOX_FORM,
+  REMOVE_BOX,
+  SET_BOXES,
+  SET_MAIN_BOX,
+  STORE_BOX_ERROR,
+  STORE_BOX_IS_SUCCESS,
+  STORE_BOX_LOADING,
+} from './actions';
 
 const normalizeBox = (box: IBox): IBoxWithDayjs => {
   const now = dayjs();
@@ -117,6 +127,28 @@ export const destroyBox = (boxToDelete: IBoxWithDayjs): AppThunkAction => {
           icon: 'error',
         });
       }
+    }
+  };
+};
+
+export const openCreateForm = (): AppThunkAction => dispatch => dispatch({ type: OPEN_CREATE_BOX_FORM });
+export const closeCreateForm = (): AppThunkAction => dispatch => dispatch({ type: CLOSE_CREATE_BOX_FORM });
+export const storeBox = (formData: { name: string }): AppThunkAction => {
+  return async dispatch => {
+    try {
+      dispatch(actionBody(STORE_BOX_LOADING, true));
+      dispatch(actionBody(STORE_BOX_ERROR, null));
+
+      const res = await axios.post<{ cashbox: IBox }>('/boxes', formData);
+      dispatch(actionBody(ADD_BOX, normalizeBox(res.data.cashbox)));
+      dispatch(actionBody(STORE_BOX_IS_SUCCESS, true));
+    } catch (error) {
+      dispatch(actionBody(STORE_BOX_ERROR, error));
+    } finally {
+      dispatch(actionBody(STORE_BOX_LOADING, false));
+      setTimeout(() => {
+        dispatch(actionBody(STORE_BOX_IS_SUCCESS, false));
+      }, 3000);
     }
   };
 };

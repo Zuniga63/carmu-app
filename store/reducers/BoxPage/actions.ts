@@ -2,3 +2,10 @@ export const SET_BOXES = 'SET_BOXES';
 export const SET_MAIN_BOX = 'SET_MAIN_BOX';
 
 export const REMOVE_BOX = 'REMOVE_BOX';
+
+export const OPEN_CREATE_BOX_FORM = 'OPEN_CREATE_BOX_FORM';
+export const CLOSE_CREATE_BOX_FORM = 'CLOSE_CREATE_BOX_FORM';
+export const STORE_BOX_LOADING = 'STORE_BOX_LOADING';
+export const STORE_BOX_IS_SUCCESS = 'STORE_BOX_IS_SUCCESS';
+export const STORE_BOX_ERROR = 'STORE_BOX_ERROR';
+export const ADD_BOX = 'ADD_BOX';

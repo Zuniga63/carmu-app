@@ -1,10 +1,12 @@
 import React from 'react';
-import { ScrollArea } from '@mantine/core';
+import { Button, ScrollArea } from '@mantine/core';
 import BoxListItem from './BoxListItem';
-import { useAppSelector } from 'store/hooks';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
+import { openCreateForm } from 'store/reducers/BoxPage/creators';
 
 const BoxList = () => {
   const { boxes } = useAppSelector(state => state.BoxPageReducer);
+  const dispatch = useAppDispatch();
   return (
     <div className="w-80">
       <header className="rounded-t-md border-x border-t border-header bg-header px-4 py-2">
@@ -17,7 +19,9 @@ const BoxList = () => {
           ))}
         </ul>
       </ScrollArea>
-      <footer className="flex min-h-[40px] items-center justify-end gap-x-2 rounded-b-md border-x border-b border-dark bg-header px-4 py-2"></footer>
+      <footer className="flex min-h-[40px] items-center justify-end gap-x-2 rounded-b-md border-x border-b border-dark bg-header px-4 py-2">
+        <Button onClick={() => dispatch(openCreateForm())}>Nueva Caja</Button>
+      </footer>
     </div>
   );
 };

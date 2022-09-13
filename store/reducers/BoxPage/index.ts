@@ -1,9 +1,23 @@
 import { IAction, IBoxPageState, IBoxWithDayjs, IMainBox } from 'types';
-import { REMOVE_BOX, SET_BOXES, SET_MAIN_BOX } from './actions';
+import {
+  ADD_BOX,
+  CLOSE_CREATE_BOX_FORM,
+  OPEN_CREATE_BOX_FORM,
+  REMOVE_BOX,
+  SET_BOXES,
+  SET_MAIN_BOX,
+  STORE_BOX_ERROR,
+  STORE_BOX_IS_SUCCESS,
+  STORE_BOX_LOADING,
+} from './actions';
 
 const initialState: IBoxPageState = {
   boxes: [],
   maiBox: null,
+  createFormOpened: false,
+  storeBoxLoading: false,
+  storeBoxIsSuccess: false,
+  storeBoxError: null,
 };
 
 export default function BoxPageReducer(state = initialState, action: IAction): IBoxPageState {
@@ -27,6 +41,45 @@ export default function BoxPageReducer(state = initialState, action: IAction): I
       return {
         ...state,
         boxes: newList,
+      };
+    }
+    //-------------------------------------------------------------------------
+    // CASES FOR STORE A NEW BOX
+    //-------------------------------------------------------------------------
+    case OPEN_CREATE_BOX_FORM: {
+      return {
+        ...state,
+        createFormOpened: true,
+      };
+    }
+    case CLOSE_CREATE_BOX_FORM: {
+      return {
+        ...state,
+        createFormOpened: false,
+      };
+    }
+    case STORE_BOX_LOADING: {
+      return {
+        ...state,
+        storeBoxLoading: action.payload as boolean,
+      };
+    }
+    case STORE_BOX_IS_SUCCESS: {
+      return {
+        ...state,
+        storeBoxIsSuccess: action.payload as boolean,
+      };
+    }
+    case STORE_BOX_ERROR: {
+      return {
+        ...state,
+        storeBoxError: action.payload,
+      };
+    }
+    case ADD_BOX: {
+      return {
+        ...state,
+        boxes: [...state.boxes, action.payload as IBoxWithDayjs],
       };
     }
     default: {
