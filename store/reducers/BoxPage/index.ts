@@ -1,7 +1,11 @@
 import { IAction, IBoxPageState, IBoxWithDayjs, IMainBox } from 'types';
 import {
   ADD_BOX,
+  CLOSE_BOX_ERROR,
+  CLOSE_BOX_IS_SUCCESS,
+  CLOSE_BOX_LOADING,
   CLOSE_CREATE_BOX_FORM,
+  MOUNT_BOX_TO_CLOSE,
   MOUNT_BOX_TO_OPEN,
   OPEN_BOX_ERROR,
   OPEN_BOX_IS_SUCCESS,
@@ -13,6 +17,7 @@ import {
   STORE_BOX_ERROR,
   STORE_BOX_IS_SUCCESS,
   STORE_BOX_LOADING,
+  UNMOUNT_BOX_TO_CLOSE,
   UNMOUNT_BOX_TO_OPEN,
   UPDATE_BOX,
 } from './actions';
@@ -30,6 +35,11 @@ const initialState: IBoxPageState = {
   openBoxLoading: false,
   openBoxIsSuccess: false,
   openBoxError: null,
+  // Close box properties
+  boxToClose: null,
+  closeBoxLoading: false,
+  closeBoxIsSuccess: false,
+  closeBoxError: null,
 };
 
 export default function BoxPageReducer(state = initialState, action: IAction): IBoxPageState {
@@ -60,7 +70,6 @@ export default function BoxPageReducer(state = initialState, action: IAction): I
       const boxes = state.boxes.slice();
       const index = boxes.findIndex(box => box.id === boxToUpdate.id);
 
-      console.log(boxToUpdate, index, boxes.length);
       if (index >= 0) {
         boxes.splice(index, 1, boxToUpdate);
         return { ...state, boxes };
@@ -136,6 +145,33 @@ export default function BoxPageReducer(state = initialState, action: IAction): I
     }
     case OPEN_BOX_ERROR: {
       return { ...state, openBoxError: action.payload };
+    }
+    //-------------------------------------------------------------------------
+    // CASES FOR CLOSE BOX
+    //-------------------------------------------------------------------------
+    case MOUNT_BOX_TO_CLOSE: {
+      return {
+        ...state,
+        boxToClose: action.payload as IBoxWithDayjs,
+      };
+    }
+    case UNMOUNT_BOX_TO_CLOSE: {
+      return {
+        ...state,
+        boxToClose: null,
+        closeBoxLoading: false,
+        closeBoxIsSuccess: false,
+        closeBoxError: null,
+      };
+    }
+    case CLOSE_BOX_LOADING: {
+      return { ...state, closeBoxLoading: action.payload as boolean };
+    }
+    case CLOSE_BOX_IS_SUCCESS: {
+      return { ...state, closeBoxIsSuccess: action.payload as boolean };
+    }
+    case CLOSE_BOX_ERROR: {
+      return { ...state, closeBoxError: action.payload };
     }
     default: {
       return state;

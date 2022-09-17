@@ -163,4 +163,9 @@ export interface IBoxPageState {
   openBoxLoading: boolean;
   openBoxIsSuccess: boolean;
   openBoxError: unknown;
+  // Close Box
+  boxToClose: IBoxWithDayjs | null;
+  closeBoxLoading: boolean;
+  closeBoxIsSuccess: boolean;
+  closeBoxError: unknown;
 }

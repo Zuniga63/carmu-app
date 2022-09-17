@@ -5,7 +5,11 @@ import { AppThunkAction, IBox, IBoxWithDayjs, IMainBox } from 'types';
 import { actionBody } from 'utils';
 import {
   ADD_BOX,
+  CLOSE_BOX_ERROR,
+  CLOSE_BOX_IS_SUCCESS,
+  CLOSE_BOX_LOADING,
   CLOSE_CREATE_BOX_FORM,
+  MOUNT_BOX_TO_CLOSE,
   MOUNT_BOX_TO_OPEN,
   OPEN_BOX_ERROR,
   OPEN_BOX_IS_SUCCESS,
@@ -17,6 +21,7 @@ import {
   STORE_BOX_ERROR,
   STORE_BOX_IS_SUCCESS,
   STORE_BOX_LOADING,
+  UNMOUNT_BOX_TO_CLOSE,
   UNMOUNT_BOX_TO_OPEN,
   UPDATE_BOX,
 } from './actions';
@@ -181,6 +186,35 @@ export const openBox = (boxToOpen: IBoxWithDayjs, formData: { base: number; cash
     } finally {
       dispatch(actionBody(OPEN_BOX_LOADING, false));
       setTimeout(() => dispatch(actionBody(OPEN_BOX_IS_SUCCESS, false)), 3000);
+    }
+  };
+};
+
+export const mountBoxToClose = (boxToClose: IBoxWithDayjs): AppThunkAction => {
+  return dispatch => dispatch(actionBody(MOUNT_BOX_TO_CLOSE, boxToClose));
+};
+
+export const unmountBoxTOClose = (): AppThunkAction => dispatch => dispatch(actionBody(UNMOUNT_BOX_TO_CLOSE));
+
+export const closeBox = (
+  boxToClose: IBoxWithDayjs,
+  formData: { cash: number; observation?: string }
+): AppThunkAction => {
+  return async dispatch => {
+    const url = `/boxes/${boxToClose.id}/close`;
+    try {
+      dispatch(actionBody(CLOSE_BOX_LOADING, true));
+      dispatch(actionBody(CLOSE_BOX_ERROR, null));
+
+      const res = await axios.put<{ cashbox: IBox }>(url, formData);
+      const box = normalizeBox(res.data.cashbox);
+
+      dispatch(actionBody(UPDATE_BOX, box));
+      dispatch(actionBody(CLOSE_BOX_IS_SUCCESS, true));
+    } catch (error) {
+      dispatch(actionBody(CLOSE_BOX_ERROR, error));
+    } finally {
+      dispatch(actionBody(CLOSE_BOX_LOADING, false));
     }
   };
 };

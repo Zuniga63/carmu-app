@@ -1,4 +1,5 @@
 import BoxList from 'components/BoxPage/BoxList';
+import CloseBoxForm from 'components/BoxPage/CloseBoxForm';
 import CreateForm from 'components/BoxPage/CreateForm';
 import OpenBoxForm from 'components/BoxPage/OpenBoxForm';
 import Layout from 'components/Layout';
@@ -58,6 +59,7 @@ const BoxesPage: NextPage<Props> = ({ data }: Props) => {
       </Layout>
       <CreateForm />
       <OpenBoxForm />
+      <CloseBoxForm />
     </>
   );
 };
