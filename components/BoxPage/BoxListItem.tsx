@@ -5,13 +5,15 @@ import {
   IconAward,
   IconDeviceFloppy,
   IconEditCircle,
+  IconFolder,
   IconLock,
   IconLockOpen,
   IconTrash,
 } from '@tabler/icons';
 import { currencyFormat } from 'utils';
 import { useAppDispatch } from 'store/hooks';
-import { destroyBox } from 'store/reducers/BoxPage/creators';
+import { destroyBox, mountBoxToOpen } from 'store/reducers/BoxPage/creators';
+import { Button } from '@mantine/core';
 
 interface Props {
   box: IBoxWithDayjs;
@@ -22,7 +24,6 @@ const BoxListItem = ({ box }: Props) => {
   const [closedFronNow, setClosedFromNow] = useState('');
   const [createdAt, setCreatedAt] = useState('');
   const [updatedAt, setUpdatedAt] = useState('');
-  let intervalId: NodeJS.Timer;
 
   const dispatch = useAppDispatch();
 
@@ -35,13 +36,31 @@ const BoxListItem = ({ box }: Props) => {
 
   useEffect(() => {
     setDateString();
+    let intervalId: NodeJS.Timer;
 
     if (box.dateRefreshRate) {
       intervalId = setInterval(setDateString, box.dateRefreshRate);
     }
 
-    return () => clearInterval(intervalId);
+    return () => {
+      console.log('Clear interval of %s: %s', box.name, intervalId);
+      clearInterval(intervalId);
+    };
   }, []);
+
+  useEffect(() => {
+    let intervalId: NodeJS.Timer | undefined = undefined;
+
+    setDateString();
+    if (box.dateRefreshRate) {
+      intervalId = setInterval(setDateString, box.dateRefreshRate);
+    }
+
+    return () => {
+      console.log('Clear interval in second hook of %s: %s', box.name, intervalId);
+      clearInterval(intervalId);
+    };
+  }, [box.openBox, box.closed, box.createdAt, box.updatedAt]);
   return (
     <li className="mb-4">
       <div className="overflow-hidden rounded-lg border border-header shadow-sm shadow-gray-500">
@@ -63,6 +82,7 @@ const BoxListItem = ({ box }: Props) => {
             </button>
           )}
         </header>
+        {/* Body */}
         <div className="px-4 py-2">
           {!!box.openBox && (
             <>
@@ -104,6 +124,33 @@ const BoxListItem = ({ box }: Props) => {
             )}
           </div>
         </div>
+
+        {/* Footer */}
+        <footer className="bg-header px-4 py-2">
+          <div className="flex items-center justify-between">
+            {!box.openBox && (
+              <Button
+                size="xs"
+                leftIcon={<IconLockOpen size={14} />}
+                color="green"
+                onClick={() => dispatch(mountBoxToOpen(box))}
+              >
+                Abrir
+              </Button>
+            )}
+            {box.openBox && (
+              <>
+                <Button size="xs" leftIcon={<IconLock size={14} />} color="orange">
+                  Cerrar
+                </Button>
+
+                <Button size="xs" leftIcon={<IconFolder size={14} />} disabled>
+                  Ver
+                </Button>
+              </>
+            )}
+          </div>
+        </footer>
       </div>
     </li>
   );

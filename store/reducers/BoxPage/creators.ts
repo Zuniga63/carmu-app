@@ -6,6 +6,10 @@ import { actionBody } from 'utils';
 import {
   ADD_BOX,
   CLOSE_CREATE_BOX_FORM,
+  MOUNT_BOX_TO_OPEN,
+  OPEN_BOX_ERROR,
+  OPEN_BOX_IS_SUCCESS,
+  OPEN_BOX_LOADING,
   OPEN_CREATE_BOX_FORM,
   REMOVE_BOX,
   SET_BOXES,
@@ -13,6 +17,8 @@ import {
   STORE_BOX_ERROR,
   STORE_BOX_IS_SUCCESS,
   STORE_BOX_LOADING,
+  UNMOUNT_BOX_TO_OPEN,
+  UPDATE_BOX,
 } from './actions';
 
 const normalizeBox = (box: IBox): IBoxWithDayjs => {
@@ -149,6 +155,32 @@ export const storeBox = (formData: { name: string }): AppThunkAction => {
       setTimeout(() => {
         dispatch(actionBody(STORE_BOX_IS_SUCCESS, false));
       }, 3000);
+    }
+  };
+};
+
+export const mountBoxToOpen = (boxToOpen: IBoxWithDayjs): AppThunkAction => {
+  return dispatch => dispatch(actionBody(MOUNT_BOX_TO_OPEN, boxToOpen));
+};
+
+export const unmountBoxToOpen = (): AppThunkAction => dispatch => dispatch({ type: UNMOUNT_BOX_TO_OPEN });
+
+export const openBox = (boxToOpen: IBoxWithDayjs, formData: { base: number; cashierId?: string }): AppThunkAction => {
+  return async dispatch => {
+    const url = `/boxes/${boxToOpen.id}/open`;
+    try {
+      dispatch(actionBody(OPEN_BOX_LOADING, true));
+      const res = await axios.put<{ cashbox: IBox }>(url, formData);
+      const { data } = res;
+      const boxWithDates = normalizeBox(data.cashbox);
+
+      dispatch(actionBody(UPDATE_BOX, boxWithDates));
+      dispatch(actionBody(OPEN_BOX_IS_SUCCESS, true));
+    } catch (error) {
+      dispatch(actionBody(OPEN_BOX_ERROR, error));
+    } finally {
+      dispatch(actionBody(OPEN_BOX_LOADING, false));
+      setTimeout(() => dispatch(actionBody(OPEN_BOX_IS_SUCCESS, false)), 3000);
     }
   };
 };

@@ -153,8 +153,14 @@ export interface IMainBox {
 export interface IBoxPageState {
   boxes: IBoxWithDayjs[];
   maiBox: IMainBox | null;
+  // Add box
   createFormOpened: boolean;
   storeBoxLoading: boolean;
   storeBoxIsSuccess: boolean;
   storeBoxError: unknown;
+  // Open box
+  boxToOpen: IBoxWithDayjs | null;
+  openBoxLoading: boolean;
+  openBoxIsSuccess: boolean;
+  openBoxError: unknown;
 }

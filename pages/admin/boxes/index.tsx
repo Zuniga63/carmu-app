@@ -1,5 +1,6 @@
 import BoxList from 'components/BoxPage/BoxList';
 import CreateForm from 'components/BoxPage/CreateForm';
+import OpenBoxForm from 'components/BoxPage/OpenBoxForm';
 import Layout from 'components/Layout';
 import { GetServerSideProps, NextPage } from 'next';
 import { useEffect } from 'react';
@@ -56,6 +57,7 @@ const BoxesPage: NextPage<Props> = ({ data }: Props) => {
         </div>
       </Layout>
       <CreateForm />
+      <OpenBoxForm />
     </>
   );
 };

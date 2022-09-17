@@ -64,6 +64,7 @@ const CreateForm = () => {
   const closeHandler = () => {
     if (!loading) {
       setName('');
+      setErrors(null);
       dispatch(closeCreateForm());
     }
   };
@@ -80,7 +81,7 @@ const CreateForm = () => {
         <header>
           <h2>Registrar Una Caja</h2>
         </header>
-        <body className="mb-2">
+        <div className="mb-2">
           <TextInput
             label="Nombre"
             placeholder="Escribelo aquí"
@@ -89,7 +90,7 @@ const CreateForm = () => {
             disabled={loading}
             error={errors?.name.message}
           />
-        </body>
+        </div>
         <footer className="flex items-center justify-end">
           <Button leftIcon={<IconDeviceFloppy />} loading={loading} type="submit" disabled={!enabled}>
             Guardar

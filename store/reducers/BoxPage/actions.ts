@@ -2,6 +2,7 @@ export const SET_BOXES = 'SET_BOXES';
 export const SET_MAIN_BOX = 'SET_MAIN_BOX';
 
 export const REMOVE_BOX = 'REMOVE_BOX';
+export const UPDATE_BOX = 'UPDATE_BOX';
 
 export const OPEN_CREATE_BOX_FORM = 'OPEN_CREATE_BOX_FORM';
 export const CLOSE_CREATE_BOX_FORM = 'CLOSE_CREATE_BOX_FORM';
@@ -9,3 +10,9 @@ export const STORE_BOX_LOADING = 'STORE_BOX_LOADING';
 export const STORE_BOX_IS_SUCCESS = 'STORE_BOX_IS_SUCCESS';
 export const STORE_BOX_ERROR = 'STORE_BOX_ERROR';
 export const ADD_BOX = 'ADD_BOX';
+
+export const MOUNT_BOX_TO_OPEN = 'MOUNT_BOX_TO_OPEN';
+export const UNMOUNT_BOX_TO_OPEN = 'UNMOUNT_BOX_TO_OPEN';
+export const OPEN_BOX_LOADING = 'OPEN_BOX_LOADING';
+export const OPEN_BOX_IS_SUCCESS = 'OPEN_BOX_IS_SUCCESS';
+export const OPEN_BOX_ERROR = 'OPEN_BOX_ERROR';
