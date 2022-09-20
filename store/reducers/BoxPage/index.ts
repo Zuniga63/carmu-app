@@ -1,12 +1,18 @@
-import { IAction, IBoxPageState, IBoxWithDayjs, IMainBox } from 'types';
+import { IAction, IBoxPageState, IBoxWithDayjs, IMainBox, ITransaction } from 'types';
 import {
   ADD_BOX,
+  ADD_TRANSACTION,
   CLOSE_BOX_ERROR,
   CLOSE_BOX_IS_SUCCESS,
   CLOSE_BOX_LOADING,
   CLOSE_CREATE_BOX_FORM,
+  GET_TRANSACTIONS_ERROR,
+  HIDE_CREATE_TRANSACTION_FORM,
+  LOADING_TRANSACTIONS,
   MOUNT_BOX_TO_CLOSE,
   MOUNT_BOX_TO_OPEN,
+  MOUNT_SELECTED_BOX,
+  MOUNT_TRANSACTIONS,
   OPEN_BOX_ERROR,
   OPEN_BOX_IS_SUCCESS,
   OPEN_BOX_LOADING,
@@ -14,11 +20,16 @@ import {
   REMOVE_BOX,
   SET_BOXES,
   SET_MAIN_BOX,
+  SHOW_CREATE_TRANSACTION_FORM,
   STORE_BOX_ERROR,
   STORE_BOX_IS_SUCCESS,
   STORE_BOX_LOADING,
+  STORE_TRANSACTION_ERROR,
+  STORE_TRANSACTION_IS_SUCCESS,
+  STORE_TRANSACTION_LOADING,
   UNMOUNT_BOX_TO_CLOSE,
   UNMOUNT_BOX_TO_OPEN,
+  UNMOUT_SELECTED_BOX,
   UPDATE_BOX,
 } from './actions';
 
@@ -40,6 +51,26 @@ const initialState: IBoxPageState = {
   closeBoxLoading: false,
   closeBoxIsSuccess: false,
   closeBoxError: null,
+  // Show Box
+  boxSelected: null,
+  loadingTransactions: false,
+  transactions: [],
+  transactionsError: null,
+  // add transaction
+  storeTransactionFormOpened: false,
+  storeTransactionLoading: false,
+  storeTransactionIsSuccess: false,
+  storeTransactionError: null,
+};
+
+const unmountBoxSelectedToState = (state: IBoxPageState): IBoxPageState => {
+  return {
+    ...state,
+    boxSelected: null,
+    loadingTransactions: false,
+    transactions: [],
+    transactionsError: null,
+  };
 };
 
 export default function BoxPageReducer(state = initialState, action: IAction): IBoxPageState {
@@ -69,13 +100,17 @@ export default function BoxPageReducer(state = initialState, action: IAction): I
       const boxToUpdate = action.payload as IBoxWithDayjs;
       const boxes = state.boxes.slice();
       const index = boxes.findIndex(box => box.id === boxToUpdate.id);
+      let newState = state;
 
       if (index >= 0) {
         boxes.splice(index, 1, boxToUpdate);
-        return { ...state, boxes };
+        newState = { ...state, boxes };
+        if (state.boxSelected && state.boxSelected.id === boxToUpdate.id && !boxToUpdate.openBox) {
+          newState = unmountBoxSelectedToState(newState);
+        }
       }
 
-      return state;
+      return newState;
     }
     //-------------------------------------------------------------------------
     // CASES FOR STORE A NEW BOX
@@ -172,6 +207,65 @@ export default function BoxPageReducer(state = initialState, action: IAction): I
     }
     case CLOSE_BOX_ERROR: {
       return { ...state, closeBoxError: action.payload };
+    }
+    //-------------------------------------------------------------------------
+    // CASES FOR SHOW BOX
+    //-------------------------------------------------------------------------
+    case MOUNT_SELECTED_BOX: {
+      return {
+        ...state,
+        boxSelected: action.payload as IBoxWithDayjs,
+      };
+    }
+    case UNMOUT_SELECTED_BOX: {
+      return unmountBoxSelectedToState(state);
+    }
+    case MOUNT_TRANSACTIONS: {
+      return {
+        ...state,
+        transactions: action.payload as ITransaction[],
+      };
+    }
+    case LOADING_TRANSACTIONS: {
+      return { ...state, loadingTransactions: action.payload as boolean };
+    }
+    case GET_TRANSACTIONS_ERROR: {
+      return { ...state, transactionsError: action.payload };
+    }
+    //-------------------------------------------------------------------------
+    // CASE FOR ADD NEW TRANSACTIONS
+    //-------------------------------------------------------------------------
+    case SHOW_CREATE_TRANSACTION_FORM: {
+      return { ...state, storeTransactionFormOpened: true };
+    }
+    case HIDE_CREATE_TRANSACTION_FORM: {
+      return {
+        ...state,
+        storeTransactionFormOpened: false,
+        storeTransactionIsSuccess: false,
+        storeTransactionLoading: false,
+        storeTransactionError: null,
+      };
+    }
+    case STORE_TRANSACTION_LOADING: {
+      return { ...state, storeTransactionLoading: action.payload as boolean };
+    }
+    case STORE_TRANSACTION_IS_SUCCESS: {
+      return { ...state, storeTransactionIsSuccess: action.payload as boolean };
+    }
+    case STORE_TRANSACTION_ERROR: {
+      return { ...state, storeTransactionError: action.payload };
+    }
+    case ADD_TRANSACTION: {
+      const newTransaction = action.payload as ITransaction;
+      const { boxSelected, transactions } = state;
+      let newState = state;
+
+      if (boxSelected && boxSelected.id === newTransaction.cashbox) {
+        newState = { ...state, transactions: [...transactions, newTransaction] };
+      }
+
+      return newState;
     }
     default: {
       return state;

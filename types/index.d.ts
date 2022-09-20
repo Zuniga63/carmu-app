@@ -135,6 +135,30 @@ export interface IBox {
   updatedAt: string; // string Date
 }
 
+export interface ITransactionResponse {
+  id: string;
+  cashbox?: string;
+  transactionDate: string;
+  description: string;
+  isTransfer: boolean;
+  amount: number;
+  createdAt: strig; // string Date
+  updatedAt: string; // string Date
+}
+
+export interface ITransaction extends ITransactionResponse {
+  transactionDate: Dayjs;
+  balance: number;
+  createdAt: Dayjs;
+  updatedAt: Dayjs;
+}
+
+export interface ITransactionRequest {
+  date?: Dayjs;
+  description: string;
+  amount: number;
+}
+
 export interface IBoxWithDayjs extends IBox {
   openBox?: Dayjs;
   closed?: Dayjs;
@@ -168,4 +192,14 @@ export interface IBoxPageState {
   closeBoxLoading: boolean;
   closeBoxIsSuccess: boolean;
   closeBoxError: unknown;
+  // Show Box
+  boxSelected: IBoxWithDayjs | null;
+  loadingTransactions: boolean;
+  transactions: ITransaction[];
+  transactionsError: unknown;
+  // Add Transaction
+  storeTransactionFormOpened: boolean;
+  storeTransactionLoading: boolean;
+  storeTransactionIsSuccess: boolean;
+  storeTransactionError: unknown;
 }

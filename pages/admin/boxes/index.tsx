@@ -1,4 +1,5 @@
 import BoxList from 'components/BoxPage/BoxList';
+import BoxShow from 'components/BoxPage/BoxShow';
 import CloseBoxForm from 'components/BoxPage/CloseBoxForm';
 import CreateForm from 'components/BoxPage/CreateForm';
 import OpenBoxForm from 'components/BoxPage/OpenBoxForm';
@@ -53,8 +54,13 @@ const BoxesPage: NextPage<Props> = ({ data }: Props) => {
   return (
     <>
       <Layout title="Cajas">
-        <div className="flex px-4 py-2 text-white">
-          <BoxList />
+        <div className="flex gap-x-4 px-4 py-2 text-white">
+          <div className="w-80 flex-shrink-0 flex-grow-0">
+            <BoxList />
+          </div>
+          <div className="flex-grow">
+            <BoxShow />
+          </div>
         </div>
       </Layout>
       <CreateForm />

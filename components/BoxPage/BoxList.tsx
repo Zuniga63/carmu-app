@@ -8,7 +8,7 @@ const BoxList = () => {
   const { boxes } = useAppSelector(state => state.BoxPageReducer);
   const dispatch = useAppDispatch();
   return (
-    <div className="w-80">
+    <div>
       <header className="rounded-t-md border-x border-t border-header bg-header px-4 py-2">
         <h2 className="text-2xl">Listado cajas</h2>
       </header>

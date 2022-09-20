@@ -1,16 +1,30 @@
 import axios, { AxiosError } from 'axios';
 import dayjs, { Dayjs } from 'dayjs';
 import Swal from 'sweetalert2';
-import { AppThunkAction, IBox, IBoxWithDayjs, IMainBox } from 'types';
+import {
+  AppThunkAction,
+  IBox,
+  IBoxWithDayjs,
+  IMainBox,
+  ITransaction,
+  ITransactionRequest,
+  ITransactionResponse,
+} from 'types';
 import { actionBody } from 'utils';
 import {
   ADD_BOX,
+  ADD_TRANSACTION,
   CLOSE_BOX_ERROR,
   CLOSE_BOX_IS_SUCCESS,
   CLOSE_BOX_LOADING,
   CLOSE_CREATE_BOX_FORM,
+  GET_TRANSACTIONS_ERROR,
+  HIDE_CREATE_TRANSACTION_FORM,
+  LOADING_TRANSACTIONS,
   MOUNT_BOX_TO_CLOSE,
   MOUNT_BOX_TO_OPEN,
+  MOUNT_SELECTED_BOX,
+  MOUNT_TRANSACTIONS,
   OPEN_BOX_ERROR,
   OPEN_BOX_IS_SUCCESS,
   OPEN_BOX_LOADING,
@@ -18,15 +32,19 @@ import {
   REMOVE_BOX,
   SET_BOXES,
   SET_MAIN_BOX,
+  SHOW_CREATE_TRANSACTION_FORM,
   STORE_BOX_ERROR,
   STORE_BOX_IS_SUCCESS,
   STORE_BOX_LOADING,
+  STORE_TRANSACTION_ERROR,
+  STORE_TRANSACTION_LOADING,
   UNMOUNT_BOX_TO_CLOSE,
   UNMOUNT_BOX_TO_OPEN,
+  UNMOUT_SELECTED_BOX,
   UPDATE_BOX,
 } from './actions';
 
-const normalizeBox = (box: IBox): IBoxWithDayjs => {
+const normalizeBox = (box: IBox | IBoxWithDayjs): IBoxWithDayjs => {
   const now = dayjs();
   const timeUnit = 'minutes';
   const timeDiffs: number[] = [];
@@ -62,6 +80,14 @@ const normalizeBox = (box: IBox): IBoxWithDayjs => {
 
   return { ...box, openBox, closed, createdAt, updatedAt, createIsSameUpdate, neverUsed, dateRefreshRate };
 };
+
+const buildTransaction = (transaction: ITransactionResponse, balance = 0): ITransaction => ({
+  ...transaction,
+  transactionDate: dayjs(transaction.transactionDate),
+  balance,
+  createdAt: dayjs(transaction.createdAt),
+  updatedAt: dayjs(transaction.updatedAt),
+});
 
 export const setBoxes = (boxes: IBox[]): AppThunkAction => {
   const normalizeBoxes = boxes.map(box => normalizeBox(box));
@@ -142,6 +168,29 @@ export const destroyBox = (boxToDelete: IBoxWithDayjs): AppThunkAction => {
   };
 };
 
+export const mountSelectedBox = (boxSelected: IBoxWithDayjs): AppThunkAction => {
+  return async dispatch => {
+    dispatch(actionBody(UNMOUT_SELECTED_BOX));
+    dispatch(actionBody(LOADING_TRANSACTIONS, true));
+    let balance = boxSelected.base;
+
+    try {
+      const res = await axios.get<{ transactions: ITransactionResponse[] }>(`/boxes/${boxSelected.id}/transactions`);
+      const transactions = res.data.transactions.map<ITransaction>(item => {
+        balance += item.amount;
+        return buildTransaction(item, balance);
+      });
+
+      dispatch(actionBody(MOUNT_TRANSACTIONS, transactions));
+    } catch (error) {
+      dispatch(actionBody(GET_TRANSACTIONS_ERROR, error));
+    } finally {
+      dispatch(actionBody(MOUNT_SELECTED_BOX, boxSelected));
+      dispatch(actionBody(LOADING_TRANSACTIONS, false));
+    }
+  };
+};
+
 export const openCreateForm = (): AppThunkAction => dispatch => dispatch({ type: OPEN_CREATE_BOX_FORM });
 export const closeCreateForm = (): AppThunkAction => dispatch => dispatch({ type: CLOSE_CREATE_BOX_FORM });
 export const storeBox = (formData: { name: string }): AppThunkAction => {
@@ -164,6 +213,9 @@ export const storeBox = (formData: { name: string }): AppThunkAction => {
   };
 };
 
+//---------------------------------------------------------------------------------------------------------------------
+// CREATORS FOR OPEN BOX
+//---------------------------------------------------------------------------------------------------------------------
 export const mountBoxToOpen = (boxToOpen: IBoxWithDayjs): AppThunkAction => {
   return dispatch => dispatch(actionBody(MOUNT_BOX_TO_OPEN, boxToOpen));
 };
@@ -190,6 +242,9 @@ export const openBox = (boxToOpen: IBoxWithDayjs, formData: { base: number; cash
   };
 };
 
+//---------------------------------------------------------------------------------------------------------------------
+//  CREATOR FOR CLOSE BOX
+//---------------------------------------------------------------------------------------------------------------------
 export const mountBoxToClose = (boxToClose: IBoxWithDayjs): AppThunkAction => {
   return dispatch => dispatch(actionBody(MOUNT_BOX_TO_CLOSE, boxToClose));
 };
@@ -215,6 +270,39 @@ export const closeBox = (
       dispatch(actionBody(CLOSE_BOX_ERROR, error));
     } finally {
       dispatch(actionBody(CLOSE_BOX_LOADING, false));
+    }
+  };
+};
+
+//---------------------------------------------------------------------------------------------------------------------
+// CREATOR FOR CREATE NEW TRANSACTION
+//---------------------------------------------------------------------------------------------------------------------
+export const showCreateTransactionForm = (): AppThunkAction => dispatch =>
+  dispatch(actionBody(SHOW_CREATE_TRANSACTION_FORM));
+
+export const hideCreateTransactionForm = (): AppThunkAction => dispatch =>
+  dispatch(actionBody(HIDE_CREATE_TRANSACTION_FORM));
+
+export const storeTransaction = (box: IBoxWithDayjs, formData: ITransactionRequest): AppThunkAction => {
+  return async dispatch => {
+    const url = `/boxes/${box.id}/transactions`;
+    dispatch(actionBody(STORE_TRANSACTION_LOADING, true));
+    try {
+      const res = await axios.post<{ transaction: ITransactionResponse }>(url, formData);
+      const { transaction } = res.data;
+
+      if (box.balance) {
+        box.balance += transaction.amount;
+        box.updatedAt = dayjs();
+      }
+
+      dispatch(actionBody(UPDATE_BOX, normalizeBox(box)));
+      dispatch(actionBody(ADD_TRANSACTION, buildTransaction(transaction, box.balance)));
+      dispatch(actionBody(STORE_BOX_IS_SUCCESS, true));
+    } catch (error) {
+      dispatch(actionBody(STORE_TRANSACTION_ERROR, error));
+    } finally {
+      dispatch(actionBody(STORE_TRANSACTION_LOADING, false));
     }
   };
 };

@@ -12,7 +12,7 @@ import {
 } from '@tabler/icons';
 import { currencyFormat } from 'utils';
 import { useAppDispatch } from 'store/hooks';
-import { destroyBox, mountBoxToClose, mountBoxToOpen } from 'store/reducers/BoxPage/creators';
+import { destroyBox, mountBoxToClose, mountBoxToOpen, mountSelectedBox } from 'store/reducers/BoxPage/creators';
 import { Button } from '@mantine/core';
 
 interface Props {
@@ -149,7 +149,7 @@ const BoxListItem = ({ box }: Props) => {
                   Cerrar
                 </Button>
 
-                <Button size="xs" leftIcon={<IconFolder size={14} />} disabled>
+                <Button size="xs" leftIcon={<IconFolder size={14} />} onClick={() => dispatch(mountSelectedBox(box))}>
                   Ver
                 </Button>
               </>

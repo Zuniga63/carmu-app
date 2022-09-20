@@ -29,7 +29,8 @@ export const authUser = (loginData: LoginData): AppThunkAction => {
         if (typeof window !== undefined) {
           localStorage.setItem('token', token);
           localStorage.setItem('user', JSON.stringify(user));
-          setCookie('token', token, buildCookieOption());
+          // ! I need resolve the times from back server
+          setCookie('token', token, buildCookieOption(30));
           axios.defaults.headers.common.Authorization = `Bearer ${token}`;
         }
       }
