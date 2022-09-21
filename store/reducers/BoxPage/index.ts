@@ -1,4 +1,4 @@
-import { IAction, IBoxPageState, IBoxWithDayjs, IMainBox, ITransaction } from 'types';
+import { IAction, IBoxPageState, IBoxWithDayjs, IMainBox, ITransaction, ITransactionResponse } from 'types';
 import {
   ADD_BOX,
   ADD_TRANSACTION,
@@ -18,6 +18,7 @@ import {
   OPEN_BOX_LOADING,
   OPEN_CREATE_BOX_FORM,
   REMOVE_BOX,
+  REMOVE_TRANSACTION,
   SET_BOXES,
   SET_MAIN_BOX,
   SHOW_CREATE_TRANSACTION_FORM,
@@ -76,9 +77,18 @@ const unmountBoxSelectedToState = (state: IBoxPageState): IBoxPageState => {
 export default function BoxPageReducer(state = initialState, action: IAction): IBoxPageState {
   switch (action.type) {
     case SET_BOXES: {
+      let boxSelected: IBoxWithDayjs | undefined;
+      const newBoxes = action.payload as IBoxWithDayjs[];
+
+      if (state && state.boxSelected) {
+        const id = state.boxSelected.id;
+        boxSelected = newBoxes.find(box => box.id === id);
+      }
+
       return {
         ...state,
         boxes: action.payload as IBoxWithDayjs[],
+        boxSelected: boxSelected ? boxSelected : null,
       };
     }
     case SET_MAIN_BOX: {
@@ -263,6 +273,29 @@ export default function BoxPageReducer(state = initialState, action: IAction): I
 
       if (boxSelected && boxSelected.id === newTransaction.cashbox) {
         newState = { ...state, transactions: [...transactions, newTransaction] };
+      }
+
+      return newState;
+    }
+    case REMOVE_TRANSACTION: {
+      const transactionDeleted = action.payload as ITransactionResponse;
+      const { boxSelected, transactions } = state;
+      let newState = state;
+
+      if (boxSelected) {
+        let balance = boxSelected.base;
+        const newTransactions = transactions
+          .filter(item => item.id !== transactionDeleted.id)
+          .map(item => {
+            balance += item.amount;
+            return { ...item, balance };
+          });
+
+        newState = {
+          ...state,
+          // boxSelected: { ...boxSelected, balance, updatedAt: dayjs(), dateRefreshRate: 1000 * 60 },
+          transactions: newTransactions,
+        };
       }
 
       return newState;

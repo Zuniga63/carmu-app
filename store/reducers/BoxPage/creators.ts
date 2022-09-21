@@ -10,7 +10,7 @@ import {
   ITransactionRequest,
   ITransactionResponse,
 } from 'types';
-import { actionBody } from 'utils';
+import { actionBody, currencyFormat } from 'utils';
 import {
   ADD_BOX,
   ADD_TRANSACTION,
@@ -30,6 +30,7 @@ import {
   OPEN_BOX_LOADING,
   OPEN_CREATE_BOX_FORM,
   REMOVE_BOX,
+  REMOVE_TRANSACTION,
   SET_BOXES,
   SET_MAIN_BOX,
   SHOW_CREATE_TRANSACTION_FORM,
@@ -37,6 +38,7 @@ import {
   STORE_BOX_IS_SUCCESS,
   STORE_BOX_LOADING,
   STORE_TRANSACTION_ERROR,
+  STORE_TRANSACTION_IS_SUCCESS,
   STORE_TRANSACTION_LOADING,
   UNMOUNT_BOX_TO_CLOSE,
   UNMOUNT_BOX_TO_OPEN,
@@ -298,11 +300,79 @@ export const storeTransaction = (box: IBoxWithDayjs, formData: ITransactionReque
 
       dispatch(actionBody(UPDATE_BOX, normalizeBox(box)));
       dispatch(actionBody(ADD_TRANSACTION, buildTransaction(transaction, box.balance)));
-      dispatch(actionBody(STORE_BOX_IS_SUCCESS, true));
+      dispatch(actionBody(STORE_TRANSACTION_IS_SUCCESS, true));
     } catch (error) {
       dispatch(actionBody(STORE_TRANSACTION_ERROR, error));
     } finally {
       dispatch(actionBody(STORE_TRANSACTION_LOADING, false));
+    }
+  };
+};
+
+export const destroyTransaction = (box: IBoxWithDayjs, transactionToDestroy: ITransaction): AppThunkAction => {
+  return async dispatch => {
+    const url = `/boxes/${box.id}/transactions/${transactionToDestroy.id}`;
+    const message = /*html */ `
+      La transacción "<strong>${transactionToDestroy.description}</strong>" 
+      por valor de <strong>${currencyFormat(transactionToDestroy.amount)}</strong> 
+      será eliminada permanentemente y esta acción no puede revertirse.`;
+
+    const result = await Swal.fire({
+      title: '<strong>¿Desea eliminar la transacción?',
+      html: message,
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Si, ¡Eliminala!',
+      backdrop: true,
+      icon: 'warning',
+      showLoaderOnConfirm: true,
+      preConfirm: async () => {
+        const result = { ok: false, message: '' };
+        let updateBoxes = false;
+
+        try {
+          const res = await axios.delete<{ transaction: ITransactionResponse }>(url);
+          const { transaction: transactionDeleted } = res.data;
+          result.ok = true;
+          result.message = `
+            ¡La transacción por valor de 
+            <strong>${currencyFormat(transactionDeleted.amount)}</strong> 
+            fue eliminada con éxito!`;
+
+          dispatch(actionBody(REMOVE_TRANSACTION, transactionDeleted));
+          updateBoxes = true;
+        } catch (error) {
+          if (error instanceof AxiosError) {
+            const { response } = error;
+            if (response?.status === 404) dispatch(actionBody(REMOVE_TRANSACTION, transactionToDestroy));
+            result.message = response?.data.message;
+            updateBoxes = true;
+          } else {
+            console.log(error);
+          }
+        }
+
+        if (updateBoxes) await dispatch(fetchBoxes());
+
+        return result;
+      },
+    });
+
+    if (result.isConfirmed && result.value) {
+      const { ok, message } = result.value;
+      if (ok) {
+        Swal.fire({
+          title: '<strong>¡Transacción Eliminada!</strong>',
+          html: message,
+          icon: 'success',
+        });
+      } else {
+        Swal.fire({
+          title: '¡Ops, algo salio mal!',
+          text: message,
+          icon: 'error',
+        });
+      }
     }
   };
 };

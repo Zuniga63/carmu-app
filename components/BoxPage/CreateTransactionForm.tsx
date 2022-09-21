@@ -22,7 +22,7 @@ const CreateTransactionForm = () => {
   const {
     boxSelected: box,
     storeTransactionFormOpened: opened,
-    storeBoxIsSuccess: isSuccess,
+    storeTransactionIsSuccess: isSuccess,
     storeTransactionError: error,
     storeTransactionLoading: loading,
   } = useAppSelector(state => state.BoxPageReducer);
