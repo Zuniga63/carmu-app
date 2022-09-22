@@ -11,6 +11,7 @@ import {
   LOADING_TRANSACTIONS,
   MOUNT_BOX_TO_CLOSE,
   MOUNT_BOX_TO_OPEN,
+  MOUNT_MAIN_TRANSACTIONS,
   MOUNT_SELECTED_BOX,
   MOUNT_TRANSACTIONS,
   OPEN_BOX_ERROR,
@@ -32,11 +33,13 @@ import {
   UNMOUNT_BOX_TO_OPEN,
   UNMOUT_SELECTED_BOX,
   UPDATE_BOX,
+  UPDATE_MAIN_BOX_BALANCE,
 } from './actions';
 
 const initialState: IBoxPageState = {
   boxes: [],
-  maiBox: null,
+  mainBox: null,
+  showingMainBox: false,
   // add box property
   createFormOpened: false,
   storeBoxLoading: false,
@@ -67,6 +70,7 @@ const initialState: IBoxPageState = {
 const unmountBoxSelectedToState = (state: IBoxPageState): IBoxPageState => {
   return {
     ...state,
+    showingMainBox: false,
     boxSelected: null,
     loadingTransactions: false,
     transactions: [],
@@ -94,7 +98,7 @@ export default function BoxPageReducer(state = initialState, action: IAction): I
     case SET_MAIN_BOX: {
       return {
         ...state,
-        maiBox: action.payload as IMainBox | null,
+        mainBox: action.payload as IMainBox | null,
       };
     }
     case REMOVE_BOX: {
@@ -121,6 +125,20 @@ export default function BoxPageReducer(state = initialState, action: IAction): I
       }
 
       return newState;
+    }
+    case UPDATE_MAIN_BOX_BALANCE: {
+      const { mainBox } = state;
+      if (mainBox) {
+        return {
+          ...state,
+          mainBox: { ...mainBox, balance: mainBox.balance + (action.payload as number) },
+        };
+      }
+
+      return state;
+    }
+    case MOUNT_MAIN_TRANSACTIONS: {
+      return { ...state, showingMainBox: true };
     }
     //-------------------------------------------------------------------------
     // CASES FOR STORE A NEW BOX

@@ -1,5 +1,8 @@
 export const SET_BOXES = 'SET_BOXES';
+
 export const SET_MAIN_BOX = 'SET_MAIN_BOX';
+export const UPDATE_MAIN_BOX_BALANCE = 'UPDATE_MAIN_BOX_BALANCE';
+export const MOUNT_MAIN_TRANSACTIONS = 'MOUNT_MAIN_TRANSACTIONS';
 
 export const REMOVE_BOX = 'REMOVE_BOX';
 export const UPDATE_BOX = 'UPDATE_BOX';

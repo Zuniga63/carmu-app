@@ -23,6 +23,7 @@ import {
   LOADING_TRANSACTIONS,
   MOUNT_BOX_TO_CLOSE,
   MOUNT_BOX_TO_OPEN,
+  MOUNT_MAIN_TRANSACTIONS,
   MOUNT_SELECTED_BOX,
   MOUNT_TRANSACTIONS,
   OPEN_BOX_ERROR,
@@ -44,6 +45,7 @@ import {
   UNMOUNT_BOX_TO_OPEN,
   UNMOUT_SELECTED_BOX,
   UPDATE_BOX,
+  UPDATE_MAIN_BOX_BALANCE,
 } from './actions';
 
 const normalizeBox = (box: IBox | IBoxWithDayjs): IBoxWithDayjs => {
@@ -193,6 +195,29 @@ export const mountSelectedBox = (boxSelected: IBoxWithDayjs): AppThunkAction => 
   };
 };
 
+export const mountMainBox = (): AppThunkAction => {
+  return async dispatch => {
+    dispatch(actionBody(UNMOUT_SELECTED_BOX));
+    dispatch(actionBody(LOADING_TRANSACTIONS, true));
+    let balance = 0;
+
+    try {
+      const res = await axios.get<{ transactions: ITransactionResponse[] }>(`/main-box/transactions`);
+      const transactions = res.data.transactions.map<ITransaction>(item => {
+        if (!item.cashbox) balance += item.amount;
+        return buildTransaction(item, balance);
+      });
+
+      dispatch(actionBody(MOUNT_TRANSACTIONS, transactions));
+      dispatch(actionBody(MOUNT_MAIN_TRANSACTIONS));
+    } catch (error) {
+      dispatch(actionBody(GET_TRANSACTIONS_ERROR, error));
+    } finally {
+      dispatch(actionBody(LOADING_TRANSACTIONS, false));
+    }
+  };
+};
+
 export const openCreateForm = (): AppThunkAction => dispatch => dispatch({ type: OPEN_CREATE_BOX_FORM });
 export const closeCreateForm = (): AppThunkAction => dispatch => dispatch({ type: CLOSE_CREATE_BOX_FORM });
 export const storeBox = (formData: { name: string }): AppThunkAction => {
@@ -251,7 +276,7 @@ export const mountBoxToClose = (boxToClose: IBoxWithDayjs): AppThunkAction => {
   return dispatch => dispatch(actionBody(MOUNT_BOX_TO_CLOSE, boxToClose));
 };
 
-export const unmountBoxTOClose = (): AppThunkAction => dispatch => dispatch(actionBody(UNMOUNT_BOX_TO_CLOSE));
+export const unmountBoxToClose = (): AppThunkAction => dispatch => dispatch(actionBody(UNMOUNT_BOX_TO_CLOSE));
 
 export const closeBox = (
   boxToClose: IBoxWithDayjs,
@@ -265,6 +290,11 @@ export const closeBox = (
 
       const res = await axios.put<{ cashbox: IBox }>(url, formData);
       const box = normalizeBox(res.data.cashbox);
+
+      if (formData.cash >= 0) {
+        const realCash = formData.cash - boxToClose.base;
+        dispatch(actionBody(UPDATE_MAIN_BOX_BALANCE, realCash));
+      }
 
       dispatch(actionBody(UPDATE_BOX, box));
       dispatch(actionBody(CLOSE_BOX_IS_SUCCESS, true));

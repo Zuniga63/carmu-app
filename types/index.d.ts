@@ -153,6 +153,13 @@ export interface ITransaction extends ITransactionResponse {
   updatedAt: Dayjs;
 }
 
+export interface IMainTransaction extends ITransaction {
+  cashbox?: {
+    id: string;
+    name: string;
+  };
+}
+
 export interface ITransactionRequest {
   date?: Dayjs;
   description: string;
@@ -176,7 +183,8 @@ export interface IMainBox {
 
 export interface IBoxPageState {
   boxes: IBoxWithDayjs[];
-  maiBox: IMainBox | null;
+  mainBox: IMainBox | null;
+  showingMainBox: boolean;
   // Add box
   createFormOpened: boolean;
   storeBoxLoading: boolean;

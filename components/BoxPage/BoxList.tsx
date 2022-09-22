@@ -3,9 +3,10 @@ import { Button, ScrollArea } from '@mantine/core';
 import BoxListItem from './BoxListItem';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { openCreateForm } from 'store/reducers/BoxPage/creators';
+import MainBox from './MainBox';
 
 const BoxList = () => {
-  const { boxes } = useAppSelector(state => state.BoxPageReducer);
+  const { boxes, mainBox } = useAppSelector(state => state.BoxPageReducer);
   const dispatch = useAppDispatch();
   return (
     <div>
@@ -17,6 +18,8 @@ const BoxList = () => {
           {boxes.map(box => (
             <BoxListItem box={box} key={box.id} />
           ))}
+
+          {mainBox && <MainBox mainBox={mainBox} />}
         </ul>
       </ScrollArea>
       <footer className="flex min-h-[40px] items-center justify-end gap-x-2 rounded-b-md border-x border-b border-dark bg-header px-4 py-2">

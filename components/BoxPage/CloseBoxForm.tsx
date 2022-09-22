@@ -4,7 +4,7 @@ import { AxiosError } from 'axios';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { closeBox, unmountBoxTOClose } from 'store/reducers/BoxPage/creators';
+import { closeBox, unmountBoxToClose } from 'store/reducers/BoxPage/creators';
 import { IValidationErrors } from 'types';
 import { currencyFormat } from 'utils';
 
@@ -32,14 +32,14 @@ function CloseBoxForm() {
       setErrors(null);
       setOpened(false);
       setTimeout(() => {
-        dispatch(unmountBoxTOClose());
+        dispatch(unmountBoxToClose());
       }, 150);
     }
   };
 
   const submitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (box && cash) {
+    if (box && typeof cash !== 'undefined') {
       const data = { cash, observation };
       dispatch(closeBox(box, data));
     }
@@ -91,7 +91,7 @@ function CloseBoxForm() {
     setLeftover(0);
     setMissign(0);
 
-    if (cash && cash >= 0 && box && box.balance) {
+    if (typeof cash !== 'undefined' && cash >= 0 && box && box.balance) {
       setEnabled(true);
 
       if (cash > box.balance) setLeftover(cash - box.balance);
@@ -126,7 +126,7 @@ function CloseBoxForm() {
             label="Observación"
             placeholder="Una observación del cierre de caja"
             onChange={({ target }) => setObservation(target.value)}
-            error={errors?.observation.message}
+            error={errors?.observation?.message}
           />
 
           <div className="min-h-[60px]">
