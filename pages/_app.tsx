@@ -1,4 +1,7 @@
 import axios from 'axios';
+import dayjs from 'dayjs';
+import 'dayjs/locale/es-do';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import type { AppProps } from 'next/app';
 import { createEmotionCache, MantineProvider } from '@mantine/core';
 import { ToastContainer } from 'react-toastify';
@@ -14,8 +17,11 @@ import { authenticate } from 'store/reducers/Auth/creators';
 import '../styles/globals.css';
 import 'react-toastify/dist/ReactToastify.css';
 
+// Config
 const appendCache = createEmotionCache({ key: 'mantine', prepend: false });
 axios.defaults.baseURL = process.env.NEXT_PUBLIC_URL_API;
+dayjs.locale('es-do');
+dayjs.extend(relativeTime);
 
 function MyApp({ Component, pageProps }: AppProps) {
   const dispatch = useAppDispatch();
@@ -31,7 +37,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         theme={{
           /** Put your mantine theme override here */
           colorScheme: 'light',
-          fontFamily: 'inherit'
+          fontFamily: 'inherit',
         }}
       >
         <Component {...pageProps} />

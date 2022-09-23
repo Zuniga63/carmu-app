@@ -1,3 +1,4 @@
+import { Dayjs } from 'dayjs';
 import { AnyAction } from 'redux';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { Socket } from 'socket.io-client';
@@ -109,4 +110,104 @@ export interface ICategoryPageState {
   storeNewOrderError: unknown;
   updateError: unknown;
   formIsLoading: boolean;
+}
+//-----------------------------------------------------------------------------
+// BOXES PAGE
+//-----------------------------------------------------------------------------
+export interface ICashier {
+  id: string;
+  name: string;
+}
+
+export interface IBox {
+  id: string;
+  cashier?: ICashier;
+  users: string[];
+  name: string;
+  cashierName?: string;
+  base: number;
+  balance?: number;
+  openBox?: string; // string Date
+  closed?: string; // string Date
+  transactions?: string[];
+  closingRecords?: string[];
+  createdAt: strig; // string Date
+  updatedAt: string; // string Date
+}
+
+export interface ITransactionResponse {
+  id: string;
+  cashbox?: string;
+  transactionDate: string;
+  description: string;
+  isTransfer: boolean;
+  amount: number;
+  createdAt: strig; // string Date
+  updatedAt: string; // string Date
+}
+
+export interface ITransaction extends ITransactionResponse {
+  transactionDate: Dayjs;
+  balance: number;
+  createdAt: Dayjs;
+  updatedAt: Dayjs;
+}
+
+export interface IMainTransaction extends ITransaction {
+  cashbox?: {
+    id: string;
+    name: string;
+  };
+}
+
+export interface ITransactionRequest {
+  date?: Dayjs;
+  description: string;
+  amount: number;
+}
+
+export interface IBoxWithDayjs extends IBox {
+  openBox?: Dayjs;
+  closed?: Dayjs;
+  neverUsed: boolean;
+  createdAt: Dayjs;
+  updatedAt: Dayjs;
+  createIsSameUpdate: boolean;
+  dateRefreshRate?: number;
+}
+
+export interface IMainBox {
+  name: string;
+  balance: number;
+}
+
+export interface IBoxPageState {
+  boxes: IBoxWithDayjs[];
+  mainBox: IMainBox | null;
+  showingMainBox: boolean;
+  // Add box
+  createFormOpened: boolean;
+  storeBoxLoading: boolean;
+  storeBoxIsSuccess: boolean;
+  storeBoxError: unknown;
+  // Open box
+  boxToOpen: IBoxWithDayjs | null;
+  openBoxLoading: boolean;
+  openBoxIsSuccess: boolean;
+  openBoxError: unknown;
+  // Close Box
+  boxToClose: IBoxWithDayjs | null;
+  closeBoxLoading: boolean;
+  closeBoxIsSuccess: boolean;
+  closeBoxError: unknown;
+  // Show Box
+  boxSelected: IBoxWithDayjs | null;
+  loadingTransactions: boolean;
+  transactions: ITransaction[];
+  transactionsError: unknown;
+  // Add Transaction
+  storeTransactionFormOpened: boolean;
+  storeTransactionLoading: boolean;
+  storeTransactionIsSuccess: boolean;
+  storeTransactionError: unknown;
 }

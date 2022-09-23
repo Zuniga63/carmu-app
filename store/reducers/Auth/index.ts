@@ -7,7 +7,7 @@ const initialState: IAuthState = {
   error: null,
   isAdmin: false,
   loading: false,
-  loginIsSuccess: false
+  loginIsSuccess: false,
 };
 
 export default function AuthReducer(state = initialState, action: IAction): IAuthState {
@@ -15,13 +15,13 @@ export default function AuthReducer(state = initialState, action: IAction): IAut
     case LOADING: {
       return {
         ...state,
-        loading: action.payload as boolean
+        loading: action.payload as boolean,
       };
     }
     case USER_IS_AUTH: {
       return {
         ...state,
-        isAuth: action.payload as boolean
+        isAuth: action.payload as boolean,
       };
     }
     case SET_USER: {
@@ -29,24 +29,24 @@ export default function AuthReducer(state = initialState, action: IAction): IAut
       return {
         ...state,
         user: user,
-        isAdmin: user.role === 'admin'
+        isAdmin: user.role === 'admin',
       };
     }
     case LOGIN_IS_SUCCESS: {
       return {
         ...state,
-        loginIsSuccess: action.payload as boolean
+        loginIsSuccess: action.payload as boolean,
       };
     }
     case SET_ERROR: {
       return {
         ...state,
-        error: action.payload as string
+        error: action.payload as string,
       };
     }
     case LOGOUT: {
       return {
-        ...initialState
+        ...initialState,
       };
     }
     default: {
