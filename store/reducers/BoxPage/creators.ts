@@ -339,6 +339,25 @@ export const storeTransaction = (box: IBoxWithDayjs, formData: ITransactionReque
   };
 };
 
+export const storeMainTransaction = (box: IMainBox, formData: ITransactionRequest): AppThunkAction => {
+  return async dispatch => {
+    const url = `/main-box/transactions`;
+    dispatch(actionBody(STORE_TRANSACTION_LOADING, true));
+    try {
+      const res = await axios.post<{ transaction: ITransactionResponse }>(url, formData);
+      const { transaction } = res.data;
+
+      dispatch(actionBody(UPDATE_MAIN_BOX_BALANCE, transaction.amount));
+      dispatch(actionBody(ADD_TRANSACTION, buildTransaction(transaction, box.balance + transaction.amount)));
+      dispatch(actionBody(STORE_TRANSACTION_IS_SUCCESS, true));
+    } catch (error) {
+      dispatch(actionBody(STORE_TRANSACTION_ERROR, error));
+    } finally {
+      dispatch(actionBody(STORE_TRANSACTION_LOADING, false));
+    }
+  };
+};
+
 export const destroyTransaction = (box: IBoxWithDayjs, transactionToDestroy: ITransaction): AppThunkAction => {
   return async dispatch => {
     const url = `/boxes/${box.id}/transactions/${transactionToDestroy.id}`;

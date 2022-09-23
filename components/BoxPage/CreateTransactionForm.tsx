@@ -4,7 +4,7 @@ import { IconCalendar, IconClock, IconDeviceFloppy, IconX } from '@tabler/icons'
 import { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { hideCreateTransactionForm, storeTransaction } from 'store/reducers/BoxPage/creators';
+import { hideCreateTransactionForm, storeMainTransaction, storeTransaction } from 'store/reducers/BoxPage/creators';
 import { IValidationErrors } from 'types';
 import { currencyFormat } from 'utils';
 import { DatePicker, TimeInput } from '@mantine/dates';
@@ -21,6 +21,7 @@ const CreateTransactionForm = () => {
 
   const {
     boxSelected: box,
+    mainBox,
     storeTransactionFormOpened: opened,
     storeTransactionIsSuccess: isSuccess,
     storeTransactionError: error,
@@ -51,16 +52,16 @@ const CreateTransactionForm = () => {
         transactionDate = dayjs(time);
       }
     }
-    console.log(transactionDate);
 
-    if (box && amount && description) {
+    if (amount && description) {
       const data = {
         description,
         amount: isExpense ? amount * -1 : amount,
         date: transactionDate ? transactionDate : undefined,
       };
 
-      dispatch(storeTransaction(box, data));
+      if (box) dispatch(storeTransaction(box, data));
+      else if (mainBox) dispatch(storeMainTransaction(mainBox, data));
     }
   };
 
@@ -112,7 +113,7 @@ const CreateTransactionForm = () => {
         <header className="mb-4 border-b-2 pb-2 text-center">
           <h2 className="text-center text-xl font-bold"> Registrar Movimiento</h2>
           <p className="text-xs text-gray-600">
-            {box?.name} ({currencyFormat(box?.balance)})
+            {box?.name || mainBox?.name} ({currencyFormat(box?.balance || mainBox?.balance)})
           </p>
         </header>
         <div className="mb-2">

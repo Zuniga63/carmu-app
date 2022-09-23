@@ -57,7 +57,7 @@ const BoxShow = () => {
             <TransactionTable transactions={transactions} />
           </ScrollArea>
           <footer className="flex justify-end rounded-b-md bg-header px-6 py-2">
-            <Button leftIcon={<IconWriting />} onClick={addHandler} disabled={showingMainBox}>
+            <Button leftIcon={<IconWriting />} onClick={addHandler}>
               Agregar Transacción
             </Button>
           </footer>

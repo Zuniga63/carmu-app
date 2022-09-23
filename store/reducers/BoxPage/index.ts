@@ -286,10 +286,10 @@ export default function BoxPageReducer(state = initialState, action: IAction): I
     }
     case ADD_TRANSACTION: {
       const newTransaction = action.payload as ITransaction;
-      const { boxSelected, transactions } = state;
+      const { boxSelected, transactions, mainBox } = state;
       let newState = state;
 
-      if (boxSelected && boxSelected.id === newTransaction.cashbox) {
+      if ((boxSelected && boxSelected.id === newTransaction.cashbox) || mainBox) {
         newState = { ...state, transactions: [...transactions, newTransaction] };
       }
 
