@@ -1,4 +1,5 @@
 import { IAction } from 'types';
+import colorLib, { Color, RGBA } from '@kurkle/color';
 
 //-----------------------------------------------------------------------------
 // UTILS FOR REDUX AND REDUX THUNK
@@ -42,4 +43,22 @@ export function currencyFormat(value: string | number | undefined, fractionDigit
   }
 
   return String(value);
+}
+
+//-----------------------------------------------------------------------------
+// UTIL FOR CHARTS
+//-----------------------------------------------------------------------------
+export const CHART_COLORS = {
+  red: 'rgb(255, 99, 132)',
+  orange: 'rgb(255, 159, 64)',
+  yellow: 'rgb(255, 205, 86)',
+  green: 'rgb(75, 192, 192)',
+  blue: 'rgb(54, 162, 235)',
+  purple: 'rgb(153, 102, 255)',
+  grey: 'rgb(201, 203, 207)',
+};
+
+export function transparentize(value: string | number[] | Color | RGBA, opacity?: number) {
+  const alpha = opacity === undefined ? 0.5 : 1 - opacity;
+  return colorLib(value).alpha(alpha).rgbString();
 }
