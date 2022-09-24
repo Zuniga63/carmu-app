@@ -1,22 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  ChartOptions,
-  ChartData,
-  PointElement,
-  LineElement,
-} from 'chart.js';
+import { ChartOptions, ChartData } from 'chart.js';
 import { Chart } from 'react-chartjs-2';
+import ChartJS from 'chart.js/auto';
 import { CHART_COLORS, currencyFormat, transparentize } from 'utils';
 import axios from 'axios';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, PointElement, LineElement);
 ChartJS.defaults.color = '#ccc';
 
 export const options: ChartOptions = {
@@ -37,7 +25,7 @@ export const options: ChartOptions = {
     },
     title: {
       display: true,
-      text: 'Chart.js Bar Chart',
+      text: 'Flujo de Caja',
     },
     tooltip: {
       callbacks: {
