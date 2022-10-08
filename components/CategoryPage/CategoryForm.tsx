@@ -1,13 +1,15 @@
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useMediaQuery } from '@mantine/hooks';
 import { Drawer, Textarea, TextInput } from '@mantine/core';
-import { IconDatabase, IconX } from '@tabler/icons';
+import { IconDatabase } from '@tabler/icons';
 import { IValidationErrors } from 'types';
 import CustomButton from 'components/CustomButton';
 import { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { hideCategoryForm, storeNewCategory, updateCategory } from 'store/reducers/CategoryPage/creators';
+import DrawerHeader from 'components/DrawerHeader';
+import DrawerBody from 'components/DrawerBody';
 
 export default function CategoryForm() {
   //---------------------------------------------------------------------------
@@ -56,40 +58,9 @@ export default function CategoryForm() {
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = getData();
-    /* const headers = { 'Content-Type': 'multipart/form-data' };
-    const url = isUpdate ? `/categories/${categoryToUpdate?.id}` : '/categories';
-    const method = isUpdate ? 'PUT' : 'POST';
-    let isSuscces = false; */
 
     if (categoryToUpdate) dispatch(updateCategory(categoryToUpdate, formData));
     else dispatch(storeNewCategory(formData));
-
-    /*  setLoading(true); */
-
-    try {
-      /* const res = await axios({ url, data: reqData, method, headers });
-      const { category: categoryData } = res.data as { category: Category };
-      onSuccess(categoryData, isUpdate);
-      isSuscces = true; */
-    } catch (error) {
-      /* if (error instanceof AxiosError) {
-        const { response } = error;
-        if (response?.data) {
-          if (response.status === 422) {
-            if (response.data.validationErrors) setErrors(response.data.validationErrors);
-          } else if (response.status === 401) {
-            toast.error(response.data.message);
-          } else {
-            console.log(error);
-          }
-        }
-      } else {
-        console.log(error);
-      } */
-    } finally {
-      /* setLoading(false);
-      if (isSuscces) close(); */
-    }
   };
 
   //---------------------------------------------------------------------------
@@ -147,50 +118,45 @@ export default function CategoryForm() {
       position="left"
     >
       <>
-        <header className="sticky top-0 z-fixed bg-header text-gray-200">
-          <div className="flex h-16 items-center justify-between px-4 py-2">
-            <h2 className="text-lg font-bold uppercase">
-              {!isUpdate ? <span>Nueva Categoría</span> : <span>{categoryToUpdate?.name}</span>}
-            </h2>
-            <button onClick={close}>
-              <IconX size={32} />
-            </button>
-          </div>
-        </header>
-        <form onSubmit={submitHandler} className="relative h-full overflow-y-auto bg-defaul-body pt-8 pb-40 text-light">
-          <div className="mx-auto mb-4 w-11/12">
-            <TextInput
-              label={<span className="font-sans text-light">Nombre</span>}
-              placeholder="Escribe el nombre aquí."
-              id="categoryName"
-              required
-              value={name}
-              onChange={({ target }) => setName(target.value)}
-              disabled={loading}
-              error={errors?.name?.message}
-            />
+        <DrawerHeader title={!isUpdate ? 'Nueva Categoría' : String(categoryToUpdate?.name)} onClose={close} />
+        <DrawerBody>
+          <form onSubmit={submitHandler}>
+            <div className="mx-auto mb-4 w-11/12">
+              <TextInput
+                label={<span className="font-sans text-light">Nombre</span>}
+                placeholder="Escribe el nombre aquí."
+                id="categoryName"
+                required
+                value={name}
+                onChange={({ target }) => setName(target.value)}
+                disabled={loading}
+                error={errors?.name?.message}
+              />
 
-            <Textarea
-              label={<span className="font-sans text-light">Descripción</span>}
-              placeholder="Escribe una descripción aqui."
-              value={description}
-              onChange={({ target }) => setDescription(target.value)}
-              disabled={loading}
-              error={errors?.description?.message}
-            ></Textarea>
-          </div>
-          <footer className="flex items-center justify-end gap-x-2 px-4 py-2">
-            {loading && (
-              <span className="animate-pulse text-xs text-slate-200">{isUpdate ? 'Actualizando' : 'Guardando'}...</span>
-            )}
-            <CustomButton disabled={loading} type="submit">
-              <div className="flex items-center gap-x-2">
-                <IconDatabase size={16} />{' '}
-                <span className="text-base">{isUpdate ? <span>Actualizar</span> : <span>Guardar</span>}</span>
-              </div>
-            </CustomButton>
-          </footer>
-        </form>
+              <Textarea
+                label={<span className="font-sans text-light">Descripción</span>}
+                placeholder="Escribe una descripción aqui."
+                value={description}
+                onChange={({ target }) => setDescription(target.value)}
+                disabled={loading}
+                error={errors?.description?.message}
+              ></Textarea>
+            </div>
+            <footer className="flex items-center justify-end gap-x-2 px-4 py-2">
+              {loading && (
+                <span className="animate-pulse text-xs text-slate-200">
+                  {isUpdate ? 'Actualizando' : 'Guardando'}...
+                </span>
+              )}
+              <CustomButton disabled={loading} type="submit">
+                <div className="flex items-center gap-x-2">
+                  <IconDatabase size={16} />{' '}
+                  <span className="text-base">{isUpdate ? <span>Actualizar</span> : <span>Guardar</span>}</span>
+                </div>
+              </CustomButton>
+            </footer>
+          </form>
+        </DrawerBody>
       </>
     </Drawer>
   );
