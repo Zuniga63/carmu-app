@@ -37,8 +37,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         withGlobalStyles
         theme={{
           /** Put your mantine theme override here */
-          colorScheme: 'light',
+          colorScheme: 'dark',
           fontFamily: 'inherit',
+          loader: 'bars',
         }}
       >
         <Component {...pageProps} />
