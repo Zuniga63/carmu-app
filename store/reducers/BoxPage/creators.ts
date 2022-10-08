@@ -367,7 +367,7 @@ export const destroyTransaction = (box: IBoxWithDayjs, transactionToDestroy: ITr
       será eliminada permanentemente y esta acción no puede revertirse.`;
 
     const result = await Swal.fire({
-      title: '<strong>¿Desea eliminar la transacción?',
+      title: '<strong>¿Desea eliminar la transacción?</strong>',
       html: message,
       showCancelButton: true,
       cancelButtonText: 'Cancelar',
@@ -409,19 +409,10 @@ export const destroyTransaction = (box: IBoxWithDayjs, transactionToDestroy: ITr
 
     if (result.isConfirmed && result.value) {
       const { ok, message } = result.value;
-      if (ok) {
-        Swal.fire({
-          title: '<strong>¡Transacción Eliminada!</strong>',
-          html: message,
-          icon: 'success',
-        });
-      } else {
-        Swal.fire({
-          title: '¡Ops, algo salio mal!',
-          text: message,
-          icon: 'error',
-        });
-      }
+      const title = ok ? '<strong>¡Transacción Eliminada!</strong>' : '¡Ops, algo salio mal!';
+      const icon = ok ? 'success' : 'error';
+
+      Swal.fire({ title, html: message, icon });
     }
   };
 };
