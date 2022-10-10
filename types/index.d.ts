@@ -258,3 +258,32 @@ export interface ICustomerStore {
     description: string;
   }[];
 }
+
+//-----------------------------------------------------------------------------
+// PRODUCTS
+//-----------------------------------------------------------------------------
+export interface IProduct {
+  id: string;
+  categories: string[];
+  tags: string[];
+  colors: string[];
+  sizes: string[];
+  name: string;
+  slug: string;
+  ref?: string;
+  barcode?: string;
+  description?: string;
+  image?: IImage;
+  images?: string[];
+  isInventoriale: boolean;
+  stock: number;
+  price: number;
+  hasDiscount?: boolean;
+  priceWithDiscount?: number;
+  productIsNew?: boolean;
+  published?: boolean;
+  sold?: number;
+  returned?: number;
+  createdAt: strig;
+  updatedAt: string;
+}
