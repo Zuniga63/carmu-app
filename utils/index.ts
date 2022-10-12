@@ -1,6 +1,16 @@
 import { IAction } from 'types';
 import colorLib, { Color, RGBA } from '@kurkle/color';
 
+export function normalizeText(text: string): string {
+  return text
+    ? text
+        .trim()
+        .toLocaleLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+    : '';
+}
+
 //-----------------------------------------------------------------------------
 // UTILS FOR REDUX AND REDUX THUNK
 //-----------------------------------------------------------------------------
