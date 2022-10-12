@@ -1,4 +1,5 @@
 import { Button } from '@mantine/core';
+import { NextLink } from '@mantine/next';
 import { IconFileInvoice, IconPrinter } from '@tabler/icons';
 import React, { useEffect, useState } from 'react';
 import { IInvoice } from 'types';
@@ -44,7 +45,14 @@ const InvoiceListItem = ({ invoice }: Props) => {
         </div>
       </div>
       <footer className="flex justify-between px-4 py-3">
-        <Button size="xs" leftIcon={<IconPrinter size={16} />} color="green">
+        <Button
+          size="xs"
+          leftIcon={<IconPrinter size={16} />}
+          color="green"
+          component={NextLink}
+          href={`/admin/invoices/print/${invoice.id}`}
+          target="_blank"
+        >
           Imprimir
         </Button>
         <Button size="xs" leftIcon={<IconFileInvoice size={16} />}>
