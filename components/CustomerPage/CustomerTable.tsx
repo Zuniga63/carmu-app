@@ -17,7 +17,7 @@ const CustomerTable = ({ customers, openForm, mountCustomer, deleteCustomer }: P
         <h2 className="text-center text-xl font-bold tracking-wider">Listado de Clientes</h2>
       </header>
       <ScrollArea className="relative h-[28rem] overflow-y-auto border border-y-0 border-x-header">
-        <table className='class="relative mb-2" min-w-full table-auto'>
+        <table className="min-w-full table-auto">
           <thead className="sticky top-0 bg-dark">
             <tr className="text-gray-300">
               <th scope="col" className="px-4 py-3 text-center uppercase tracking-wide">
