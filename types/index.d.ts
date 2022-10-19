@@ -46,6 +46,7 @@ export type AppThunkAction = ThunkAction<void, unknown, unknown, AnyAction>;
 //-----------------------------------------------------------------------------
 
 export interface IUser {
+  id: string;
   name: string;
   email: string;
   profilePhoto?: IImage;
@@ -275,7 +276,7 @@ export interface IProduct {
   description?: string;
   image?: IImage;
   images?: string[];
-  isInventoriale: boolean;
+  isInventoriable: boolean;
   stock: number;
   price: number;
   hasDiscount?: boolean;
@@ -286,4 +287,118 @@ export interface IProduct {
   returned?: number;
   createdAt: strig;
   updatedAt: string;
+}
+
+//-----------------------------------------------------------------------------
+// INVOICE
+//-----------------------------------------------------------------------------
+export type IInvoiceSeller = Pick<IUser, 'name' | 'id'>;
+export type IInvoiceCustomer = Pick<ICustomer, 'id' | 'firstName' | 'lastName' | 'fullName'>;
+export type IInvoiceCategory = Pick<Category, 'id' | 'name'>;
+export type IInvoiceProduct = Omit<IProduct, 'images' | 'isInventoriable' | 'sold' | 'returned'>;
+export type IInvoiceCashbox = Pick<IBox, 'id' | 'name' | 'openBox'>;
+
+export interface IInvoiceBase {
+  id: string;
+  seller?: IInvoiceSeller;
+  customer?: IInvoiceCustomer;
+  isSeparate: boolean;
+  prefixNumber: string;
+  customerName: string;
+  customerAddress?: string;
+  customerPhone?: string;
+  customerDocument?: string;
+  customerDocumentType?: string;
+  sellerName: string;
+  expeditionDate: string;
+  expirationDate: string;
+  subtotal?: number;
+  discount?: number;
+  amount: number;
+  cash?: number;
+  credit?: number;
+  cashChange?: number;
+  balance?: number;
+  cancel?: boolean;
+  cancelMessage?: string;
+  createdAt: strig;
+  updatedAt: string;
+}
+
+export interface IInvoiceItemBase {
+  id: string;
+  categories: string[];
+  product?: string;
+  productSize?: string;
+  productColor?: string;
+  tags: string[];
+  description: string;
+  quantity: number;
+  unitValue: number;
+  discount?: number;
+  amount: number;
+  balance?: number;
+  cancel: boolean;
+  cancelMessage?: string;
+}
+
+export type INewInvoiceItem = Omit<IInvoiceItemBase, 'balance' | 'cancel' | 'cancelMessage'>;
+
+export interface INewInvoicePayment {
+  id: number;
+  box?: IInvoiceCashbox;
+  register: boolean;
+  description: string;
+  amount: number;
+}
+
+export interface IInvoiceSummary {
+  subtotal: number;
+  discount?: number;
+  amount: number;
+  cash?: number;
+  cashChange?: number;
+  balance?: number;
+}
+
+export interface IInvoicePaymentBase {
+  id: string;
+  paymentDate: string;
+  description?: string;
+  amount: number;
+  initialPayment: boolean;
+  cancel: boolean;
+  cancelMessage?: string;
+  createdAt: strig;
+  updatedAt: string;
+}
+
+export interface IInvoiceBaseFull extends IInvoiceBase {
+  items: IInvoiceItemBase[];
+  payments: IInvoicePaymentBase[];
+}
+
+export interface IInvoice extends IInvoiceBase {
+  expeditionDate: Dayjs;
+  expirationDate: Dayjs;
+  createdAt: Dayjs;
+  updatedAt: Dayjs;
+  search: string;
+}
+
+export interface IInvoicePageData {
+  invoices: IInvoiceBase[];
+  customers: ICustomer[];
+  categories: IInvoiceCategory[];
+  products: IInvoiceProduct[];
+  cashboxs: IInvoiceCashbox[];
+}
+
+export interface IInvoicePageState {
+  invoices: IInvoice[];
+  customers: ICustomer[];
+  categories: IInvoiceCategory[];
+  products: IInvoiceProduct[];
+  cashboxs: IInvoiceCashbox[];
+  formOpened: boolean;
 }
