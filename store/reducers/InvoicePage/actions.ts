@@ -1,1 +1,2 @@
 export const MOUNT_DATA = 'MOUNT_DATA';
+export const FORM_NEW_INVOICE_OPENED = 'FORM_NEW_INVOICE_OPENED';

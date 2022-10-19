@@ -1,7 +1,8 @@
 import { Button, Loader, ScrollArea, SegmentedControl, TextInput } from '@mantine/core';
 import { IconFileInvoice, IconSearch } from '@tabler/icons';
 import React, { useEffect, useRef, useState } from 'react';
-import { useAppSelector } from 'store/hooks';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
+import { openNewInvoiceForm } from 'store/reducers/InvoicePage/creators';
 import { IInvoice } from 'types';
 import { normalizeText } from 'utils';
 import InvoiceListItem from './InvoiceListItem';
@@ -9,6 +10,7 @@ import InvoiceRated from './InvoiceRated';
 
 const InvoiceList = () => {
   const { invoices } = useAppSelector(state => state.InvoicePageReducer);
+  const dispatch = useAppDispatch();
   const growRate = 25;
 
   const [paidInvoices, setPaidInvoices] = useState<IInvoice[]>([]);
@@ -136,7 +138,9 @@ const InvoiceList = () => {
       />
 
       <footer className="flex justify-end">
-        <Button leftIcon={<IconFileInvoice />}>Registrar Factura</Button>
+        <Button leftIcon={<IconFileInvoice />} onClick={() => dispatch(openNewInvoiceForm())}>
+          Registrar Factura
+        </Button>
       </footer>
     </div>
   );

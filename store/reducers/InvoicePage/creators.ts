@@ -45,3 +45,11 @@ export const fetchInvoiceData = (): AppThunkAction => {
     }
   };
 };
+
+export const openNewInvoiceForm = (): AppThunkAction => {
+  return dispatch => dispatch(actionBody(actions.FORM_NEW_INVOICE_OPENED, true));
+};
+
+export const closeNewInvoiceForm = (): AppThunkAction => {
+  return dispatch => dispatch(actionBody(actions.FORM_NEW_INVOICE_OPENED, false));
+};
