@@ -31,7 +31,9 @@ export const buildCookieOption = (duration = 1) => ({
 // UTIL FOR FORMAT CURRENCY
 //-----------------------------------------------------------------------------
 export function currencyFormat(value: string | number | undefined, fractionDigits = 0): string {
-  if (value) {
+  const parseValue = parseFloat(String(value));
+
+  if (!isNaN(parseValue)) {
     const style = 'currency';
     const currency = 'COP';
     const formarter = new Intl.NumberFormat('es-CO', {
@@ -40,16 +42,16 @@ export function currencyFormat(value: string | number | undefined, fractionDigit
       minimumFractionDigits: fractionDigits,
     });
 
-    if (typeof value === 'string') {
-      const parseValue = parseFloat(value);
-      if (Number.isNaN(parseValue)) {
-        return value.toString();
-      }
+    // if (typeof value === 'string') {
+    //   const parseValue = parseFloat(value);
+    //   if (Number.isNaN(parseValue)) {
+    //     return value.toString();
+    //   }
 
-      return formarter.format(parseValue);
-    }
+    //   return formarter.format(parseValue);
+    // }
 
-    return formarter.format(value);
+    return formarter.format(parseValue);
   }
 
   return String(value);
