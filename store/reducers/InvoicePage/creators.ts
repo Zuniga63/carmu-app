@@ -1,10 +1,10 @@
 import axios from 'axios';
 import dayjs from 'dayjs';
-import { AppThunkAction, IInvoiceBase, IInvoicePageData } from 'types';
+import { AppThunkAction, IInvoice, IInvoiceBase, IInvoicePageData, IInvoiceStoreData } from 'types';
 import { actionBody, currencyFormat, normalizeText } from 'utils';
 import * as actions from './actions';
 
-export const buildInvoice = (invoice: IInvoiceBase) => {
+export const buildInvoice = (invoice: IInvoiceBase): IInvoice => {
   const { expeditionDate, expirationDate, createdAt, updatedAt } = invoice;
   const date = dayjs(expeditionDate);
   const search = `
@@ -52,4 +52,26 @@ export const openNewInvoiceForm = (): AppThunkAction => {
 
 export const closeNewInvoiceForm = (): AppThunkAction => {
   return dispatch => dispatch(actionBody(actions.FORM_NEW_INVOICE_OPENED, false));
+};
+
+export const storeNewInvoice = (invoiceData: IInvoiceStoreData): AppThunkAction => {
+  return async dispatch => {
+    try {
+      // Start Loading
+      dispatch(actionBody(actions.INVOICE_STORE_LOADING, true));
+      dispatch(actionBody(actions.INVOICE_STORE_ERROR, null));
+      // Request
+      const res = await axios.post<{ invoice: IInvoiceBase }>('/invoices', invoiceData);
+      const invoice = buildInvoice(res.data.invoice);
+      dispatch(actionBody(actions.ADD_NEW_INVOICE, invoice));
+      dispatch(actionBody(actions.INVOICE_STORE_SUCCESS, true));
+    } catch (error) {
+      dispatch(actionBody(actions.INVOICE_STORE_ERROR, error));
+    } finally {
+      dispatch(actionBody(actions.INVOICE_STORE_LOADING, false));
+      setTimeout(() => {
+        dispatch(actionBody(actions.INVOICE_STORE_SUCCESS, false));
+      }, 2000);
+    }
+  };
 };

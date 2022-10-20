@@ -8,14 +8,23 @@ import InvoiceFormHeader from './InvoiceFormHeader';
 import InvoiceFormGroup from './InvoiceFormGroup';
 import InvoiceFormNewItem from './InvoiceFormNewItem';
 import InvoiceFormItemList from './InvoiceFormItemList';
-import { IInvoiceSummary, INewInvoiceItem, INewInvoicePayment } from 'types';
+import { IInvoiceStoreData, IInvoiceSummary, INewInvoiceItem, INewInvoicePayment } from 'types';
 import InvoiceFormPayment from './InvoiceFormPayment';
 import InvoiceFormPaymentList from './InvoiceFormPaymentList';
-import { closeNewInvoiceForm } from 'store/reducers/InvoicePage/creators';
+import { closeNewInvoiceForm, storeNewInvoice } from 'store/reducers/InvoicePage/creators';
+import { toast } from 'react-toastify';
 
 const InvoiceForm = () => {
-  const { formOpened: opened, customers } = useAppSelector(state => state.InvoicePageReducer);
+  const {
+    formOpened: opened,
+    customers,
+    storeLoading: loading,
+    storeError: error,
+    storeSuccess: success,
+  } = useAppSelector(state => state.InvoicePageReducer);
+  const { user } = useAppSelector(state => state.AuthReducer);
   const dispatch = useAppDispatch();
+  const [enabled, setEnabled] = useState(false);
 
   // CUSTOMER
   const [customerId, setCustomerId] = useState<string | null>(null);
@@ -34,7 +43,7 @@ const InvoiceForm = () => {
   const [items, setItems] = useState<INewInvoiceItem[]>([]);
   const [cashPayments, setCashPayments] = useState<INewInvoicePayment[]>([]);
 
-  // RESUME
+  // SUMMARY
   const [summary, setSummary] = useState<IInvoiceSummary>({
     subtotal: 0,
     discount: undefined,
@@ -131,7 +140,79 @@ const InvoiceForm = () => {
   };
 
   const closeInvoice = () => {
-    dispatch(closeNewInvoiceForm());
+    if (!loading) {
+      dispatch(closeNewInvoiceForm());
+    }
+  };
+
+  const getData = (): IInvoiceStoreData => {
+    return {
+      sellerId: user?.id,
+      customerId: customerId || undefined,
+      isSeparate,
+      customerName: customerName || undefined,
+      customerAddress: address.trim() || undefined,
+      customerDocument: document || undefined,
+      customerDocumentType: documentType || undefined,
+      sellerName: user?.name,
+      expeditionDate: expeditionDate || undefined,
+      expirationDate: expirationDate || undefined,
+      cash: summary.cash,
+      items: items.map(item => ({ ...item, id: undefined, amount: undefined })),
+      cashPayments: cashPayments.map(payment => ({
+        cashboxId: payment.box?.id,
+        description: payment.description,
+        amount: payment.amount,
+        register: payment.register,
+      })),
+    };
+  };
+
+  const getSumary = (): IInvoiceSummary => {
+    let subtotal = 0,
+      discount = 0,
+      amount = 0,
+      balance = 0,
+      cash = 0,
+      cashChange = 0;
+
+    items.forEach(item => {
+      subtotal += item.quantity * item.unitValue;
+      if (item.discount) discount += item.quantity * item.discount;
+    });
+
+    amount += subtotal - discount;
+    balance = amount;
+    cash = cashPayments.reduce((prevValue, currentPayment) => prevValue + currentPayment.amount, 0);
+
+    if (cash < balance) balance -= cash;
+    else {
+      cashChange = cash - balance;
+      balance = 0;
+    }
+
+    return {
+      subtotal,
+      discount: discount || undefined,
+      amount,
+      cash: cash || undefined,
+      cashChange: cashChange || undefined,
+      balance: balance || undefined,
+    };
+  };
+
+  const checkIn = () => {
+    if (enabled) {
+      const invoiceData = getData();
+      dispatch(storeNewInvoice(invoiceData));
+    }
+  };
+
+  const resetForm = () => {
+    setCustomerId(null);
+    setIsSeparate(false);
+    setItems([]);
+    setCashPayments([]);
   };
 
   // --------------------------------------------------------------------------
@@ -165,36 +246,27 @@ const InvoiceForm = () => {
   }, [expeditionDate]);
 
   useEffect(() => {
-    let subtotal = 0,
-      discount = 0,
-      amount = 0,
-      balance = 0,
-      cash = 0,
-      cashChange = 0;
-
-    items.forEach(item => {
-      subtotal += item.quantity * item.unitValue;
-      if (item.discount) discount += item.quantity * item.discount;
-    });
-
-    amount += subtotal - discount;
-    balance = amount;
-    cash = cashPayments.reduce((prevValue, currentPayment) => prevValue + currentPayment.amount, 0);
-
-    if (cash < balance) balance -= cash;
-    else {
-      cashChange = cash - balance;
-      balance = 0;
-    }
-    setSummary({
-      subtotal,
-      discount: discount || undefined,
-      amount,
-      cash: cash || undefined,
-      cashChange: cashChange || undefined,
-      balance: balance || undefined,
-    });
+    const summary = getSumary();
+    setSummary(summary);
   }, [items, cashPayments]);
+
+  useEffect(() => {
+    if (summary.amount <= 0) setEnabled(false);
+    else if (summary.balance && !(customerName && document && documentType)) setEnabled(false);
+    else setEnabled(true);
+  }, [customerName, document, documentType, summary.amount, summary.balance]);
+
+  useEffect(() => {
+    if (error) console.log(error);
+  }, [error]);
+
+  useEffect(() => {
+    if (success) {
+      toast.success('Factura Creada');
+      closeInvoice();
+      resetForm();
+    }
+  }, [success]);
 
   return (
     <Modal opened={opened} size="80%" padding={0} withCloseButton={false} onClose={closeInvoice}>
@@ -328,7 +400,13 @@ const InvoiceForm = () => {
         </div>
       </div>
       <footer className="flex justify-end px-6 py-4">
-        <Button size="md" leftIcon={<IconFileInvoice size={18} />}>
+        <Button
+          size="md"
+          leftIcon={<IconFileInvoice size={18} />}
+          loading={loading}
+          disabled={!enabled}
+          onClick={checkIn}
+        >
           {isSeparate ? 'Apartar' : 'Facturar'}
         </Button>
       </footer>

@@ -361,6 +361,28 @@ export interface IInvoiceSummary {
   balance?: number;
 }
 
+export interface IInvoiceStoreData {
+  sellerId?: string;
+  customerId?: string;
+  isSeparate: boolean;
+  customerName?: string;
+  customerAddress?: string;
+  customerPhone?: string;
+  customerDocument?: string;
+  customerDocumentType?: string;
+  sellerName?: string;
+  expeditionDate?: Date;
+  expirationDate?: Date;
+  cash?: number;
+  items: Omit<INewInvoiceItem, 'id' | 'amount'>[];
+  cashPayments: {
+    cashboxId?: string;
+    description: string;
+    amount: number;
+    register: boolean;
+  }[];
+}
+
 export interface IInvoicePaymentBase {
   id: string;
   paymentDate: string;
@@ -400,5 +422,9 @@ export interface IInvoicePageState {
   categories: IInvoiceCategory[];
   products: IInvoiceProduct[];
   cashboxs: IInvoiceCashbox[];
+  // STORE INVOICE
   formOpened: boolean;
+  storeLoading: boolean;
+  storeSuccess: boolean;
+  storeError: unknown;
 }
