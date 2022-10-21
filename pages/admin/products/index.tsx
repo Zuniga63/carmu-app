@@ -86,13 +86,6 @@ const ProductPage: NextPage<Props> = ({ data }) => {
     const index = copy.findIndex(p => p.id === product.id);
     if (index >= 0) copy.splice(index, 1);
     setProducts(copy);
-    // setProducts(currentProducts => {
-    //   const index = currentProducts.findIndex(p => p.id === product.id);
-    //   if (index >= 0) currentProducts.splice(index, 1);
-    //   toast.info(currentProducts.length);
-    //   return currentProducts;
-    // });
-    // toast.info(products.length);
   };
 
   const storeProduct = async (formData: unknown) => {
