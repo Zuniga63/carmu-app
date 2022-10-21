@@ -1,4 +1,4 @@
-import { IAction, IInvoice, IInvoicePageState } from 'types';
+import { IAction, IInvoice, IInvoiceFull, IInvoicePageState } from 'types';
 import * as actions from './actions';
 
 const initialState: IInvoicePageState = {
@@ -7,6 +7,8 @@ const initialState: IInvoicePageState = {
   categories: [],
   products: [],
   cashboxs: [],
+  invoiceSelected: null,
+  loading: false,
   // STORE NEW INVOICE
   formOpened: false,
   storeLoading: false,
@@ -40,6 +42,12 @@ export default function InvoicePageReducer(state = initialState, action: IAction
         ...state,
         invoices: [...state.invoices, newInvoice],
       };
+    }
+    case actions.LOADING_DATA: {
+      return { ...state, loading: action.payload as boolean };
+    }
+    case actions.MOUNT_SELECTED_INVOICE: {
+      return { ...state, invoiceSelected: action.payload as IInvoiceFull };
     }
     default: {
       return state;

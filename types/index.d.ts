@@ -408,6 +408,17 @@ export interface IInvoice extends IInvoiceBase {
   search: string;
 }
 
+export interface IInvoicePayment extends IInvoicePaymentBase {
+  paymentDate: Dayjs;
+  createdAt: Dayjs;
+  updatedAt: Dayjs;
+}
+
+export interface IInvoiceFull extends IInvoice {
+  items: IInvoiceItemBase[];
+  payments: IInvoicePayment[];
+}
+
 export interface IInvoicePageData {
   invoices: IInvoiceBase[];
   customers: ICustomer[];
@@ -422,6 +433,8 @@ export interface IInvoicePageState {
   categories: IInvoiceCategory[];
   products: IInvoiceProduct[];
   cashboxs: IInvoiceCashbox[];
+  invoiceSelected: IInvoiceFull | null;
+  loading: boolean;
   // STORE INVOICE
   formOpened: boolean;
   storeLoading: boolean;

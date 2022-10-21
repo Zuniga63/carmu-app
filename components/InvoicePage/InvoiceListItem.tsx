@@ -2,6 +2,8 @@ import { Button } from '@mantine/core';
 import { NextLink } from '@mantine/next';
 import { IconFileInvoice, IconPrinter } from '@tabler/icons';
 import React, { useEffect, useState } from 'react';
+import { useAppDispatch } from 'store/hooks';
+import { mountInvoice } from 'store/reducers/InvoicePage/creators';
 import { IInvoice } from 'types';
 import { currencyFormat } from 'utils';
 
@@ -10,6 +12,7 @@ interface Props {
 }
 const InvoiceListItem = ({ invoice }: Props) => {
   const [textColor, setTextColor] = useState('green');
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (invoice.isSeparate) setTextColor('blue');
@@ -55,7 +58,7 @@ const InvoiceListItem = ({ invoice }: Props) => {
         >
           Imprimir
         </Button>
-        <Button size="xs" leftIcon={<IconFileInvoice size={16} />}>
+        <Button size="xs" leftIcon={<IconFileInvoice size={16} />} onClick={() => dispatch(mountInvoice(invoice.id))}>
           Ver
         </Button>
       </footer>

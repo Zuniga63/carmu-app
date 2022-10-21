@@ -6,21 +6,23 @@ import { useEffect } from 'react';
 import { mountInvoiceData } from 'store/reducers/InvoicePage/creators';
 import InvoiceList from 'components/InvoicePage/InvoiceList';
 import InvoiceForm from 'components/InvoicePage/InvoiceForm';
+import InvoiceCard from 'components/InvoicePage/InvoiceCard';
+import EmptyInvoice from 'components/InvoicePage/EmptyInvoice';
 
 interface Props {
   initialData: IInvoicePageData;
 }
 
 const InvoicePage: NextPage<Props> = ({ initialData }) => {
-  const { invoices } = useAppSelector(state => state.InvoicePageReducer);
+  const { invoiceSelected } = useAppSelector(state => state.InvoicePageReducer);
   const dispatch = useAppDispatch();
 
   useEffect(() => dispatch(mountInvoiceData(initialData)), []);
   return (
     <Layout title="Facturación">
-      <div className="grid grid-cols-3 gap-x-4 px-4 pt-8 3xl:grid-cols-5">
+      <div className="grid grid-cols-3 gap-x-4 px-4 pt-4 3xl:grid-cols-5">
         <InvoiceList />
-        <div className="col-span-2 h-full bg-red-100 3xl:col-span-4">{invoices.length}</div>
+        <div className="col-span-2 h-full 3xl:col-span-4">{invoiceSelected ? <InvoiceCard /> : <EmptyInvoice />}</div>
       </div>
       <InvoiceForm />
     </Layout>

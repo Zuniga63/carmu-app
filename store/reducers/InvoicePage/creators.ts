@@ -1,32 +1,75 @@
 import axios from 'axios';
 import dayjs from 'dayjs';
-import { AppThunkAction, IInvoice, IInvoiceBase, IInvoicePageData, IInvoiceStoreData } from 'types';
+import {
+  AppThunkAction,
+  IInvoice,
+  IInvoiceBase,
+  IInvoiceBaseFull,
+  IInvoiceFull,
+  IInvoicePageData,
+  IInvoiceStoreData,
+} from 'types';
 import { actionBody, currencyFormat, normalizeText } from 'utils';
 import * as actions from './actions';
 
-export const buildInvoice = (invoice: IInvoiceBase): IInvoice => {
-  const { expeditionDate, expirationDate, createdAt, updatedAt } = invoice;
-  const date = dayjs(expeditionDate);
+// --------------------------------------------------------------------------------------
+// UTILS
+// --------------------------------------------------------------------------------------
+const createSearch = (invoice: IInvoiceBase | IInvoiceBaseFull) => {
   const search = `
-    ${invoice.prefixNumber} 
-    ${invoice.customer ? invoice.customer.fullName : invoice.customerName} 
-    ${invoice.customerAddress} 
-    ${invoice.customerDocument} 
-    ${invoice.customerPhone}
-    ${date.format('DD-MM-YYYY')}
-    ${date.format('DD/MM/YYYY')}
-    ${invoice.amount}
-    ${currencyFormat(invoice.amount)}
-    `;
+  ${invoice.prefixNumber} 
+  ${invoice.customer ? invoice.customer.fullName : invoice.customerName} 
+  ${invoice.customerAddress} 
+  ${invoice.customerDocument} 
+  ${invoice.customerPhone}
+  ${invoice.amount}
+  ${currencyFormat(invoice.amount)}
+  `;
+
+  return normalizeText(search);
+};
+
+const createInvoiceDates = (invoice: IInvoiceBase | IInvoiceBaseFull) => {
+  const { expeditionDate, expirationDate, createdAt, updatedAt } = invoice;
   return {
-    ...invoice,
     expeditionDate: dayjs(expeditionDate),
     expirationDate: dayjs(expirationDate),
     createdAt: dayjs(createdAt),
     updatedAt: dayjs(updatedAt),
-    search: normalizeText(search),
   };
 };
+
+const buildInvoice = (invoice: IInvoiceBase): IInvoice => {
+  const search = createSearch(invoice);
+  const dates = createInvoiceDates(invoice);
+  return {
+    ...invoice,
+    ...dates,
+    search,
+  };
+};
+
+const buildInvoiceFull = (invoice: IInvoiceBaseFull): IInvoiceFull => {
+  const search = createSearch(invoice);
+  const dates = createInvoiceDates(invoice);
+  const payments = invoice.payments.map(payment => ({
+    ...payment,
+    paymentDate: dayjs(payment.paymentDate),
+    createdAt: dayjs(payment.createdAt),
+    updatedAt: dayjs(payment.updatedAt),
+  }));
+
+  return {
+    ...invoice,
+    ...dates,
+    payments,
+    search,
+  };
+};
+
+// --------------------------------------------------------------------------------------
+// REDUCERS
+// --------------------------------------------------------------------------------------
 
 export const mountInvoiceData = (data: IInvoicePageData): AppThunkAction => {
   return dispatch => {
@@ -72,6 +115,22 @@ export const storeNewInvoice = (invoiceData: IInvoiceStoreData): AppThunkAction 
       setTimeout(() => {
         dispatch(actionBody(actions.INVOICE_STORE_SUCCESS, false));
       }, 2000);
+    }
+  };
+};
+
+export const mountInvoice = (invoiceId: string): AppThunkAction => {
+  return async dispatch => {
+    try {
+      dispatch(actionBody(actions.LOADING_DATA, true));
+      const res = await axios.get(`/invoices/${invoiceId}`);
+      const invoice = buildInvoiceFull(res.data.invoice);
+      dispatch(actionBody(actions.MOUNT_SELECTED_INVOICE, invoice));
+      console.log(invoice);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      dispatch(actionBody(actions.LOADING_DATA, false));
     }
   };
 };
