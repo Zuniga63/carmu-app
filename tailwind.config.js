@@ -25,6 +25,9 @@ module.exports = {
         header: '#161b22',
         'btn-bg': '#21262d',
       },
+      screens: {
+        '3xl': '1920px',
+      },
     },
   },
   plugins: ['prettier', require('@tailwindcss/line-clamp')],

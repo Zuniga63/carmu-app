@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { IconDashboard, IconCategory, IconBox } from '@tabler/icons';
+import { IconDashboard, IconCategory, IconBox, IconUsers, IconBuildingStore, IconFileInvoice } from '@tabler/icons';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -29,6 +29,27 @@ export default function NavLinks({ close }: Props) {
       path: '/admin/boxes',
       active: false,
       icon: <IconBox size={32} stroke={1.5} className="flex-shrink-0" />,
+    },
+    {
+      id: 4,
+      name: 'Clientes',
+      path: '/admin/customers',
+      active: false,
+      icon: <IconUsers size={32} stroke={1.5} className="flex-shrink-0" />,
+    },
+    {
+      id: 5,
+      name: 'Productos',
+      path: '/admin/products',
+      active: false,
+      icon: <IconBuildingStore size={32} stroke={1.5} className="flex-shrink-0" />,
+    },
+    {
+      id: 6,
+      name: 'Facturación',
+      path: '/admin/invoices',
+      active: false,
+      icon: <IconFileInvoice size={32} stroke={1.5} className="flex-shrink-0" />,
     },
   ]);
 
