@@ -7,6 +7,7 @@ import {
   IInvoiceBaseFull,
   IInvoiceFull,
   IInvoicePageData,
+  IInvoicePaymentData,
   IInvoiceStoreData,
 } from 'types';
 import { actionBody, currencyFormat, normalizeText } from 'utils';
@@ -131,6 +132,40 @@ export const mountInvoice = (invoiceId: string): AppThunkAction => {
       console.log(error);
     } finally {
       dispatch(actionBody(actions.LOADING_DATA, false));
+    }
+  };
+};
+
+export const openPaymentForm = (): AppThunkAction => {
+  return dispatch => {
+    dispatch(actionBody(actions.PAYMENT_FORM_OPENED, true));
+  };
+};
+
+export const closePaymentForm = (): AppThunkAction => {
+  return dispatch => {
+    dispatch(actionBody(actions.PAYMENT_FORM_OPENED, false));
+  };
+};
+
+export const registerPayment = (paymentData: IInvoicePaymentData, invoiceId: string): AppThunkAction => {
+  return async dispatch => {
+    dispatch(actionBody(actions.PAYMENT_STORE_LOADING, true));
+    dispatch(actionBody(actions.PAYMENT_STORE_ERROR, null));
+
+    try {
+      const url = `/invoices/${invoiceId}/add-payment`;
+      const res = await axios.post<{ invoice: IInvoiceBaseFull; message: string }>(url, paymentData);
+      const invoice = buildInvoiceFull(res.data.invoice);
+      dispatch(actionBody(actions.ADD_PAYMENT_TO_INVOICE, invoice));
+      dispatch(actionBody(actions.PAYMENT_STORE_SUCCESS, res.data.message));
+    } catch (error) {
+      dispatch(actionBody(actions.PAYMENT_STORE_ERROR, error));
+    } finally {
+      dispatch(actionBody(actions.PAYMENT_STORE_LOADING, false));
+      setTimeout(() => {
+        dispatch(actionBody(actions.PAYMENT_STORE_SUCCESS, undefined));
+      }, 2000);
     }
   };
 };

@@ -361,6 +361,14 @@ export interface IInvoiceSummary {
   balance?: number;
 }
 
+export interface IInvoicePaymentData {
+  cashboxId?: string;
+  paymentDate?: Date;
+  description: string;
+  amount: number;
+  register: boolean;
+}
+
 export interface IInvoiceStoreData {
   sellerId?: string;
   customerId?: string;
@@ -440,4 +448,9 @@ export interface IInvoicePageState {
   storeLoading: boolean;
   storeSuccess: boolean;
   storeError: unknown;
+  // STORE PAYMENT
+  paymentFormOpened: boolean;
+  storePaymentLoading: boolean;
+  storePaymentSuccess?: string;
+  storePaymentError: unknown;
 }

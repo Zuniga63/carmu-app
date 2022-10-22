@@ -8,6 +8,7 @@ import InvoiceList from 'components/InvoicePage/InvoiceList';
 import InvoiceForm from 'components/InvoicePage/InvoiceForm';
 import InvoiceCard from 'components/InvoicePage/InvoiceCard';
 import EmptyInvoice from 'components/InvoicePage/EmptyInvoice';
+import InvoicePaymentForm from 'components/InvoicePage/InvoicePaymentForm';
 
 interface Props {
   initialData: IInvoicePageData;
@@ -25,6 +26,7 @@ const InvoicePage: NextPage<Props> = ({ initialData }) => {
         <div className="col-span-2 h-full 3xl:col-span-4">{invoiceSelected ? <InvoiceCard /> : <EmptyInvoice />}</div>
       </div>
       <InvoiceForm />
+      <InvoicePaymentForm />
     </Layout>
   );
 };

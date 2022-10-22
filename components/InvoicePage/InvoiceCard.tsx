@@ -1,7 +1,8 @@
 import { Button, Tabs } from '@mantine/core';
-import { IconBox, IconFileInvoice } from '@tabler/icons';
+import { IconBox, IconCash, IconFileInvoice } from '@tabler/icons';
 import React, { useEffect, useState } from 'react';
-import { useAppSelector } from 'store/hooks';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
+import { openPaymentForm } from 'store/reducers/InvoicePage/creators';
 import { IInvoiceItemBase, IInvoicePayment } from 'types';
 import InvoiceCardField from './InvoiceCardField';
 import InvoiceCardItems from './InvoiceCardItems';
@@ -10,6 +11,8 @@ import InvoiceCardSummary from './InvoiceCardSummary';
 
 const InvoiceCard = () => {
   const { invoiceSelected: invoice } = useAppSelector(state => state.InvoicePageReducer);
+  const dispatch = useAppDispatch();
+
   const [invoiceType, setInvoiceType] = useState('Factura');
   const [items, setItems] = useState<IInvoiceItemBase[]>([]);
   const [payments, setPayments] = useState<IInvoicePayment[]>([]);
@@ -122,8 +125,13 @@ const InvoiceCard = () => {
         </div>
       </div>
       <footer className="flex justify-end rounded-b-lg bg-header p-4">
-        <Button color="grape" disabled={!invoice?.balance}>
-          Realizar Abono
+        <Button
+          leftIcon={<IconCash />}
+          color="grape"
+          disabled={!invoice?.balance}
+          onClick={() => dispatch(openPaymentForm())}
+        >
+          Registrar Pago
         </Button>
       </footer>
     </div>

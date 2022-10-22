@@ -14,6 +14,11 @@ const initialState: IInvoicePageState = {
   storeLoading: false,
   storeSuccess: false,
   storeError: null,
+  // STORE PAYMENT
+  paymentFormOpened: true,
+  storePaymentLoading: false,
+  storePaymentSuccess: undefined,
+  storePaymentError: null,
 };
 
 export default function InvoicePageReducer(state = initialState, action: IAction): IInvoicePageState {
@@ -48,6 +53,28 @@ export default function InvoicePageReducer(state = initialState, action: IAction
     }
     case actions.MOUNT_SELECTED_INVOICE: {
       return { ...state, invoiceSelected: action.payload as IInvoiceFull };
+    }
+    case actions.PAYMENT_FORM_OPENED: {
+      return { ...state, paymentFormOpened: action.payload as boolean };
+    }
+    case actions.PAYMENT_STORE_LOADING: {
+      return { ...state, storePaymentLoading: action.payload as boolean };
+    }
+    case actions.PAYMENT_STORE_SUCCESS: {
+      return { ...state, storePaymentSuccess: action.payload as string | undefined };
+    }
+    case actions.PAYMENT_STORE_ERROR: {
+      return { ...state, storePaymentError: action.payload };
+    }
+    case actions.ADD_PAYMENT_TO_INVOICE: {
+      const newInvoice = action.payload as IInvoiceFull;
+
+      // Find and replace the old invoice
+      const list = state.invoices.slice();
+      const index = list.findIndex(item => item.id === newInvoice.id);
+      if (index >= 0) list.splice(index, 1, newInvoice);
+
+      return { ...state, invoices: list, invoiceSelected: newInvoice };
     }
     default: {
       return state;
