@@ -21,11 +21,14 @@ export default function Layout({ title, children }: Props) {
 
       <div className="relative xl:h-screen xl:overflow-hidden">
         <Header title={title} />
-        <div className="flex xl:h-[calc(100vh-62px)]">
+        <div className="flex h-[calc(100vh-62px)]">
           <Sidebar />
-          <ScrollArea className="flex-grow overflow-y-auto transition-all duration-200 xl:h-full">
-            <main>{children}</main>
-          </ScrollArea>
+          <div className="h-full flex-grow overflow-y-auto transition-all duration-200">
+            <ScrollArea className="h-full">
+              {/* 208 px is the width of sidebar in xl */}
+              <main className="w-screen xl:w-[calc(100vw-208px)]">{children}</main>
+            </ScrollArea>
+          </div>
         </div>
       </div>
     </>

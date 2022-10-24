@@ -29,17 +29,17 @@ export default function UserAvatar() {
   }, [user?.name]);
 
   return (
-    <Menu shadow="xl" transition="rotate-right" transitionDuration={150}>
+    <Menu shadow="xl" transition="pop-top-right" transitionDuration={150}>
       <Menu.Target>
-        <Avatar src={user?.profilePhoto?.url} alt={user?.name} radius="xl" color="cyan" className="cursor-pointer">
+        <Avatar src={user?.profilePhoto?.url} alt={user?.name} radius="xl" color="blue" className="cursor-pointer">
           <span className="text-cyan-600">{initials}</span>
         </Avatar>
       </Menu.Target>
       <Menu.Dropdown>
         <div className="mb-2 px-2">
-          <p className="text-center text-sm font-bold text-gray-900">{user?.name}</p>
-          {isAdmin && <p className="scale-90 text-center text-xs italic tracking-wider text-gray-600">Administrador</p>}
-          <p className="scale-90 text-center text-sm text-gray-600">{user?.email}</p>
+          <p className="text-center text-sm font-bold">{user?.name}</p>
+          {isAdmin && <p className="scale-90 text-center text-xs italic tracking-wider text-gray-200">Administrador</p>}
+          <p className="scale-90 text-center text-sm text-gray-100">{user?.email}</p>
         </div>
         <Menu.Divider />
 

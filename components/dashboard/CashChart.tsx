@@ -136,7 +136,7 @@ const CashChart = () => {
   }, []);
 
   return (
-    <div className="px-4 py-6">
+    <div className="px-8 py-6">
       <div className="relative h-96 w-full rounded-md bg-dark bg-opacity-90 px-4 py-2">
         {data && <Chart type="bar" options={options} data={data} />}
       </div>

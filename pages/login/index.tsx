@@ -38,7 +38,7 @@ const Login: NextPage = () => {
 
   return (
     <AuthenticationCard>
-      <div className="mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg">
+      <div className="mt-6 w-full overflow-hidden bg-header bg-opacity-60 px-6 py-4 shadow-lg shadow-header backdrop-blur-sm sm:max-w-md sm:rounded-lg">
         <form onSubmit={onSubmit}>
           <header className="mb-4">
             <figure className="mx-auto block w-1/2">
@@ -50,7 +50,7 @@ const Login: NextPage = () => {
               value={email}
               onChange={({ target }) => setEmail(target.value)}
               placeholder="Escribelo aquí"
-              label={<span className="text-gray-800">Email</span>}
+              label="Email"
               required
               className="mb-2"
               type="email"
@@ -62,7 +62,7 @@ const Login: NextPage = () => {
               value={password}
               onChange={({ target }) => setPassword(target.value)}
               placeholder="Escribe la contraseña"
-              label={<span className="text-gray-800">Contraseña</span>}
+              label="Contraseña"
               required
               icon={<IconLock size={20} />}
               visibilityToggleIcon={({ reveal, size }) =>
@@ -80,9 +80,9 @@ const Login: NextPage = () => {
                   title="¡Ops, algo salio mal!"
                   color="red"
                   className="mb-2"
-                  withCloseButton
+                  variant="filled"
                 >
-                  <span className="text-red-400">{error}</span>
+                  <span className="text-red-100">{error}</span>
                 </Alert>
               )}
 
