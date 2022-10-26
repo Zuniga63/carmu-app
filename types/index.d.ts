@@ -76,6 +76,39 @@ export interface LoginData {
 }
 
 //-----------------------------------------------------------------------------
+// DASHBOARD PAGE
+//-----------------------------------------------------------------------------
+export interface ICategoryReport {
+  category: {
+    id: string;
+    mainCategory: string;
+    name: string;
+    level: number;
+    subCategories: string[];
+  };
+  amount: number;
+  tags: [];
+}
+
+export interface IDailyReport {
+  fromDate: string;
+  toDate: string;
+  categories: ICategoryReport[];
+  tags: [];
+  amount: number;
+}
+
+export interface IMonthlyReport extends IDailyReport {
+  name: string;
+  dailyReports: IDailyReport[];
+}
+
+export interface IAnnualReport extends IDailyReport {
+  year: number;
+  monthlyReports: IMonthlyReport[];
+}
+
+//-----------------------------------------------------------------------------
 // CATEGORY PAGE
 //-----------------------------------------------------------------------------
 export interface Category {
