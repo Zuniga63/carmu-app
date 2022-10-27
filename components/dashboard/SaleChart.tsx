@@ -1,19 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
-import { toast } from 'react-toastify';
 import dayjs from 'dayjs';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
 
 import { Chart } from 'react-chartjs-2';
-import { Button, Select, Skeleton } from '@mantine/core';
-import { IconChartArrowsVertical, IconTrashX } from '@tabler/icons';
+import { Select } from '@mantine/core';
 import { IAnnualReport } from 'types';
 import { CHART_COLORS, COLORS, currencyFormat, MONTHS, transparentize } from 'utils';
 
 dayjs.extend(isLeapYear);
 
-const BASE_URL = '/dashboard/sale-report';
 const enum Period {
   annual = 'annual',
   monthly = 'monthly',
@@ -55,60 +51,15 @@ export const initialOptions: ChartOptions = {
   },
 };
 
-const SaleChart = () => {
-  const [reports, setReports] = useState<IAnnualReport[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [loadingReport, setLoadingReport] = useState(false);
+interface Props {
+  annualReports: IAnnualReport[];
+}
 
+const SaleChart = ({ annualReports }: Props) => {
   const [period, setPeriod] = useState<string | null>(Period.annual);
   const [monthSelected, setMonthSelected] = useState<string | null>(dayjs().month().toString());
   const [chartData, setChartData] = useState<ChartData | null>(null);
   const [options, setOptions] = useState(initialOptions);
-
-  const fetchReport = async (year?: number): Promise<IAnnualReport> => {
-    const res = await axios.get<{ report: IAnnualReport }>(BASE_URL, { params: { year: year } });
-    return res.data.report;
-  };
-
-  const getInitialData = async () => {
-    try {
-      setLoading(true);
-      const report = await fetchReport();
-      setReports([report]);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const addAnnualReport = async () => {
-    const lastReport = reports.at(-1);
-    const year = lastReport ? lastReport.year - 1 : undefined;
-    try {
-      setLoadingReport(true);
-      const report = await fetchReport(year);
-      setReports(current => {
-        const list = current.slice();
-        list.push(report);
-        return list;
-      });
-    } catch (error) {
-      toast.error(`No se pudo cargar el reporte del año ${year}`);
-    } finally {
-      setLoadingReport(false);
-    }
-  };
-
-  const removeAnnualReport = () => {
-    if (reports.length > 1) {
-      setReports(currentList => {
-        const list = currentList.slice();
-        list.pop();
-        return list;
-      });
-    }
-  };
 
   const getLabels = (leapYear: boolean): string[] => {
     const labels: string[] = [];
@@ -118,7 +69,7 @@ const SaleChart = () => {
     if (period === Period.annual) labels.push(...MONTHS.map(month => month.slice(0, 3)));
     // The labels correspond to the number of day contained
     // in the month selected
-    else if (period === Period.monthly && !isNaN(month) && reports.length > 0) {
+    else if (period === Period.monthly && !isNaN(month) && annualReports.length > 0) {
       let daysInMonth = dayjs().month(month).daysInMonth();
       if (leapYear) daysInMonth += 1;
       for (let day = 1; day <= daysInMonth; day += 1) labels.push(day < 10 ? '0'.concat(String(day)) : String(day));
@@ -131,7 +82,7 @@ const SaleChart = () => {
     const datasets: ChartDataset[] = [];
     const month = Number(monthSelected);
 
-    reports.forEach(({ year, monthlyReports }, index) => {
+    annualReports.forEach(({ year, monthlyReports }, index) => {
       const color = CHART_COLORS[COLORS[index % COLORS.length] as keyof typeof CHART_COLORS];
 
       if (period === Period.annual) {
@@ -220,12 +171,8 @@ const SaleChart = () => {
   };
 
   useEffect(() => {
-    getInitialData();
-  }, []);
-
-  useEffect(() => {
-    if (reports.length) {
-      const leapYear = reports.map(({ year }) => dayjs().year(year).isLeapYear()).some(item => item === true);
+    if (annualReports.length) {
+      const leapYear = annualReports.map(({ year }) => dayjs().year(year).isLeapYear()).some(item => item === true);
       const labels = getLabels(leapYear);
       const datasets = getDatasets(leapYear);
       updateOptions();
@@ -235,67 +182,25 @@ const SaleChart = () => {
         datasets,
       });
     }
-  }, [reports.length, period, monthSelected]);
+  }, [annualReports.length, period, monthSelected]);
 
   return (
-    <Skeleton visible={loading}>
-      <div className="min-h-[300px] bg-dark bg-opacity-90 px-4 py-6">
-        <header className="mb-4">
-          <h2 className="mb-1 text-center text-2xl font-bold text-light">Reporte de Venta Directa</h2>
-          <p className="text-center text-sm italic">
-            Representa las ventas en efectivo por mostrador y pagos iniciales de apartados y creditos
-          </p>
-        </header>
-
-        <div className="grid grid-cols-3 gap-4">
-          {/* MAIN CHART */}
-          <div className="col-span-2">
-            <div className="mb-4 flex justify-evenly">
-              <Select value={period} data={CHART_DATA_PERIODS} onChange={setPeriod} size="xs" />
-              <Select
-                value={monthSelected}
-                data={MONTHS.map((name, index) => ({ value: index.toString(), label: name }))}
-                onChange={setMonthSelected}
-                size="xs"
-                disabled={period === Period.annual}
-              />
-            </div>
-            {/* CHART */}
-            <div className="relative h-96">
-              {chartData && (
-                <Chart type={period === Period.annual ? 'bar' : 'line'} options={options} data={chartData} />
-              )}
-            </div>
-          </div>
-          {/* CATEGORIES AND TAGS */}
-          <div className="border">
-            {reports.map(report => (
-              <div key={report.year} className="border">
-                <h3 className="text-center">{report.year}</h3>
-                <p className="text-center">{currencyFormat(report.amount)}</p>
-                <ul>
-                  {report.categories.map(category => (
-                    <li key={category.category.id} className="flex justify-between">
-                      <span>{currencyFormat(category.category.name)}: </span>
-                      <span>{currencyFormat(category.amount)}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-          {/* controllers */}
-          <div className="col-span-3 flex gap-x-2">
-            <Button onClick={addAnnualReport} loading={loadingReport} leftIcon={<IconChartArrowsVertical size={16} />}>
-              Agregar año
-            </Button>
-            <Button onClick={removeAnnualReport} color="red" leftIcon={<IconTrashX size={16} />}>
-              Remover año
-            </Button>
-          </div>
-        </div>
+    <>
+      <div className="mb-4 flex justify-evenly">
+        <Select value={period} data={CHART_DATA_PERIODS} onChange={setPeriod} size="xs" />
+        <Select
+          value={monthSelected}
+          data={MONTHS.map((name, index) => ({ value: index.toString(), label: name }))}
+          onChange={setMonthSelected}
+          size="xs"
+          disabled={period === Period.annual}
+        />
       </div>
-    </Skeleton>
+      {/* CHART */}
+      <div className="relative h-96 w-full 3xl:h-[450px]">
+        {chartData && <Chart type={period === Period.annual ? 'bar' : 'line'} options={options} data={chartData} />}
+      </div>
+    </>
   );
 };
 
