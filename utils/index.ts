@@ -75,6 +75,16 @@ export const MONTHS = [
   'Diciembre',
 ];
 
+export enum ChartPeriod {
+  annual = 'annual',
+  monthly = 'monthly',
+}
+
+export const CHART_DATA_PERIODS = [
+  { value: ChartPeriod.annual, label: 'Anual' },
+  { value: ChartPeriod.monthly, label: 'Mensual' },
+];
+
 export const COLORS = ['green', 'red', 'orange', 'yellow', 'blue', 'purple', 'grey'];
 
 export const CHART_COLORS = {

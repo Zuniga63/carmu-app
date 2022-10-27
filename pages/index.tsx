@@ -5,8 +5,8 @@ import { useEffect, useRef } from 'react';
 import Layout from 'components/Layout';
 import { toast } from 'react-toastify';
 import CashChart from 'components/dashboard/CashChart';
-import SaleChart from 'components/dashboard/SaleChart';
 import ChartJS from 'chart.js/auto';
+import SaleStatistics from 'components/dashboard/SaleStatistics';
 
 ChartJS.defaults.color = '#ccc';
 
@@ -50,7 +50,7 @@ const Home: NextPage = () => {
               <CashChart />
             </div>
             <div className="mb-4">
-              <SaleChart />
+              <SaleStatistics />
             </div>
           </>
         )}

@@ -9,6 +9,7 @@ import { IAnnualReport } from 'types';
 import AnnualSalesAux from './AnnualSalesAux';
 import SaleChart from './SaleChart';
 import AnnualCategoryChart from './AnnualCategoryChart';
+import CategoryChartComponent from './CategoryChartComponent';
 
 dayjs.extend(isLeapYear);
 
@@ -78,7 +79,7 @@ const SaleStatistics = () => {
           </p>
         </header>
 
-        <div className="grid grid-cols-12 gap-4">
+        <div className="grid grid-cols-12 gap-4 gap-y-6">
           {/* MAIN CHART */}
           <div className="col-span-8 3xl:col-span-9">
             <SaleChart annualReports={reports} />
@@ -97,7 +98,7 @@ const SaleStatistics = () => {
 
           {/* CATEGORY CHART */}
           <div className="col-span-8 3xl:col-span-9">
-            <SaleChart annualReports={reports} />
+            <CategoryChartComponent title="Ventas por Categorías" annualReports={reports} />
           </div>
 
           <div className="col-span-4 3xl:col-span-3">

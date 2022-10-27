@@ -71,7 +71,7 @@ const SaleChart = ({ annualReports }: Props) => {
     // in the month selected
     else if (period === Period.monthly && !isNaN(month) && annualReports.length > 0) {
       let daysInMonth = dayjs().month(month).daysInMonth();
-      if (leapYear) daysInMonth += 1;
+      if (leapYear && month === 1) daysInMonth += 1;
       for (let day = 1; day <= daysInMonth; day += 1) labels.push(day < 10 ? '0'.concat(String(day)) : String(day));
     }
 
