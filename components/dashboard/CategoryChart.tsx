@@ -103,6 +103,7 @@ const lineOptions: ChartOptions = {
 
 const CategoryChart = ({ annualReport, period, month }: Props) => {
   const [chartData, setChartData] = useState<ChartData | null>(null);
+  const [chartOptions, setChartOptions] = useState(barOptions);
 
   const getLabels = (period: string, month: number): string[] => {
     const leapYear = dayjs().year(annualReport.year).isLeapYear();
@@ -193,26 +194,25 @@ const CategoryChart = ({ annualReport, period, month }: Props) => {
   };
 
   useEffect(() => {
+    let newChartData: ChartData | null = null;
+    let options = barOptions;
+
     if (annualReport && period && month) {
       const labels = getLabels(period, Number(month));
       const categories = getCategories(annualReport);
       const datasets = getDatasets(period, Number(month), annualReport, categories);
-      setChartData({
-        labels,
-        datasets,
-      });
-    } else {
-      setChartData(null);
+
+      if (period === ChartPeriod.monthly) options = lineOptions;
+      newChartData = { labels, datasets };
     }
+
+    setChartData(newChartData);
+    setChartOptions(options);
   }, [annualReport, period, month]);
   return (
     <div className="relative h-96 w-full 3xl:h-[450px]">
       {chartData ? (
-        <Chart
-          type={period === ChartPeriod.annual ? 'bar' : 'line'}
-          options={period === ChartPeriod.annual ? barOptions : lineOptions}
-          data={chartData}
-        />
+        <Chart type={period === ChartPeriod.annual ? 'bar' : 'line'} options={chartOptions} data={chartData} />
       ) : null}
     </div>
   );
