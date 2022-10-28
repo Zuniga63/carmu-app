@@ -111,9 +111,9 @@ const CustomerForm = ({ opened, close, customer, loading, errors, store, update 
       opened={opened}
       onClose={onCloseHandler}
       padding={0}
-      size={largeScreen ? 'md' : '100%'}
+      size={largeScreen ? 'lg' : '100%'}
       withCloseButton={false}
-      position="right"
+      position="left"
     >
       <DrawerHeader title={title} onClose={onCloseHandler} />
       <DrawerBody>

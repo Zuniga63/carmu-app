@@ -121,7 +121,7 @@ const ProductForm = ({ product, categories, opened, loading, errors, close, stor
       padding={0}
       size={largeScreen ? 'xl' : '100%'}
       withCloseButton={false}
-      position="right"
+      position="left"
     >
       <DrawerHeader title={formTitle} onClose={close} />
       <DrawerBody>
