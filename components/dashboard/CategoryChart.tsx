@@ -18,6 +18,7 @@ interface Props {
 interface Category {
   id: string;
   name: string;
+  pareto: number; // Pareto law
 }
 
 const barOptions: ChartOptions = {
@@ -124,8 +125,25 @@ const CategoryChart = ({ annualReport, period, month }: Props) => {
 
   const getCategories = (annualReport: IAnnualReport): Category[] => {
     const categories: Category[] = [];
-    annualReport.categories.forEach(({ category }) => {
-      if (category.level === 0) categories.push({ id: category.id, name: category.name });
+    let accumulated = 0;
+
+    // Get individual reports for sort for max to min
+    const categoryReports = annualReport.categories.filter(report => report.category.level === 0);
+    const totalAmount = categoryReports.reduce((acc, current) => acc + current.amount, 0);
+
+    categoryReports.sort((last, current) => {
+      let result = 0;
+      if (last.amount > current.amount) result = -1;
+      else if (last.amount < current.amount) result = 1;
+
+      return result;
+    });
+
+    categoryReports.forEach(({ category, amount }) => {
+      accumulated += amount;
+      const pareto = Math.floor((accumulated / totalAmount) * 10) * 10;
+      console.log(pareto);
+      if (category.level === 0) categories.push({ id: category.id, name: category.name, pareto });
     });
 
     return categories;
@@ -186,6 +204,7 @@ const CategoryChart = ({ annualReport, period, month }: Props) => {
           fill: false,
           tension: 0.2,
           pointBorderWidth: 1,
+          hidden: category.pareto > 80,
         });
       });
     }
