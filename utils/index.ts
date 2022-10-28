@@ -85,7 +85,20 @@ export const CHART_DATA_PERIODS = [
   { value: ChartPeriod.monthly, label: 'Mensual' },
 ];
 
-export const COLORS = ['green', 'red', 'orange', 'yellow', 'blue', 'purple', 'grey'];
+export const COLORS = [
+  'green',
+  'red',
+  'orange',
+  'yellow',
+  'blue',
+  'purple',
+  'violet',
+  'raspberry',
+  'grey',
+  'forestGreen',
+  'burgundy',
+  'indigo',
+];
 
 export const CHART_COLORS = {
   green: 'rgb(75, 192, 192)',
@@ -94,7 +107,12 @@ export const CHART_COLORS = {
   yellow: 'rgb(255, 205, 86)',
   blue: 'rgb(54, 162, 235)',
   purple: 'rgb(153, 102, 255)',
+  violet: '#330036',
+  raspberry: '#C42847',
   grey: 'rgb(201, 203, 207)',
+  forestGreen: '#138A36',
+  burgundy: '#A62639',
+  indigo: '#2B4162',
 };
 
 export function transparentize(value: string | number[] | Color | RGBA, opacity?: number) {

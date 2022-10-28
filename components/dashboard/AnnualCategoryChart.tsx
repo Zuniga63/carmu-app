@@ -21,6 +21,8 @@ interface CategoryData {
 const options: ChartOptions<'doughnut'> = {
   responsive: true,
   maintainAspectRatio: false,
+  circumference: 180,
+  rotation: 270,
   plugins: {
     legend: {
       position: 'top' as const,
@@ -36,11 +38,12 @@ const options: ChartOptions<'doughnut'> = {
 
           return label;
         },
+        afterLabel(tooltipItem) {
+          return tooltipItem.dataset.label || 'foo';
+        },
       },
     },
   },
-  circumference: 180,
-  rotation: 270,
 };
 
 const initalData: CategoryData = {
@@ -57,25 +60,51 @@ const AnnualCategoryChart = ({ annualReports }: Props) => {
   const addCategory = (categoryId: string | null) => {
     const categories = categoryData.categories.slice();
     const categoryAnnualReports = categoryData.annualReports.slice();
-    const categoryReportToAdd = categoryReports.find(report => report.category.id === categoryId);
 
-    if (yearSelected && categoryReportToAdd) {
-      const { category: categoryToAdd } = categoryReportToAdd;
-      const annualReport = categoryAnnualReports.find(report => report.year === yearSelected);
+    if (yearSelected && categoryId) {
+      if (categoryId !== 'all') {
+        const categoryReportToAdd = categoryReports.find(report => report.category.id === categoryId);
 
-      // Add category name if not exits
-      if (!categories.some(categoryName => categoryName === categoryToAdd.name)) {
-        categories.push(categoryToAdd.name);
-      }
+        if (categoryReportToAdd) {
+          const { category: categoryToAdd } = categoryReportToAdd;
+          const annualReport = categoryAnnualReports.find(report => report.year === yearSelected);
 
-      // Add category report to year if no existe in the category reports
-      if (annualReport) {
-        const exists = annualReport.categoryReports.some(report => report.category.id === categoryId);
-        if (!exists) annualReport.categoryReports.push(categoryReportToAdd);
+          // Add category name if not exits
+          if (!categories.some(categoryName => categoryName === categoryToAdd.name)) {
+            categories.push(categoryToAdd.name);
+          }
+
+          // Add category report to year if no existe in the category reports
+          if (annualReport) {
+            const exists = annualReport.categoryReports.some(report => report.category.id === categoryId);
+            if (!exists) annualReport.categoryReports.push(categoryReportToAdd);
+          } else {
+            categoryAnnualReports.push({
+              year: yearSelected,
+              categoryReports: [categoryReportToAdd],
+            });
+          }
+        }
       } else {
-        categoryAnnualReports.push({
-          year: yearSelected,
-          categoryReports: [categoryReportToAdd],
+        categoryReports.forEach(categoryReportToAdd => {
+          const { category: categoryToAdd } = categoryReportToAdd;
+          const annualReport = categoryAnnualReports.find(report => report.year === yearSelected);
+
+          // Add category name if not exits
+          if (!categories.some(categoryName => categoryName === categoryToAdd.name)) {
+            categories.push(categoryToAdd.name);
+          }
+
+          // Add category report to year if no existe in the category reports
+          if (annualReport) {
+            const exists = annualReport.categoryReports.some(report => report.category.id === categoryId);
+            if (!exists) annualReport.categoryReports.push(categoryReportToAdd);
+          } else {
+            categoryAnnualReports.push({
+              year: yearSelected,
+              categoryReports: [categoryReportToAdd],
+            });
+          }
         });
       }
     }
@@ -92,11 +121,12 @@ const AnnualCategoryChart = ({ annualReports }: Props) => {
 
       categoryData.annualReports.forEach(annualReport => {
         const categoryReports = annualReport.categoryReports.filter(({ category }) => category.name !== lastCategory);
-
-        reports.push({
-          year: annualReport.year,
-          categoryReports,
-        });
+        if (categoryReports.length > 0) {
+          reports.push({
+            year: annualReport.year,
+            categoryReports,
+          });
+        }
       });
     }
 
@@ -105,8 +135,26 @@ const AnnualCategoryChart = ({ annualReports }: Props) => {
 
   const removeYear = () => {
     const annualReports = categoryData.annualReports.slice();
+    const categories: string[] = [];
+
+    // Remove the las year
     annualReports.pop();
-    setCategoryData(current => ({ ...current, annualReports }));
+
+    // Remove innecesary categories
+    if (annualReports.length > 0) {
+      categoryData.categories.forEach(categoryName => {
+        const exists: boolean[] = [];
+        annualReports.forEach(({ categoryReports }) => {
+          exists.push(categoryReports.some(({ category }) => category.name === categoryName));
+        });
+
+        const existsForAtLeastOneYear = exists.some(result => result === true);
+
+        if (existsForAtLeastOneYear) categories.push(categoryName);
+      });
+    }
+
+    setCategoryData({ categories, annualReports });
   };
 
   const buildCategoryChartData = () => {
@@ -146,8 +194,14 @@ const AnnualCategoryChart = ({ annualReports }: Props) => {
     const year = Number(yearSelected);
     if (!isNaN(year)) {
       const annualReport = annualReports.find(report => report.year === year);
-      if (annualReport) categories = annualReport.categories;
+      if (annualReport) categories = annualReport.categories.slice();
     }
+
+    categories.sort((lastReport, currentReport) => {
+      if (lastReport.amount > currentReport.amount) return -1;
+      else if (lastReport.amount < currentReport.amount) return 1;
+      return 0;
+    });
 
     setCategoryReports(categories);
   }, [yearSelected]);
@@ -171,7 +225,10 @@ const AnnualCategoryChart = ({ annualReports }: Props) => {
           <Select
             value={null}
             onChange={addCategory}
-            data={categoryReports.map(report => ({ value: report.category.id, label: report.category.name }))}
+            data={[
+              ...categoryReports.map(report => ({ value: report.category.id, label: report.category.name })),
+              { value: 'all', label: 'Agregar todas' },
+            ]}
             size="xs"
             placeholder="Categoría"
           />
@@ -179,7 +236,7 @@ const AnnualCategoryChart = ({ annualReports }: Props) => {
       </header>
 
       <div
-        className={`relative h-72 border-x-4 border-header bg-white px-2 backdrop-blur transition-colors ${
+        className={`relative h-80 border-x-4 border-header bg-white px-2 backdrop-blur transition-colors ${
           chartData ? 'bg-opacity-0' : 'bg-opacity-10'
         }`}
       >
@@ -201,16 +258,16 @@ const AnnualCategoryChart = ({ annualReports }: Props) => {
           disabled={categoryData.categories.length <= 0}
           onClick={removeCategory}
         >
-          Categoría
+          Quitar Categoría
         </Button>
         <Button
           leftIcon={<IconX size={16} />}
           color="red"
           size="xs"
-          disabled={categoryData.annualReports.length <= 1}
+          disabled={categoryData.annualReports.length <= 0}
           onClick={removeYear}
         >
-          Año
+          Quitar Año
         </Button>
       </footer>
     </div>

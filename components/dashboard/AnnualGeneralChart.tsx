@@ -4,7 +4,6 @@ import dayjs from 'dayjs';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
 
 import { Chart } from 'react-chartjs-2';
-import { Select } from '@mantine/core';
 import { IAnnualReport } from 'types';
 import { CHART_COLORS, COLORS, currencyFormat, MONTHS, transparentize } from 'utils';
 
@@ -14,10 +13,6 @@ const enum Period {
   annual = 'annual',
   monthly = 'monthly',
 }
-const CHART_DATA_PERIODS = [
-  { value: Period.annual, label: 'Anual' },
-  { value: Period.monthly, label: 'Mensual' },
-];
 
 export const initialOptions: ChartOptions = {
   responsive: true,
@@ -53,11 +48,11 @@ export const initialOptions: ChartOptions = {
 
 interface Props {
   annualReports: IAnnualReport[];
+  period: string | null;
+  monthSelected: string | null;
 }
 
-const SaleChart = ({ annualReports }: Props) => {
-  const [period, setPeriod] = useState<string | null>(Period.annual);
-  const [monthSelected, setMonthSelected] = useState<string | null>(dayjs().month().toString());
+const AnnualGeneralChart = ({ annualReports, period, monthSelected }: Props) => {
   const [chartData, setChartData] = useState<ChartData | null>(null);
   const [options, setOptions] = useState(initialOptions);
 
@@ -185,23 +180,10 @@ const SaleChart = ({ annualReports }: Props) => {
   }, [annualReports.length, period, monthSelected]);
 
   return (
-    <>
-      <div className="mb-4 flex justify-evenly">
-        <Select value={period} data={CHART_DATA_PERIODS} onChange={setPeriod} size="xs" />
-        <Select
-          value={monthSelected}
-          data={MONTHS.map((name, index) => ({ value: index.toString(), label: name }))}
-          onChange={setMonthSelected}
-          size="xs"
-          disabled={period === Period.annual}
-        />
-      </div>
-      {/* CHART */}
-      <div className="relative h-96 w-full 3xl:h-[450px]">
-        {chartData && <Chart type={period === Period.annual ? 'bar' : 'line'} options={options} data={chartData} />}
-      </div>
-    </>
+    <div className="relative h-96 w-full 3xl:h-[60vh]">
+      {chartData && <Chart type={period === Period.annual ? 'bar' : 'line'} options={options} data={chartData} />}
+    </div>
   );
 };
 
-export default SaleChart;
+export default AnnualGeneralChart;

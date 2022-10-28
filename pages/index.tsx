@@ -2,13 +2,17 @@ import type { NextPage } from 'next';
 import { useAppSelector } from 'store/hooks';
 import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
+
 import Layout from 'components/Layout';
 import { toast } from 'react-toastify';
 import CashChart from 'components/dashboard/CashChart';
 import ChartJS from 'chart.js/auto';
-import SaleStatistics from 'components/dashboard/SaleStatistics';
+import dayjs from 'dayjs';
+import isLeapYear from 'dayjs/plugin/isLeapYear';
+import ReportStatistics from 'components/dashboard/ReportStatistics';
 
 ChartJS.defaults.color = '#ccc';
+dayjs.extend(isLeapYear);
 
 const Home: NextPage = () => {
   const { isAuth, loginIsSuccess, user, isAdmin } = useAppSelector(state => state.AuthReducer);
@@ -50,7 +54,7 @@ const Home: NextPage = () => {
               <CashChart />
             </div>
             <div className="mb-4">
-              <SaleStatistics />
+              <ReportStatistics />
             </div>
           </>
         )}

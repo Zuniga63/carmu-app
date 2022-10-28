@@ -229,7 +229,7 @@ const CategoryChart = ({ annualReport, period, month }: Props) => {
     setChartOptions(options);
   }, [annualReport, period, month]);
   return (
-    <div className="relative h-96 w-full 3xl:h-[450px]">
+    <div className="relative h-96 w-full 3xl:h-[60vh]">
       {chartData ? (
         <Chart type={period === ChartPeriod.annual ? 'bar' : 'line'} options={chartOptions} data={chartData} />
       ) : null}
