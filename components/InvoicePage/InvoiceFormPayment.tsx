@@ -82,14 +82,6 @@ const InvoiceFormPayment = ({ invoiceDate, addPayment }: Props) => {
               size="xs"
               ref={input}
             />
-            {!boxId && (
-              <Checkbox
-                label={<span className="font-sans text-light">Registrar Transacción</span>}
-                size="xs"
-                checked={register}
-                onChange={({ currentTarget }) => setRegister(currentTarget.checked)}
-              />
-            )}
           </div>
           {/* DESCRIPTION */}
           <Select
@@ -102,18 +94,29 @@ const InvoiceFormPayment = ({ invoiceDate, addPayment }: Props) => {
             required
           />
           {/* AMOUNT */}
-          <NumberInput
-            placeholder="Importe del pago en $"
-            hideControls
-            size="xs"
-            value={amount}
-            precision={2}
-            parser={value => value?.replace(/\$\s?|(,*)/g, '')}
-            onChange={val => setAmount(val)}
-            formatter={formater}
-            onFocus={({ target }) => target.select()}
-            onKeyDown={handleKeyPress}
-          />
+          <div className="flex flex-col gap-y-2">
+            <NumberInput
+              placeholder="Importe del pago en $"
+              hideControls
+              size="xs"
+              value={amount}
+              precision={2}
+              parser={value => value?.replace(/\$\s?|(,*)/g, '')}
+              onChange={val => setAmount(val)}
+              formatter={formater}
+              onFocus={({ target }) => target.select()}
+              onKeyDown={handleKeyPress}
+            />
+            {!boxId && (
+              <Checkbox
+                label={<span className="font-sans text-light">Registrar Transacción</span>}
+                size="xs"
+                checked={register}
+                onChange={({ currentTarget }) => setRegister(currentTarget.checked)}
+                onKeyDown={handleKeyPress}
+              />
+            )}
+          </div>
         </div>
 
         <button

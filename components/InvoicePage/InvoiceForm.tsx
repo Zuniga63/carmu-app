@@ -352,7 +352,6 @@ const InvoiceForm = () => {
               clearable
               className="mb-2"
               size="xs"
-              dropdownType="modal"
             />
 
             {/* EXPIRATION DATE */}
@@ -368,20 +367,12 @@ const InvoiceForm = () => {
               clearable
               size="xs"
               disabled={!expeditionDate}
-              dropdownType="modal"
-            />
-
-            <Checkbox
-              label="¿Es un apartado?"
-              checked={isSeparate}
-              onChange={({ currentTarget }) => setIsSeparate(currentTarget.checked)}
-              size="xs"
             />
           </InvoiceFormGroup>
         </div>
         {/* ADD ITEM */}
         <div className="mb-6">
-          <InvoiceFormNewItem addItem={addItem} />
+          <InvoiceFormNewItem summary={summary} addItem={addItem} />
         </div>
         {/* ADD PAYMENT */}
         <div className="mb-6">
@@ -399,15 +390,22 @@ const InvoiceForm = () => {
           </div>
         </div>
       </div>
-      <footer className="flex justify-end px-6 py-4">
+      <footer className="flex justify-end gap-x-4 px-6 py-4">
+        <Checkbox
+          label="¿Es un apartado?"
+          checked={isSeparate}
+          onChange={({ currentTarget }) => setIsSeparate(currentTarget.checked)}
+        />
+
         <Button
           size="md"
+          className="min-w-[300px]"
           leftIcon={<IconFileInvoice size={18} />}
           loading={loading}
           disabled={!enabled}
           onClick={checkIn}
         >
-          {isSeparate ? 'Apartar' : 'Facturar'}
+          {isSeparate ? 'Registrar Apartado' : summary.balance ? 'Registrar Credito' : 'Registrar Factura'}
         </Button>
       </footer>
     </Modal>
