@@ -10,7 +10,7 @@ interface Props {
 
 const InvoiceFormPaymentListItem = ({ payment, onRemove }: Props) => {
   return (
-    <tr className="bg-gray-300 text-dark odd:bg-neutral-500 odd:text-light">
+    <tr className="bg-gray-200 text-dark odd:bg-dark odd:text-light">
       <td className="px-2 py-1 text-xs">
         <p>
           <span className="font-bold">{payment.description}</span> en{' '}
