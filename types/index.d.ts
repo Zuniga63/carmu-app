@@ -273,6 +273,10 @@ export interface ICustomer {
   birthDate?: string;
   profilePhoto?: IImage;
   invoice: string[];
+  balance?: number;
+  firstPendingInvoice?: string;
+  lastPendingInvoice?: string;
+  lastPayment?: string;
   createdAt: strig;
   updatedAt: string;
 }
