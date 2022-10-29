@@ -3,7 +3,6 @@ import dayjs from 'dayjs';
 import { GetServerSideProps, NextPage } from 'next';
 import Image from 'next/image';
 import brandLogo from 'public/images/logo_62601199d793d.png';
-import { useEffect } from 'react';
 import { IInvoiceBaseFull } from 'types';
 import { currencyFormat } from 'utils';
 
@@ -12,13 +11,8 @@ interface Props {
 }
 
 const PrintPage: NextPage<Props> = ({ invoice }) => {
-  useEffect(() => {
-    // setTimeout(() => {
-    //   window.print();
-    // }, 3000);
-  }, []);
   return (
-    <div className="min-h-screen bg-white text-dark">
+    <div className="mx-auto min-h-screen max-w-sm bg-white text-dark">
       <header className="mb-2 border-b-4 border-double border-dark pb-2">
         <figure className="mx-auto mb-2 flex w-10/12 items-center">
           <Image src={brandLogo} alt="Carmú Logo" />
@@ -72,7 +66,7 @@ const PrintPage: NextPage<Props> = ({ invoice }) => {
         <div className="mb-2 border-b border-dashed pb-2">
           <div className="mb-2 flex justify-between font-bold">
             <h3 className="text-sm uppercase">Cant.</h3>
-            <h3 className="text-sm uppercase">Descripción</h3>
+            <h3 className="justify-self-start text-sm uppercase">Descripción</h3>
             <h3 className="text-sm uppercase">Vlr. Unt</h3>
           </div>
           {invoice.items.map(item => (
