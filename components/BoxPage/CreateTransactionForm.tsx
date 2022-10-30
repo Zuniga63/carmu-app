@@ -108,39 +108,43 @@ const CreateTransactionForm = () => {
   }, [amount, description]);
 
   return (
-    <Modal opened={opened} onClose={closeHandler} size="xs" padding={0} withCloseButton={false}>
+    <Modal opened={opened} onClose={closeHandler} size="sm" padding={0} withCloseButton={false}>
       <form onSubmit={submitHandler} className="px-4 py-6">
         <header className="mb-4 border-b-2 pb-2 text-center">
-          <h2 className="text-center text-xl font-bold"> Registrar Movimiento</h2>
+          <h2 className="text-center text-xl font-bold"> Registrar Transacción</h2>
           <p className="text-xs text-gray-600">
             {box?.name || mainBox?.name} ({currencyFormat(box?.balance || mainBox?.balance)})
           </p>
         </header>
-        <div className="mb-2">
-          {/* Date */}
-          <DatePicker
-            label="Fecha"
-            locale="es-do"
-            placeholder="Selecciona una fecha"
-            value={date}
-            onChange={setDate}
-            minDate={box?.openBox?.toDate()}
-            maxDate={dayjs().toDate()}
-            className="mb-2"
-            icon={<IconCalendar size={16} />}
-            error={errors?.transactionDate.message}
-          />
-          {/* Time */}
-          <TimeInput
-            label="Hora"
-            placeholder="Ingresala aquí."
-            value={time}
-            onChange={setTime}
-            className="mb-2"
-            icon={<IconClock size={16} />}
-            format="12"
-            clearable
-          />
+        <div className="mb-4 py-4">
+          {/* DATE AND TIME */}
+          <div className="gap-x-2 md:mb-2 md:grid md:grid-cols-5">
+            {/* Date */}
+            <DatePicker
+              label="Fecha"
+              locale="es-do"
+              placeholder="Selecciona una fecha"
+              value={date}
+              onChange={setDate}
+              minDate={box?.openBox?.toDate()}
+              maxDate={dayjs().toDate()}
+              className="mb-2 md:col-span-3 md:mb-0"
+              icon={<IconCalendar size={16} />}
+              error={errors?.transactionDate.message}
+            />
+            {/* Time */}
+            <TimeInput
+              label="Hora"
+              placeholder="Ingresala aquí."
+              value={time}
+              onChange={setTime}
+              className="mb-2 md:col-span-2 md:mb-0"
+              icon={<IconClock size={16} />}
+              format="12"
+              clearable
+            />
+          </div>
+
           {/* Description */}
           <Textarea
             label="Descripción"
@@ -151,12 +155,13 @@ const CreateTransactionForm = () => {
             onChange={({ target }) => setDescription(target.value)}
             error={errors?.description.message}
           />
+
           {/* Amount */}
           <NumberInput
             label="Importe"
             required
             placeholder="Escribe el importe aquí."
-            className="mb-2"
+            className="mb-4"
             hideControls
             min={0}
             step={100}
@@ -170,7 +175,6 @@ const CreateTransactionForm = () => {
           {/* Check */}
           <Checkbox
             label="Es un egreso."
-            size="xs"
             checked={isExpense}
             onChange={({ currentTarget }) => setIsExpense(currentTarget.checked)}
           />
