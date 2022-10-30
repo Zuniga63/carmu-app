@@ -46,9 +46,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       </MantineProvider>
 
       <ToastContainer
-        position="bottom-right"
+        position="top-left"
         theme="dark"
-        autoClose={3000}
+        autoClose={2000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
