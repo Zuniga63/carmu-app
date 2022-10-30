@@ -13,7 +13,7 @@ interface Props {
 const InvoiceFormItemList = ({ items, removeItem, summary }: Props) => {
   return (
     <div>
-      <ScrollArea className="relative mb-2 h-40 overflow-y-auto bg-gradient-to-br from-dark via-neutral-500 to-header">
+      <ScrollArea className="relative mb-2 h-40 overflow-y-auto bg-dark">
         <table className="w-full table-auto">
           <thead className="sticky top-0 z-fixed bg-gray-dark">
             <tr className="whitespace-nowrap text-gray-100">

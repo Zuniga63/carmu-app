@@ -1,12 +1,13 @@
 import { Select } from '@mantine/core';
 import { IconBox } from '@tabler/icons';
-import React, { forwardRef } from 'react';
+import React, { forwardRef, KeyboardEvent } from 'react';
 import { IImage, IInvoiceProduct } from 'types';
 import { normalizeText } from 'utils';
 
 interface Props {
   products: IInvoiceProduct[];
   onSelect(id: string | null): void;
+  onEnterPress(event: KeyboardEvent<HTMLInputElement>, maintainFocus?: boolean): void;
   productId: string | null;
   className?: string;
   selectRef: React.RefObject<HTMLInputElement>;
@@ -29,7 +30,7 @@ const SelectItem = forwardRef<HTMLDivElement, ItemProps>(({ label, description, 
 
 SelectItem.displayName = 'SelectItemProduct';
 
-const ProductSelect = ({ products, onSelect, productId, className, selectRef }: Props) => {
+const ProductSelect = ({ products, onSelect, productId, className, selectRef, onEnterPress }: Props) => {
   return (
     <Select
       className={className}
@@ -53,6 +54,8 @@ const ProductSelect = ({ products, onSelect, productId, className, selectRef }: 
       }}
       onChange={onSelect}
       ref={selectRef}
+      onKeyDown={event => onEnterPress(event, true)}
+      name="productSelect"
     />
   );
 };

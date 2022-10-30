@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { ChartOptions, ChartData } from 'chart.js';
 import { Chart } from 'react-chartjs-2';
-import ChartJS from 'chart.js/auto';
 import { CHART_COLORS, currencyFormat, transparentize } from 'utils';
 import axios from 'axios';
-
-ChartJS.defaults.color = '#ccc';
 
 export const options: ChartOptions = {
   responsive: true,
@@ -46,6 +43,7 @@ const CashChart = () => {
   const [data, setData] = useState<ChartData | null>(null);
 
   const buildDataSets = async (): Promise<void> => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let data: any[] | null = null;
     try {
       const res = await axios.get('/dashboard/cash-report');
@@ -136,10 +134,8 @@ const CashChart = () => {
   }, []);
 
   return (
-    <div className="px-4 py-6">
-      <div className="relative h-96 w-full rounded-md bg-dark bg-opacity-90 px-4 py-2">
-        {data && <Chart type="bar" options={options} data={data} />}
-      </div>
+    <div className="relative h-96 w-full rounded-md bg-dark bg-opacity-90 px-4 py-2">
+      {data && <Chart type="bar" options={options} data={data} />}
     </div>
   );
 };

@@ -10,7 +10,7 @@ interface Props {
 
 const InvoiceFormItemListItem = ({ item, onRemove }: Props) => {
   return (
-    <tr className="bg-gray-300 text-dark odd:bg-neutral-500 odd:text-light">
+    <tr className="bg-gray-200 text-dark odd:bg-dark odd:text-light">
       <td className="whitespace-nowrap px-2 py-1 text-center text-sm">{item.quantity}</td>
       <td className="px-2 py-1 text-sm">{item.description}</td>
       <td className="whitespace-nowrap px-2 py-1 text-center text-xs">
@@ -25,7 +25,7 @@ const InvoiceFormItemListItem = ({ item, onRemove }: Props) => {
       <td className="px-3">
         <div className="flex items-center justify-center">
           <button
-            className="rounded-full border border-transparent p-1 text-red-800 transition-colors hover:border-red-800 hover:bg-red-100 hover:text-opacity-70 hover:shadow-md active:text-opacity-90"
+            className="rounded-full border border-transparent p-1 text-red-500 transition-colors hover:border-red-500 hover:bg-red-100 hover:text-opacity-70 hover:shadow-md active:text-opacity-90"
             onClick={() => onRemove(item.id)}
           >
             <IconTrash size={16} />

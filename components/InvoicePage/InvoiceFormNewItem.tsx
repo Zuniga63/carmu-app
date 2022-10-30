@@ -1,17 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, KeyboardEvent } from 'react';
 import { NumberInput, Select, TextInput } from '@mantine/core';
 import { useAppSelector } from 'store/hooks';
 import { IconCategory, IconPlus, IconX } from '@tabler/icons';
 import ProductSelect from './ProductSelect';
 import InvoiceFormGroup from './InvoiceFormGroup';
-import { INewInvoiceItem } from 'types';
-import { toast } from 'react-toastify';
+import { IInvoiceSummary, INewInvoiceItem } from 'types';
+import { currencyFormat } from 'utils';
 
 interface Props {
+  summary: IInvoiceSummary;
   addItem(newItem: INewInvoiceItem): void;
 }
 
-const InvoiceFormNewItem = ({ addItem }: Props) => {
+const InvoiceFormNewItem = ({ summary, addItem }: Props) => {
   const { products, categories } = useAppSelector(state => state.InvoicePageReducer);
   const selectRef = useRef<HTMLInputElement>(null);
 
@@ -60,8 +61,13 @@ const InvoiceFormNewItem = ({ addItem }: Props) => {
 
     addItem(item);
     resetItem();
+  };
 
-    toast.info(`¡El item "${item.description}" fue agregado!`);
+  const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>, maintainFocus?: boolean) => {
+    if (event.key === 'Enter' && itemDescription && itemQuantity && itemUnitValue) {
+      add();
+      if (!maintainFocus) event.currentTarget.blur();
+    }
   };
 
   useEffect(() => {
@@ -98,13 +104,14 @@ const InvoiceFormNewItem = ({ addItem }: Props) => {
       <div className="flex items-center gap-x-4">
         <div className="flex-grow">
           {/* CATEGORY & PRODUCT */}
-          <div className="mb-2 grid grid-cols-4 gap-x-2">
+          <div className="mb-2 grid grid-cols-4 items-center gap-x-2">
             {/* PRODUCT */}
             <ProductSelect
               products={products}
               productId={productId}
               selectRef={selectRef}
               onSelect={setProductId}
+              onEnterPress={handleKeyPress}
               className="col-span-2"
             />
 
@@ -122,6 +129,14 @@ const InvoiceFormNewItem = ({ addItem }: Props) => {
               clearable
               size="xs"
             />
+
+            {/* Total items */}
+            {summary.amount > 0 ? (
+              <p className="pr-4 text-right text-sm italic">
+                <span>Facturado: </span>
+                <span className="font-bold tracking-widest">{currencyFormat(summary.amount)}</span>
+              </p>
+            ) : null}
           </div>
 
           {/* ITEM INFO */}
@@ -140,12 +155,13 @@ const InvoiceFormNewItem = ({ addItem }: Props) => {
             <NumberInput
               label="Cant."
               placeholder="1.0"
-              value={itemQuantity}
-              onChange={val => setItemQuantity(val)}
               size="xs"
               min={1}
               step={1}
+              value={itemQuantity}
               type="number"
+              onChange={val => setItemQuantity(val)}
+              onKeyDown={handleKeyPress}
             />
             {/* UNIT VALUE */}
             <NumberInput
@@ -162,6 +178,7 @@ const InvoiceFormNewItem = ({ addItem }: Props) => {
               onChange={value => setItemUnitValue(value)}
               parser={value => value?.replace(/\$\s?|(,*)/g, '')}
               formatter={formater}
+              onKeyDown={handleKeyPress}
             />
             {/* DISCOUNT */}
             <NumberInput
@@ -179,6 +196,7 @@ const InvoiceFormNewItem = ({ addItem }: Props) => {
               onChange={value => setItemDiscount(value)}
               parser={value => value?.replace(/\$\s?|(,*)/g, '')}
               formatter={formater}
+              onKeyDown={handleKeyPress}
             />
 
             {/* AMOUNT */}

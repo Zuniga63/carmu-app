@@ -1,6 +1,8 @@
 import { IconDeviceMobile, IconEdit, IconMail, IconMapPin, IconTrash } from '@tabler/icons';
+import dayjs from 'dayjs';
 import React from 'react';
 import { ICustomer } from 'types';
+import { currencyFormat } from 'utils';
 
 interface Props {
   customer: ICustomer;
@@ -48,8 +50,21 @@ const CustomerTableItem = ({ customer, mount, onDelete }: Props) => {
           )}
         </div>
       </td>
-      <td className="px-3 py-2 text-right text-sm"></td>
-      <td className={`px-3 py-2 text-right text-sm`}></td>
+      <td className="px-3 py-2 text-right text-sm">
+        <div className="flex flex-col items-center text-xs">
+          {customer.firstPendingInvoice ? (
+            <p>Fact. más antigua {dayjs(customer.firstPendingInvoice).fromNow()}</p>
+          ) : null}
+          {customer.lastPendingInvoice && customer.lastPendingInvoice !== customer.firstPendingInvoice ? (
+            <p>Fact. más reciente {dayjs(customer.lastPendingInvoice).fromNow()}</p>
+          ) : null}
+          {customer.lastPayment ? <p>Ultimo pago {dayjs(customer.lastPayment).fromNow()}</p> : null}
+          <p className="italic text-neutral-400">Registro {dayjs(customer.createdAt).fromNow()}</p>
+        </div>
+      </td>
+      <td className={`px-3 py-2 text-right tracking-widest`}>
+        {customer.balance ? currencyFormat(customer.balance) : ''}
+      </td>
       <td className="px-3 py-2 text-sm">
         <div className="flex gap-x-2">
           <button className="rounded-full border-2 border-blue-600 border-opacity-50 p-2 text-blue-600 text-opacity-50 transition-colors hover:border-opacity-80 hover:text-opacity-80 active:border-opacity-100 active:text-opacity-100">

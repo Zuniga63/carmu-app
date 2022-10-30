@@ -27,8 +27,10 @@ const ProductForm = ({ product, categories, opened, loading, errors, close, stor
   const [price, setPrice] = useState<number | undefined>(undefined);
   const [hasDiscount, setHasDiscount] = useState(false);
   const [priceWithDiscount, setPriceWithDiscount] = useState<number | undefined>(undefined);
+  const [stock, setStock] = useState<number | undefined>(0);
   const [productIsNew, setProductIsNew] = useState(false);
   const [published, setPublished] = useState(false);
+  const [isInventoriable, setIsInventoriable] = useState(false);
 
   const largeScreen = useMediaQuery('(min-width: 768px)');
 
@@ -73,6 +75,8 @@ const ProductForm = ({ product, categories, opened, loading, errors, close, stor
     }
     if (productIsNew) formData.append('productIsNew', String(productIsNew));
     if (published) formData.append('published', String(published));
+    if (stock && stock >= 0) formData.append(!product ? 'initialStock' : 'stock', String(stock));
+    if (isInventoriable) formData.append('isInventoriable', 'true');
 
     return formData;
   };
@@ -97,10 +101,13 @@ const ProductForm = ({ product, categories, opened, loading, errors, close, stor
         setName(product.name);
         setRef(product.ref || '');
         setBarcode(product.barcode || '');
+        if (product.categories.length > 0) setProductCategory(product.categories[0]);
         setDescription(product.description || '');
         setPrice(product.price);
         setHasDiscount(Boolean(product.hasDiscount));
         setPriceWithDiscount(product.priceWithDiscount);
+        setStock(product.stock);
+        setIsInventoriable(product.isInventoriable);
         setProductIsNew(Boolean(product.productIsNew));
         setPublished(Boolean(product.published));
       }
@@ -121,7 +128,7 @@ const ProductForm = ({ product, categories, opened, loading, errors, close, stor
       padding={0}
       size={largeScreen ? 'xl' : '100%'}
       withCloseButton={false}
-      position="right"
+      position="left"
     >
       <DrawerHeader title={formTitle} onClose={close} />
       <DrawerBody>
@@ -164,6 +171,18 @@ const ProductForm = ({ product, categories, opened, loading, errors, close, stor
                 error={errors?.barcode?.message}
               />
             </div>
+
+            {/* CATEGORY */}
+            <Select
+              label={<span className="font-sans text-light">Categoría</span>}
+              placeholder="Selecciona una"
+              className="mb-2"
+              value={productCategory}
+              clearable
+              onChange={setProductCategory}
+              data={categories.map(category => ({ value: category.id, label: category.name }))}
+              error={errors?.['categoryIds.0']?.message}
+            />
 
             {/* DESCRIPTION */}
             <Textarea
@@ -229,10 +248,25 @@ const ProductForm = ({ product, categories, opened, loading, errors, close, stor
               />
             </div>
 
-            {/* PUBLISHED AND IS NEW */}
-            <div className="mb-4 flex gap-x-2">
+            {/* STOCK */}
+            <NumberInput
+              label={<span className="font-sans text-light">Unidades en stock</span>}
+              id="productStock"
+              placeholder="Escribe el precio aquí."
+              className="mb-4"
+              min={0}
+              step={1}
+              value={stock}
+              onChange={value => setStock(value)}
+              onFocus={({ target }) => target.select()}
+              error={errors?.stock?.message}
+              disabled={loading}
+            />
+
+            {/* PUBLISHED, INVENTORIABLE & IS NEW */}
+            <div className="mb-4 flex gap-x-4">
               <Checkbox
-                label={<span className="font-sans text-light">Producto nuevo</span>}
+                label={<span className="font-sans text-light">Nuevo</span>}
                 checked={published}
                 onChange={({ currentTarget }) => setPublished(currentTarget.checked)}
                 disabled={loading}
@@ -244,20 +278,14 @@ const ProductForm = ({ product, categories, opened, loading, errors, close, stor
                 onChange={({ currentTarget }) => setProductIsNew(currentTarget.checked)}
                 disabled={loading}
               />
-            </div>
 
-            {/* CATEGORY */}
-            {!product && (
-              <Select
-                label={<span className="font-sans text-light">Categoría</span>}
-                placeholder="Selecciona una"
-                value={productCategory}
-                clearable
-                onChange={setProductCategory}
-                data={categories.map(category => ({ value: category.id, label: category.name }))}
-                error={errors?.['categoryIds.0']?.message}
+              <Checkbox
+                label={<span className="font-sans text-light">Es inventariable</span>}
+                checked={isInventoriable}
+                onChange={({ currentTarget }) => setIsInventoriable(currentTarget.checked)}
+                disabled={loading}
               />
-            )}
+            </div>
           </div>
 
           <footer className="mx-auto flex w-11/12 justify-end">

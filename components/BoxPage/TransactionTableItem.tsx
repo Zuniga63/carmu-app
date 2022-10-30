@@ -1,7 +1,7 @@
 import { IconTrash } from '@tabler/icons';
 import React from 'react';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { destroyTransaction } from 'store/reducers/BoxPage/creators';
+import { destroyMainTransaction, destroyTransaction } from 'store/reducers/BoxPage/creators';
 import { IMainTransaction, ITransaction } from 'types';
 import { currencyFormat } from 'utils';
 
@@ -13,10 +13,9 @@ const TransactionTableItem = ({ transaction }: Props) => {
   const dispatch = useAppDispatch();
   const otherBox = isMainBox && !!transaction.cashbox;
 
-  const onDeleteHandler = () => {
-    if (boxSelected) {
-      dispatch(destroyTransaction(boxSelected, transaction));
-    }
+  const onDelete = () => {
+    if (isMainBox) dispatch(destroyMainTransaction(transaction));
+    else if (boxSelected) dispatch(destroyTransaction(boxSelected, transaction));
   };
 
   return (
@@ -41,15 +40,13 @@ const TransactionTableItem = ({ transaction }: Props) => {
       <td className={`px-3 py-2 text-right text-sm ${otherBox && 'line-through'}`}>
         {currencyFormat(transaction.balance)}
       </td>
-      <td className="px-3 py-2 text-sm">
-        {!isMainBox && (
-          <button
-            className="rounded-full border-2 border-red-600 border-opacity-50 p-2 text-red-600 text-opacity-50 transition-colors hover:border-opacity-80 hover:text-opacity-80 active:border-opacity-100 active:text-opacity-100"
-            onClick={onDeleteHandler}
-          >
-            <IconTrash size={16} stroke={3} />
-          </button>
-        )}
+      <td className="py-2 pl-3 pr-5 text-sm">
+        <button
+          className="rounded-full border-2 border-red-600 border-opacity-50 p-2 text-red-600 text-opacity-50 transition-colors hover:border-opacity-80 hover:text-opacity-80 active:border-opacity-100 active:text-opacity-100"
+          onClick={onDelete}
+        >
+          <IconTrash size={16} stroke={3} />
+        </button>
       </td>
     </tr>
   );
