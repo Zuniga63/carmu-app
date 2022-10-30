@@ -43,6 +43,7 @@ const CashChart = () => {
   const [data, setData] = useState<ChartData | null>(null);
 
   const buildDataSets = async (): Promise<void> => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let data: any[] | null = null;
     try {
       const res = await axios.get('/dashboard/cash-report');
