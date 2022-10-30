@@ -386,3 +386,62 @@ export const destroyTransaction = (box: IBoxWithDayjs, transactionToDestroy: ITr
     }
   };
 };
+
+export const destroyMainTransaction = (transactionToDestroy: ITransaction): AppThunkAction => {
+  return async dispatch => {
+    const url = `/main-box/transactions/${transactionToDestroy.id}`;
+    const message = /*html */ `
+      La transacción "<strong>${transactionToDestroy.description}</strong>" 
+      por valor de <strong>${currencyFormat(transactionToDestroy.amount)}</strong> 
+      será eliminada permanentemente y esta acción no puede revertirse.`;
+
+    const result = await Swal.fire({
+      title: '<strong>¿Desea eliminar la transacción?</strong>',
+      html: message,
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Si, ¡Eliminala!',
+      backdrop: true,
+      icon: 'warning',
+      showLoaderOnConfirm: true,
+      preConfirm: async () => {
+        const result = { ok: false, message: '' };
+        let updateBoxes = false;
+
+        try {
+          const res = await axios.delete<{ transaction: ITransactionResponse }>(url);
+          const { transaction: transactionDeleted } = res.data;
+          result.ok = true;
+          result.message = `
+            ¡La transacción por valor de 
+            <strong>${currencyFormat(transactionDeleted.amount)}</strong> 
+            fue eliminada con éxito!`;
+
+          dispatch(actionBody(ACTIONS.REMOVE_TRANSACTION, transactionDeleted));
+          updateBoxes = true;
+        } catch (error) {
+          if (error instanceof AxiosError) {
+            const { response } = error;
+            if (response?.status === 404) dispatch(actionBody(ACTIONS.REMOVE_TRANSACTION, transactionToDestroy));
+            result.message = response?.data.message;
+            updateBoxes = true;
+          } else {
+            console.log(error);
+          }
+        }
+
+        if (updateBoxes) await dispatch(fetchBoxes());
+
+        return result;
+      },
+    });
+
+    if (result.isConfirmed && result.value) {
+      const { ok, message } = result.value;
+      const title = ok ? '<strong>¡Transacción Eliminada!</strong>' : '¡Ops, algo salio mal!';
+      const icon = ok ? 'success' : 'error';
+
+      Swal.fire({ title, html: message, icon });
+    }
+  };
+};

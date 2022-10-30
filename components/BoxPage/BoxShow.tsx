@@ -53,7 +53,7 @@ const BoxShow = () => {
             <h2 className="text-center text-xl font-bold tracking-wider">{boxName}</h2>
             <p className="text-center font-bold">{currencyFormat(boxBalance)}</p>
           </header>
-          <ScrollArea className="relative h-[28rem] overflow-y-auto border border-y-0 border-x-header" offsetScrollbars>
+          <ScrollArea className="relative h-[26rem] overflow-y-auto border border-y-0 border-x-header 3xl:h-[40rem]">
             <TransactionTable transactions={transactions} />
           </ScrollArea>
           <footer className="flex justify-end rounded-b-md bg-header px-6 py-2">

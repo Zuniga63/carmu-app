@@ -269,21 +269,19 @@ export default function BoxPageReducer(state = initialState, action: IAction): I
       const { boxSelected, transactions } = state;
       let newState = state;
 
-      if (boxSelected) {
-        let balance = boxSelected.base;
-        const newTransactions = transactions
-          .filter(item => item.id !== transactionDeleted.id)
-          .map(item => {
-            balance += item.amount;
-            return { ...item, balance };
-          });
+      let balance = boxSelected?.base || 0;
+      const newTransactions = transactions
+        .filter(item => item.id !== transactionDeleted.id)
+        .map(item => {
+          balance += item.amount;
+          return { ...item, balance };
+        });
 
-        newState = {
-          ...state,
-          // boxSelected: { ...boxSelected, balance, updatedAt: dayjs(), dateRefreshRate: 1000 * 60 },
-          transactions: newTransactions,
-        };
-      }
+      newState = {
+        ...state,
+        // boxSelected: { ...boxSelected, balance, updatedAt: dayjs(), dateRefreshRate: 1000 * 60 },
+        transactions: newTransactions,
+      };
 
       return newState;
     }
