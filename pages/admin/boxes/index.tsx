@@ -7,8 +7,45 @@ import Layout from 'components/Layout';
 import { GetServerSideProps, NextPage } from 'next';
 import { useEffect } from 'react';
 import { useAppDispatch } from 'store/hooks';
-import { setBoxes, setMainBox } from 'store/reducers/BoxPage/creators';
+import { setBoxes, setMainBox, unmountTransactions } from 'store/reducers/BoxPage/creators';
 import { IBox, IMainBox } from 'types';
+
+interface Props {
+  data: {
+    boxes: IBox[];
+    mainBox: IMainBox | null;
+  };
+}
+
+const BoxesPage: NextPage<Props> = ({ data }: Props) => {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(setBoxes(data.boxes));
+    dispatch(setMainBox(data.mainBox));
+
+    return () => {
+      dispatch(unmountTransactions());
+    };
+  }, []);
+  return (
+    <>
+      <Layout title="Cajas">
+        <div className="flex gap-x-4 px-4 py-2 text-white">
+          <div className="w-80 flex-shrink-0 flex-grow-0">
+            <BoxList />
+          </div>
+          <div className="flex-grow">
+            <BoxShow />
+          </div>
+        </div>
+      </Layout>
+      <CreateForm />
+      <OpenBoxForm />
+      <CloseBoxForm />
+    </>
+  );
+};
 
 export const getServerSideProps: GetServerSideProps = async context => {
   const { token } = context.req.cookies;
@@ -35,39 +72,6 @@ export const getServerSideProps: GetServerSideProps = async context => {
   return {
     props: { data },
   };
-};
-
-interface Props {
-  data: {
-    boxes: IBox[];
-    mainBox: IMainBox | null;
-  };
-}
-
-const BoxesPage: NextPage<Props> = ({ data }: Props) => {
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(setBoxes(data.boxes));
-    dispatch(setMainBox(data.mainBox));
-  }, []);
-  return (
-    <>
-      <Layout title="Cajas">
-        <div className="flex gap-x-4 px-4 py-2 text-white">
-          <div className="w-80 flex-shrink-0 flex-grow-0">
-            <BoxList />
-          </div>
-          <div className="flex-grow">
-            <BoxShow />
-          </div>
-        </div>
-      </Layout>
-      <CreateForm />
-      <OpenBoxForm />
-      <CloseBoxForm />
-    </>
-  );
 };
 
 export default BoxesPage;
