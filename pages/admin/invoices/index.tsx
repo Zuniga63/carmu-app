@@ -61,8 +61,6 @@ export const getServerSideProps: GetServerSideProps<{ data: IInvoicePageData }> 
       data.categories = categories || [];
       data.customers = customers || [];
       data.cashboxs = cashboxs || [];
-
-      console.log(data.invoices.length);
     } catch (error) {
       console.log(error);
     }
