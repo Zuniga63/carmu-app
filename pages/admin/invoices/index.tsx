@@ -11,14 +11,16 @@ import EmptyInvoice from 'components/InvoicePage/EmptyInvoice';
 import InvoicePaymentForm from 'components/InvoicePage/InvoicePaymentForm';
 
 interface Props {
-  initialData: IInvoicePageData;
+  data: IInvoicePageData;
 }
 
-const InvoicePage: NextPage<Props> = ({ initialData }) => {
+const InvoicePage: NextPage<Props> = ({ data }) => {
   const { invoiceSelected } = useAppSelector(state => state.InvoicePageReducer);
   const dispatch = useAppDispatch();
 
-  useEffect(() => dispatch(mountInvoiceData(initialData)), []);
+  useEffect(() => {
+    dispatch(mountInvoiceData(data));
+  }, [data]);
   return (
     <Layout title="Facturación">
       <div className="grid grid-cols-3 gap-x-4 px-4 pt-4 3xl:grid-cols-5">
@@ -33,9 +35,10 @@ const InvoicePage: NextPage<Props> = ({ initialData }) => {
 
 export default InvoicePage;
 
-export const getServerSideProps: GetServerSideProps = async context => {
+export const getServerSideProps: GetServerSideProps<{ data: IInvoicePageData }> = async context => {
   const { token } = context.req.cookies;
-  const data = {
+  context.req.cookies.ski;
+  const data: IInvoicePageData = {
     invoices: [],
     products: [],
     categories: [],
@@ -58,12 +61,14 @@ export const getServerSideProps: GetServerSideProps = async context => {
       data.categories = categories || [];
       data.customers = customers || [];
       data.cashboxs = cashboxs || [];
+
+      console.log(data.invoices.length);
     } catch (error) {
       console.log(error);
     }
   }
 
   return {
-    props: { initialData: data },
+    props: { data },
   };
 };
