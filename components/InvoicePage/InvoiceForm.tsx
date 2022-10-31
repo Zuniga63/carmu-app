@@ -250,10 +250,14 @@ const InvoiceForm = () => {
     setSummary(summary);
   }, [items, cashPayments]);
 
+  // To determine wheter or not to save the invoice
   useEffect(() => {
-    if (summary.amount <= 0) setEnabled(false);
-    else if (summary.balance && !(customerName && document && documentType)) setEnabled(false);
-    else setEnabled(true);
+    let result = false;
+    if (summary.amount > 0 && !summary.balance) result = true;
+    else if (summary.balance && ((customerId && customerName) || (customerName && document && documentType))) {
+      result = true;
+    }
+    setEnabled(result);
   }, [customerName, document, documentType, summary.amount, summary.balance]);
 
   useEffect(() => {

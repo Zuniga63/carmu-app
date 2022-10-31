@@ -79,12 +79,10 @@ const InvoiceList = () => {
   };
 
   useEffect(() => {
-    console.log('Invoices', invoices.length);
     classifyInvoices();
   }, [invoices]);
 
   useEffect(() => {
-    console.log('filter', invoices.length);
     filterInvoices();
   }, [filter, search]);
 
