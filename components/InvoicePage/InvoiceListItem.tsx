@@ -1,6 +1,6 @@
 import { Button, Collapse } from '@mantine/core';
 import { IconFileInvoice } from '@tabler/icons';
-import React, { useEffect, useState } from 'react';
+import React, { MouseEventHandler, useEffect, useState } from 'react';
 import { useAppDispatch } from 'store/hooks';
 import { mountInvoice } from 'store/reducers/InvoicePage/creators';
 import { IInvoice } from 'types';
@@ -13,51 +13,86 @@ const InvoiceListItem = ({ invoice }: Props) => {
   const [textColor, setTextColor] = useState('green');
   const [opened, setOpened] = useState(false);
   const dispatch = useAppDispatch();
+  const [summary, setSumary] = useState({
+    subtotal: 0,
+    discount: 0,
+    amount: 0,
+    cash: 0,
+    payments: 0,
+    balance: 0,
+    cashChange: 0,
+  });
 
   useEffect(() => {
     if (invoice.isSeparate) setTextColor('blue');
     else if (invoice.balance) setTextColor('orange');
     else setTextColor('green');
-  }, [invoice.balance, invoice.isSeparate]);
+
+    const newSummary = { ...summary };
+    newSummary.subtotal = invoice.subtotal || 0;
+    newSummary.discount = invoice.discount || 0;
+    newSummary.amount = invoice.amount;
+    newSummary.cash = invoice.cash || 0;
+    newSummary.cashChange = invoice.cashChange || 0;
+    if (!invoice.cashChange) {
+      newSummary.balance = invoice.balance || 0;
+      newSummary.payments = newSummary.amount - newSummary.balance - newSummary.cash;
+    }
+
+    setSumary(newSummary);
+  }, [invoice]);
+
+  const showInvoice: MouseEventHandler<HTMLButtonElement> = event => {
+    event.stopPropagation();
+    dispatch(mountInvoice(invoice.id));
+  };
 
   return (
-    <button
-      className="overflow-hidden rounded-lg border border-header bg-header shadow shadow-header hover:cursor-pointer hover:bg-gradient-to-br hover:from-header hover:to-purple-500"
-      onClick={() => setOpened(current => !current)}
-    >
-      <header className="px-4 py-2">
+    <div className="overflow-hidden rounded-lg border border-header bg-header shadow shadow-header transition-colors hover:border-dark hover:bg-dark hover:shadow-neutral-900">
+      <header className="px-4 py-2 hover:cursor-pointer" onClick={() => setOpened(current => !current)}>
         <div className="flex justify-between">
+          <span className="text-sm font-bold">{invoice.expeditionDate.format('DD-MM-YYYY hh:mm a')}</span>
           <h2 className="text-center text-sm font-bold tracking-wider">
             Factura N°: <span className={`text-${textColor}-400`}>{invoice.prefixNumber}</span>
           </h2>
-          <span className="text-sm font-bold">{invoice.expeditionDate.format('DD-MM-YYYY')}</span>
         </div>
         <p className="text-center text-xs italic text-gray-400">
           {invoice.customer ? invoice.customer.fullName : invoice.customerName}
         </p>
       </header>
       <Collapse in={opened}>
-        <div className="bg-gradient-to-r from-slate-800 via-gray-500 to-slate-800 p-2">
-          <div className="flex justify-evenly">
-            <div>
-              <h3 className="text-center text-xs text-gray-100">Valor</h3>
-              <p className=" font-bold text-light">{currencyFormat(invoice.amount)}</p>
+        <div className="bg-white bg-opacity-10 p-2 transition-colors hover:bg-opacity-50 hover:text-dark ">
+          <div className="flex justify-between gap-x-4">
+            {/* Labels */}
+            <div className="text-right">
+              <p className="text-xs">Subtotal:</p>
+              <p className="text-xs">Descuento:</p>
+              <p className="border-t border-transparent text-base font-bold">Total:</p>
+              <p className="text-xs">Pago inicial:</p>
+              <p className="text-xs">Abonos:</p>
+              <p className="border-t border-transparent italic">Saldo:</p>
+              {summary.cashChange > 0 ? <p className="text-xs">Vueltos:</p> : null}
             </div>
-            {invoice.balance && (
-              <div>
-                <h3 className={`text-center text-xs text-${textColor}-400`}>Saldo</h3>
-                <p className={`text-sm font-bold text-${textColor}-400`}>{currencyFormat(invoice.balance)}</p>
-              </div>
-            )}
+
+            {/* AMOUNTS */}
+            <div className="text-right tracking-widest">
+              <p className="text-xs">{currencyFormat(summary.subtotal)}</p>
+              <p className="text-xs"> - {currencyFormat(summary.discount)}</p>
+              <p className="border-t text-base font-bold">{currencyFormat(summary.amount)}</p>
+              <p className="text-xs"> - {currencyFormat(summary.cash)}</p>
+              <p className="text-xs"> - {currencyFormat(summary.payments)}</p>
+              <p className="border-t italic">{currencyFormat(summary.balance)}</p>
+              {summary.cashChange > 0 ? <p className="text-xs italic">{currencyFormat(summary.cashChange)}</p> : null}
+            </div>
           </div>
         </div>
         <footer className="flex justify-end px-4 py-3">
-          <Button size="xs" leftIcon={<IconFileInvoice size={16} />} onClick={() => dispatch(mountInvoice(invoice.id))}>
-            Ver
+          <Button size="xs" leftIcon={<IconFileInvoice size={16} />} onClick={showInvoice}>
+            Ver detalles
           </Button>
         </footer>
       </Collapse>
-    </button>
+    </div>
   );
 };
 
