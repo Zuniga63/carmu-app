@@ -123,16 +123,32 @@ export const storeNewInvoice = (invoiceData: IInvoiceStoreData): AppThunkAction 
 export const mountInvoice = (invoiceId: string): AppThunkAction => {
   return async dispatch => {
     try {
-      dispatch(actionBody(actions.LOADING_DATA, true));
+      dispatch(actionBody(actions.SELECTED_INVOICE_OPENED, true));
+      dispatch(actionBody(actions.SELECTED_INVOICE_LOADING, true));
+      dispatch(actionBody(actions.SELECTED_INVOICE_ERROR, null));
+
       const res = await axios.get(`/invoices/${invoiceId}`);
       const invoice = buildInvoiceFull(res.data.invoice);
       dispatch(actionBody(actions.MOUNT_SELECTED_INVOICE, invoice));
-      console.log(invoice);
     } catch (error) {
+      const msg = 'No se pudo recuperar la factura.';
+      dispatch(actionBody(actions.SELECTED_INVOICE_ERROR, msg));
       console.log(error);
     } finally {
-      dispatch(actionBody(actions.LOADING_DATA, false));
+      dispatch(actionBody(actions.SELECTED_INVOICE_LOADING, false));
     }
+  };
+};
+
+export const unmountSelectedInvoice = (): AppThunkAction => {
+  return dispatch => {
+    dispatch(actionBody(actions.SELECTED_INVOICE_OPENED, false));
+    dispatch(actionBody(actions.SELECTED_INVOICE_LOADING, false));
+    dispatch(actionBody(actions.SELECTED_INVOICE_ERROR, null));
+
+    setTimeout(() => {
+      dispatch(actionBody(actions.UNMOUNT_SELECTED_INVOICE));
+    }, 250);
   };
 };
 

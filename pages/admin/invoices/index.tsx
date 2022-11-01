@@ -1,21 +1,19 @@
 import { GetServerSideProps, NextPage } from 'next';
 import Layout from 'components/Layout';
 import { IInvoicePageData } from 'types';
-import { useAppDispatch, useAppSelector } from 'store/hooks';
+import { useAppDispatch } from 'store/hooks';
 import { useEffect } from 'react';
 import { mountInvoiceData } from 'store/reducers/InvoicePage/creators';
 import InvoiceList from 'components/InvoicePage/InvoiceList';
 import InvoiceForm from 'components/InvoicePage/InvoiceForm';
-import InvoiceCard from 'components/InvoicePage/InvoiceCard';
-import EmptyInvoice from 'components/InvoicePage/EmptyInvoice';
 import InvoicePaymentForm from 'components/InvoicePage/InvoicePaymentForm';
+import InvoiceCardModal from 'components/InvoicePage/InvoiceCardModal';
 
 interface Props {
   data: IInvoicePageData;
 }
 
 const InvoicePage: NextPage<Props> = ({ data }) => {
-  const { invoiceSelected } = useAppSelector(state => state.InvoicePageReducer);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -25,9 +23,9 @@ const InvoicePage: NextPage<Props> = ({ data }) => {
     <Layout title="Facturación">
       <div className="grid grid-cols-3 gap-x-4 px-4 pt-4 3xl:grid-cols-5">
         <InvoiceList />
-        <div className="col-span-2 h-full 3xl:col-span-4">{invoiceSelected ? <InvoiceCard /> : <EmptyInvoice />}</div>
       </div>
       <InvoiceForm />
+      <InvoiceCardModal />
       <InvoicePaymentForm />
     </Layout>
   );

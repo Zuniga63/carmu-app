@@ -13,7 +13,7 @@ import { currencyFormat } from 'utils';
 const InvoicePaymentForm = () => {
   const {
     paymentFormOpened: opened,
-    invoiceSelected: invoice,
+    selectedInvoice: invoice,
     storePaymentLoading: loading,
     storePaymentError: error,
     storePaymentSuccess: success,
