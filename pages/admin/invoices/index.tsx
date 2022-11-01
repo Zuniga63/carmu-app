@@ -8,6 +8,10 @@ import InvoiceList from 'components/InvoicePage/InvoiceList';
 import InvoiceForm from 'components/InvoicePage/InvoiceForm';
 import InvoicePaymentForm from 'components/InvoicePage/InvoicePaymentForm';
 import InvoiceCardModal from 'components/InvoicePage/InvoiceCardModal';
+import WeeklyInvoiceChart from 'components/InvoicePage/WeeklyInvoiceChart';
+
+import ChartJS from 'chart.js/auto';
+ChartJS.defaults.color = '#ccc';
 
 interface Props {
   data: IInvoicePageData;
@@ -19,10 +23,14 @@ const InvoicePage: NextPage<Props> = ({ data }) => {
   useEffect(() => {
     dispatch(mountInvoiceData(data));
   }, [data]);
+
   return (
     <Layout title="Facturación">
-      <div className="grid grid-cols-3 gap-x-4 px-4 pt-4 3xl:grid-cols-5">
+      <div className="grid grid-cols-3 gap-x-4 px-4 pt-4 3xl:grid-cols-4">
         <InvoiceList />
+        <div className="col-span-2 3xl:col-span-3">
+          <WeeklyInvoiceChart />
+        </div>
       </div>
       <InvoiceForm />
       <InvoiceCardModal />
@@ -35,7 +43,6 @@ export default InvoicePage;
 
 export const getServerSideProps: GetServerSideProps<{ data: IInvoicePageData }> = async context => {
   const { token } = context.req.cookies;
-  context.req.cookies.ski;
   const data: IInvoicePageData = {
     invoices: [],
     products: [],
