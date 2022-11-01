@@ -1,22 +1,29 @@
 import { Loader } from '@mantine/core';
-import { IconFileInvoice } from '@tabler/icons';
+import { IconX } from '@tabler/icons';
 import React from 'react';
-import { useAppSelector } from 'store/hooks';
 
-const EmptyInvoice = () => {
-  const { loading } = useAppSelector(state => state.InvoicePageReducer);
+interface Props {
+  loading: boolean;
+  error: string | null;
+}
+
+const EmptyInvoice = ({ loading, error }: Props) => {
   return (
-    <div className="flex h-full items-center justify-center">
-      <div className="flex flex-col items-center">
-        <p className="text-2xl font-bold">Selecciona una factura</p>
-        {loading && (
-          <div className="flex gap-x-2">
-            <Loader size={12}></Loader>
-            <p className="animate-pulse text-xs">Recuperando la información...</p>
+    <div className="flex h-96 items-center justify-center">
+      {loading ? (
+        <div className="flex items-center gap-x-2">
+          <Loader size={30} color="dark"></Loader>
+          <p className="animate-pulse text-light">Recuperando la información...</p>
+        </div>
+      ) : null}
+      {error && !loading ? (
+        <div className="flex flex-col items-center">
+          <div className="mb-4 rounded-full border border-red-600 p-4">
+            <IconX size={64} className="text-red-800" />
           </div>
-        )}
-        <IconFileInvoice size={60} className="mt-4" />
-      </div>
+          <p className="font-bold italic text-red-800">{error}</p>
+        </div>
+      ) : null}
     </div>
   );
 };

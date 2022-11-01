@@ -1,6 +1,5 @@
-import { Button } from '@mantine/core';
-import { NextLink } from '@mantine/next';
-import { IconFileInvoice, IconPrinter } from '@tabler/icons';
+import { Button, Collapse } from '@mantine/core';
+import { IconFileInvoice } from '@tabler/icons';
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch } from 'store/hooks';
 import { mountInvoice } from 'store/reducers/InvoicePage/creators';
@@ -12,6 +11,7 @@ interface Props {
 }
 const InvoiceListItem = ({ invoice }: Props) => {
   const [textColor, setTextColor] = useState('green');
+  const [opened, setOpened] = useState(false);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -21,7 +21,10 @@ const InvoiceListItem = ({ invoice }: Props) => {
   }, [invoice.balance, invoice.isSeparate]);
 
   return (
-    <div className="overflow-hidden rounded-lg border border-header bg-header shadow shadow-header hover:bg-gradient-to-br hover:from-header hover:to-purple-500">
+    <button
+      className="overflow-hidden rounded-lg border border-header bg-header shadow shadow-header hover:cursor-pointer hover:bg-gradient-to-br hover:from-header hover:to-purple-500"
+      onClick={() => setOpened(current => !current)}
+    >
       <header className="px-4 py-2">
         <div className="flex justify-between">
           <h2 className="text-center text-sm font-bold tracking-wider">
@@ -33,36 +36,28 @@ const InvoiceListItem = ({ invoice }: Props) => {
           {invoice.customer ? invoice.customer.fullName : invoice.customerName}
         </p>
       </header>
-      <div className="bg-gradient-to-r from-slate-800 via-gray-500 to-slate-800 p-2">
-        <div className="flex justify-evenly">
-          <div>
-            <h3 className="text-center text-xs text-gray-100">Valor</h3>
-            <p className=" font-bold text-light">{currencyFormat(invoice.amount)}</p>
-          </div>
-          {invoice.balance && (
+      <Collapse in={opened}>
+        <div className="bg-gradient-to-r from-slate-800 via-gray-500 to-slate-800 p-2">
+          <div className="flex justify-evenly">
             <div>
-              <h3 className={`text-center text-xs text-${textColor}-400`}>Saldo</h3>
-              <p className={`text-sm font-bold text-${textColor}-400`}>{currencyFormat(invoice.balance)}</p>
+              <h3 className="text-center text-xs text-gray-100">Valor</h3>
+              <p className=" font-bold text-light">{currencyFormat(invoice.amount)}</p>
             </div>
-          )}
+            {invoice.balance && (
+              <div>
+                <h3 className={`text-center text-xs text-${textColor}-400`}>Saldo</h3>
+                <p className={`text-sm font-bold text-${textColor}-400`}>{currencyFormat(invoice.balance)}</p>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-      <footer className="flex justify-between px-4 py-3">
-        <Button
-          size="xs"
-          leftIcon={<IconPrinter size={16} />}
-          color="green"
-          component={NextLink}
-          href={`/admin/invoices/print/${invoice.id}`}
-          target="_blank"
-        >
-          Imprimir
-        </Button>
-        <Button size="xs" leftIcon={<IconFileInvoice size={16} />} onClick={() => dispatch(mountInvoice(invoice.id))}>
-          Ver
-        </Button>
-      </footer>
-    </div>
+        <footer className="flex justify-end px-4 py-3">
+          <Button size="xs" leftIcon={<IconFileInvoice size={16} />} onClick={() => dispatch(mountInvoice(invoice.id))}>
+            Ver
+          </Button>
+        </footer>
+      </Collapse>
+    </button>
   );
 };
 

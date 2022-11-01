@@ -478,8 +478,12 @@ export interface IInvoicePageState {
   categories: IInvoiceCategory[];
   products: IInvoiceProduct[];
   cashboxs: IInvoiceCashbox[];
-  invoiceSelected: IInvoiceFull | null;
   loading: boolean;
+  // Show invoice
+  selectedInvoice: IInvoiceFull | null;
+  selectedInvoiceOpened: boolean;
+  selectedInvoiceLoading: boolean;
+  selectedInvoiceError: string | null;
   // STORE INVOICE
   formOpened: boolean;
   storeLoading: boolean;
