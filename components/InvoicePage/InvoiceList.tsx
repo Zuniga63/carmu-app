@@ -91,16 +91,31 @@ const InvoiceList = () => {
   }, [invoiceLegth]);
 
   return (
-    <div className="rounded bg-header px-3 py-4">
+    <div className="rounded bg-header px-3 pt-4 pb-2">
       <header className="mb-2 px-2">
         <h2 className="mb-2 text-center text-xl font-bold tracking-widest text-light">Facturas</h2>
-        <TextInput
-          size="xs"
-          icon={loading ? <Loader size={14} variant="dots" /> : <IconSearch size={14} stroke={1.5} />}
-          placeholder="Buscar Factura"
-          className="mb-2"
-          onChange={({ target }) => updateSearch(target.value)}
-        />
+
+        {/* SEARCH AND NEW INVOICE */}
+        <div className="mb-2 flex gap-x-3">
+          <TextInput
+            size="xs"
+            icon={loading ? <Loader size={14} variant="dots" /> : <IconSearch size={14} stroke={1.5} />}
+            placeholder="Buscar Factura"
+            className="flex-grow"
+            onChange={({ target }) => updateSearch(target.value)}
+          />
+
+          <Button
+            className="flex-shrink-0"
+            size="xs"
+            leftIcon={<IconFileInvoice size={16} />}
+            onClick={() => dispatch(openNewInvoiceForm())}
+          >
+            Nueva
+          </Button>
+        </div>
+
+        {/* FILTERS */}
         <SegmentedControl
           size="xs"
           value={filter}
@@ -116,7 +131,7 @@ const InvoiceList = () => {
       </header>
 
       <div className="mb-2 rounded-md bg-slate-800 bg-opacity-50">
-        <ScrollArea className="h-80 px-4 py-5 3xl:h-[34rem]">
+        <ScrollArea className="h-80 px-4 py-3 3xl:h-[40rem]">
           <div className="flex flex-col gap-y-4">
             {invoiceList.map(invoice => (
               <InvoiceListItem key={invoice.id} invoice={invoice} />
@@ -134,12 +149,6 @@ const InvoiceList = () => {
         separated={separatedInvoices.length}
         canceled={canceledInvoices.length}
       />
-
-      <footer className="flex justify-end">
-        <Button leftIcon={<IconFileInvoice />} onClick={() => dispatch(openNewInvoiceForm())}>
-          Registrar Factura
-        </Button>
-      </footer>
     </div>
   );
 };
