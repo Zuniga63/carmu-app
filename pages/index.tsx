@@ -10,6 +10,7 @@ import ChartJS from 'chart.js/auto';
 import dayjs from 'dayjs';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
 import ReportStatistics from 'components/dashboard/ReportStatistics';
+import CreditEvolution from 'components/dashboard/CreditEvolution';
 
 ChartJS.defaults.color = '#ccc';
 dayjs.extend(isLeapYear);
@@ -55,6 +56,9 @@ const Home: NextPage = () => {
             </div>
             <div className="mb-4">
               <ReportStatistics />
+            </div>
+            <div className="mb-4">
+              <CreditEvolution />
             </div>
           </>
         )}
