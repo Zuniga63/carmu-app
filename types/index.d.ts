@@ -108,6 +108,18 @@ export interface IAnnualReport extends IDailyReport {
   monthlyReports: IMonthlyReport[];
 }
 
+export interface IDailyCreditEvolution {
+  date: string;
+  credits: number;
+  payments: number;
+  balance: number;
+}
+
+export interface ICreditEvolutionReport {
+  initialBalance: number;
+  dailyReports: IDailyCreditEvolution[];
+}
+
 //-----------------------------------------------------------------------------
 // CATEGORY PAGE
 //-----------------------------------------------------------------------------
