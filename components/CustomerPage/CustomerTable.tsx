@@ -8,9 +8,11 @@ interface Props {
   customers: ICustomer[];
   openForm(): void;
   mountCustomer(customer: ICustomer): void;
+  mountCustomerToPayment(customer: ICustomer): void;
   deleteCustomer(customer: ICustomer): Promise<void>;
 }
-const CustomerTable = ({ customers, openForm, mountCustomer, deleteCustomer }: Props) => {
+
+const CustomerTable = ({ customers, openForm, mountCustomer, deleteCustomer, mountCustomerToPayment }: Props) => {
   return (
     <div className="mx-auto w-11/12 pt-4 text-light">
       <header className="rounded-t-md bg-header px-6 py-2">
@@ -43,6 +45,7 @@ const CustomerTable = ({ customers, openForm, mountCustomer, deleteCustomer }: P
                 customer={customer}
                 key={customer.id}
                 mount={mountCustomer}
+                mountToPayment={mountCustomerToPayment}
                 onDelete={deleteCustomer}
               />
             ))}

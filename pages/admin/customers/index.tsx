@@ -1,55 +1,56 @@
-import { GetServerSideProps, NextPage } from 'next';
+import { NextPage } from 'next';
 import Layout from 'components/Layout';
-import { ICustomer, IValidationErrors } from 'types';
+import { ICustomer, IInvoiceCashbox, IValidationErrors } from 'types';
 import CustomerTable from 'components/CustomerPage/CustomerTable';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CustomerForm from 'components/CustomerPage/CustomerForm';
 import axios, { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
+import CustomerPaymentModal from 'components/CustomerPage/CustomerPaymentModal';
+import { useAppSelector } from 'store/hooks';
+import { Loader } from '@mantine/core';
 
-export const getServerSideProps: GetServerSideProps = async context => {
-  const { token } = context.req.cookies;
-  const data = {
-    customers: [],
-  };
+const CustomerPage: NextPage = () => {
+  const { isAuth } = useAppSelector(state => state.AuthReducer);
 
-  if (token) {
-    const baseUrl = process.env.NEXT_PUBLIC_URL_API;
-    const url = `${baseUrl}/customers`;
-    const headers = { Authorization: `Bearer ${token}` };
+  const [fetchLoading, setFetchLoading] = useState(true);
 
-    try {
-      const res = await fetch(url, { headers });
-      const resData = await res.json();
-      data.customers = resData.customers;
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  return {
-    props: { data },
-  };
-};
-
-interface Props {
-  data: {
-    customers: ICustomer[];
-  };
-}
-
-const CustomerPage: NextPage<Props> = ({ data }) => {
   const [formOpened, setFormOpened] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<IValidationErrors | null | undefined>(null);
-  const [customers, setCustomers] = useState(data.customers);
+  const [customers, setCustomers] = useState<ICustomer[]>([]);
+  const [cashboxs, setCashboxs] = useState<IInvoiceCashbox[]>([]);
   const [customerToUpdate, setCustomerToUpdate] = useState<ICustomer | null>(null);
+  const [paymentModalOpened, setPaymentModalOpened] = useState(false);
+  const [paymentModalLoading, setPaymentModalLoading] = useState(false);
+  const [paymentModalError, setPaymentModalError] = useState<unknown>(null);
+
+  const fetchData = async () => {
+    setFetchLoading(true);
+    try {
+      const res = await axios.get<{ customers: ICustomer[]; cashboxs: IInvoiceCashbox[] }>('/customers');
+      setCustomers(res.data.customers);
+      setCashboxs(res.data.cashboxs);
+    } catch (error) {
+      console.log(error);
+      toast.error('No se ha podido cargar los datos de los clientes');
+    } finally {
+      setFetchLoading(false);
+    }
+  };
 
   const closeForm = () => {
     setFormOpened(false);
     setErrors(null);
     setLoading(false);
+    setCustomerToUpdate(null);
+  };
+
+  const closeModal = () => {
+    setPaymentModalOpened(false);
+    setPaymentModalLoading(false);
+    setPaymentModalError(null);
     setCustomerToUpdate(null);
   };
 
@@ -88,6 +89,11 @@ const CustomerPage: NextPage<Props> = ({ data }) => {
   const mountCustomerToUpdate = (customer: ICustomer) => {
     setCustomerToUpdate(customer);
     openForm();
+  };
+
+  const mountCustomerToPayment = (customer: ICustomer) => {
+    setCustomerToUpdate(customer);
+    setPaymentModalOpened(true);
   };
 
   const updateCustomer = async (formData: unknown) => {
@@ -175,14 +181,48 @@ const CustomerPage: NextPage<Props> = ({ data }) => {
     }
   };
 
+  const registerPayment = async (formData: unknown) => {
+    const url = `/customers/${customerToUpdate?.id}/add-credit-payment`;
+    try {
+      setPaymentModalLoading(true);
+      await axios.post(url, formData);
+      const resData = await axios.get('/customers');
+      setCustomers(resData.data.customers);
+      setCashboxs(resData.data.cashboxs);
+      closeModal();
+      toast.success('¡Pago registrado');
+    } catch (error) {
+      setPaymentModalError(error);
+    } finally {
+      setPaymentModalLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isAuth) {
+      fetchData();
+    }
+  }, [isAuth]);
+
   return (
     <Layout title="Clientes">
-      <CustomerTable
-        customers={customers}
-        openForm={openForm}
-        mountCustomer={mountCustomerToUpdate}
-        deleteCustomer={deleteCustomer}
-      />
+      {!fetchLoading ? (
+        <CustomerTable
+          customers={customers}
+          openForm={openForm}
+          mountCustomer={mountCustomerToUpdate}
+          mountCustomerToPayment={mountCustomerToPayment}
+          deleteCustomer={deleteCustomer}
+        />
+      ) : (
+        <div className="flex h-96 animate-pulse items-center justify-center">
+          <div className="flex flex-col items-center">
+            <Loader size={40} color="red" />
+            <span className="tracking-widest">Cargando la información de los clientes...</span>
+          </div>
+        </div>
+      )}
+
       <CustomerForm
         opened={formOpened}
         close={closeForm}
@@ -191,6 +231,16 @@ const CustomerPage: NextPage<Props> = ({ data }) => {
         update={updateCustomer}
         loading={loading}
         errors={errors}
+      />
+
+      <CustomerPaymentModal
+        opened={paymentModalOpened}
+        customer={customerToUpdate}
+        onClose={closeModal}
+        loading={paymentModalLoading}
+        error={paymentModalError}
+        cashboxs={cashboxs}
+        registerPayment={registerPayment}
       />
     </Layout>
   );
