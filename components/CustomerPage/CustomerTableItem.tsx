@@ -1,4 +1,5 @@
-import { IconDeviceMobile, IconEdit, IconMail, IconMapPin, IconTrash } from '@tabler/icons';
+import { Tooltip } from '@mantine/core';
+import { IconCash, IconDeviceMobile, IconEdit, IconMail, IconMapPin, IconTrash } from '@tabler/icons';
 import dayjs from 'dayjs';
 import React from 'react';
 import { ICustomer } from 'types';
@@ -7,10 +8,11 @@ import { currencyFormat } from 'utils';
 interface Props {
   customer: ICustomer;
   mount(customer: ICustomer): void;
+  mountToPayment(customer: ICustomer): void;
   onDelete(customer: ICustomer): Promise<void>;
 }
 
-const CustomerTableItem = ({ customer, mount, onDelete }: Props) => {
+const CustomerTableItem = ({ customer, mount, onDelete, mountToPayment }: Props) => {
   return (
     <tr className="text-gray-300">
       <td className="whitespace-nowrap px-3 py-2">
@@ -65,10 +67,24 @@ const CustomerTableItem = ({ customer, mount, onDelete }: Props) => {
       <td className={`px-3 py-2 text-right tracking-widest`}>
         {customer.balance ? currencyFormat(customer.balance) : ''}
       </td>
-      <td className="px-3 py-2 text-sm">
-        <div className="flex gap-x-2">
-          <button className="rounded-full border-2 border-blue-600 border-opacity-50 p-2 text-blue-600 text-opacity-50 transition-colors hover:border-opacity-80 hover:text-opacity-80 active:border-opacity-100 active:text-opacity-100">
-            <IconEdit size={16} stroke={3} onClick={() => mount(customer)} />
+      <td className="py-2 pl-3 pr-6 text-sm">
+        <div className="flex justify-end gap-x-2">
+          {customer.balance ? (
+            <Tooltip label="Hacer abono" withArrow>
+              <button
+                className="rounded-full border-2 border-green-600 border-opacity-50 p-2 text-green-600 text-opacity-50 transition-colors hover:border-opacity-80 hover:text-opacity-80 active:border-opacity-100 active:text-opacity-100"
+                onClick={() => mountToPayment(customer)}
+              >
+                <IconCash size={16} stroke={2} />
+              </button>
+            </Tooltip>
+          ) : null}
+
+          <button
+            className="rounded-full border-2 border-blue-600 border-opacity-50 p-2 text-blue-600 text-opacity-50 transition-colors hover:border-opacity-80 hover:text-opacity-80 active:border-opacity-100 active:text-opacity-100"
+            onClick={() => mount(customer)}
+          >
+            <IconEdit size={16} stroke={3} />
           </button>
 
           <button
