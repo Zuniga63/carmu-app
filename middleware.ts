@@ -9,7 +9,7 @@ export async function middleware(request: NextRequest) {
   if (token) {
     const baseUrl = process.env.NEXT_PUBLIC_URL_API;
     const url = `${baseUrl}/auth/local/is-authenticated`;
-    const headers = { Authorization: `Bearer ${token}` };
+    const headers = { Authorization: `Bearer ${token.value}` };
     try {
       const res = await fetch(url, { headers });
       const data = await res.json();

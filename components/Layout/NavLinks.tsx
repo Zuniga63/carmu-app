@@ -76,14 +76,14 @@ export default function NavLinks({ close }: Props) {
       <ul className="text-light">
         {links.map(link => (
           <li key={link.id} className={!link.active ? 'text-light' : 'bg-btn-bg text-blue-600'}>
-            <Link href={link.path} passHref>
-              <a
-                className="flex items-center gap-x-2 px-6 py-4 text-2xl transition-colors duration-200 hover:bg-slate-200 hover:text-dark active:bg-slate-200 active:text-dark xl:py-3 xl:text-base"
-                onClick={clickHandler}
-              >
-                {link.icon}
-                <span className="font-bold tracking-wide">{link.name}</span>
-              </a>
+            <Link
+              href={link.path}
+              passHref
+              className="flex items-center gap-x-2 px-6 py-4 text-2xl transition-colors duration-200 hover:bg-slate-200 hover:text-dark active:bg-slate-200 active:text-dark xl:py-3 xl:text-base"
+              onClick={clickHandler}
+            >
+              {link.icon}
+              <span className="font-bold tracking-wide">{link.name}</span>
             </Link>
           </li>
         ))}

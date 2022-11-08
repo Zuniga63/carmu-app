@@ -4,7 +4,7 @@ import { useAppSelector, useAppDispatch } from 'store/hooks';
 import { logout } from 'store/reducers/Auth/creators';
 import { IconLogout } from '@tabler/icons';
 import { useRouter } from 'next/router';
-import { NextLink } from '@mantine/next';
+import Link from 'next/link';
 
 export default function UserAvatar() {
   const { user, isAdmin } = useAppSelector(({ AuthReducer }) => AuthReducer);
@@ -43,8 +43,8 @@ export default function UserAvatar() {
           <p className="scale-90 text-center text-sm text-gray-100">{user?.email}</p>
         </div>
         <Menu.Divider />
-        <Menu.Item component={NextLink} href="/admin/profile">
-          Perfil de usuario
+        <Menu.Item>
+          <Link href="/admin/profile">Perfil de usuario</Link>
         </Menu.Item>
         <Menu.Divider />
         <Menu.Item color="red" onClick={logoutHandle} icon={<IconLogout size={16} />}>
