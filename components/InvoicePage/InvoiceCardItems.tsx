@@ -12,8 +12,8 @@ const InvoiceCardItems = ({ items }: Props) => {
     <Table>
       <thead>
         <tr>
-          <th scope="col">
-            <div className="text-center">Cant.</div>
+          <th scope="col" className="whitespace-nowrap">
+            <div className="text-center text-xs">Cant.</div>
           </th>
           <th scope="col">Descripción</th>
           <th scope="col">

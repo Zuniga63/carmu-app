@@ -1,6 +1,6 @@
 import { Button, Modal } from '@mantine/core';
-import { NextLink } from '@mantine/next';
 import { IconCash, IconPrinter } from '@tabler/icons';
+import Link from 'next/link';
 import React from 'react';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { openPaymentForm, unmountSelectedInvoice } from 'store/reducers/InvoicePage/creators';
@@ -22,7 +22,7 @@ const InvoiceCardModal = () => {
   };
 
   return (
-    <Modal size="60%" opened={opened} onClose={onClose} padding={0} withCloseButton={false}>
+    <Modal size="70%" opened={opened} onClose={onClose} padding={0} withCloseButton={false}>
       <div>
         <InvoiceCardModalHeader
           title={
@@ -40,16 +40,12 @@ const InvoiceCardModal = () => {
         </div>
 
         <footer className="flex justify-between rounded-b-lg bg-header p-4">
-          <Button
-            leftIcon={<IconPrinter />}
-            color="green"
-            component={NextLink}
-            href={`/admin/invoices/print/${invoice?.id}`}
-            target="_blank"
-            disabled={!invoice}
-          >
-            Imprimir
+          <Button leftIcon={<IconPrinter />} color="green" disabled={!invoice}>
+            <Link href={`/admin/invoices/print/${invoice?.id}`} target="_blank">
+              Imprimir
+            </Link>
           </Button>
+
           <Button
             leftIcon={<IconCash />}
             color="grape"

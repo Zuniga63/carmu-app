@@ -26,6 +26,25 @@ const InvoiceList = () => {
   const [invoiceLegth, setInvoiceLength] = useState(growRate);
   const debounceInterval = useRef<undefined | NodeJS.Timeout>(undefined);
 
+  const filterInvoices = () => {
+    let result: IInvoice[] = [];
+
+    if (filter === 'all') result = invoices.slice();
+    else if (filter === 'paid') result = paidInvoices.slice();
+    else if (filter === 'pending') result = pendingInvoices.slice();
+    else if (filter === 'separated') result = separatedInvoices.slice();
+    else if (filter === 'canceled') result = canceledInvoices.slice();
+
+    if (search) {
+      const text = normalizeText(search);
+      result = result.filter(invoice => invoice.search.includes(text));
+    }
+    result.reverse();
+    setFilteredInvoices(result);
+    setInvoceList(result.slice(0, growRate));
+    setInvoiceLength(growRate);
+  };
+
   const classifyInvoices = () => {
     const paid: IInvoice[] = [];
     const cancel: IInvoice[] = [];
@@ -46,25 +65,6 @@ const InvoiceList = () => {
     filterInvoices();
   };
 
-  const filterInvoices = () => {
-    let result: IInvoice[] = [];
-
-    if (filter === 'all') result = invoices.slice();
-    else if (filter === 'paid') result = paidInvoices.slice();
-    else if (filter === 'pending') result = pendingInvoices.slice();
-    else if (filter === 'separated') result = separatedInvoices.slice();
-    else if (filter === 'canceled') result = canceledInvoices.slice();
-
-    if (search) {
-      const text = normalizeText(search);
-      result = result.filter(invoice => invoice.search.includes(text));
-    }
-    result.reverse();
-    setFilteredInvoices(result);
-    setInvoceList(result.slice(0, growRate));
-    setInvoiceLength(growRate);
-  };
-
   const updateSearch = (value: string) => {
     if (debounceInterval.current) clearTimeout(debounceInterval.current);
     setLoading(true);
@@ -80,6 +80,7 @@ const InvoiceList = () => {
 
   useEffect(() => {
     classifyInvoices();
+    filterInvoices();
   }, [invoices]);
 
   useEffect(() => {
