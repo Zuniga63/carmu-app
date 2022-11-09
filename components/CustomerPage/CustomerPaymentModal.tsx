@@ -134,14 +134,6 @@ const CustomerPaymentModal = ({ opened, customer, error, loading, onClose, cashb
               size="xs"
               error={errors?.cashboxId?.message}
             />
-            {!boxId && (
-              <Checkbox
-                label={<span className="font-sans text-light">Registrar Transacción</span>}
-                size="xs"
-                checked={register}
-                onChange={({ currentTarget }) => setRegister(currentTarget.checked)}
-              />
-            )}
           </div>
 
           {/* DATE */}
@@ -188,6 +180,15 @@ const CustomerPaymentModal = ({ opened, customer, error, loading, onClose, cashb
             onFocus={({ target }) => target.select()}
             error={errors?.amount?.message}
           />
+          {!boxId && (
+            <Checkbox
+              className="mt-2"
+              label={<span className="font-sans text-light">Registrar Transacción</span>}
+              size="xs"
+              checked={register}
+              onChange={({ currentTarget }) => setRegister(currentTarget.checked)}
+            />
+          )}
         </div>
         <footer className="flex justify-end">
           <Button leftIcon={<IconCash size={16} />} type="submit" loading={loading}>
