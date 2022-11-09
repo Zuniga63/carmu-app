@@ -1,5 +1,6 @@
 import { IconTrash } from '@tabler/icons';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useAppSelector } from 'store/hooks';
 import { INewInvoiceItem } from 'types';
 import { currencyFormat } from 'utils';
 
@@ -9,10 +10,25 @@ interface Props {
 }
 
 const InvoiceFormItemListItem = ({ item, onRemove }: Props) => {
+  const { categories } = useAppSelector(state => state.InvoicePageReducer);
+  const [itemCategories, setItemCategories] = useState('');
+
+  useEffect(() => {
+    item.categories.forEach(categoryId => {
+      let result = '';
+      const categoryName = categories.find(category => category.id === categoryId)?.name;
+      if (categoryName) result += `${categoryName} `;
+
+      setItemCategories(result.trim());
+    });
+  }, []);
   return (
     <tr className="bg-gray-200 text-dark odd:bg-dark odd:text-light">
       <td className="whitespace-nowrap px-2 py-1 text-center text-sm">{item.quantity}</td>
-      <td className="px-2 py-1 text-sm">{item.description}</td>
+      <td className="px-2 py-1 text-sm">
+        <p>{item.description}</p>
+        {itemCategories ? <p className="text-xs font-bold text-light text-opacity-60">{itemCategories}</p> : null}
+      </td>
       <td className="whitespace-nowrap px-2 py-1 text-center text-xs">
         <div className="flex flex-col text-sm">
           <span className={`${Boolean(item.discount) && 'scale-90 text-xs line-through opacity-70'}`}>
