@@ -67,9 +67,9 @@ const InvoiceCard = ({ invoice }: Props) => {
         </div>
       </div>
       <div className="rounded-md bg-black bg-opacity-30 px-2 py-4 shadow shadow-dark">
-        <div className="relative grid grid-cols-3 gap-x-4">
+        <div className="relative grid grid-cols-4 gap-x-4">
           {/* ITEMS AND PAYMENTS */}
-          <div className="col-span-2">
+          <div className="col-span-3">
             <Tabs defaultValue="items" color="blue">
               <Tabs.List>
                 <Tabs.Tab value="items" color="blue" icon={<IconBox size={14} />}>
