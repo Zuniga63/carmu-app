@@ -12,7 +12,7 @@ const CreditEvolution = () => {
   const [loading, setLoading] = useState(false);
   const [report, setReport] = useState<ICreditEvolutionReport | null>(null);
 
-  const [period, setPeriod] = useState<string | null>(ChartPeriod.annual);
+  const [period, setPeriod] = useState<string | null>(ChartPeriod.monthly);
   const [monthSelected, setMonthSelected] = useState<string | null>(dayjs().month().toString());
 
   const fetchData = async () => {

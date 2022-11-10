@@ -26,7 +26,7 @@ const AnnualReportStatistics = ({ title, description, type }: Props) => {
   const [loading, setLoading] = useState(false);
   const [loadingReport, setLoadingReport] = useState(false);
 
-  const [period, setPeriod] = useState<string | null>(ChartPeriod.annual);
+  const [period, setPeriod] = useState<string | null>(ChartPeriod.monthly);
   const [monthSelected, setMonthSelected] = useState<string | null>(dayjs().month().toString());
 
   const fetchReport = async (year?: number): Promise<IAnnualReport> => {
