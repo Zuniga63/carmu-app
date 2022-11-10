@@ -1,6 +1,6 @@
 import { GetServerSideProps, NextPage } from 'next';
 import Layout from 'components/Layout';
-import { Category, IProduct, IValidationErrors } from 'types';
+import { Category, IProductWithCategories, IValidationErrors } from 'types';
 import { useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
@@ -44,14 +44,14 @@ export const getServerSideProps: GetServerSideProps = async context => {
 
 interface Props {
   data: {
-    products: IProduct[];
+    products: IProductWithCategories[];
     categories: Category[];
   };
 }
 
 const ProductPage: NextPage<Props> = ({ data }) => {
   const [products, setProducts] = useState(data.products);
-  const [productToUpdate, setProductToUpdate] = useState<IProduct | null>(null);
+  const [productToUpdate, setProductToUpdate] = useState<IProductWithCategories | null>(null);
   const [formOpened, setFormOpened] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<IValidationErrors | null>(null);
@@ -59,7 +59,7 @@ const ProductPage: NextPage<Props> = ({ data }) => {
 
   const openForm = () => setFormOpened(true);
 
-  const mountProduct = (product: IProduct) => {
+  const mountProduct = (product: IProductWithCategories) => {
     setProductToUpdate(product);
     openForm();
   };
@@ -81,7 +81,7 @@ const ProductPage: NextPage<Props> = ({ data }) => {
     }
   };
 
-  const removeProduct = (product: IProduct) => {
+  const removeProduct = (product: IProductWithCategories) => {
     const copy = products.slice();
     const index = copy.findIndex(p => p.id === product.id);
     if (index >= 0) copy.splice(index, 1);
@@ -92,12 +92,11 @@ const ProductPage: NextPage<Props> = ({ data }) => {
     const url = '/products';
     try {
       setLoading(true);
-      const res = await axios.post<{ product: IProduct }>(url, formData, { headers });
-      setProducts(currentProducts => {
-        currentProducts.push(res.data.product);
-        currentProducts.sort((p1, p2) => p1.name.localeCompare(p2.name));
-        return currentProducts;
-      });
+      const res = await axios.post<{ product: IProductWithCategories }>(url, formData, { headers });
+      const newProductList = products.slice();
+      newProductList.push(res.data.product);
+      newProductList.sort((p1, p2) => p1.name.localeCompare(p2.name));
+      setProducts(newProductList);
       closeForm();
     } catch (error) {
       handleError(error);
@@ -110,14 +109,15 @@ const ProductPage: NextPage<Props> = ({ data }) => {
     const url = `/products/${productToUpdate?.id}`;
     try {
       setLoading(true);
-      const res = await axios.put<{ product: IProduct }>(url, formData, { headers });
-      setProducts(currentProducts => {
-        const productUpdated = res.data.product;
-        const index = currentProducts.findIndex(p => p.id === productUpdated.id);
-        if (index >= 0) currentProducts.splice(index, 1, productUpdated);
-        currentProducts.sort((p1, p2) => p1.name.localeCompare(p2.name));
-        return currentProducts;
-      });
+      const res = await axios.put<{ product: IProductWithCategories }>(url, formData, { headers });
+
+      const productUpdated = res.data.product;
+      const list = products.slice();
+      const index = list.findIndex(p => p.id === productUpdated.id);
+      if (index >= 0) list.splice(index, 1, productUpdated);
+      list.sort((p1, p2) => p1.name.localeCompare(p2.name));
+      setProducts(list);
+
       closeForm();
     } catch (error) {
       handleError(error);
@@ -126,7 +126,7 @@ const ProductPage: NextPage<Props> = ({ data }) => {
     }
   };
 
-  const deleteProduct = async (product: IProduct) => {
+  const deleteProduct = async (product: IProductWithCategories) => {
     const url = `products/${product.id}`;
     const message = /*html */ `
       El producto "<strong>${product.name}</strong>" 
@@ -178,7 +178,12 @@ const ProductPage: NextPage<Props> = ({ data }) => {
 
   return (
     <Layout title="Productos">
-      <ProductTable products={products} openForm={openForm} mountProduct={mountProduct} deleteProduct={deleteProduct} />
+      <ProductTable
+        allProducts={products}
+        openForm={openForm}
+        mountProduct={mountProduct}
+        deleteProduct={deleteProduct}
+      />
       <ProductForm
         product={productToUpdate}
         categories={data.categories}

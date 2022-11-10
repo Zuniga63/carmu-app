@@ -338,6 +338,13 @@ export interface IProduct {
   updatedAt: string;
 }
 
+export interface IProductWithCategories extends IProduct {
+  categories: {
+    id: string;
+    name: string;
+  }[];
+}
+
 //-----------------------------------------------------------------------------
 // INVOICE
 //-----------------------------------------------------------------------------

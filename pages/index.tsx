@@ -51,14 +51,14 @@ const Home: NextPage = () => {
         </div>
         {isAdmin && (
           <>
-            <div className="mb-8">
-              <CashChart />
+            <div className="mb-4">
+              <CreditEvolution />
             </div>
             <div className="mb-4">
               <ReportStatistics />
             </div>
-            <div className="mb-4">
-              <CreditEvolution />
+            <div className="mb-8">
+              <CashChart />
             </div>
           </>
         )}
