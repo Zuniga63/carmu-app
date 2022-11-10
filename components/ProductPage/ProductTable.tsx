@@ -15,7 +15,7 @@ interface Props {
 const ProductTable = ({ allProducts, openForm, mountProduct, deleteProduct }: Props) => {
   const [search, setSearch] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
-  const [products, setProducts] = useState(allProducts.slice());
+  const [products, setProducts] = useState<IProductWithCategories[]>([]);
   const debounceInterval = useRef<undefined | NodeJS.Timeout>(undefined);
 
   const updateSearch = (value: string) => {
@@ -42,6 +42,7 @@ const ProductTable = ({ allProducts, openForm, mountProduct, deleteProduct }: Pr
   };
 
   useEffect(() => {
+    console.log('actualizar');
     updateProductList();
   }, [allProducts, search]);
 

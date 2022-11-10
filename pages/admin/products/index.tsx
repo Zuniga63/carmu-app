@@ -93,11 +93,10 @@ const ProductPage: NextPage<Props> = ({ data }) => {
     try {
       setLoading(true);
       const res = await axios.post<{ product: IProductWithCategories }>(url, formData, { headers });
-      setProducts(currentProducts => {
-        currentProducts.push(res.data.product);
-        currentProducts.sort((p1, p2) => p1.name.localeCompare(p2.name));
-        return currentProducts;
-      });
+      const newProductList = products.slice();
+      newProductList.push(res.data.product);
+      newProductList.sort((p1, p2) => p1.name.localeCompare(p2.name));
+      setProducts(newProductList);
       closeForm();
     } catch (error) {
       handleError(error);
@@ -111,13 +110,14 @@ const ProductPage: NextPage<Props> = ({ data }) => {
     try {
       setLoading(true);
       const res = await axios.put<{ product: IProductWithCategories }>(url, formData, { headers });
-      setProducts(currentProducts => {
-        const productUpdated = res.data.product;
-        const index = currentProducts.findIndex(p => p.id === productUpdated.id);
-        if (index >= 0) currentProducts.splice(index, 1, productUpdated);
-        currentProducts.sort((p1, p2) => p1.name.localeCompare(p2.name));
-        return currentProducts;
-      });
+
+      const productUpdated = res.data.product;
+      const list = products.slice();
+      const index = list.findIndex(p => p.id === productUpdated.id);
+      if (index >= 0) list.splice(index, 1, productUpdated);
+      list.sort((p1, p2) => p1.name.localeCompare(p2.name));
+      setProducts(list);
+
       closeForm();
     } catch (error) {
       handleError(error);
