@@ -1,32 +1,78 @@
-import React from 'react';
-import { Button, ScrollArea } from '@mantine/core';
-import { IconWriting } from '@tabler/icons';
-import { IProduct } from 'types';
+import React, { useEffect, useRef, useState } from 'react';
+import { Button, Loader, ScrollArea, TextInput } from '@mantine/core';
+import { IconSearch, IconWriting } from '@tabler/icons';
+import { IProductWithCategories } from 'types';
 import ProductTableItem from './ProductTableItem';
+import { normalizeText } from 'utils';
 
 interface Props {
-  products: IProduct[];
+  allProducts: IProductWithCategories[];
   openForm(): void;
-  mountProduct(customer: IProduct): void;
-  deleteProduct(customer: IProduct): Promise<void>;
+  mountProduct(product: IProductWithCategories): void;
+  deleteProduct(product: IProductWithCategories): Promise<void>;
 }
-const ProductTable = ({ products, openForm, mountProduct, deleteProduct }: Props) => {
+
+const ProductTable = ({ allProducts, openForm, mountProduct, deleteProduct }: Props) => {
+  const [search, setSearch] = useState<string | undefined>(undefined);
+  const [loading, setLoading] = useState(false);
+  const [products, setProducts] = useState(allProducts.slice());
+  const debounceInterval = useRef<undefined | NodeJS.Timeout>(undefined);
+
+  const updateSearch = (value: string) => {
+    if (debounceInterval.current) clearTimeout(debounceInterval.current);
+    setLoading(true);
+    debounceInterval.current = setTimeout(() => {
+      setLoading(false);
+      setSearch(value);
+    }, 500);
+  };
+
+  const updateProductList = () => {
+    let result = allProducts.slice();
+    if (search) {
+      result = result.filter(item => {
+        const text = normalizeText(
+          [item.name, item.description || '', item.ref || '', item.barcode || ''].join(' ').trim()
+        );
+        return text.includes(normalizeText(search));
+      });
+    }
+
+    setProducts(result);
+  };
+
+  useEffect(() => {
+    updateProductList();
+  }, [allProducts, search]);
+
   return (
     <div className="mx-auto w-11/12 pt-4 text-light">
       <header className="rounded-t-md bg-header px-6 py-2">
         <h2 className="text-center text-xl font-bold tracking-wider">Listado de productos</h2>
+        <div className="grid grid-cols-3">
+          <TextInput
+            size="xs"
+            icon={loading ? <Loader size={14} variant="dots" /> : <IconSearch size={14} stroke={1.5} />}
+            placeholder="Buscar producto"
+            className="flex-grow"
+            onChange={({ target }) => updateSearch(target.value)}
+          />
+        </div>
       </header>
-      <ScrollArea className="relative h-[28rem] overflow-y-auto border border-y-0 border-x-header">
+      <ScrollArea className="relative h-[26rem] overflow-y-auto border border-y-0 border-x-header 3xl:h-[70vh]">
         <table className='class="relative mb-2" min-w-full table-auto'>
           <thead className="sticky top-0 bg-dark">
             <tr className="text-gray-300">
               <th scope="col" className="px-4 py-3 text-center uppercase tracking-wide">
-                Nombre
+                Producto
               </th>
               <th scope="col" className="px-4 py-3 text-center uppercase tracking-wide">
-                Descripción
+                Referencias
               </th>
-              <th scope="col" className="px-4 py-3 text-center uppercase tracking-wide">
+              <th scope="col" className="whitespace-nowrap px-4 py-3 text-center uppercase tracking-wide">
+                Categorías
+              </th>
+              <th scope="col" className="whitespace-nowrap px-4 py-3 text-center uppercase tracking-wide">
                 Stock
               </th>
               <th scope="col" className="px-4 py-3 text-center uppercase tracking-wide">

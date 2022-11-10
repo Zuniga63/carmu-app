@@ -3,10 +3,10 @@ import { useMediaQuery } from '@mantine/hooks';
 import DrawerBody from 'components/DrawerBody';
 import DrawerHeader from 'components/DrawerHeader';
 import React, { FormEvent, useEffect, useState } from 'react';
-import { Category, IProduct, IValidationErrors } from 'types';
+import { Category, IProductWithCategories, IValidationErrors } from 'types';
 
 interface Props {
-  product?: IProduct | null;
+  product?: IProductWithCategories | null;
   categories: Category[];
   opened: boolean;
   loading: boolean;
@@ -101,7 +101,7 @@ const ProductForm = ({ product, categories, opened, loading, errors, close, stor
         setName(product.name);
         setRef(product.ref || '');
         setBarcode(product.barcode || '');
-        if (product.categories.length > 0) setProductCategory(product.categories[0]);
+        if (product.categories.length > 0) setProductCategory(product.categories[0].id);
         setDescription(product.description || '');
         setPrice(product.price);
         setHasDiscount(Boolean(product.hasDiscount));
