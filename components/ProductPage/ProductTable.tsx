@@ -87,7 +87,7 @@ const ProductTable = ({ allProducts, openForm, mountProduct, deleteProduct }: Pr
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody className="divide-y divide-gray-400">
             {products.map(product => (
               <ProductTableItem product={product} key={product.id} mount={mountProduct} onDelete={deleteProduct} />
             ))}
