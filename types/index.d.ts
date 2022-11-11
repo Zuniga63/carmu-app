@@ -349,7 +349,10 @@ export interface IProductWithCategories extends IProduct {
 // INVOICE
 //-----------------------------------------------------------------------------
 export type IInvoiceSeller = Pick<IUser, 'name' | 'id'>;
-export type IInvoiceCustomer = Pick<ICustomer, 'id' | 'firstName' | 'lastName' | 'fullName'>;
+export type IInvoiceCustomer = Pick<
+  ICustomer,
+  'id' | 'firstName' | 'lastName' | 'fullName' | 'documentNumber' | 'address'
+>;
 export type IInvoiceCategory = Pick<Category, 'id' | 'name'>;
 export type IInvoiceProduct = Omit<IProduct, 'images' | 'isInventoriable' | 'sold' | 'returned'>;
 export type IInvoiceCashbox = Pick<IBox, 'id' | 'name' | 'openBox'>;

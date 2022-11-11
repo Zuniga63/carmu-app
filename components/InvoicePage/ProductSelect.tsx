@@ -1,4 +1,4 @@
-import { Select } from '@mantine/core';
+import { Select, SelectItem } from '@mantine/core';
 import { IconBox } from '@tabler/icons';
 import React, { forwardRef, KeyboardEvent } from 'react';
 import { IImage, IInvoiceProduct } from 'types';
@@ -31,6 +31,11 @@ const SelectItem = forwardRef<HTMLDivElement, ItemProps>(({ label, description, 
 SelectItem.displayName = 'SelectItemProduct';
 
 const ProductSelect = ({ products, onSelect, productId, className, selectRef, onEnterPress }: Props) => {
+  const filter = (value: string, item: SelectItem) => {
+    const text = normalizeText(`${item.label} ${item.description} ${item.productref} ${item.barcode}`);
+    return text.includes(normalizeText(value));
+  };
+
   return (
     <Select
       className={className}
@@ -48,10 +53,7 @@ const ProductSelect = ({ products, onSelect, productId, className, selectRef, on
       }))}
       searchable
       clearable
-      filter={(value, item) => {
-        const text = normalizeText(`${item.label} ${item.description} ${item.productref} ${item.barcode}`);
-        return text.includes(normalizeText(value));
-      }}
+      filter={filter}
       onChange={onSelect}
       ref={selectRef}
       onKeyDown={event => onEnterPress(event, true)}

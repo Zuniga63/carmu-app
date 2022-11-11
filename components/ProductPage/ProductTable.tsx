@@ -42,7 +42,6 @@ const ProductTable = ({ allProducts, openForm, mountProduct, deleteProduct }: Pr
   };
 
   useEffect(() => {
-    console.log('actualizar');
     updateProductList();
   }, [allProducts, search]);
 

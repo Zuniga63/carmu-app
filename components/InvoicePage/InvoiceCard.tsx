@@ -31,14 +31,16 @@ const InvoiceCard = ({ invoice }: Props) => {
                   <p className="text-center italic">
                     <span>{invoice?.customerDocumentType}</span>
                     {': '}
-                    <span className="font-bold">{invoice?.customerDocument || 'No reporta'}</span>
+                    <span className="font-bold">
+                      {invoice?.customer?.documentNumber || invoice?.customerDocument || 'No reporta'}
+                    </span>
                   </p>
                 </InvoiceCardField>
               </div>
               {/* CUSTOMER ADDRESS */}
               <div className="col-span-8">
                 <InvoiceCardField title="Dirección">
-                  <p className="italic">{invoice?.customerAddress || 'No reporta'}</p>
+                  <p className="italic">{invoice.customer?.address || invoice?.customerAddress || 'No reporta'}</p>
                 </InvoiceCardField>
               </div>
               {/* DOCUMENT */}
