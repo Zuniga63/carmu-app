@@ -50,6 +50,8 @@ const ProductForm = ({ product, categories, opened, loading, errors, close, stor
     setPriceWithDiscount(undefined);
     setProductIsNew(false);
     setPublished(false);
+    setIsInventoriable(false);
+    setStock(undefined);
   };
 
   const formater = (value: string | undefined) => {
@@ -252,7 +254,7 @@ const ProductForm = ({ product, categories, opened, loading, errors, close, stor
             <NumberInput
               label={<span className="font-sans text-light">Unidades en stock</span>}
               id="productStock"
-              placeholder="Escribe el precio aquí."
+              placeholder="Escribe las unidades en stock"
               className="mb-4"
               min={0}
               step={1}
