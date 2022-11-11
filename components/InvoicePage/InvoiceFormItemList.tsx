@@ -1,5 +1,4 @@
 import React from 'react';
-import { ScrollArea } from '@mantine/core';
 import { IInvoiceSummary, INewInvoiceItem } from 'types';
 import InvoiceFormItemListItem from './InvoiceFormItemListItem';
 import { currencyFormat } from 'utils';
@@ -13,7 +12,7 @@ interface Props {
 const InvoiceFormItemList = ({ items, removeItem, summary }: Props) => {
   return (
     <div>
-      <ScrollArea className="relative mb-2 h-40 overflow-y-auto bg-dark">
+      <div className="relative mb-2 min-h-[10rem] bg-dark">
         <table className="w-full table-auto">
           <thead className="sticky top-0 z-fixed bg-gray-dark">
             <tr className="whitespace-nowrap text-gray-100">
@@ -34,13 +33,13 @@ const InvoiceFormItemList = ({ items, removeItem, summary }: Props) => {
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody className="divide-y divide-gray-500">
             {items.map(item => (
               <InvoiceFormItemListItem key={item.id} item={item} onRemove={removeItem} />
             ))}
           </tbody>
         </table>
-      </ScrollArea>
+      </div>
       {/* SUMMARY */}
       <div className="flex gap-x-4">
         {/* PROPERTIES */}

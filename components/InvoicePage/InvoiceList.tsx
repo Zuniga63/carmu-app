@@ -39,6 +39,7 @@ const InvoiceList = () => {
       const text = normalizeText(search);
       result = result.filter(invoice => invoice.search.includes(text));
     }
+
     result.reverse();
     setFilteredInvoices(result);
     setInvoceList(result.slice(0, growRate));
@@ -79,8 +80,8 @@ const InvoiceList = () => {
   };
 
   useEffect(() => {
+    setFilter('all');
     classifyInvoices();
-    filterInvoices();
   }, [invoices]);
 
   useEffect(() => {

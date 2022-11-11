@@ -42,7 +42,6 @@ const ProductTable = ({ allProducts, openForm, mountProduct, deleteProduct }: Pr
   };
 
   useEffect(() => {
-    console.log('actualizar');
     updateProductList();
   }, [allProducts, search]);
 
@@ -57,6 +56,9 @@ const ProductTable = ({ allProducts, openForm, mountProduct, deleteProduct }: Pr
             placeholder="Buscar producto"
             className="flex-grow"
             onChange={({ target }) => updateSearch(target.value)}
+            onFocus={({ target }) => {
+              target.select();
+            }}
           />
         </div>
       </header>
@@ -84,7 +86,7 @@ const ProductTable = ({ allProducts, openForm, mountProduct, deleteProduct }: Pr
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody className="divide-y divide-gray-400">
             {products.map(product => (
               <ProductTableItem product={product} key={product.id} mount={mountProduct} onDelete={deleteProduct} />
             ))}

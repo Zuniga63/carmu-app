@@ -154,6 +154,7 @@ const InvoiceForm = () => {
       customerAddress: address.trim() || undefined,
       customerDocument: document || undefined,
       customerDocumentType: documentType || undefined,
+      customerPhone: phone || undefined,
       sellerName: user?.name,
       expeditionDate: expeditionDate || undefined,
       expirationDate: expirationDate || undefined,

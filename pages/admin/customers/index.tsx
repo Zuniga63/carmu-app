@@ -213,6 +213,7 @@ const CustomerPage: NextPage = () => {
           mountCustomer={mountCustomerToUpdate}
           mountCustomerToPayment={mountCustomerToPayment}
           deleteCustomer={deleteCustomer}
+          refresh={fetchData}
         />
       ) : (
         <div className="flex h-96 animate-pulse items-center justify-center">

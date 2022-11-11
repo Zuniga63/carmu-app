@@ -11,11 +11,11 @@ interface Props {
 
 const ProductTableItem = ({ product, mount, onDelete }: Props) => {
   return (
-    <tr className="text-gray-300">
+    <tr className="text-light">
       <td className="px-3 py-2">
         <div className="text-center">
-          <p>{product.name}</p>
-          <p className="text-xs">{product.description}</p>
+          <p className="font-bold">{product.name}</p>
+          <p className="text-xs text-gray-400">{product.description}</p>
         </div>
       </td>
       <td className="whitespace-nowrap px-3 py-2 text-center text-xs">
@@ -36,8 +36,15 @@ const ProductTableItem = ({ product, mount, onDelete }: Props) => {
         ))}
       </td>
       <td className="px-3 py-2 text-center text-sm">{product.stock}</td>
-      <td className={`whitespace-nowrap px-3 py-2 text-right`}>{currencyFormat(product.price)}</td>
-      <td className="px-3 py-2 text-sm">
+      <td className="whitespace-nowrap px-3 py-2 text-right">
+        <div>
+          <p className={product.hasDiscount ? 'text-xs text-gray-400 line-through' : ''}>
+            {currencyFormat(product.price)}
+          </p>
+          {product.hasDiscount && product.priceWithDiscount ? <p>{currencyFormat(product.priceWithDiscount)}</p> : null}
+        </div>
+      </td>
+      <td className="px-3 py-2 pr-6 text-sm">
         <div className="flex justify-end gap-x-2">
           <button
             className="rounded-full border-2 border-blue-600 border-opacity-50 p-2 text-blue-600 text-opacity-50 transition-colors hover:border-opacity-80 hover:text-opacity-80 active:border-opacity-100 active:text-opacity-100"

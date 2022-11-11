@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button, Loader, ScrollArea, TextInput } from '@mantine/core';
 import { ICustomer } from 'types';
 import CustomerTableItem from './CustomerTableItem';
-import { IconSearch, IconWriting } from '@tabler/icons';
+import { IconRefresh, IconSearch, IconWriting } from '@tabler/icons';
 import { normalizeText } from 'utils';
 
 interface Props {
@@ -11,9 +11,17 @@ interface Props {
   mountCustomer(customer: ICustomer): void;
   mountCustomerToPayment(customer: ICustomer): void;
   deleteCustomer(customer: ICustomer): Promise<void>;
+  refresh(): Promise<void>;
 }
 
-const CustomerTable = ({ customers, openForm, mountCustomer, deleteCustomer, mountCustomerToPayment }: Props) => {
+const CustomerTable = ({
+  customers,
+  openForm,
+  mountCustomer,
+  deleteCustomer,
+  mountCustomerToPayment,
+  refresh,
+}: Props) => {
   const [search, setSearch] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
   const [filteredCustomers, setFilteredCustomers] = useState<ICustomer[]>([]);
@@ -46,7 +54,7 @@ const CustomerTable = ({ customers, openForm, mountCustomer, deleteCustomer, mou
 
   return (
     <div className="mx-auto w-11/12 pt-4 text-light">
-      <header className="rounded-t-md bg-header px-6 pt-2 pb-4">
+      <header className="relative rounded-t-md bg-header px-6 pt-2 pb-4">
         <h2 className="mb-4 text-center text-xl font-bold tracking-wider">Listado de Clientes</h2>
         <div className="grid grid-cols-3">
           <TextInput
@@ -55,8 +63,19 @@ const CustomerTable = ({ customers, openForm, mountCustomer, deleteCustomer, mou
             placeholder="Buscar Cliente"
             className="flex-grow"
             onChange={({ target }) => updateSearch(target.value)}
+            onFocus={({ target }) => {
+              target.select();
+            }}
           />
         </div>
+
+        {/* REFRESH BUTTON */}
+        <button
+          className="absolute top-4 right-4 rounded-full border border-cyan-500 p-1 text-blue-500 transition-colors hover:border-cyan-300 hover:text-blue-400 active:border-cyan-700 active:text-blue-700"
+          onClick={refresh}
+        >
+          <IconRefresh size={18} />
+        </button>
       </header>
       <ScrollArea className="relative h-[28rem] overflow-y-auto border border-y-0 border-x-header">
         <table className="min-w-full table-auto">
