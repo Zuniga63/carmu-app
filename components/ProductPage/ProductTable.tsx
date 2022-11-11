@@ -57,6 +57,9 @@ const ProductTable = ({ allProducts, openForm, mountProduct, deleteProduct }: Pr
             placeholder="Buscar producto"
             className="flex-grow"
             onChange={({ target }) => updateSearch(target.value)}
+            onFocus={({ target }) => {
+              target.select();
+            }}
           />
         </div>
       </header>

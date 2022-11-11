@@ -63,6 +63,9 @@ const CustomerTable = ({
             placeholder="Buscar Cliente"
             className="flex-grow"
             onChange={({ target }) => updateSearch(target.value)}
+            onFocus={({ target }) => {
+              target.select();
+            }}
           />
         </div>
 
