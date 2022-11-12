@@ -183,7 +183,7 @@ const CustomerPage: NextPage = () => {
   };
 
   const registerPayment = async (formData: unknown) => {
-    const url = `/customers/${customerToUpdate?.id}/add-credit-payment`;
+    const url = `/customers/${customerToPay?.id}/add-credit-payment`;
     try {
       setPaymentModalLoading(true);
       await axios.post(url, formData);
