@@ -52,6 +52,7 @@ const CustomerPage: NextPage = () => {
     setPaymentModalLoading(false);
     setPaymentModalError(null);
     setCustomerToPay(null);
+    setCustomerToUpdate(null);
   };
 
   const openForm = () => {
