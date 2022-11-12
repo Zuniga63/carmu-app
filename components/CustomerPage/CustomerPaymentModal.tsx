@@ -74,7 +74,7 @@ const CustomerPaymentModal = ({ opened, customer, error, loading, onClose, cashb
   };
 
   useEffect(() => {
-    if (!customer || !customer.balance) closeForm();
+    if (opened && (!customer || !customer.balance)) closeForm();
   }, [customer]);
 
   useEffect(() => {

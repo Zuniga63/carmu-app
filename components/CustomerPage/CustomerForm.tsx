@@ -82,13 +82,14 @@ const CustomerForm = ({ opened, close, customer, loading, errors, store, update 
   //---------------------------------------------------------------------------
   // EFFECTS
   //---------------------------------------------------------------------------
-  useEffect(() => {
-    if (opened) resetFields();
-  }, [opened]);
+  // useEffect(() => {
+  //   if (opened) resetFields();
+  // }, [opened]);
 
   useEffect(() => {
     setTitle(customer ? 'Actualizar Cliente' : 'Nuevo Cliente');
     setBtnMessage(customer ? 'Actualizar' : 'Guardar');
+    console.log(customer, title);
     if (customer) {
       setFirstName(customer.firstName);
       if (customer.lastName) setLastName(customer.lastName);

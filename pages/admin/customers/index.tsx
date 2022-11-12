@@ -22,6 +22,7 @@ const CustomerPage: NextPage = () => {
   const [customers, setCustomers] = useState<ICustomer[]>([]);
   const [cashboxs, setCashboxs] = useState<IInvoiceCashbox[]>([]);
   const [customerToUpdate, setCustomerToUpdate] = useState<ICustomer | null>(null);
+  const [customerToPay, setCustomerToPay] = useState<ICustomer | null>(null);
   const [paymentModalOpened, setPaymentModalOpened] = useState(false);
   const [paymentModalLoading, setPaymentModalLoading] = useState(false);
   const [paymentModalError, setPaymentModalError] = useState<unknown>(null);
@@ -51,7 +52,7 @@ const CustomerPage: NextPage = () => {
     setPaymentModalOpened(false);
     setPaymentModalLoading(false);
     setPaymentModalError(null);
-    setCustomerToUpdate(null);
+    setCustomerToPay(null);
   };
 
   const openForm = () => {
@@ -92,7 +93,7 @@ const CustomerPage: NextPage = () => {
   };
 
   const mountCustomerToPayment = (customer: ICustomer) => {
-    setCustomerToUpdate(customer);
+    setCustomerToPay(customer);
     setPaymentModalOpened(true);
   };
 
@@ -236,7 +237,7 @@ const CustomerPage: NextPage = () => {
 
       <CustomerPaymentModal
         opened={paymentModalOpened}
-        customer={customerToUpdate}
+        customer={customerToPay}
         onClose={closeModal}
         loading={paymentModalLoading}
         error={paymentModalError}
