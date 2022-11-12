@@ -6,6 +6,11 @@ import { mountInvoice } from 'store/reducers/InvoicePage/creators';
 import { IInvoice } from 'types';
 import { currencyFormat } from 'utils';
 
+import dayjs from 'dayjs';
+import isToday from 'dayjs/plugin/isToday';
+
+dayjs.extend(isToday);
+
 interface Props {
   invoice: IInvoice;
 }
@@ -48,7 +53,11 @@ const InvoiceListItem = ({ invoice }: Props) => {
   };
 
   return (
-    <div className="overflow-hidden rounded-lg border border-header bg-header shadow shadow-header transition-colors hover:border-dark hover:bg-dark hover:shadow-neutral-900">
+    <div
+      className={`overflow-hidden rounded-lg border ${
+        invoice.expeditionDate.isToday() ? 'border-emerald-700 bg-emerald-900' : 'border-header bg-header'
+      } shadow shadow-header transition-colors hover:border-dark hover:bg-dark hover:shadow-neutral-900`}
+    >
       <header className="px-4 py-2 hover:cursor-pointer" onClick={() => setOpened(current => !current)}>
         <div className="flex justify-between">
           <span className="text-sm font-bold">{invoice.expeditionDate.format('DD-MM-YYYY hh:mm a')}</span>
