@@ -52,15 +52,33 @@ export const lineOptions: ChartOptions<'line'> = {
           const { dataset, dataIndex, parsed } = tooltipItem;
 
           if (dataIndex > 0) {
-            const lastData = dataset.data[dataIndex - 1];
-            const diff = Number(parsed.y) - Number(lastData);
-            const percentage = Math.round((diff / Number(lastData)) * 100);
+            const initialBalance = dataset.data[0];
+            const lastBalance = dataset.data[dataIndex - 1];
 
-            if (!isNaN(percentage) && isFinite(percentage) && percentage !== 0) {
-              afterLabel += percentage > 0 ? '+' : '-';
-              afterLabel += `${Math.abs(percentage)}% (${currencyFormat(diff)})`;
+            if (lastBalance && typeof lastBalance === 'number') {
+              const diff = Number(parsed.y) - lastBalance;
+              const percentage = Math.round((diff / Number(lastBalance)) * 100);
+
+              if (!isNaN(percentage) && isFinite(percentage) && percentage !== 0) {
+                afterLabel += 'Parcial: ';
+                afterLabel += percentage > 0 ? '+' : '-';
+                afterLabel += `${Math.abs(percentage)}% (${currencyFormat(diff)})`;
+              }
+            }
+
+            if (dataIndex > 1 && initialBalance && typeof initialBalance === 'number' && initialBalance > 0) {
+              const balanceDiff = Number(parsed.y) - initialBalance;
+              const fraction = balanceDiff / initialBalance;
+              const percentage = Math.round(fraction * 1000) / 10;
+
+              if (!isNaN(percentage) && isFinite(percentage) && percentage !== 0) {
+                afterLabel += '\nGlobal: ';
+                afterLabel += percentage > 0 ? '+' : '-';
+                afterLabel += `${Math.abs(percentage)}% (${currencyFormat(balanceDiff)})`;
+              }
             }
           }
+
           return afterLabel;
         },
       },
