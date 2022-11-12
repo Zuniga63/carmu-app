@@ -7,6 +7,7 @@ import { normalizeText } from 'utils';
 
 interface Props {
   customers: ICustomer[];
+  fetchLoading: boolean;
   openForm(): void;
   mountCustomer(customer: ICustomer): void;
   mountCustomerToPayment(customer: ICustomer): void;
@@ -16,6 +17,7 @@ interface Props {
 
 const CustomerTable = ({
   customers,
+  fetchLoading,
   openForm,
   mountCustomer,
   deleteCustomer,
@@ -33,7 +35,7 @@ const CustomerTable = ({
     debounceInterval.current = setTimeout(() => {
       setLoading(false);
       setSearch(value);
-    }, 500);
+    }, 250);
   };
 
   const filterCustomers = () => {
@@ -77,42 +79,52 @@ const CustomerTable = ({
           <IconRefresh size={18} />
         </button>
       </header>
-      <ScrollArea className="relative h-[28rem] overflow-y-auto border border-y-0 border-x-header">
-        <table className="min-w-full table-auto">
-          <thead className="sticky top-0 bg-dark">
-            <tr className="text-gray-300">
-              <th scope="col" className="px-4 py-3 text-center uppercase tracking-wide">
-                Cliente
-              </th>
-              <th scope="col" className="px-4 py-3 text-center uppercase tracking-wide">
-                Contacto
-              </th>
-              <th scope="col" className="px-4 py-3 text-center uppercase tracking-wide">
-                Historial
-              </th>
-              <th scope="col" className="px-4 py-3 text-center uppercase tracking-wide">
-                Saldo
-              </th>
-              <th scope="col" className="relative px-6 py-3">
-                <span className="sr-only">Actions</span>
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {filteredCustomers.map(customer => (
-              <CustomerTableItem
-                customer={customer}
-                key={customer.id}
-                mount={mountCustomer}
-                mountToPayment={mountCustomerToPayment}
-                onDelete={deleteCustomer}
-              />
-            ))}
-          </tbody>
-        </table>
-      </ScrollArea>
+      {!fetchLoading ? (
+        <ScrollArea className="relative h-[28rem] overflow-y-auto border border-y-0 border-x-header">
+          <table className="min-w-full table-auto">
+            <thead className="sticky top-0 bg-dark">
+              <tr className="text-gray-300">
+                <th scope="col" className="px-4 py-3 text-center uppercase tracking-wide">
+                  Cliente
+                </th>
+                <th scope="col" className="px-4 py-3 text-center uppercase tracking-wide">
+                  Contacto
+                </th>
+                <th scope="col" className="px-4 py-3 text-center uppercase tracking-wide">
+                  Historial
+                </th>
+                <th scope="col" className="px-4 py-3 text-center uppercase tracking-wide">
+                  Saldo
+                </th>
+                <th scope="col" className="relative px-6 py-3">
+                  <span className="sr-only">Actions</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {filteredCustomers.map(customer => (
+                <CustomerTableItem
+                  customer={customer}
+                  key={customer.id}
+                  mount={mountCustomer}
+                  mountToPayment={mountCustomerToPayment}
+                  onDelete={deleteCustomer}
+                />
+              ))}
+            </tbody>
+          </table>
+        </ScrollArea>
+      ) : (
+        <div className="flex h-96 animate-pulse items-center justify-center">
+          <div className="flex flex-col items-center">
+            <Loader size={40} color="red" />
+            <span className="tracking-widest">Cargando la información de los clientes...</span>
+          </div>
+        </div>
+      )}
+
       <footer className="flex justify-end rounded-b-md bg-header px-6 py-2">
-        <Button leftIcon={<IconWriting />} onClick={() => openForm()}>
+        <Button leftIcon={<IconWriting />} onClick={() => openForm()} disabled={fetchLoading}>
           Agregar Cliente
         </Button>
       </footer>

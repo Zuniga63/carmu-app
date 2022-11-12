@@ -9,7 +9,6 @@ import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 import CustomerPaymentModal from 'components/CustomerPage/CustomerPaymentModal';
 import { useAppSelector } from 'store/hooks';
-import { Loader } from '@mantine/core';
 
 const CustomerPage: NextPage = () => {
   const { isAuth } = useAppSelector(state => state.AuthReducer);
@@ -207,23 +206,15 @@ const CustomerPage: NextPage = () => {
 
   return (
     <Layout title="Clientes">
-      {!fetchLoading ? (
-        <CustomerTable
-          customers={customers}
-          openForm={openForm}
-          mountCustomer={mountCustomerToUpdate}
-          mountCustomerToPayment={mountCustomerToPayment}
-          deleteCustomer={deleteCustomer}
-          refresh={fetchData}
-        />
-      ) : (
-        <div className="flex h-96 animate-pulse items-center justify-center">
-          <div className="flex flex-col items-center">
-            <Loader size={40} color="red" />
-            <span className="tracking-widest">Cargando la información de los clientes...</span>
-          </div>
-        </div>
-      )}
+      <CustomerTable
+        customers={customers}
+        fetchLoading={fetchLoading}
+        openForm={openForm}
+        mountCustomer={mountCustomerToUpdate}
+        mountCustomerToPayment={mountCustomerToPayment}
+        deleteCustomer={deleteCustomer}
+        refresh={fetchData}
+      />
 
       <CustomerForm
         opened={formOpened}
