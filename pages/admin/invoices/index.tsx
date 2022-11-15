@@ -26,9 +26,9 @@ const InvoicePage: NextPage<Props> = ({ data }) => {
 
   return (
     <Layout title="Facturación">
-      <div className="grid grid-cols-3 gap-x-4 px-4 pt-4 3xl:grid-cols-4">
+      <div className="grid grid-cols-3 items-start gap-x-4 px-4 pt-4 3xl:grid-cols-4">
         <InvoiceList />
-        <div className="col-span-2 3xl:col-span-3">
+        <div className="col-span-2 pr-8 3xl:col-span-3">
           <WeeklyInvoiceChart />
         </div>
       </div>

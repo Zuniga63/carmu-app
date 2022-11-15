@@ -517,3 +517,11 @@ export interface IInvoicePageState {
   storePaymentSuccess?: string;
   storePaymentError: unknown;
 }
+
+export interface ISaleHistory {
+  id: string;
+  operationDate: string;
+  operationType: 'sale' | 'credit' | 'separate' | 'credit_payment' | 'separate_payment';
+  description?: string;
+  amount: number;
+}
