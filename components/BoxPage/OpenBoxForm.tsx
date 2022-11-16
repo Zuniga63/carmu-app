@@ -34,7 +34,7 @@ const OpenBoxForm = () => {
 
   const submitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (box && base) {
+    if (box && typeof base === 'number' && base >= 0) {
       const data = { base };
       dispatch(openBox(box, data));
     }
@@ -74,7 +74,7 @@ const OpenBoxForm = () => {
   }, [error]);
 
   useEffect(() => {
-    if (base && base > 100) setEnabled(true);
+    if (typeof base === 'number' && base >= 0) setEnabled(true);
     else setEnabled(false);
   }, [base]);
 
@@ -90,7 +90,7 @@ const OpenBoxForm = () => {
             required
             placeholder="Escribe la base aquí"
             hideControls
-            min={100}
+            min={0}
             step={100}
             value={base}
             onChange={value => setBase(value)}

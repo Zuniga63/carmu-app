@@ -91,7 +91,7 @@ function CloseBoxForm() {
     setLeftover(0);
     setMissign(0);
 
-    if (typeof cash !== 'undefined' && cash >= 0 && box && box.balance) {
+    if (typeof cash !== 'undefined' && cash >= 0 && box && typeof box.balance !== 'undefined') {
       setEnabled(true);
 
       if (cash > box.balance) setLeftover(cash - box.balance);
