@@ -13,7 +13,7 @@ const BoxList = () => {
       <header className="rounded-t-md border-x border-t border-header bg-header px-4 py-2">
         <h2 className="text-2xl">Listado cajas</h2>
       </header>
-      <ScrollArea className="h-96 overflow-y-auto border-x border-header px-4 py-4">
+      <ScrollArea className="h-96 overflow-y-auto border-x border-header px-4 py-4 3xl:h-[70vh]">
         <ul>
           {boxes.map(box => (
             <BoxListItem box={box} key={box.id} />

@@ -1,16 +1,15 @@
-import { ScrollArea, Table, Tabs } from '@mantine/core';
+import { Tabs } from '@mantine/core';
 import { IconChartBar, IconTable } from '@tabler/icons';
 import axios, { CancelTokenSource } from 'axios';
 import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
 import dayjs from 'dayjs';
-import isToday from 'dayjs/plugin/isToday';
-import isYesterday from 'dayjs/plugin/isYesterday';
 import React, { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { toast } from 'react-toastify';
 import { useAppSelector } from 'store/hooks';
 import { ISaleHistory } from 'types';
 import { CHART_COLORS, currencyFormat, transparentize } from 'utils';
+import WeeklyHistory from './WeeklyHistory';
 
 export const barOptions: ChartOptions<'bar'> = {
   responsive: true,
@@ -50,9 +49,6 @@ export const barOptions: ChartOptions<'bar'> = {
     },
   },
 };
-
-dayjs.extend(isToday);
-dayjs.extend(isYesterday);
 
 const WeeklyInvoiceChart = () => {
   const { storeSuccess, storePaymentSuccess } = useAppSelector(state => state.InvoicePageReducer);
@@ -98,17 +94,8 @@ const WeeklyInvoiceChart = () => {
       hidden: true,
     };
 
-    const separatedDataset: ChartDataset<'bar'> = {
-      label: 'Apartado',
-      data: [],
-      borderColor: CHART_COLORS.indigo,
-      borderWidth: 2,
-      backgroundColor: transparentize(CHART_COLORS.indigo, 0.6),
-      hidden: true,
-    };
-
     const loanDataset: ChartDataset<'bar'> = {
-      label: 'Creditos (+)',
+      label: 'Creditos',
       data: [],
       borderColor: CHART_COLORS.raspberry,
       borderWidth: 2,
@@ -125,24 +112,6 @@ const WeeklyInvoiceChart = () => {
       hidden: true,
     };
 
-    const separatedPaymentDataset: ChartDataset<'bar'> = {
-      label: 'Abn. Apartados',
-      data: [],
-      borderColor: CHART_COLORS.blue,
-      borderWidth: 2,
-      backgroundColor: transparentize(CHART_COLORS.blue, 0.6),
-      hidden: true,
-    };
-
-    const loanPaymentDataset: ChartDataset<'bar'> = {
-      label: 'Abn. Créditos',
-      data: [],
-      borderColor: CHART_COLORS.red,
-      borderWidth: 2,
-      backgroundColor: transparentize(CHART_COLORS.red, 0.6),
-      hidden: true,
-    };
-
     const today = dayjs();
     let date = today.subtract(1, 'week');
 
@@ -153,53 +122,39 @@ const WeeklyInvoiceChart = () => {
       let amount = 0;
       let sold = 0;
       let loan = 0;
-      let separated = 0;
+      // let separated = 0;
       let payments = 0;
-      let creditPayments = 0;
-      let separatePayments = 0;
+      // let creditPayments = 0;
+      // let separatePayments = 0;
 
       saleHistory.forEach(record => {
         const recordDate = dayjs(record.operationDate);
         if (recordDate.isBefore(startDay) || recordDate.isAfter(endDay)) return;
 
-        if (record.operationType === 'sale') {
+        if (
+          record.operationType === 'sale' ||
+          record.operationType === 'separate' ||
+          record.operationType === 'separate_payment'
+        ) {
           sold += record.amount;
           amount += record.amount;
         } else if (record.operationType === 'credit') {
           loan += record.amount;
           amount += record.amount;
-        } else if (record.operationType === 'separate') {
-          separated += record.amount;
-          amount += record.amount;
         } else if (record.operationType === 'credit_payment') {
           payments += record.amount;
-          creditPayments += record.amount;
-        } else if ((record.operationType = 'separate_payment')) {
-          payments += record.amount;
-          separatePayments += record.amount;
         }
       });
 
       invoicedDataset.data.push(amount);
       soldDataset.data.push(sold);
-      paymentDataset.data.push(payments);
       loanDataset.data.push(loan);
-      loanPaymentDataset.data.push(creditPayments);
-      separatedDataset.data.push(separated);
-      separatedPaymentDataset.data.push(separatePayments);
+      paymentDataset.data.push(payments);
 
       date = date.add(1, 'day');
     }
 
-    datasets.push(
-      invoicedDataset,
-      soldDataset,
-      loanDataset,
-      separatedDataset,
-      paymentDataset,
-      loanPaymentDataset,
-      separatedPaymentDataset
-    );
+    datasets.push(invoicedDataset, soldDataset, loanDataset, paymentDataset);
 
     return datasets;
   };
@@ -252,61 +207,32 @@ const WeeklyInvoiceChart = () => {
       </Tabs.List>
 
       <Tabs.Panel value="chart">
-        <div className="relative mb-4 h-96 w-full 3xl:h-[60vh]">
-          <Bar options={barOptions} data={chartData} />
+        <div className="mb-16">
+          <div className="relative mb-4 h-96 w-full 3xl:h-[60vh]">
+            <Bar options={barOptions} data={chartData} />
+          </div>
+
+          <ul className="mx-auto w-10/12 text-sm">
+            <li className="mb-4 rounded-lg bg-header px-4 py-2">
+              <span className="font-bold text-indigo-600">Facturado</span>: Corresponde a la suma de los valores de
+              todas las facturas tanto por <strong className="font-bold text-emerald-500">venta directa</strong> y{' '}
+              <strong className="font-bold text-red-600">créditos</strong> junto con los pagos individuales de cada uno
+              de los <strong className="font-bold text-cyan-500">apartados</strong>.
+            </li>
+            <li className="rounded-lg bg-header px-4 py-2">
+              <span className="font-bold text-emerald-600">Efectivo</span>: Es la suma de los{' '}
+              <strong className="font-bold">importes</strong> en efectivo de cada una de las facturas,{' '}
+              <span className="underline">los pagos iniciales</span> de los{' '}
+              <strong className="font-bold text-red-600">créditos</strong>,{' '}
+              <span className="underline">los pagos iniciales</span> y abonos de los{' '}
+              <strong className="font-bold text-cyan-500">apartados</strong>.
+            </li>
+          </ul>
         </div>
       </Tabs.Panel>
 
       <Tabs.Panel value="history" pt={4}>
-        <div className="rounded-b-xl bg-neutral-900 pb-4">
-          <ScrollArea className="relative mb-2 h-96 overflow-y-auto  3xl:h-[60vh]">
-            <Table>
-              <thead className="sticky top-0 bg-header">
-                <tr>
-                  <th scope="col">
-                    <div className="text-center">Fecha</div>
-                  </th>
-                  <th scope="col">Descripción</th>
-                  <th scope="col">
-                    <div className="text-center">Importe</div>
-                  </th>
-                  <th scope="col">
-                    <span className="sr-only">Actions</span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {history.map(record => (
-                  <tr key={record.id}>
-                    <td className="text-center">
-                      <span className="text-xs">
-                        {dayjs(record.operationDate).isToday() || dayjs(record.operationDate).isYesterday()
-                          ? dayjs(record.operationDate).fromNow()
-                          : dayjs(record.operationDate).format('ddd DD MMM hh:mm a')}
-                      </span>
-                    </td>
-                    <td>
-                      <p>{record.description || 'No tiene descripción'}</p>
-                      <div className="text-xs font-bold italic">
-                        {record.operationType === 'sale' ? <p className="text-green-500">Venta</p> : null}
-                        {record.operationType === 'credit' ? <p className="text-red-500">Credito</p> : null}
-                        {record.operationType === 'separate' ? <p className="text-blue-500">Apartado</p> : null}
-                        {record.operationType === 'credit_payment' ? (
-                          <p className="text-emerald-500">Abono de credito</p>
-                        ) : null}
-                        {record.operationType === 'separate_payment' ? (
-                          <p className="text-emerald-500">Abono de apartado</p>
-                        ) : null}
-                      </div>
-                    </td>
-                    <td className="text-right">{currencyFormat(record.amount)}</td>
-                    <td></td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          </ScrollArea>
-        </div>
+        <WeeklyHistory history={history} />
       </Tabs.Panel>
     </Tabs>
   );
