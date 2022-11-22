@@ -1,5 +1,5 @@
 import { Select, SelectItem } from '@mantine/core';
-import { IconBox } from '@tabler/icons';
+import { IconSearch } from '@tabler/icons';
 import React, { forwardRef, KeyboardEvent } from 'react';
 import { IImage, IInvoiceProduct } from 'types';
 import { normalizeText } from 'utils';
@@ -40,7 +40,7 @@ const ProductSelect = ({ products, onSelect, productId, className, selectRef, on
     <Select
       className={className}
       placeholder="Busca o selecciona un producto"
-      icon={<IconBox size={14} />}
+      icon={<IconSearch size={14} />}
       size="xs"
       itemComponent={SelectItem}
       value={productId}

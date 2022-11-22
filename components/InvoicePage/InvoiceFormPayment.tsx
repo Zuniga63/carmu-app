@@ -8,10 +8,11 @@ import InvoiceFormGroup from './InvoiceFormGroup';
 
 interface Props {
   invoiceDate: Date | null;
+  customerName: string;
   addPayment(newPayment: INewInvoicePayment): void;
 }
 
-const InvoiceFormPayment = ({ invoiceDate, addPayment }: Props) => {
+const InvoiceFormPayment = ({ customerName, invoiceDate, addPayment }: Props) => {
   const { cashboxs } = useAppSelector(state => state.InvoicePageReducer);
   const input = useRef<HTMLInputElement>(null);
 
@@ -64,7 +65,7 @@ const InvoiceFormPayment = ({ invoiceDate, addPayment }: Props) => {
 
   return (
     <InvoiceFormGroup title="Agregar Pago">
-      <div className="flex items-center gap-x-4">
+      <div className="flex h-16 items-start gap-x-4">
         <div className="grid flex-grow grid-cols-3 items-start gap-x-4">
           {/* BOX */}
           <div className="flex flex-col gap-y-2">
@@ -117,6 +118,12 @@ const InvoiceFormPayment = ({ invoiceDate, addPayment }: Props) => {
               />
             )}
           </div>
+        </div>
+
+        <div className="absolute bottom-2 scale-90 transform rounded-full border-2 border-red-500 px-4 py-2 text-xs">
+          <p>
+            Cliente: <span className="font-bold tracking-wider">{customerName || 'Mostrador'}</span>
+          </p>
         </div>
 
         <button

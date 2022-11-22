@@ -13,6 +13,8 @@ interface Props {
   mountCustomerToPayment(customer: ICustomer): void;
   deleteCustomer(customer: ICustomer): Promise<void>;
   refresh(): Promise<void>;
+  paymentLoading: boolean;
+  onGetPayments(customer: ICustomer): Promise<void>;
 }
 
 const CustomerTable = ({
@@ -23,6 +25,8 @@ const CustomerTable = ({
   deleteCustomer,
   mountCustomerToPayment,
   refresh,
+  paymentLoading,
+  onGetPayments,
 }: Props) => {
   const [search, setSearch] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
@@ -109,6 +113,8 @@ const CustomerTable = ({
                   mount={mountCustomer}
                   mountToPayment={mountCustomerToPayment}
                   onDelete={deleteCustomer}
+                  paymentLoading={paymentLoading}
+                  onGetPayments={onGetPayments}
                 />
               ))}
             </tbody>

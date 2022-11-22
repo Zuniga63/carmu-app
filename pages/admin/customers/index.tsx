@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
 import Layout from 'components/Layout';
-import { ICustomer, IInvoiceCashbox, IValidationErrors } from 'types';
+import { ICustomer, IInvoiceCashbox, IInvoicePaymentBase, IValidationErrors } from 'types';
 import CustomerTable from 'components/CustomerPage/CustomerTable';
 import { useEffect, useState } from 'react';
 import CustomerForm from 'components/CustomerPage/CustomerForm';
@@ -9,6 +9,9 @@ import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 import CustomerPaymentModal from 'components/CustomerPage/CustomerPaymentModal';
 import { useAppSelector } from 'store/hooks';
+import { Modal } from '@mantine/core';
+import dayjs from 'dayjs';
+import { currencyFormat } from 'utils';
 
 const CustomerPage: NextPage = () => {
   const { isAuth } = useAppSelector(state => state.AuthReducer);
@@ -25,6 +28,11 @@ const CustomerPage: NextPage = () => {
   const [paymentModalOpened, setPaymentModalOpened] = useState(false);
   const [paymentModalLoading, setPaymentModalLoading] = useState(false);
   const [paymentModalError, setPaymentModalError] = useState<unknown>(null);
+
+  const [fetchPaymentsLoading, setFetchPaymentsLoading] = useState(false);
+  const [payments, setPayments] = useState<IInvoicePaymentBase[]>([]);
+  const [paymentsOpened, setPaymentsOpened] = useState(false);
+  const [customer, setCustomer] = useState<ICustomer | null>(null);
 
   const fetchData = async () => {
     setFetchLoading(true);
@@ -199,6 +207,35 @@ const CustomerPage: NextPage = () => {
     }
   };
 
+  const fetchCustomerPayments = async (customer: ICustomer) => {
+    const url = `customers/${customer.id}/payments`;
+    try {
+      setFetchPaymentsLoading(true);
+      setPayments([]);
+      const res = await axios.get<{ payments: IInvoicePaymentBase[] }>(url);
+      setPayments(res.data.payments);
+      showPayments(customer);
+    } catch (error) {
+      toast.error('No se pudo recuperar los pagos');
+      console.log(error);
+    } finally {
+      setFetchPaymentsLoading(false);
+    }
+  };
+
+  const showPayments = (customer: ICustomer) => {
+    setCustomer(customer);
+    setPaymentsOpened(true);
+  };
+
+  const hidePayments = () => {
+    setPaymentsOpened(false);
+    setTimeout(() => {
+      setCustomer(null);
+      setPayments([]);
+    }, 250);
+  };
+
   useEffect(() => {
     if (isAuth) {
       fetchData();
@@ -213,6 +250,8 @@ const CustomerPage: NextPage = () => {
         openForm={openForm}
         mountCustomer={mountCustomerToUpdate}
         mountCustomerToPayment={mountCustomerToPayment}
+        onGetPayments={fetchCustomerPayments}
+        paymentLoading={fetchPaymentsLoading}
         deleteCustomer={deleteCustomer}
         refresh={fetchData}
       />
@@ -236,6 +275,25 @@ const CustomerPage: NextPage = () => {
         cashboxs={cashboxs}
         registerPayment={registerPayment}
       />
+
+      <Modal opened={paymentsOpened} onClose={hidePayments} title={customer?.fullName}>
+        <ul className="flex flex-col gap-y-4">
+          {payments.map(payment => (
+            <li key={payment.id} className="rounded-lg border border-gray-400 px-4 py-2">
+              <div className="flex items-center justify-between gap-x-2">
+                <div className="text-sm">
+                  <p>{dayjs(payment.paymentDate).format('ddd DD-MM-YYYY hh:mm a')}</p>
+                  <p>
+                    {payment.description}{' '}
+                    <span className="text-xs text-gray-600">({dayjs(payment.paymentDate).fromNow()})</span>
+                  </p>
+                </div>
+                <div className="text-sm font-bold">{currencyFormat(payment.amount)}</div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </Modal>
     </Layout>
   );
 };
