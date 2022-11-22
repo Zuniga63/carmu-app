@@ -1,5 +1,5 @@
-import { Tooltip } from '@mantine/core';
-import { IconCash, IconDeviceMobile, IconEdit, IconMail, IconMapPin, IconTrash } from '@tabler/icons';
+import { Loader, Tooltip } from '@mantine/core';
+import { IconCash, IconDeviceMobile, IconEdit, IconListCheck, IconMail, IconMapPin, IconTrash } from '@tabler/icons';
 import dayjs from 'dayjs';
 import React from 'react';
 import { ICustomer } from 'types';
@@ -10,9 +10,11 @@ interface Props {
   mount(customer: ICustomer): void;
   mountToPayment(customer: ICustomer): void;
   onDelete(customer: ICustomer): Promise<void>;
+  paymentLoading: boolean;
+  onGetPayments(customer: ICustomer): Promise<void>;
 }
 
-const CustomerTableItem = ({ customer, mount, onDelete, mountToPayment }: Props) => {
+const CustomerTableItem = ({ customer, mount, onDelete, mountToPayment, paymentLoading, onGetPayments }: Props) => {
   return (
     <tr className="text-gray-300">
       <td className="whitespace-nowrap px-3 py-2">
@@ -70,14 +72,25 @@ const CustomerTableItem = ({ customer, mount, onDelete, mountToPayment }: Props)
       <td className="py-2 pl-3 pr-6 text-sm">
         <div className="flex justify-end gap-x-2">
           {customer.balance ? (
-            <Tooltip label="Hacer abono" withArrow>
-              <button
-                className="rounded-full border-2 border-green-600 border-opacity-50 p-2 text-green-600 text-opacity-50 transition-colors hover:border-opacity-80 hover:text-opacity-80 active:border-opacity-100 active:text-opacity-100"
-                onClick={() => mountToPayment(customer)}
-              >
-                <IconCash size={16} stroke={2} />
-              </button>
-            </Tooltip>
+            <>
+              <Tooltip label="Hacer abono" withArrow>
+                <button
+                  className="rounded-full border-2 border-green-600 border-opacity-50 p-2 text-green-600 text-opacity-50 transition-colors hover:border-opacity-80 hover:text-opacity-80 active:border-opacity-100 active:text-opacity-100"
+                  onClick={() => mountToPayment(customer)}
+                >
+                  <IconCash size={16} stroke={2} />
+                </button>
+              </Tooltip>
+
+              <Tooltip label="Ver Abonos" withArrow>
+                <button
+                  className="rounded-full border-2 border-purple-600 border-opacity-50 p-2 text-purple-600 text-opacity-50 transition-colors hover:border-opacity-80 hover:text-opacity-80 active:border-opacity-100 active:text-opacity-100"
+                  onClick={() => onGetPayments(customer)}
+                >
+                  {paymentLoading ? <Loader size={16} /> : <IconListCheck size={16} stroke={2} />}
+                </button>
+              </Tooltip>
+            </>
           ) : null}
 
           <button
