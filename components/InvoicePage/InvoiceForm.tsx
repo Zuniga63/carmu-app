@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Checkbox, Modal, Select, TextInput } from '@mantine/core';
-import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { IconCalendar, IconFileInvoice, IconHome, IconPhone } from '@tabler/icons';
-import { DatePicker } from '@mantine/dates';
 import dayjs from 'dayjs';
+import { toast } from 'react-toastify';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
+import { closeNewInvoiceForm, storeNewInvoice } from 'store/reducers/InvoicePage/creators';
+
+import { DatePicker } from '@mantine/dates';
+import { Button, Checkbox, Modal, Select, Tabs, TextInput } from '@mantine/core';
+import { IconBox, IconCalendar, IconFileInvoice, IconHome, IconPhone, IconSearch } from '@tabler/icons';
+
 import InvoiceFormHeader from './InvoiceFormHeader';
 import InvoiceFormGroup from './InvoiceFormGroup';
 import InvoiceFormNewItem from './InvoiceFormNewItem';
 import InvoiceFormItemList from './InvoiceFormItemList';
-import { IInvoiceStoreData, IInvoiceSummary, INewInvoiceItem, INewInvoicePayment } from 'types';
 import InvoiceFormPayment from './InvoiceFormPayment';
 import InvoiceFormPaymentList from './InvoiceFormPaymentList';
-import { closeNewInvoiceForm, storeNewInvoice } from 'store/reducers/InvoicePage/creators';
-import { toast } from 'react-toastify';
+import { IInvoiceStoreData, IInvoiceSummary, INewInvoiceItem, INewInvoicePayment } from 'types';
 
 const InvoiceForm = () => {
   const {
@@ -277,112 +279,130 @@ const InvoiceForm = () => {
     <Modal opened={opened} size="80%" padding={0} withCloseButton={false} onClose={closeInvoice}>
       <InvoiceFormHeader onClose={closeInvoice} isSeparate={isSeparate} />
       <div className="px-6 py-2">
-        {/* CUSTOMER && DATE */}
-        <div className="mb-6 grid grid-cols-12 gap-x-4">
-          {/* CUSTOMER */}
-          <InvoiceFormGroup title="Cliente" className="col-span-9">
-            <div className="grid grid-cols-2 gap-2">
-              {/* SELECT CUSTOMER */}
-              <Select
-                className="col-span-2"
-                value={customerId}
-                onChange={value => setCustomerId(value)}
-                data={customers.map(customer => ({ value: customer.id, label: customer.fullName }))}
-                size="xs"
-                placeholder="Selecciona un cliente"
-                searchable
-                clearable
-              />
+        <Tabs defaultValue="new-customer" className="mb-8">
+          <Tabs.List>
+            <Tabs.Tab value="new-customer" color="blue" icon={<IconFileInvoice size={14} />}>
+              Facturación
+            </Tabs.Tab>
+            <Tabs.Tab value="new-item" color="blue" icon={<IconBox size={14} />}>
+              Items
+            </Tabs.Tab>
+            <Tabs.Tab value="new-payment" icon={<IconFileInvoice size={14} />}>
+              Pagos
+            </Tabs.Tab>
+          </Tabs.List>
 
-              {/* Full Name */}
-              <TextInput
-                label="Nombre completo"
-                value={customerName}
-                placeholder="Nombre completo del cliente"
-                size="xs"
-                onChange={({ target }) => setCustomerName(target.value)}
-              />
+          {/* CUSTOMER && DATE */}
+          <Tabs.Panel value="new-customer" pt="lg">
+            <div className="mb-6 grid grid-cols-12 gap-x-4">
+              {/* CUSTOMER */}
+              <InvoiceFormGroup title="Cliente" className="col-span-9">
+                <div className="grid grid-cols-2 gap-2">
+                  {/* SELECT CUSTOMER */}
+                  <Select
+                    className="col-span-2"
+                    value={customerId}
+                    onChange={value => setCustomerId(value)}
+                    data={customers.map(customer => ({ value: customer.id, label: customer.fullName }))}
+                    size="xs"
+                    placeholder="Buscar cliente"
+                    icon={<IconSearch size={15} />}
+                    searchable
+                    clearable
+                  />
 
-              {/* Document */}
-              <div className="grid grid-cols-12 gap-2">
-                <TextInput
-                  label="Documento"
-                  className="col-span-9"
-                  value={document}
-                  placeholder="Escribelo aquí"
+                  {/* Full Name */}
+                  <TextInput
+                    label="Nombre completo"
+                    value={customerName}
+                    placeholder="Nombre completo del cliente"
+                    size="xs"
+                    onChange={({ target }) => setCustomerName(target.value)}
+                  />
+
+                  {/* Document */}
+                  <div className="grid grid-cols-12 gap-2">
+                    <TextInput
+                      label="Documento"
+                      className="col-span-9"
+                      value={document}
+                      placeholder="Escribelo aquí"
+                      size="xs"
+                      onChange={({ target }) => setDocument(target.value)}
+                    />
+                    <Select
+                      className="col-span-3"
+                      label="Tipo"
+                      value={documentType}
+                      onChange={value => setDocumentType(value)}
+                      data={['CC', 'TI', 'NIT', 'PAP']}
+                      size="xs"
+                      allowDeselect={false}
+                    />
+                  </div>
+
+                  {/* ADDRESS */}
+                  <TextInput
+                    placeholder="Dirección del cliente"
+                    size="xs"
+                    icon={<IconHome size={15} />}
+                    value={address}
+                    onChange={({ target }) => setAddress(target.value)}
+                  />
+                  <TextInput
+                    placeholder="Telefono de contacto"
+                    size="xs"
+                    icon={<IconPhone size={15} />}
+                    value={phone}
+                    onChange={({ target }) => setPhone(target.value)}
+                    type="tel"
+                  />
+                </div>
+              </InvoiceFormGroup>
+
+              {/* DATES */}
+              <InvoiceFormGroup title="Facturación" className="col-span-3">
+                {/* Expedition Date */}
+                <DatePicker
+                  label="Fecha de expedición"
+                  locale="es-do"
+                  icon={<IconCalendar size={14} />}
+                  placeholder="Selecciona una fecha"
+                  value={expeditionDate}
+                  onChange={value => setExpeditionDate(value)}
+                  maxDate={dayjs().toDate()}
+                  clearable
+                  className="mb-2"
                   size="xs"
-                  onChange={({ target }) => setDocument(target.value)}
                 />
-                <Select
-                  className="col-span-3"
-                  label="Tipo"
-                  value={documentType}
-                  onChange={value => setDocumentType(value)}
-                  data={['CC', 'TI', 'NIT', 'PAP']}
-                  size="xs"
-                  allowDeselect={false}
-                />
-              </div>
 
-              {/* ADDRESS */}
-              <TextInput
-                placeholder="Dirección del cliente"
-                size="xs"
-                icon={<IconHome size={15} />}
-                value={address}
-                onChange={({ target }) => setAddress(target.value)}
-              />
-              <TextInput
-                placeholder="Telefono de contacto"
-                size="xs"
-                icon={<IconPhone size={15} />}
-                value={phone}
-                onChange={({ target }) => setPhone(target.value)}
-                type="tel"
-              />
+                {/* EXPIRATION DATE */}
+                <DatePicker
+                  label="Fecha de vencimiento"
+                  className="mb-2"
+                  locale="es-do"
+                  icon={<IconCalendar size={14} />}
+                  placeholder="Selecciona una fecha"
+                  value={expirationDate}
+                  onChange={value => setExpirationDate(value)}
+                  minDate={dayjs(expeditionDate).toDate()}
+                  clearable
+                  size="xs"
+                  disabled={!expeditionDate}
+                />
+              </InvoiceFormGroup>
             </div>
-          </InvoiceFormGroup>
+          </Tabs.Panel>
 
-          {/* DATES */}
-          <InvoiceFormGroup title="Facturación" className="col-span-3">
-            {/* Expedition Date */}
-            <DatePicker
-              label="Fecha de expedición"
-              locale="es-do"
-              icon={<IconCalendar size={14} />}
-              placeholder="Selecciona una fecha"
-              value={expeditionDate}
-              onChange={value => setExpeditionDate(value)}
-              maxDate={dayjs().toDate()}
-              clearable
-              className="mb-2"
-              size="xs"
-            />
+          <Tabs.Panel value="new-item" pt="lg">
+            <InvoiceFormNewItem customerName={customerName} summary={summary} addItem={addItem} />
+          </Tabs.Panel>
 
-            {/* EXPIRATION DATE */}
-            <DatePicker
-              label="Fecha de vencimiento"
-              className="mb-2"
-              locale="es-do"
-              icon={<IconCalendar size={14} />}
-              placeholder="Selecciona una fecha"
-              value={expirationDate}
-              onChange={value => setExpirationDate(value)}
-              minDate={dayjs(expeditionDate).toDate()}
-              clearable
-              size="xs"
-              disabled={!expeditionDate}
-            />
-          </InvoiceFormGroup>
-        </div>
-        {/* ADD ITEM */}
-        <div className="mb-6">
-          <InvoiceFormNewItem summary={summary} addItem={addItem} />
-        </div>
-        {/* ADD PAYMENT */}
-        <div className="mb-6">
-          <InvoiceFormPayment invoiceDate={expeditionDate} addPayment={addPayment} />
-        </div>
+          <Tabs.Panel value="new-payment" pt="lg">
+            <InvoiceFormPayment customerName={customerName} invoiceDate={expeditionDate} addPayment={addPayment} />
+          </Tabs.Panel>
+        </Tabs>
+
         {/* ITEM LIST AND PAYMENTS */}
         <div className="mb-6 grid grid-cols-3 items-start gap-x-4">
           {/* ITEM LIST */}
@@ -395,7 +415,7 @@ const InvoiceForm = () => {
           </div>
         </div>
       </div>
-      <footer className="flex justify-end gap-x-4 px-6 py-4">
+      <footer className="flex items-center justify-end gap-x-4 px-6 py-4">
         <Checkbox
           label="¿Es un apartado?"
           checked={isSeparate}
