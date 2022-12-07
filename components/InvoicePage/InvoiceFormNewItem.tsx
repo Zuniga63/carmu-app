@@ -1,24 +1,28 @@
 import React, { useState, useEffect, useRef, KeyboardEvent } from 'react';
-import { Button, NumberInput, Select, TextInput } from '@mantine/core';
+import { Button, Checkbox, NumberInput, Select, TextInput } from '@mantine/core';
 import { useAppSelector } from 'store/hooks';
-import { IconCategory, IconPlus, IconTrash } from '@tabler/icons';
+import { IconBox, IconCategory, IconPlus, IconTrash } from '@tabler/icons';
 import ProductSelect from './ProductSelect';
 import InvoiceFormGroup from './InvoiceFormGroup';
-import { IInvoiceSummary, INewInvoiceItem } from 'types';
+import { IInvoiceCashbox, IInvoiceSummary, INewInvoiceItem } from 'types';
 import { currencyFormat } from 'utils';
+import dayjs from 'dayjs';
 
 interface Props {
   customerName: string;
   summary: IInvoiceSummary;
-  addItem(newItem: INewInvoiceItem): void;
+  invoiceDate: Date | null;
+  addItem(newItem: INewInvoiceItem, isCounterSale?: boolean, box?: IInvoiceCashbox | null): void;
 }
 
-const InvoiceFormNewItem = ({ customerName, summary, addItem }: Props) => {
-  const { products, categories } = useAppSelector(state => state.InvoicePageReducer);
+const InvoiceFormNewItem = ({ customerName, summary, addItem, invoiceDate }: Props) => {
+  const { products, categories, cashboxs } = useAppSelector(state => state.InvoicePageReducer);
   const searchRef = useRef<HTMLInputElement>(null);
   const categoryRef = useRef<HTMLInputElement>(null);
 
   const [productId, setProductId] = useState<string | null>(null);
+  const [boxId, setBoxId] = useState<string | null>(null);
+  const [boxList, setBoxList] = useState<IInvoiceCashbox[]>([]);
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const [itemDescription, setItemDescription] = useState('');
   const [itemQuantity, setItemQuantity] = useState<number | undefined>(1);
@@ -26,6 +30,7 @@ const InvoiceFormNewItem = ({ customerName, summary, addItem }: Props) => {
   const [itemDiscount, setItemDiscount] = useState<number | undefined>(undefined);
   const [itemAmount, setItemAmount] = useState<number | undefined>(undefined);
   const [enabled, setEnabled] = useState(false);
+  const [isCounterSale, setIsCounterSale] = useState(false);
 
   const resetItem = (focus: 'search' | 'category' = 'category') => {
     setProductId(null);
@@ -48,6 +53,7 @@ const InvoiceFormNewItem = ({ customerName, summary, addItem }: Props) => {
   };
 
   const add = (from: 'search' | 'other' = 'other') => {
+    let box: IInvoiceCashbox | null = null;
     const item: INewInvoiceItem = {
       id: String(new Date().getTime()),
       categories: [],
@@ -61,8 +67,11 @@ const InvoiceFormNewItem = ({ customerName, summary, addItem }: Props) => {
 
     if (categoryId) item.categories.push(categoryId);
     if (productId) item.product = productId;
+    if (isCounterSale) {
+      box = boxList.find(item => item.id === boxId) || null;
+    }
 
-    addItem(item);
+    addItem(item, isCounterSale, box);
     resetItem(from === 'other' ? 'category' : 'search');
   };
 
@@ -89,6 +98,13 @@ const InvoiceFormNewItem = ({ customerName, summary, addItem }: Props) => {
   }, [productId]);
 
   useEffect(() => {
+    let date = dayjs();
+    if (invoiceDate && dayjs(invoiceDate).isValid()) date = dayjs(invoiceDate);
+    setBoxList(cashboxs.filter(box => Boolean(box.openBox && dayjs(box.openBox).isBefore(date))));
+    setBoxId(null);
+  }, [cashboxs.length, invoiceDate]);
+
+  useEffect(() => {
     if (itemQuantity && itemUnitValue) {
       let amount = itemQuantity * itemUnitValue;
       if (itemDiscount && itemDiscount < itemUnitValue) amount -= itemQuantity * itemDiscount;
@@ -99,8 +115,11 @@ const InvoiceFormNewItem = ({ customerName, summary, addItem }: Props) => {
   }, [itemQuantity, itemUnitValue, itemDiscount]);
 
   useEffect(() => {
-    setEnabled(Boolean(itemAmount && itemDescription && itemAmount > 0));
-  }, [itemAmount, itemDescription]);
+    let result = Boolean(itemAmount && itemDescription && itemAmount > 0);
+    if (result && isCounterSale && !boxId) result = false;
+
+    setEnabled(result);
+  }, [itemAmount, itemDescription, isCounterSale, boxId]);
 
   return (
     <InvoiceFormGroup title="Agregar Item">
@@ -108,7 +127,7 @@ const InvoiceFormNewItem = ({ customerName, summary, addItem }: Props) => {
         <div className="mb-4 flex items-center gap-x-4">
           <div className="flex-grow">
             {/* CATEGORY & PRODUCT */}
-            <div className="mb-2 grid grid-cols-4 items-center gap-2">
+            <div className="mb-2 grid grid-cols-8 items-center gap-2">
               {/* PRODUCT */}
               <ProductSelect
                 products={products}
@@ -116,12 +135,28 @@ const InvoiceFormNewItem = ({ customerName, summary, addItem }: Props) => {
                 selectRef={searchRef}
                 onSelect={setProductId}
                 onEnterPress={handleKeyPress}
-                className="col-span-4 lg:col-span-3"
+                className="col-span-8 lg:col-span-4"
+              />
+
+              <Select
+                placeholder="Selecciona una caja"
+                value={boxId}
+                onChange={setBoxId}
+                icon={<IconBox size={14} />}
+                data={boxList.map(box => ({
+                  value: box.id,
+                  label: box.name,
+                }))}
+                searchable
+                clearable
+                size="xs"
+                className="col-span-8 lg:col-span-2"
+                disabled={!isCounterSale}
               />
 
               {/* Total items */}
               {summary.amount > 0 ? (
-                <p className="col-span-4 pr-4 text-right text-sm italic lg:col-span-1">
+                <p className="col-span-8 pr-4 text-right text-sm italic lg:col-span-2">
                   <span>Facturado: </span>
                   <span className="font-bold tracking-widest">{currencyFormat(summary.amount)}</span>
                 </p>
@@ -218,6 +253,12 @@ const InvoiceFormNewItem = ({ customerName, summary, addItem }: Props) => {
 
           <div className="flex flex-col items-center justify-end gap-4 lg:flex-row">
             {itemAmount ? <span className="text-xs">Importe: {currencyFormat(itemAmount)}</span> : null}
+            <Checkbox
+              className="flex items-center"
+              label="Venta por mostrador"
+              checked={isCounterSale}
+              onChange={({ currentTarget }) => setIsCounterSale(currentTarget.checked)}
+            />
             <Button leftIcon={<IconPlus size={15} stroke={4} />} size="xs" disabled={!enabled} onClick={() => add()}>
               Agregar Item
             </Button>
