@@ -87,11 +87,11 @@ const AnnualGeneralAux = ({ title, description, annualReports, period }: Props) 
 
   return (
     <div>
-      <header className="rounded-t-md bg-header px-4 py-2">
-        <h2 className="mb-1 text-center text-sm font-bold tracking-wider">{title}</h2>
+      <header className="rounded-t-md bg-gray-300 px-4 py-2 dark:bg-header">
+        <h2 className="mb-1 text-center text-sm font-bold tracking-wider text-dark dark:text-light">{title}</h2>
         {description && <p className="text-center text-xs italic text-neutral-400">{description}</p>}
       </header>
-      <div className="relative h-80 border-x-4 border-b-4 border-header px-2">
+      <div className="relative h-80 border-x-4 border-b-4 border-gray-300 px-2 dark:border-header">
         <Chart type="doughnut" options={chartOptions} data={chartData} />
       </div>
     </div>

@@ -49,14 +49,14 @@ const BoxShow = () => {
       {waiting && <WaitingBox loading={loading} />}
       {!waiting && (
         <div>
-          <header className="rounded-t-md bg-header px-6 py-2">
+          <header className="rounded-t-md bg-gray-300 px-6 py-2 dark:bg-header">
             <h2 className="text-center text-xl font-bold tracking-wider">{boxName}</h2>
             <p className="text-center font-bold">{currencyFormat(boxBalance)}</p>
           </header>
-          <ScrollArea className="relative h-[26rem] overflow-y-auto border border-y-0 border-x-header 3xl:h-[40rem]">
+          <ScrollArea className="relative h-[26rem] overflow-y-auto border border-y-0 border-x-gray-400 dark:border-x-header 3xl:h-[40rem]">
             <TransactionTable transactions={transactions} />
           </ScrollArea>
-          <footer className="flex justify-end rounded-b-md bg-header px-6 py-2">
+          <footer className="flex justify-end rounded-b-md bg-gray-300 px-6 py-2 dark:bg-header">
             <Button leftIcon={<IconWriting />} onClick={addHandler}>
               Agregar Transacción
             </Button>

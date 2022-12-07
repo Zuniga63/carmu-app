@@ -46,15 +46,15 @@ const ProductTable = ({ allProducts, openForm, mountProduct, deleteProduct }: Pr
   }, [allProducts, search]);
 
   return (
-    <div className="mx-auto w-11/12 pt-4 text-light">
-      <header className="rounded-t-md bg-header px-6 py-2">
+    <div className="mx-auto w-11/12 pt-4 dark:text-light">
+      <header className="rounded-t-md bg-gray-300 px-6 py-2 dark:bg-header">
         <h2 className="text-center text-xl font-bold tracking-wider">Listado de productos</h2>
         <div className="grid grid-cols-3">
           <TextInput
             size="xs"
             icon={loading ? <Loader size={14} variant="dots" /> : <IconSearch size={14} stroke={1.5} />}
             placeholder="Buscar producto"
-            className="flex-grow"
+            className="col-span-3 flex-grow lg:col-span-1"
             onChange={({ target }) => updateSearch(target.value)}
             onFocus={({ target }) => {
               target.select();
@@ -62,10 +62,10 @@ const ProductTable = ({ allProducts, openForm, mountProduct, deleteProduct }: Pr
           />
         </div>
       </header>
-      <ScrollArea className="relative h-[26rem] overflow-y-auto border border-y-0 border-x-header 3xl:h-[70vh]">
+      <ScrollArea className="relative h-[26rem] overflow-y-auto border border-y-0 border-x-gray-300 dark:border-x-header 3xl:h-[70vh]">
         <table className='class="relative mb-2" min-w-full table-auto'>
-          <thead className="sticky top-0 bg-dark">
-            <tr className="text-gray-300">
+          <thead className="sticky top-0 bg-gray-400 dark:bg-dark">
+            <tr className="text-dark dark:text-gray-300">
               <th scope="col" className="px-4 py-3 text-center uppercase tracking-wide">
                 Producto
               </th>
@@ -93,7 +93,7 @@ const ProductTable = ({ allProducts, openForm, mountProduct, deleteProduct }: Pr
           </tbody>
         </table>
       </ScrollArea>
-      <footer className="flex justify-end rounded-b-md bg-header px-6 py-2">
+      <footer className="flex justify-end rounded-b-md bg-gray-300 px-6 py-2 dark:bg-header">
         <Button leftIcon={<IconWriting />} onClick={() => openForm()}>
           Agregar Producto
         </Button>

@@ -10,7 +10,7 @@ interface Props {
 
 const InvoiceCardModalHeader = ({ title, invoiceNumber, onClose, invoiceType = 'Factura' }: Props) => {
   return (
-    <header className="relative rounded-t-lg bg-header p-4">
+    <header className="relative rounded-t-lg bg-gray-300 p-4 dark:bg-header">
       <h2 className="text-center text-xl tracking-wider">
         <span className="mr-2 inline-block">{invoiceType}</span>
         {title}
@@ -23,7 +23,7 @@ const InvoiceCardModalHeader = ({ title, invoiceNumber, onClose, invoiceType = '
 
       {/* CLOSE BUTTON */}
       <button
-        className="absolute top-4 right-4 text-light text-opacity-80 transition-opacity hover:text-opacity-100"
+        className="absolute top-4 right-4 text-opacity-80 transition-opacity hover:text-opacity-100 dark:text-light"
         onClick={onClose}
       >
         <IconX stroke={3} />

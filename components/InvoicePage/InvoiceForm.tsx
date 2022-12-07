@@ -15,6 +15,7 @@ import InvoiceFormItemList from './InvoiceFormItemList';
 import InvoiceFormPayment from './InvoiceFormPayment';
 import InvoiceFormPaymentList from './InvoiceFormPaymentList';
 import { IInvoiceStoreData, IInvoiceSummary, INewInvoiceItem, INewInvoicePayment } from 'types';
+import { useMediaQuery } from '@mantine/hooks';
 
 const InvoiceForm = () => {
   const {
@@ -27,6 +28,7 @@ const InvoiceForm = () => {
   const { user } = useAppSelector(state => state.AuthReducer);
   const dispatch = useAppDispatch();
   const [enabled, setEnabled] = useState(false);
+  const largeScreen = useMediaQuery('(min-width: 768px)');
 
   // CUSTOMER
   const [customerId, setCustomerId] = useState<string | null>(null);
@@ -276,7 +278,13 @@ const InvoiceForm = () => {
   }, [success]);
 
   return (
-    <Modal opened={opened} size="80%" padding={0} withCloseButton={false} onClose={closeInvoice}>
+    <Modal
+      opened={opened}
+      size={largeScreen ? '80%' : '100%'}
+      padding={0}
+      withCloseButton={false}
+      onClose={closeInvoice}
+    >
       <InvoiceFormHeader onClose={closeInvoice} isSeparate={isSeparate} />
       <div className="px-6 py-2">
         <Tabs defaultValue="new-customer" className="mb-8">
@@ -294,13 +302,13 @@ const InvoiceForm = () => {
 
           {/* CUSTOMER && DATE */}
           <Tabs.Panel value="new-customer" pt="lg">
-            <div className="mb-6 grid grid-cols-12 gap-x-4">
+            <div className="mb-6 grid gap-4 lg:grid-cols-12">
               {/* CUSTOMER */}
-              <InvoiceFormGroup title="Cliente" className="col-span-9">
-                <div className="grid grid-cols-2 gap-2">
+              <InvoiceFormGroup title="Cliente" className="lg:col-span-9">
+                <div className="grid gap-2 lg:grid-cols-2">
                   {/* SELECT CUSTOMER */}
                   <Select
-                    className="col-span-2"
+                    className="lg:col-span-2"
                     value={customerId}
                     onChange={value => setCustomerId(value)}
                     data={customers.map(customer => ({ value: customer.id, label: customer.fullName }))}
@@ -361,7 +369,7 @@ const InvoiceForm = () => {
               </InvoiceFormGroup>
 
               {/* DATES */}
-              <InvoiceFormGroup title="Facturación" className="col-span-3">
+              <InvoiceFormGroup title="Facturación" className="lg:col-span-3">
                 {/* Expedition Date */}
                 <DatePicker
                   label="Fecha de expedición"
@@ -404,9 +412,9 @@ const InvoiceForm = () => {
         </Tabs>
 
         {/* ITEM LIST AND PAYMENTS */}
-        <div className="mb-6 grid grid-cols-3 items-start gap-x-4">
+        <div className="mb-6 grid w-full items-start gap-4 lg:grid-cols-3">
           {/* ITEM LIST */}
-          <div className="col-span-2">
+          <div className="lg:col-span-2">
             <InvoiceFormItemList items={items} removeItem={removeItem} summary={summary} />
           </div>
           {/* Payments */}
@@ -415,7 +423,7 @@ const InvoiceForm = () => {
           </div>
         </div>
       </div>
-      <footer className="flex items-center justify-end gap-x-4 px-6 py-4">
+      <footer className="flex flex-col items-center justify-end gap-4 px-6 py-4 lg:flex-row">
         <Checkbox
           label="¿Es un apartado?"
           checked={isSeparate}

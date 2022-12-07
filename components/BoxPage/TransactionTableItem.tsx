@@ -19,7 +19,7 @@ const TransactionTableItem = ({ transaction }: Props) => {
   };
 
   return (
-    <tr className="text-gray-300">
+    <tr className="text-dark dark:text-gray-300">
       <td className="whitespace-nowrap px-3 py-2">
         <div className="text-center">
           <p className="text-sm">{transaction.transactionDate.format('DD/MM/YY hh:mm a')}</p>

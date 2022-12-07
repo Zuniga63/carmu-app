@@ -22,21 +22,25 @@ const InvoiceCardSummary = ({ invoice }: Props) => {
         {Boolean(invoice.subtotal) && invoice.subtotal !== invoice.amount && (
           <div className="flex flex-col items-end">
             <p className="text-xs">Subtotal</p>
-            <p className="border-t px-2 text-sm font-bold text-gray-200">{currencyFormat(invoice.subtotal)}</p>
+            <p className="border-t px-2 text-sm font-bold text-dark dark:text-gray-200">
+              {currencyFormat(invoice.subtotal)}
+            </p>
           </div>
         )}
         {/* DESCUENTO */}
         {invoice.discount && (
           <div className="flex flex-col items-end">
             <p className="text-xs">Descuento</p>
-            <p className="border-t px-2 text-sm font-bold text-gray-200">{currencyFormat(invoice.discount)}</p>
+            <p className="border-t px-2 text-sm font-bold text-dark dark:text-gray-200">
+              {currencyFormat(invoice.discount)}
+            </p>
           </div>
         )}
       </div>
       {/* AMOUNT */}
       <div className="mb-2 flex flex-col items-end">
         <p className="font-bold uppercase">Total</p>
-        <p className="border-t px-2 text-lg font-bold text-gray-200">{currencyFormat(invoice.amount)}</p>
+        <p className="border-t px-2 text-lg font-bold text-dark dark:text-gray-200">{currencyFormat(invoice.amount)}</p>
       </div>
       {/* CASH && CASHCHAGE && PAYMENTS */}
       <div
@@ -48,21 +52,25 @@ const InvoiceCardSummary = ({ invoice }: Props) => {
         {Boolean(invoice.cash) && (
           <div className="flex flex-col items-end">
             <p className="text-xs">Efectivo</p>
-            <p className="border-t px-2 text-sm font-bold text-gray-200">{currencyFormat(invoice.cash)}</p>
+            <p className="border-t px-2 text-sm font-bold text-dark dark:text-gray-200">
+              {currencyFormat(invoice.cash)}
+            </p>
           </div>
         )}
         {/* CASH CHANGE */}
         {invoice.cashChange && (
           <div className="flex flex-col items-end">
             <p className="text-xs">Cambio</p>
-            <p className="border-t px-2 text-sm font-bold text-gray-200">{currencyFormat(invoice.cashChange)}</p>
+            <p className="border-t px-2 text-sm font-bold text-dark dark:text-gray-200">
+              {currencyFormat(invoice.cashChange)}
+            </p>
           </div>
         )}
         {/* PAYMENTS */}
         {payments > 0 && (
           <div className="flex flex-col items-end">
             <p className="text-xs">Abonos</p>
-            <p className="border-t px-2 text-sm font-bold text-gray-200">{currencyFormat(payments)}</p>
+            <p className="border-t px-2 text-sm font-bold text-dark dark:text-gray-200">{currencyFormat(payments)}</p>
           </div>
         )}
       </div>
@@ -70,7 +78,9 @@ const InvoiceCardSummary = ({ invoice }: Props) => {
       {Boolean(invoice.balance) && (
         <div className="mb-2 flex flex-col items-end">
           <p className="font-bold uppercase">Saldo</p>
-          <p className="border-t px-2 text-lg font-bold text-gray-200">{currencyFormat(invoice.balance)}</p>
+          <p className="border-t px-2 text-lg font-bold text-dark dark:text-gray-200">
+            {currencyFormat(invoice.balance)}
+          </p>
         </div>
       )}
     </div>

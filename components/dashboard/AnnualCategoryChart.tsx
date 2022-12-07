@@ -210,8 +210,8 @@ const AnnualCategoryChart = ({ annualReports }: Props) => {
 
   return (
     <div>
-      <header className="rounded-t-md bg-header px-4 py-2">
-        <h2 className="text-center text-sm font-bold tracking-wider">Comparativa Anual</h2>
+      <header className="rounded-t-md bg-gray-300 px-4 py-2 dark:bg-header">
+        <h2 className="text-center text-sm font-bold tracking-wider text-dark dark:text-light">Comparativa Anual</h2>
         <p className="mb-2 text-center text-xs italic">Categorías</p>
         {/* Controllers */}
         <div className="flex justify-between gap-2">
@@ -236,7 +236,7 @@ const AnnualCategoryChart = ({ annualReports }: Props) => {
       </header>
 
       <div
-        className={`relative h-80 border-x-4 border-header bg-white px-2 backdrop-blur transition-colors ${
+        className={`relative h-80 border-x-4 border-gray-300 bg-white px-2 backdrop-blur transition-colors dark:border-header ${
           chartData ? 'bg-opacity-0' : 'bg-opacity-10'
         }`}
       >
@@ -250,7 +250,7 @@ const AnnualCategoryChart = ({ annualReports }: Props) => {
         )}
       </div>
 
-      <footer className="rounded-b.md flex justify-between bg-header px-2 py-3">
+      <footer className="rounded-b.md flex justify-between bg-gray-300 px-2 py-3 dark:bg-header">
         <Button
           leftIcon={<IconX size={16} />}
           color="violet"

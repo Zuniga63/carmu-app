@@ -12,7 +12,7 @@ import isLeapYear from 'dayjs/plugin/isLeapYear';
 import ReportStatistics from 'components/dashboard/ReportStatistics';
 import CreditEvolution from 'components/dashboard/CreditEvolution';
 
-ChartJS.defaults.color = '#ccc';
+ChartJS.register();
 dayjs.extend(isLeapYear);
 
 const Home: NextPage = () => {
@@ -41,8 +41,8 @@ const Home: NextPage = () => {
 
   return (
     <Layout title="Dashboard">
-      <div className="px-8 pb-40">
-        <div className="mb-2 flex flex-col items-center justify-center py-8 text-light">
+      <div className="px-4 pb-40 lg:px-8">
+        <div className="mb-2 flex flex-col items-center justify-center py-8 text-dark dark:text-light">
           <h1 className="m-0 text-center text-2xl leading-tight">Bienvenido {user?.name}</h1>
           <p className="mt-4 text-center text-sm leading-tight">
             Sección en continua actualización, actualmente se encuentra implementado el flujo de caja y el flujo de

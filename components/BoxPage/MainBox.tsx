@@ -13,16 +13,16 @@ interface Props {
 const MainBox = ({ mainBox }: Props) => {
   const dispatch = useAppDispatch();
   return (
-    <div className="overflow-hidden rounded-lg border border-header shadow-sm shadow-gray-500">
-      <header className="relative bg-header px-4 py-2">
+    <div className="overflow-hidden rounded-lg border shadow-sm dark:border-header dark:shadow-gray-500">
+      <header className="relative bg-gray-300 px-4 py-2 dark:bg-header">
         <h2 className="text-center font-bold tracking-wider">{mainBox.name}</h2>
       </header>
-      <div className="px-4 py-2">
+      <div className="bg-gradient-to-b from-gray-200 to-indigo-300 px-4 py-2 dark:bg-none">
         <p className="text-center text-2xl font-bold tracking-wider">{currencyFormat(mainBox.balance)}</p>
         <p className="text-center text-xs font-bold">Saldo</p>
       </div>
 
-      <footer className="bg-header px-4 py-2">
+      <footer className="bg-indigo-400 px-4 py-2 dark:bg-header">
         <div className="flex items-center justify-end">
           <Button size="xs" leftIcon={<IconFolder size={14} />} onClick={() => dispatch(mountMainBox())}>
             Ver Transacciones

@@ -1,4 +1,5 @@
 import { Button, Modal } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { IconCash, IconPrinter } from '@tabler/icons';
 import Link from 'next/link';
 import React from 'react';
@@ -16,13 +17,14 @@ const InvoiceCardModal = () => {
     selectedInvoiceError: error,
   } = useAppSelector(state => state.InvoicePageReducer);
   const dispatch = useAppDispatch();
+  const largeScreen = useMediaQuery('(min-width: 768px)');
 
   const onClose = () => {
     if (!loading) dispatch(unmountSelectedInvoice());
   };
 
   return (
-    <Modal size="70%" opened={opened} onClose={onClose} padding={0} withCloseButton={false}>
+    <Modal size={largeScreen ? '70%' : '100%'} opened={opened} onClose={onClose} padding={0} withCloseButton={false}>
       <div>
         <InvoiceCardModalHeader
           title={
@@ -39,7 +41,7 @@ const InvoiceCardModal = () => {
           {invoice ? <InvoiceCard invoice={invoice} /> : <EmptyInvoice loading={loading} error={error} />}
         </div>
 
-        <footer className="flex justify-between rounded-b-lg bg-header p-4">
+        <footer className="flex justify-between rounded-b-lg bg-gray-300 p-4 dark:bg-header">
           <Button leftIcon={<IconPrinter />} color="green" disabled={!invoice}>
             <Link href={`/admin/invoices/print/${invoice?.id}`} target="_blank">
               Imprimir

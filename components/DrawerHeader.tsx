@@ -7,7 +7,7 @@ interface Props {
 }
 const DrawerHeader = ({ title, onClose }: Props) => {
   return (
-    <header className="sticky top-0 z-fixed bg-header text-gray-200">
+    <header className="sticky top-0 z-fixed bg-gray-200 text-dark dark:bg-header dark:text-gray-200">
       <div className="flex h-16 items-center justify-between px-4 py-2">
         <h2 className="text-lg font-bold uppercase">{title}</h2>
         <button onClick={onClose}>

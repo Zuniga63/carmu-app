@@ -80,13 +80,13 @@ const AnnualReportStatistics = ({ title, description, type }: Props) => {
 
   return (
     <Skeleton visible={loading}>
-      <div className="min-h-[300px] bg-dark bg-opacity-90 px-4 pt-6 pb-2">
+      <div className="min-h-[300px] bg-gray-200 bg-opacity-90 px-4 pt-6 pb-2 dark:bg-dark">
         <header className="mb-4">
-          <h2 className="mb-1 text-center text-2xl font-bold text-light">{title}</h2>
+          <h2 className="mb-1 text-center text-2xl font-bold text-dark dark:text-light">{title}</h2>
           {description ? <p className="mb-2 text-center text-sm italic">{description}</p> : null}
 
           {/* CONTROLS */}
-          <div className="mb-4 flex justify-center gap-x-6">
+          <div className="mb-4 flex flex-wrap justify-center gap-y-2 gap-x-6">
             {/* PERIOD */}
             <Select value={period} data={CHART_DATA_PERIODS} onChange={setPeriod} size="xs" />
             {/* MONTH */}
@@ -126,11 +126,11 @@ const AnnualReportStatistics = ({ title, description, type }: Props) => {
           <Tabs.Panel value="general" pt="sm">
             <div className="grid grid-cols-12 gap-4 gap-y-6">
               {/* MAIN CHART */}
-              <div className="col-span-8 3xl:col-span-9">
+              <div className="col-span-12 lg:col-span-8 3xl:col-span-9">
                 <AnnualGeneralChart annualReports={reports} period={period} monthSelected={monthSelected} />
               </div>
               {/* ANNUAL SALES AUX */}
-              <div className="col-span-4 self-center 3xl:col-span-3">
+              <div className="col-span-12 self-center lg:col-span-4 3xl:col-span-3">
                 <AnnualGeneralAux
                   title="Comparativa Anual"
                   description="Compara las ventas totales de los años seleccionados"
@@ -144,11 +144,11 @@ const AnnualReportStatistics = ({ title, description, type }: Props) => {
           <Tabs.Panel value="categories" pt="sm">
             <div className="grid grid-cols-12 gap-4 gap-y-6">
               {/* CATEGORY CHART */}
-              <div className="col-span-8 3xl:col-span-9">
+              <div className="col-span-12 lg:col-span-8 3xl:col-span-9">
                 <CategoryChartComponent annualReports={reports} period={period} monthSelected={monthSelected} />
               </div>
 
-              <div className="col-span-4 self-center 3xl:col-span-3">
+              <div className="col-span-12 self-center lg:col-span-4 3xl:col-span-3">
                 <AnnualCategoryChart annualReports={reports} />
               </div>
             </div>

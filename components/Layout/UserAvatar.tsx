@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Avatar, Menu } from '@mantine/core';
 import { useAppSelector, useAppDispatch } from 'store/hooks';
 import { logout } from 'store/reducers/Auth/creators';
-import { IconLogout } from '@tabler/icons';
+import { IconCategory, IconLogout } from '@tabler/icons';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
@@ -39,12 +39,19 @@ export default function UserAvatar() {
       <Menu.Dropdown>
         <div className="mb-2 px-2">
           <p className="text-center text-sm font-bold">{user?.name}</p>
-          {isAdmin && <p className="scale-90 text-center text-xs italic tracking-wider text-gray-200">Administrador</p>}
-          <p className="scale-90 text-center text-sm text-gray-100">{user?.email}</p>
+          {isAdmin && (
+            <p className="scale-90 text-center text-xs italic tracking-wider text-dark dark:text-gray-200">
+              Administrador
+            </p>
+          )}
+          <p className="scale-90 text-center text-sm text-dark dark:text-gray-100">{user?.email}</p>
         </div>
         <Menu.Divider />
         <Menu.Item>
           <Link href="/admin/profile">Perfil de usuario</Link>
+        </Menu.Item>
+        <Menu.Item icon={<IconCategory size={18} />}>
+          <Link href="/admin/categories">Administrar Categorías</Link>
         </Menu.Item>
         <Menu.Divider />
         <Menu.Item color="red" onClick={logoutHandle} icon={<IconLogout size={16} />}>

@@ -9,10 +9,10 @@ interface Props {
 
 const WeeklyHistory = ({ history }: Props) => {
   return (
-    <div className="rounded-b-xl bg-header pb-4">
+    <div className="rounded-b-xl pb-4 dark:bg-header">
       <ScrollArea className="relative mb-2 h-96 overflow-y-auto  3xl:h-[60vh]">
         <Table>
-          <thead className="sticky top-0 bg-header">
+          <thead className="sticky top-0 bg-gray-300 dark:bg-header">
             <tr>
               <th scope="col">
                 <div className="text-center">Fecha</div>
