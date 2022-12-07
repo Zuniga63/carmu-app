@@ -51,11 +51,16 @@ export const barOptions: ChartOptions<'bar'> = {
 };
 
 const WeeklyInvoiceChart = () => {
-  const { storeSuccess, storePaymentSuccess } = useAppSelector(state => state.InvoicePageReducer);
+  const {
+    storeSuccess,
+    storePaymentSuccess,
+    loading: loadingInvoices,
+  } = useAppSelector(state => state.InvoicePageReducer);
   const { isAuth } = useAppSelector(state => state.AuthReducer);
   const [chartData, setChartData] = useState<ChartData<'bar'>>({ labels: [], datasets: [] });
   const [history, setHistory] = useState<ISaleHistory[]>([]);
   const [initialData, setInitialData] = useState(true);
+  const [waiting, setWaiting] = useState(false);
 
   const CancelToken = axios.CancelToken;
   let source: CancelTokenSource;
@@ -165,6 +170,7 @@ const WeeklyInvoiceChart = () => {
     const weekAgo = dayjs().subtract(1, 'week').startOf('day');
 
     try {
+      setWaiting(true);
       const res = await axios.get<{ history: ISaleHistory[] }>('/sale-history', {
         cancelToken: source?.token,
         params: {
@@ -178,22 +184,26 @@ const WeeklyInvoiceChart = () => {
     } catch (error) {
       toast.error('Hubo un error y no se pudo cargar los datos de la grafica');
       console.log(error);
+    } finally {
+      setWaiting(false);
     }
 
     setChartData({ labels, datasets });
   };
 
   useEffect(() => {
-    if (isAuth && (storeSuccess || storePaymentSuccess || initialData)) {
-      source = CancelToken.source();
-      fetchData();
+    if (isAuth && (storeSuccess || storePaymentSuccess || initialData || !loadingInvoices)) {
+      if (!waiting) {
+        source = CancelToken.source();
+        fetchData();
+      }
 
       return () => {
         source.cancel('Cancelado por desmonte del componente');
         setInitialData(true);
       };
     }
-  }, [isAuth, storeSuccess, storePaymentSuccess]);
+  }, [isAuth, storeSuccess, storePaymentSuccess, loadingInvoices]);
 
   return (
     <Tabs defaultValue="chart" color="blue">

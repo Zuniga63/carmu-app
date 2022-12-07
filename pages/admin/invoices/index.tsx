@@ -1,9 +1,8 @@
-import { GetServerSideProps, NextPage } from 'next';
+import { NextPage } from 'next';
 import Layout from 'components/Layout';
-import { IInvoicePageData } from 'types';
-import { useAppDispatch } from 'store/hooks';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { useEffect } from 'react';
-import { mountInvoiceData } from 'store/reducers/InvoicePage/creators';
+import { fetchInvoiceData } from 'store/reducers/InvoicePage/creators';
 import InvoiceList from 'components/InvoicePage/InvoiceList';
 import InvoiceForm from 'components/InvoicePage/InvoiceForm';
 import InvoicePaymentForm from 'components/InvoicePage/InvoicePaymentForm';
@@ -13,16 +12,13 @@ import WeeklyInvoiceChart from 'components/InvoicePage/WeeklyInvoiceChart';
 import ChartJS from 'chart.js/auto';
 ChartJS.register();
 
-interface Props {
-  data: IInvoicePageData;
-}
-
-const InvoicePage: NextPage<Props> = ({ data }) => {
+const InvoicePage: NextPage = () => {
+  const { isAuth, isAdmin } = useAppSelector(state => state.AuthReducer);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(mountInvoiceData(data));
-  }, [data]);
+    if (isAuth && isAdmin) dispatch(fetchInvoiceData());
+  }, [isAuth, isAdmin]);
 
   return (
     <Layout title="Facturación">
@@ -40,38 +36,3 @@ const InvoicePage: NextPage<Props> = ({ data }) => {
 };
 
 export default InvoicePage;
-
-export const getServerSideProps: GetServerSideProps<{ data: IInvoicePageData }> = async context => {
-  const { token } = context.req.cookies;
-  const data: IInvoicePageData = {
-    invoices: [],
-    products: [],
-    categories: [],
-    customers: [],
-    cashboxs: [],
-  };
-
-  if (token) {
-    const baseUrl = process.env.NEXT_PUBLIC_URL_API;
-    const url = `${baseUrl}/invoices`;
-    const headers = { Authorization: `Bearer ${token}` };
-
-    try {
-      const res = await fetch(url, { headers });
-      const resData = await res.json();
-      const { invoices, products, categories, customers, cashboxs } = resData;
-
-      data.invoices = invoices || [];
-      data.products = products || [];
-      data.categories = categories || [];
-      data.customers = customers || [];
-      data.cashboxs = cashboxs || [];
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  return {
-    props: { data },
-  };
-};

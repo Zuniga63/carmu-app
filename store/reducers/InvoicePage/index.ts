@@ -7,7 +7,7 @@ const initialState: IInvoicePageState = {
   categories: [],
   products: [],
   cashboxs: [],
-  loading: false,
+  loading: true,
   // Show invoice
   selectedInvoice: null,
   selectedInvoiceOpened: false,
