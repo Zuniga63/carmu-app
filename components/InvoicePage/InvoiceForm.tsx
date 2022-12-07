@@ -3,6 +3,8 @@ import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { closeNewInvoiceForm, storeNewInvoice } from 'store/reducers/InvoicePage/creators';
+import { useMediaQuery } from '@mantine/hooks';
+import { IInvoiceCashbox, IInvoiceStoreData, IInvoiceSummary, INewInvoiceItem, INewInvoicePayment } from 'types';
 
 import { DatePicker } from '@mantine/dates';
 import { Button, Checkbox, Modal, Select, Tabs, TextInput } from '@mantine/core';
@@ -14,8 +16,6 @@ import InvoiceFormNewItem from './InvoiceFormNewItem';
 import InvoiceFormItemList from './InvoiceFormItemList';
 import InvoiceFormPayment from './InvoiceFormPayment';
 import InvoiceFormPaymentList from './InvoiceFormPaymentList';
-import { IInvoiceStoreData, IInvoiceSummary, INewInvoiceItem, INewInvoicePayment } from 'types';
-import { useMediaQuery } from '@mantine/hooks';
 
 const InvoiceForm = () => {
   const {
@@ -61,7 +61,36 @@ const InvoiceForm = () => {
   // METHODS
   // --------------------------------------------------------------------------
 
-  const addItem = (newItem: INewInvoiceItem) => {
+  const addPayment = (newPayment: INewInvoicePayment) => {
+    const result = cashPayments.slice();
+
+    const equalPayment = result.find(payment => {
+      let isEqual = true;
+      if (Boolean(payment.box) !== Boolean(newPayment.box)) isEqual = false;
+      else if (payment.box && newPayment.box && payment.box.id !== newPayment.box.id) isEqual = false;
+      else if (payment.description !== newPayment.description) isEqual = false;
+      else if (payment.register !== newPayment.register) isEqual = false;
+
+      return isEqual;
+    });
+
+    if (!equalPayment) result.push(newPayment);
+    else {
+      const index = result.findIndex(item => item.id === equalPayment.id);
+      equalPayment.amount += newPayment.amount;
+      result.splice(index, 1, equalPayment);
+    }
+
+    setCashPayments(result);
+  };
+
+  const removePayment = (paymentId: number) => {
+    setCashPayments(current => {
+      return current.filter(item => item.id !== paymentId);
+    });
+  };
+
+  const addItem = (newItem: INewInvoiceItem, isCounterSale = false, box: IInvoiceCashbox | null = null) => {
     // Verify if exist other item with this characteristics
     const equalItem = items.find(item => {
       let isEqual = true;
@@ -106,41 +135,21 @@ const InvoiceForm = () => {
     } else {
       setItems(current => [...current, newItem]);
     }
+
+    if (isCounterSale && box) {
+      addPayment({
+        id: new Date().getTime(),
+        box,
+        register: true,
+        description: 'Efectivo',
+        amount: newItem.amount,
+      });
+    }
   };
 
   const removeItem = (itemId: string) => {
     const list = items.filter(item => item.id !== itemId);
     setItems(list);
-  };
-
-  const addPayment = (newPayment: INewInvoicePayment) => {
-    const result = cashPayments.slice();
-    console.log(newPayment);
-
-    const equalPayment = result.find(payment => {
-      let isEqual = true;
-      if (Boolean(payment.box) !== Boolean(newPayment.box)) isEqual = false;
-      else if (payment.box && newPayment.box && payment.box.id !== newPayment.box.id) isEqual = false;
-      else if (payment.description !== newPayment.description) isEqual = false;
-      else if (payment.register !== newPayment.register) isEqual = false;
-
-      return isEqual;
-    });
-
-    if (!equalPayment) result.push(newPayment);
-    else {
-      const index = result.findIndex(item => item.id === equalPayment.id);
-      equalPayment.amount += newPayment.amount;
-      result.splice(index, 1, equalPayment);
-    }
-
-    setCashPayments(result);
-  };
-
-  const removePayment = (paymentId: number) => {
-    setCashPayments(current => {
-      return current.filter(item => item.id !== paymentId);
-    });
   };
 
   const closeInvoice = () => {
@@ -287,7 +296,7 @@ const InvoiceForm = () => {
     >
       <InvoiceFormHeader onClose={closeInvoice} isSeparate={isSeparate} />
       <div className="px-6 py-2">
-        <Tabs defaultValue="new-customer" className="mb-8">
+        <Tabs defaultValue="new-item" className="mb-8">
           <Tabs.List>
             <Tabs.Tab value="new-customer" color="blue" icon={<IconFileInvoice size={14} />}>
               Facturación
@@ -403,7 +412,12 @@ const InvoiceForm = () => {
           </Tabs.Panel>
 
           <Tabs.Panel value="new-item" pt="lg">
-            <InvoiceFormNewItem customerName={customerName} summary={summary} addItem={addItem} />
+            <InvoiceFormNewItem
+              customerName={customerName}
+              summary={summary}
+              addItem={addItem}
+              invoiceDate={expeditionDate}
+            />
           </Tabs.Panel>
 
           <Tabs.Panel value="new-payment" pt="lg">
@@ -425,7 +439,7 @@ const InvoiceForm = () => {
       </div>
       <footer className="flex flex-col items-center justify-end gap-4 px-6 py-4 lg:flex-row">
         <Checkbox
-          label="¿Es un apartado?"
+          label="Es un apartado"
           checked={isSeparate}
           onChange={({ currentTarget }) => setIsSeparate(currentTarget.checked)}
         />

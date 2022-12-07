@@ -6,6 +6,7 @@ import { normalizeText } from 'utils';
 
 interface Props {
   products: IInvoiceProduct[];
+  disabled?: boolean;
   onSelect(id: string | null): void;
   onEnterPress(event: KeyboardEvent<HTMLInputElement>, maintainFocus?: boolean): void;
   productId: string | null;
@@ -30,7 +31,15 @@ const SelectItem = forwardRef<HTMLDivElement, ItemProps>(({ label, description, 
 
 SelectItem.displayName = 'SelectItemProduct';
 
-const ProductSelect = ({ products, onSelect, productId, className, selectRef, onEnterPress }: Props) => {
+const ProductSelect = ({
+  products,
+  onSelect,
+  productId,
+  className,
+  selectRef,
+  onEnterPress,
+  disabled = false,
+}: Props) => {
   const filter = (value: string, item: SelectItem) => {
     const text = normalizeText(`${item.label} ${item.description} ${item.productref} ${item.barcode}`);
     return text.includes(normalizeText(value));
@@ -58,6 +67,7 @@ const ProductSelect = ({ products, onSelect, productId, className, selectRef, on
       ref={selectRef}
       onKeyDown={event => onEnterPress(event, true)}
       name="productSelect"
+      disabled={disabled}
     />
   );
 };

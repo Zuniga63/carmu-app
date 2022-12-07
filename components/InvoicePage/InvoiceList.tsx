@@ -1,15 +1,15 @@
-import { Button, Loader, ScrollArea, SegmentedControl, TextInput } from '@mantine/core';
-import { IconFileInvoice, IconSearch } from '@tabler/icons';
+import { ActionIcon, Button, Loader, ScrollArea, SegmentedControl, TextInput } from '@mantine/core';
+import { IconFileInvoice, IconReload, IconSearch } from '@tabler/icons';
 import React, { useEffect, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { openNewInvoiceForm } from 'store/reducers/InvoicePage/creators';
+import { fetchInvoiceData, openNewInvoiceForm } from 'store/reducers/InvoicePage/creators';
 import { IInvoice } from 'types';
 import { normalizeText } from 'utils';
 import InvoiceListItem from './InvoiceListItem';
 import InvoiceRated from './InvoiceRated';
 
 const InvoiceList = () => {
-  const { invoices } = useAppSelector(state => state.InvoicePageReducer);
+  const { invoices, loading: loadingData } = useAppSelector(state => state.InvoicePageReducer);
   const dispatch = useAppDispatch();
   const growRate = 25;
 
@@ -93,7 +93,12 @@ const InvoiceList = () => {
   }, [invoiceLegth]);
 
   return (
-    <div className="rounded bg-gray-300 px-3 pt-4 pb-2 dark:bg-header">
+    <div className="relative rounded bg-gray-300 px-3 pt-4 pb-2 dark:bg-header">
+      <div className="absolute top-2 right-2">
+        <ActionIcon loading={loadingData} color="blue" onClick={() => dispatch(fetchInvoiceData())}>
+          <IconReload size={18} />
+        </ActionIcon>
+      </div>
       <header className="mb-2 px-2">
         <h2 className="mb-2 text-center text-xl font-bold tracking-widest text-dark dark:text-light">Facturas</h2>
 
@@ -133,16 +138,25 @@ const InvoiceList = () => {
       </header>
 
       <div className="mb-2 rounded-md bg-white bg-opacity-50 dark:bg-slate-800">
-        <ScrollArea className="h-80 px-4 py-3 3xl:h-[40rem]">
-          <div className="flex flex-col gap-y-4">
-            {invoiceList.map(invoice => (
-              <InvoiceListItem key={invoice.id} invoice={invoice} />
-            ))}
-            {Boolean(filteredInvoices.length) && invoiceLegth <= filteredInvoices.length + 1 && (
-              <Button onClick={showMoreInvoices}>Mostrar más facturas</Button>
-            )}
+        {loadingData ? (
+          <div className="flex h-80 flex-col items-center justify-center gap-y-4">
+            <Loader />
+            <p className="animate-pulse text-center text-xs tracking-widest text-dark dark:text-light">
+              Se están recuperando las facturas, esto puede tardar un poco...
+            </p>
           </div>
-        </ScrollArea>
+        ) : (
+          <ScrollArea className="h-80 px-4 py-3 3xl:h-[40rem]">
+            <div className="flex flex-col gap-y-4">
+              {invoiceList.map(invoice => (
+                <InvoiceListItem key={invoice.id} invoice={invoice} />
+              ))}
+              {Boolean(filteredInvoices.length && !loadingData) && invoiceLegth <= filteredInvoices.length + 1 && (
+                <Button onClick={showMoreInvoices}>Mostrar más facturas</Button>
+              )}
+            </div>
+          </ScrollArea>
+        )}
       </div>
 
       <InvoiceRated
