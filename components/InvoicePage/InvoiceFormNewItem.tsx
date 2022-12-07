@@ -108,7 +108,7 @@ const InvoiceFormNewItem = ({ customerName, summary, addItem }: Props) => {
         <div className="mb-4 flex items-center gap-x-4">
           <div className="flex-grow">
             {/* CATEGORY & PRODUCT */}
-            <div className="mb-2 grid grid-cols-4 items-center gap-x-2">
+            <div className="mb-2 grid grid-cols-4 items-center gap-2">
               {/* PRODUCT */}
               <ProductSelect
                 products={products}
@@ -116,12 +116,12 @@ const InvoiceFormNewItem = ({ customerName, summary, addItem }: Props) => {
                 selectRef={searchRef}
                 onSelect={setProductId}
                 onEnterPress={handleKeyPress}
-                className="col-span-3"
+                className="col-span-4 lg:col-span-3"
               />
 
               {/* Total items */}
               {summary.amount > 0 ? (
-                <p className="pr-4 text-right text-sm italic">
+                <p className="col-span-4 pr-4 text-right text-sm italic lg:col-span-1">
                   <span>Facturado: </span>
                   <span className="font-bold tracking-widest">{currencyFormat(summary.amount)}</span>
                 </p>
@@ -129,7 +129,7 @@ const InvoiceFormNewItem = ({ customerName, summary, addItem }: Props) => {
             </div>
 
             {/* ITEM INFO */}
-            <div className="grid grid-cols-12 gap-x-2">
+            <div className="grid grid-cols-12 gap-2">
               {/* QUANTITY */}
               <NumberInput
                 label="Cant."
@@ -142,13 +142,14 @@ const InvoiceFormNewItem = ({ customerName, summary, addItem }: Props) => {
                 onChange={val => setItemQuantity(val)}
                 onKeyDown={handleKeyPress}
                 ref={categoryRef}
+                className="col-span-4 lg:col-span-1"
               />
 
               {/* category */}
               <Select
                 placeholder="Selecciona categoría"
                 label="Categoría"
-                className="col-span-2"
+                className="col-span-8 lg:col-span-2"
                 value={categoryId}
                 onChange={setCategoryId}
                 icon={<IconCategory size={14} />}
@@ -164,7 +165,7 @@ const InvoiceFormNewItem = ({ customerName, summary, addItem }: Props) => {
               {/* ITEM DESCRIPTION */}
               <TextInput
                 label="Descripción"
-                className="col-span-5"
+                className="col-span-12 lg:col-span-5"
                 value={itemDescription}
                 placeholder="Nombre del producto o servicio"
                 size="xs"
@@ -175,7 +176,7 @@ const InvoiceFormNewItem = ({ customerName, summary, addItem }: Props) => {
               <NumberInput
                 label="Precio"
                 placeholder="1.0"
-                className="col-span-2"
+                className="col-span-6 lg:col-span-2"
                 hideControls
                 size="xs"
                 value={itemUnitValue}
@@ -191,7 +192,7 @@ const InvoiceFormNewItem = ({ customerName, summary, addItem }: Props) => {
               <NumberInput
                 label="Desc. Unt"
                 placeholder="1.0"
-                className="col-span-2"
+                className="col-span-6 lg:col-span-2"
                 hideControls
                 size="xs"
                 value={itemDiscount}
@@ -208,14 +209,14 @@ const InvoiceFormNewItem = ({ customerName, summary, addItem }: Props) => {
           </div>
         </div>
 
-        <div className="flex justify-between">
-          <div className="rounded-full border-2 border-red-500 px-4 py-2 text-xs">
+        <div className="flex flex-col justify-between lg:flex-row">
+          <div className="mb-4 rounded-md border-2 border-red-500 px-4 py-2 text-xs lg:mb-0 lg:rounded-full">
             <p>
               Cliente: <span className="font-bold tracking-wider">{customerName || 'Mostrador'}</span>
             </p>
           </div>
 
-          <div className="flex items-center justify-end gap-x-4">
+          <div className="flex flex-col items-center justify-end gap-4 lg:flex-row">
             {itemAmount ? <span className="text-xs">Importe: {currencyFormat(itemAmount)}</span> : null}
             <Button leftIcon={<IconPlus size={15} stroke={4} />} size="xs" disabled={!enabled} onClick={() => add()}>
               Agregar Item

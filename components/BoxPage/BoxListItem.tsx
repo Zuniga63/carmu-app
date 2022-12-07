@@ -63,11 +63,11 @@ const BoxListItem = ({ box }: Props) => {
   }, [box.openBox, box.closed, box.createdAt, box.updatedAt]);
   return (
     <li className="mb-4">
-      <div className="overflow-hidden rounded-lg border border-header shadow-sm shadow-gray-500">
-        <header className="relative bg-header px-4 py-2">
+      <div className="overflow-hidden rounded-lg border shadow-sm dark:border-header dark:shadow-gray-500">
+        <header className="relative bg-gray-300 px-4 py-2 dark:bg-header">
           <h1 className="text-center font-bold tracking-wider">{box.name}</h1>
           {box.openBox && (
-            <div className="flex items-center justify-center gap-x-2 text-gray-400">
+            <div className="flex items-center justify-center gap-x-2 text-gray-dark dark:text-gray-400">
               <IconAward size={18} />
               <p className="text-xs">{box.cashier ? box.cashier.name : box.cashierName}</p>
             </div>
@@ -83,10 +83,10 @@ const BoxListItem = ({ box }: Props) => {
           )}
         </header>
         {/* Body */}
-        <div className="px-4 py-2">
+        <div className="bg-gradient-to-b from-gray-200 to-indigo-300 px-4 py-2 dark:bg-none">
           {!!box.openBox && (
             <>
-              <div className="flex justify-between text-xs text-gray-400">
+              <div className="flex justify-between text-xs text-gray-dark dark:text-gray-400">
                 <p>
                   Base: <span className="font-bold">{currencyFormat(box.base)}</span>
                 </p>
@@ -100,18 +100,18 @@ const BoxListItem = ({ box }: Props) => {
             </>
           )}
           {box.closed && (
-            <div className="flex flex-col items-center gap-y-3 py-4 text-gray-400">
+            <div className="flex flex-col items-center gap-y-3 py-4 text-gray-dark dark:text-gray-400">
               <IconLock size={30} stroke={2} />
               <p className="text-xs">Cerrada {closedFronNow}</p>
             </div>
           )}
           {box.neverUsed && (
-            <div className="flex flex-col items-center gap-y-3 py-4 text-gray-400">
+            <div className="flex flex-col items-center gap-y-3 py-4 text-gray-dark dark:text-gray-400">
               <IconAlertTriangle size={30} stroke={2} />
               <p className="text-xs">¡Caja nunca usada!</p>
             </div>
           )}
-          <div className="mt-2 flex justify-between text-xs text-gray-400">
+          <div className="mt-2 flex justify-between text-xs text-gray-dark dark:text-gray-400">
             <div className="flex items-center gap-x-2">
               <IconDeviceFloppy size={18} />
               <span>{createdAt}</span>
@@ -126,7 +126,7 @@ const BoxListItem = ({ box }: Props) => {
         </div>
 
         {/* Footer */}
-        <footer className="bg-header px-4 py-2">
+        <footer className="bg-indigo-400 px-4 py-2 dark:bg-header">
           <div className="flex items-center justify-between">
             {!box.openBox && (
               <Button

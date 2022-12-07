@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { IconDashboard, IconCategory, IconBox, IconUsers, IconBuildingStore, IconFileInvoice } from '@tabler/icons';
+import { IconDashboard, IconBox, IconUsers, IconBuildingStore, IconFileInvoice } from '@tabler/icons';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -15,13 +15,6 @@ export default function NavLinks({ close }: Props) {
       path: '/',
       active: false,
       icon: <IconDashboard size={32} stroke={1.5} className="flex-shrink-0" />,
-    },
-    {
-      id: 2,
-      name: 'Categorías',
-      path: '/admin/categories',
-      active: false,
-      icon: <IconCategory size={32} stroke={1.5} className="flex-shrink-0" />,
     },
     {
       id: 3,
@@ -75,7 +68,14 @@ export default function NavLinks({ close }: Props) {
     <nav>
       <ul className="text-light">
         {links.map(link => (
-          <li key={link.id} className={!link.active ? 'text-light' : 'bg-btn-bg text-blue-600'}>
+          <li
+            key={link.id}
+            className={
+              !link.active
+                ? 'text-dark dark:text-light'
+                : 'bg-blue-100 text-blue-600 dark:bg-btn-bg dark:text-yellow-400'
+            }
+          >
             <Link
               href={link.path}
               passHref

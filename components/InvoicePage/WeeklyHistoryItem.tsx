@@ -33,7 +33,7 @@ const WeeklyHistoryItem = ({ item }: Props) => {
         isCreditPayment && 'bg-orange-600'
       } ${
         isSeparatePayment && 'bg-cyan-600'
-      } group bg-opacity-5 transition-colors hover:bg-opacity-40 group-hover:bg-opacity-40`}
+      } group bg-opacity-10 transition-colors hover:bg-opacity-40 group-hover:bg-opacity-40 dark:bg-opacity-5`}
     >
       <td className="text-center">
         <span className="text-xs">{date}</span>

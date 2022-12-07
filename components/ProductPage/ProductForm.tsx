@@ -138,7 +138,7 @@ const ProductForm = ({ product, categories, opened, loading, errors, close, stor
           <div className="mx-auto mb-4 w-11/12">
             {/* PRODUCT NAME */}
             <TextInput
-              label={<span className="font-sans text-light">Nombre</span>}
+              label={<span className="font-sans dark:text-light">Nombre</span>}
               className="mb-2"
               placeholder="Escribe el nombre aquí."
               id="productName"
@@ -153,7 +153,7 @@ const ProductForm = ({ product, categories, opened, loading, errors, close, stor
             <div className="mb-2 grid grid-cols-1 gap-2 md:grid-cols-2">
               {/* REF */}
               <TextInput
-                label={<span className="font-sans text-light">Ref</span>}
+                label={<span className="font-sans dark:text-light">Ref</span>}
                 placeholder="Escribe la referencia aquí."
                 id="productRef"
                 value={ref}
@@ -164,7 +164,7 @@ const ProductForm = ({ product, categories, opened, loading, errors, close, stor
 
               {/* BARCODE */}
               <TextInput
-                label={<span className="font-sans text-light">Codigo</span>}
+                label={<span className="font-sans dark:text-light">Codigo</span>}
                 placeholder="Escribe el codigo aquí."
                 id="productBarcode"
                 value={barcode}
@@ -176,7 +176,7 @@ const ProductForm = ({ product, categories, opened, loading, errors, close, stor
 
             {/* CATEGORY */}
             <Select
-              label={<span className="font-sans text-light">Categoría</span>}
+              label={<span className="font-sans dark:text-light">Categoría</span>}
               placeholder="Selecciona una"
               className="mb-2"
               value={productCategory}
@@ -188,7 +188,7 @@ const ProductForm = ({ product, categories, opened, loading, errors, close, stor
 
             {/* DESCRIPTION */}
             <Textarea
-              label={<span className="font-sans text-light">Descripción</span>}
+              label={<span className="font-sans dark:text-light">Descripción</span>}
               id="productDescription"
               placeholder="Describe el producto aquí."
               className="mb-2"
@@ -203,7 +203,7 @@ const ProductForm = ({ product, categories, opened, loading, errors, close, stor
               {/* PRICE AND CHECK */}
               <div className=" flex flex-col">
                 <NumberInput
-                  label={<span className="font-sans text-light">Precio</span>}
+                  label={<span className="font-sans dark:text-light">Precio</span>}
                   id="productPrice"
                   required
                   placeholder="Escribe el precio aquí."
@@ -222,7 +222,7 @@ const ProductForm = ({ product, categories, opened, loading, errors, close, stor
 
                 {/* HAS DISCOUNT */}
                 <Checkbox
-                  label={<span className="font-sans text-light">Tiene descuento</span>}
+                  label={<span className="font-sans dark:text-light">Tiene descuento</span>}
                   size="xs"
                   checked={hasDiscount}
                   onChange={({ currentTarget }) => setHasDiscount(currentTarget.checked)}
@@ -232,7 +232,7 @@ const ProductForm = ({ product, categories, opened, loading, errors, close, stor
 
               {/* PRICE WITH DISCOUNT */}
               <NumberInput
-                label={<span className="font-sans text-light">Precio con descuento</span>}
+                label={<span className="font-sans dark:text-light">Precio con descuento</span>}
                 id="productPriceWithDiscount"
                 required
                 placeholder="Escribe el precio aquí."
@@ -252,7 +252,7 @@ const ProductForm = ({ product, categories, opened, loading, errors, close, stor
 
             {/* STOCK */}
             <NumberInput
-              label={<span className="font-sans text-light">Unidades en stock</span>}
+              label={<span className="font-sans dark:text-light">Unidades en stock</span>}
               id="productStock"
               placeholder="Escribe las unidades en stock"
               className="mb-4"
@@ -268,21 +268,21 @@ const ProductForm = ({ product, categories, opened, loading, errors, close, stor
             {/* PUBLISHED, INVENTORIABLE & IS NEW */}
             <div className="mb-4 flex gap-x-4">
               <Checkbox
-                label={<span className="font-sans text-light">Nuevo</span>}
+                label={<span className="font-sans dark:text-light">Nuevo</span>}
                 checked={published}
                 onChange={({ currentTarget }) => setPublished(currentTarget.checked)}
                 disabled={loading}
               />
 
               <Checkbox
-                label={<span className="font-sans text-light">Publicar</span>}
+                label={<span className="font-sans dark:text-light">Publicar</span>}
                 checked={productIsNew}
                 onChange={({ currentTarget }) => setProductIsNew(currentTarget.checked)}
                 disabled={loading}
               />
 
               <Checkbox
-                label={<span className="font-sans text-light">Es inventariable</span>}
+                label={<span className="font-sans dark:text-light">Es inventariable</span>}
                 checked={isInventoriable}
                 onChange={({ currentTarget }) => setIsInventoriable(currentTarget.checked)}
                 disabled={loading}

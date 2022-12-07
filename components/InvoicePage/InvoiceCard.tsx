@@ -14,19 +14,19 @@ interface Props {
 const InvoiceCard = ({ invoice }: Props) => {
   return (
     <>
-      <div className="mb-4 grid grid-cols-3 gap-3">
+      <div className="mb-4 grid gap-3 lg:grid-cols-3">
         {/* CUSTOMER */}
-        <div className="col-span-2">
+        <div className="lg:col-span-2">
           <div className="rounded-lg bg-gray-dark bg-opacity-20 px-4 py-6">
-            <div className="grid grid-cols-12 gap-4">
+            <div className="grid gap-4 lg:grid-cols-12">
               {/* CUSTOMER NAME */}
-              <div className="col-span-8">
+              <div className="lg:col-span-8">
                 <InvoiceCardField title="Cliente">
                   <p className="italic">{invoice?.customer?.fullName || invoice?.customerName}</p>
                 </InvoiceCardField>
               </div>
               {/* DOCUMENT */}
-              <div className="col-span-4">
+              <div className="lg:col-span-4">
                 <InvoiceCardField title="Documento">
                   <p className="text-center italic">
                     <span>{invoice?.customerDocumentType}</span>
@@ -38,13 +38,13 @@ const InvoiceCard = ({ invoice }: Props) => {
                 </InvoiceCardField>
               </div>
               {/* CUSTOMER ADDRESS */}
-              <div className="col-span-8">
+              <div className="lg:col-span-8">
                 <InvoiceCardField title="Dirección">
                   <p className="italic">{invoice.customer?.address || invoice?.customerAddress || 'No reporta'}</p>
                 </InvoiceCardField>
               </div>
               {/* DOCUMENT */}
-              <div className="col-span-4">
+              <div className="lg:col-span-4">
                 <InvoiceCardField title="Teléfono">
                   <p className="text-center italic">
                     <span className="font-bold">{invoice?.customerPhone || 'No reporta'}</span>
@@ -68,10 +68,10 @@ const InvoiceCard = ({ invoice }: Props) => {
           </div>
         </div>
       </div>
-      <div className="rounded-md bg-black bg-opacity-30 px-2 py-4 shadow shadow-dark">
-        <div className="relative grid grid-cols-4 gap-x-4">
+      <div className="rounded-md bg-light bg-opacity-30 px-2 py-4 shadow shadow-light dark:bg-black dark:bg-opacity-30 dark:shadow-dark">
+        <div className="relative grid gap-x-4 lg:grid-cols-4">
           {/* ITEMS AND PAYMENTS */}
-          <div className="col-span-3">
+          <div className="lg:col-span-3">
             <Tabs defaultValue="items" color="blue">
               <Tabs.List>
                 <Tabs.Tab value="items" color="blue" icon={<IconBox size={14} />}>

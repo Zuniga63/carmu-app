@@ -93,9 +93,9 @@ const InvoiceList = () => {
   }, [invoiceLegth]);
 
   return (
-    <div className="rounded bg-header px-3 pt-4 pb-2">
+    <div className="rounded bg-gray-300 px-3 pt-4 pb-2 dark:bg-header">
       <header className="mb-2 px-2">
-        <h2 className="mb-2 text-center text-xl font-bold tracking-widest text-light">Facturas</h2>
+        <h2 className="mb-2 text-center text-xl font-bold tracking-widest text-dark dark:text-light">Facturas</h2>
 
         {/* SEARCH AND NEW INVOICE */}
         <div className="mb-2 flex gap-x-3">
@@ -132,7 +132,7 @@ const InvoiceList = () => {
         />
       </header>
 
-      <div className="mb-2 rounded-md bg-slate-800 bg-opacity-50">
+      <div className="mb-2 rounded-md bg-white bg-opacity-50 dark:bg-slate-800">
         <ScrollArea className="h-80 px-4 py-3 3xl:h-[40rem]">
           <div className="flex flex-col gap-y-4">
             {invoiceList.map(invoice => (

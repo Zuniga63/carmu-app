@@ -8,8 +8,8 @@ interface Props {
 const TransactionTable = ({ transactions }: Props) => {
   return (
     <table className='class="relative mb-2" min-w-full table-auto'>
-      <thead className="sticky top-0 bg-dark">
-        <tr className="text-gray-300">
+      <thead className="sticky top-0 bg-gray-200 dark:bg-dark">
+        <tr className="text-dark dark:text-gray-300">
           <th scope="col" className="px-4 py-3 text-center uppercase tracking-wide">
             Fecha
           </th>

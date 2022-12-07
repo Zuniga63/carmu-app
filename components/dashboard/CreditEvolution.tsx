@@ -34,9 +34,11 @@ const CreditEvolution = () => {
 
   return (
     <Skeleton visible={loading}>
-      <div className="min-h-[300px] bg-dark bg-opacity-90 px-4 pt-6 pb-2">
+      <div className="min-h-[300px] bg-gray-200 bg-opacity-90 px-4 pt-6 pb-2 dark:bg-dark">
         <header className="mb-4">
-          <h2 className="mb-1 text-center text-2xl font-bold text-light">Evolución de Credito {dayjs().year()}</h2>
+          <h2 className="mb-1 text-center text-2xl font-bold text-dark dark:text-light">
+            Evolución de Credito {dayjs().year()}
+          </h2>
           <p className="mb-2 text-center text-sm italic">Resume como se ha comportado la cartera a lo largo del año</p>
 
           {/* CONTROLS */}
@@ -56,10 +58,10 @@ const CreditEvolution = () => {
 
         {report ? (
           <div className="grid grid-cols-12 gap-4 gap-y-6">
-            <div className="col-span-8 3xl:col-span-9">
+            <div className="col-span-12 lg:col-span-8 3xl:col-span-9">
               <CreditEvolutionChart creditReport={report} period={period} monthSelected={monthSelected} />
             </div>
-            <div className="col-span-4 self-center 3xl:col-span-3">
+            <div className="col-span-12 self-center lg:col-span-4 3xl:col-span-3">
               <CreditEvolutionChartAux creditReport={report} period={period} monthSelected={monthSelected} />
             </div>
           </div>

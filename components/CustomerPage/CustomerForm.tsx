@@ -114,12 +114,12 @@ const CustomerForm = ({ opened, close, customer, loading, errors, store, update 
       padding={0}
       size={largeScreen ? 'lg' : '100%'}
       withCloseButton={false}
-      position="left"
+      position="right"
     >
       <DrawerHeader title={title} onClose={onCloseHandler} />
       <DrawerBody>
         <form onSubmit={onSubmitHandler}>
-          <Tabs variant="pills" color="dark" defaultValue="personal" className="mx-auto mb-4 w-11/12">
+          <Tabs variant="pills" defaultValue="personal" className="mx-auto mb-4 w-11/12">
             <Tabs.List>
               <Tabs.Tab value="personal" icon={<IconUser size={14} />}>
                 Datos Personales
@@ -132,7 +132,7 @@ const CustomerForm = ({ opened, close, customer, loading, errors, store, update 
             <Tabs.Panel value="personal" pt="xs">
               {/* FIRST NAME */}
               <TextInput
-                label={<span className="font-sans text-light">Nombres</span>}
+                label={<span className="font-sans text-gray-dark dark:text-light">Nombres</span>}
                 className="mb-2"
                 placeholder="Escribe el nombre aquí."
                 id="customerName"
@@ -145,7 +145,7 @@ const CustomerForm = ({ opened, close, customer, loading, errors, store, update 
 
               {/* LAST NAME */}
               <TextInput
-                label={<span className="font-sans text-light">Apellidos</span>}
+                label={<span className="font-sans text-gray-dark dark:text-light">Apellidos</span>}
                 className="mb-2"
                 placeholder="Escribe los apellidos aquí"
                 id="customerLastName"
@@ -157,7 +157,7 @@ const CustomerForm = ({ opened, close, customer, loading, errors, store, update 
 
               {/* ALIAS */}
               <TextInput
-                label={<span className="font-sans text-light">Alias</span>}
+                label={<span className="font-sans text-gray-dark dark:text-light">Alias</span>}
                 className="mb-2"
                 placeholder="A.K.A"
                 id="customerAlias"
@@ -169,7 +169,7 @@ const CustomerForm = ({ opened, close, customer, loading, errors, store, update 
 
               {/* DOCUMENT */}
               <TextInput
-                label={<span className="font-sans text-light">Identificación</span>}
+                label={<span className="font-sans text-gray-dark dark:text-light">Identificación</span>}
                 className="mb-2"
                 placeholder="#.###.###.###"
                 id="customerDocument"
@@ -197,7 +197,7 @@ const CustomerForm = ({ opened, close, customer, loading, errors, store, update 
             <Tabs.Panel value="contact" pt="xs">
               {/* EMAIL */}
               <TextInput
-                label={<span className="font-sans text-light">Email</span>}
+                label={<span className="font-sans text-gray-dark dark:text-light">Email</span>}
                 className="mb-2"
                 placeholder="ejemplo@ejemplo.com"
                 id="customerEmail"
@@ -212,7 +212,7 @@ const CustomerForm = ({ opened, close, customer, loading, errors, store, update 
               {/* PHONE */}
               {!customer && (
                 <TextInput
-                  label={<span className="font-sans text-light">Telefono</span>}
+                  label={<span className="font-sans text-gray-dark dark:text-light">Telefono</span>}
                   className="mb-2"
                   placeholder="555-5555"
                   id="customerPhone"
@@ -227,7 +227,7 @@ const CustomerForm = ({ opened, close, customer, loading, errors, store, update 
 
               {/* ADDRESS */}
               <TextInput
-                label={<span className="font-sans text-light">Dirección</span>}
+                label={<span className="font-sans text-gray-dark dark:text-light">Dirección</span>}
                 className="mb-2"
                 placeholder="Avenida siempre vida 1234"
                 id="customerAddress"

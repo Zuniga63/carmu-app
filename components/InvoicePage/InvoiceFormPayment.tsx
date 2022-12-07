@@ -65,8 +65,8 @@ const InvoiceFormPayment = ({ customerName, invoiceDate, addPayment }: Props) =>
 
   return (
     <InvoiceFormGroup title="Agregar Pago">
-      <div className="flex h-16 items-start gap-x-4">
-        <div className="grid flex-grow grid-cols-3 items-start gap-x-4">
+      <div className="flex items-center gap-4 lg:h-16 lg:items-start">
+        <div className="grid flex-grow items-start gap-4 lg:grid-cols-3">
           {/* BOX */}
           <div className="flex flex-col gap-y-2">
             <Select
@@ -120,7 +120,7 @@ const InvoiceFormPayment = ({ customerName, invoiceDate, addPayment }: Props) =>
           </div>
         </div>
 
-        <div className="absolute bottom-2 scale-90 transform rounded-full border-2 border-red-500 px-4 py-2 text-xs">
+        <div className="hidden scale-90 transform rounded-full border-2 border-red-500 px-4 py-2 text-xs lg:absolute lg:bottom-2 lg:block">
           <p>
             Cliente: <span className="font-bold tracking-wider">{customerName || 'Mostrador'}</span>
           </p>

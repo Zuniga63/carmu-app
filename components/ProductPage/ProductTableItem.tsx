@@ -11,8 +11,8 @@ interface Props {
 
 const ProductTableItem = ({ product, mount, onDelete }: Props) => {
   return (
-    <tr className="text-light">
-      <td className="px-3 py-2">
+    <tr className="text-gray-dark dark:text-light">
+      <td className="whitespace-nowrap px-3 py-2 lg:whitespace-normal">
         <div className="text-center">
           <p className="font-bold">{product.name}</p>
           <p className="text-xs text-gray-400">{product.description}</p>
@@ -38,7 +38,7 @@ const ProductTableItem = ({ product, mount, onDelete }: Props) => {
       <td className="px-3 py-2 text-center text-sm">{product.stock}</td>
       <td className="whitespace-nowrap px-3 py-2 text-right">
         <div>
-          <p className={product.hasDiscount ? 'text-xs text-gray-400 line-through' : ''}>
+          <p className={product.hasDiscount ? 'text-xs line-through dark:text-gray-400' : ''}>
             {currencyFormat(product.price)}
           </p>
           {product.hasDiscount && product.priceWithDiscount ? <p>{currencyFormat(product.priceWithDiscount)}</p> : null}

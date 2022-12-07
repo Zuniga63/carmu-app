@@ -213,13 +213,13 @@ const WeeklyInvoiceChart = () => {
           </div>
 
           <ul className="mx-auto w-10/12 text-sm">
-            <li className="mb-4 rounded-lg bg-header px-4 py-2">
+            <li className="mb-4 rounded-lg bg-gray-300 px-4 py-2 dark:bg-header">
               <span className="font-bold text-indigo-600">Facturado</span>: Corresponde a la suma de los valores de
               todas las facturas tanto por <strong className="font-bold text-emerald-500">venta directa</strong> y{' '}
               <strong className="font-bold text-red-600">créditos</strong> junto con los pagos individuales de cada uno
               de los <strong className="font-bold text-cyan-500">apartados</strong>.
             </li>
-            <li className="rounded-lg bg-header px-4 py-2">
+            <li className="rounded-lg bg-gray-300 px-4 py-2 dark:bg-header">
               <span className="font-bold text-emerald-600">Efectivo</span>: Es la suma de los{' '}
               <strong className="font-bold">importes</strong> en efectivo de cada una de las facturas,{' '}
               <span className="underline">los pagos iniciales</span> de los{' '}

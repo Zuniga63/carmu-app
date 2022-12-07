@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/es-do';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import type { AppProps } from 'next/app';
-import { MantineProvider } from '@mantine/core';
+import { ColorScheme, ColorSchemeProvider, MantineProvider } from '@mantine/core';
 import { ToastContainer } from 'react-toastify';
 
 // For route progress with NProgress
@@ -22,6 +22,7 @@ import '../styles/globals.css';
 import 'react-toastify/dist/ReactToastify.css';
 import 'nprogress/nprogress.css';
 import { emCache } from 'utils/emotionCache';
+import { useHotkeys, useLocalStorage } from '@mantine/hooks';
 
 // Config
 axios.defaults.baseURL = process.env.NEXT_PUBLIC_URL_API;
@@ -31,10 +32,48 @@ NProgress.configure({ showSpinner: false });
 
 function MyApp({ Component, pageProps }: AppProps) {
   const dispatch = useAppDispatch();
-  // For cache of mantine
+
+  // --------------------------------------------------------------------------
+  // SET THEME APP
+  // --------------------------------------------------------------------------
   emCache();
+  const KEY_THEME = 'mantine-color-scheme';
+
+  const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
+    key: KEY_THEME,
+    defaultValue: 'dark',
+    getInitialValueInEffect: true,
+  });
+
+  const setGlobalDarkTheme = (value?: ColorScheme) => {
+    let theme: ColorScheme = value || 'dark';
+
+    if (!value && window) {
+      const localTheme = JSON.parse(localStorage[KEY_THEME] || null);
+      if (localTheme && localTheme === 'light') theme = 'light';
+    }
+
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  };
+
+  const toggleColorScheme = (value?: ColorScheme) => {
+    const theme = value || (colorScheme === 'dark' ? 'light' : 'dark');
+    setColorScheme(theme);
+    setGlobalDarkTheme(theme);
+  };
+
+  useHotkeys([['mod+J', () => toggleColorScheme()]]);
+
+  // --------------------------------------------------------------------------
+  // EFFECTS
+  // --------------------------------------------------------------------------
   useEffect(() => {
     dispatch(authenticate());
+    setGlobalDarkTheme();
 
     // NProgress
     // https://caspertheghost.me/blog/nprogress-next-js
@@ -54,17 +93,19 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <Provider store={store}>
+    <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
       <MantineProvider
         withGlobalStyles
         theme={{
           /** Put your mantine theme override here */
-          colorScheme: 'dark',
+          colorScheme,
           fontFamily: 'inherit',
           loader: 'bars',
         }}
       >
-        <Component {...pageProps} />
+        <Provider store={store}>
+          <Component {...pageProps} />
+        </Provider>
       </MantineProvider>
 
       <ToastContainer
@@ -79,7 +120,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         draggable
         pauseOnHover
       />
-    </Provider>
+    </ColorSchemeProvider>
   );
 }
 

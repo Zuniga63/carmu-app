@@ -11,7 +11,7 @@ import InvoiceCardModal from 'components/InvoicePage/InvoiceCardModal';
 import WeeklyInvoiceChart from 'components/InvoicePage/WeeklyInvoiceChart';
 
 import ChartJS from 'chart.js/auto';
-ChartJS.defaults.color = '#ccc';
+ChartJS.register();
 
 interface Props {
   data: IInvoicePageData;
@@ -26,9 +26,9 @@ const InvoicePage: NextPage<Props> = ({ data }) => {
 
   return (
     <Layout title="Facturación">
-      <div className="grid grid-cols-3 items-start gap-x-4 px-4 pt-4 3xl:grid-cols-4">
+      <div className="grid items-start gap-y-4 gap-x-4 px-4 pt-4 lg:grid-cols-3 3xl:grid-cols-4">
         <InvoiceList />
-        <div className="col-span-2 pr-8 3xl:col-span-3">
+        <div className="pr-8 lg:col-span-2 3xl:col-span-3">
           <WeeklyInvoiceChart />
         </div>
       </div>

@@ -11,7 +11,7 @@ interface Props {
 
 const InvoiceFormItemList = ({ items, removeItem, summary }: Props) => {
   return (
-    <div>
+    <>
       <div className="relative mb-2 min-h-[10rem] bg-dark">
         <table className="w-full table-auto">
           <thead className="sticky top-0 z-fixed bg-gray-dark">
@@ -59,7 +59,7 @@ const InvoiceFormItemList = ({ items, removeItem, summary }: Props) => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

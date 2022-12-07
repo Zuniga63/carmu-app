@@ -55,7 +55,7 @@ const InvoiceListItem = ({ invoice }: Props) => {
 
   return (
     <div
-      className={`overflow-hidden rounded-lg border ${
+      className={`overflow-hidden rounded-lg border text-light ${
         invoice.expeditionDate.isToday() ? 'border-emerald-700 bg-emerald-900' : 'border-header bg-header'
       } shadow shadow-header transition-colors hover:border-dark hover:bg-dark hover:shadow-neutral-900`}
     >

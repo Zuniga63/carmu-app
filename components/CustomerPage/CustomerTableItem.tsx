@@ -16,7 +16,8 @@ interface Props {
 
 const CustomerTableItem = ({ customer, mount, onDelete, mountToPayment, paymentLoading, onGetPayments }: Props) => {
   return (
-    <tr className="text-gray-300">
+    <tr className="text-dark dark:text-gray-300">
+      {/* CUSTOMER */}
       <td className="whitespace-nowrap px-3 py-2">
         <div className="text-center">
           <p>{customer.fullName}</p>
@@ -28,7 +29,8 @@ const CustomerTableItem = ({ customer, mount, onDelete, mountToPayment, paymentL
           {Boolean(customer.alias) && <p className="text-xs text-light text-opacity-50">({customer.alias})</p>}
         </div>
       </td>
-      <td className="px-3 py-2 text-center text-sm">
+      {/* CONTACT */}
+      <td className="hidden px-3 py-2 text-center text-sm lg:table-cell ">
         <div className="flex flex-col items-center">
           {customer.email && (
             <div className="flex items-center gap-x-2 text-xs">
@@ -54,7 +56,8 @@ const CustomerTableItem = ({ customer, mount, onDelete, mountToPayment, paymentL
           )}
         </div>
       </td>
-      <td className="px-3 py-2 text-right text-sm">
+      {/* HISTORY */}
+      <td className="hidden px-3 py-2 text-right text-sm lg:table-cell">
         <div className="flex flex-col items-center text-xs">
           {customer.firstPendingInvoice ? (
             <p>Fact. más antigua {dayjs(customer.firstPendingInvoice).fromNow()}</p>
@@ -63,7 +66,7 @@ const CustomerTableItem = ({ customer, mount, onDelete, mountToPayment, paymentL
             <p>Fact. más reciente {dayjs(customer.lastPendingInvoice).fromNow()}</p>
           ) : null}
           {customer.lastPayment ? <p>Ultimo pago {dayjs(customer.lastPayment).fromNow()}</p> : null}
-          <p className="italic text-neutral-400">Registro {dayjs(customer.createdAt).fromNow()}</p>
+          <p className="italic text-gray-dark dark:text-neutral-400">Registro {dayjs(customer.createdAt).fromNow()}</p>
         </div>
       </td>
       <td className={`px-3 py-2 text-right tracking-widest`}>
