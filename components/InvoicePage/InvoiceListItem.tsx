@@ -16,7 +16,6 @@ interface Props {
   invoice: IInvoice;
 }
 const InvoiceListItem = ({ invoice }: Props) => {
-  const [textColor, setTextColor] = useState('green');
   const [opened, setOpened] = useState(false);
   const dispatch = useAppDispatch();
   const [summary, setSumary] = useState({
@@ -30,10 +29,6 @@ const InvoiceListItem = ({ invoice }: Props) => {
   });
 
   useEffect(() => {
-    if (invoice.isSeparate) setTextColor('blue');
-    else if (invoice.balance) setTextColor('orange');
-    else setTextColor('green');
-
     const newSummary = { ...summary };
     newSummary.subtotal = invoice.subtotal || 0;
     newSummary.discount = invoice.discount || 0;
@@ -63,7 +58,12 @@ const InvoiceListItem = ({ invoice }: Props) => {
         <div className="flex justify-between">
           <span className="text-sm font-bold">{invoice.expeditionDate.format('DD-MM-YYYY hh:mm a')}</span>
           <h2 className="text-center text-sm font-bold tracking-wider">
-            Factura N°: <span className={`text-${textColor}-400`}>{invoice.prefixNumber}</span>
+            Factura N°:{' '}
+            <span
+              className={invoice.isSeparate ? 'text-blue-400' : invoice.balance ? 'text-orange-400' : 'text-green-400'}
+            >
+              {invoice.prefixNumber}
+            </span>
           </h2>
         </div>
         <p className="text-center text-xs italic text-gray-400">
