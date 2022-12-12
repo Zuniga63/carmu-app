@@ -81,14 +81,20 @@ export const mountInvoiceData = (data: IInvoicePageData): AppThunkAction => {
 
 export const fetchInvoiceData = (): AppThunkAction => {
   return async dispatch => {
+    dispatch(actionBody(actions.LOADING_DATA, true));
+    dispatch(actionBody(actions.REFRESH_IS_SUCCESS, false));
+
     try {
-      dispatch(actionBody(actions.LOADING_DATA, true));
       const res = await axios.get<IInvoicePageData>('/invoices');
       dispatch(mountInvoiceData(res.data));
+      dispatch(actionBody(actions.REFRESH_IS_SUCCESS, true));
     } catch (error) {
       console.log(error);
     } finally {
       dispatch(actionBody(actions.LOADING_DATA, false));
+      setTimeout(() => {
+        dispatch(actionBody(actions.REFRESH_IS_SUCCESS, false));
+      }, 250);
     }
   };
 };

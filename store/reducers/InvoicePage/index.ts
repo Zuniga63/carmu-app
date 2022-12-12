@@ -8,6 +8,7 @@ const initialState: IInvoicePageState = {
   products: [],
   cashboxs: [],
   loading: true,
+  refreshIsSuccess: false,
   // Show invoice
   selectedInvoice: null,
   selectedInvoiceOpened: false,
@@ -54,6 +55,9 @@ export default function InvoicePageReducer(state = initialState, action: IAction
     }
     case ACTIONS.LOADING_DATA: {
       return { ...state, loading: action.payload as boolean };
+    }
+    case ACTIONS.REFRESH_IS_SUCCESS: {
+      return { ...state, refreshIsSuccess: action.payload as boolean };
     }
     // ------------------------------------------------------------------------
     // CASES RELATED WITH SELECTED INVOICE

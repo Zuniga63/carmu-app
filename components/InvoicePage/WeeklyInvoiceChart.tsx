@@ -51,11 +51,7 @@ export const barOptions: ChartOptions<'bar'> = {
 };
 
 const WeeklyInvoiceChart = () => {
-  const {
-    storeSuccess,
-    storePaymentSuccess,
-    loading: loadingInvoices,
-  } = useAppSelector(state => state.InvoicePageReducer);
+  const { storeSuccess, storePaymentSuccess, refreshIsSuccess } = useAppSelector(state => state.InvoicePageReducer);
   const { isAuth } = useAppSelector(state => state.AuthReducer);
   const [chartData, setChartData] = useState<ChartData<'bar'>>({ labels: [], datasets: [] });
   const [history, setHistory] = useState<ISaleHistory[]>([]);
@@ -192,18 +188,21 @@ const WeeklyInvoiceChart = () => {
   };
 
   useEffect(() => {
-    if (isAuth && (storeSuccess || storePaymentSuccess || initialData || !loadingInvoices)) {
-      if (!waiting) {
-        source = CancelToken.source();
-        fetchData();
-      }
-
-      return () => {
-        source.cancel('Cancelado por desmonte del componente');
-        setInitialData(true);
-      };
+    if (isAuth && (storeSuccess || storePaymentSuccess || refreshIsSuccess || initialData)) {
+      if (waiting) source.cancel('El estado cambió');
+      source = CancelToken.source();
+      fetchData();
     }
-  }, [isAuth, storeSuccess, storePaymentSuccess, loadingInvoices]);
+  }, [isAuth, storeSuccess, storePaymentSuccess, refreshIsSuccess]);
+
+  useEffect(() => {
+    return () => {
+      if (source) {
+        source.cancel('Desmontando el componente.');
+      }
+      setInitialData(true);
+    };
+  }, []);
 
   return (
     <Tabs defaultValue="chart" color="blue">

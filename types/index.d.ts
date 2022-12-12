@@ -501,6 +501,7 @@ export interface IInvoicePageState {
   products: IInvoiceProduct[];
   cashboxs: IInvoiceCashbox[];
   loading: boolean;
+  refreshIsSuccess: boolean;
   // Show invoice
   selectedInvoice: IInvoiceFull | null;
   selectedInvoiceOpened: boolean;
