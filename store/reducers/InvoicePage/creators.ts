@@ -81,14 +81,20 @@ export const mountInvoiceData = (data: IInvoicePageData): AppThunkAction => {
 
 export const fetchInvoiceData = (): AppThunkAction => {
   return async dispatch => {
+    dispatch(actionBody(actions.LOADING_DATA, true));
+    dispatch(actionBody(actions.REFRESH_IS_SUCCESS, false));
+
     try {
-      dispatch(actionBody(actions.LOADING_DATA, true));
       const res = await axios.get<IInvoicePageData>('/invoices');
       dispatch(mountInvoiceData(res.data));
+      dispatch(actionBody(actions.REFRESH_IS_SUCCESS, true));
     } catch (error) {
       console.log(error);
     } finally {
       dispatch(actionBody(actions.LOADING_DATA, false));
+      setTimeout(() => {
+        dispatch(actionBody(actions.REFRESH_IS_SUCCESS, false));
+      }, 250);
     }
   };
 };
@@ -99,6 +105,14 @@ export const openNewInvoiceForm = (): AppThunkAction => {
 
 export const closeNewInvoiceForm = (): AppThunkAction => {
   return dispatch => dispatch(actionBody(actions.FORM_NEW_INVOICE_OPENED, false));
+};
+
+export const openCounterSaleForm = (): AppThunkAction => {
+  return dispatch => dispatch(actionBody(actions.COUNTER_SALE_FORM_OPENED, true));
+};
+
+export const closeCounterSaleForm = (): AppThunkAction => {
+  return dispatch => dispatch(actionBody(actions.COUNTER_SALE_FORM_OPENED, false));
 };
 
 export const storeNewInvoice = (invoiceData: IInvoiceStoreData): AppThunkAction => {

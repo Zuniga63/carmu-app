@@ -501,6 +501,7 @@ export interface IInvoicePageState {
   products: IInvoiceProduct[];
   cashboxs: IInvoiceCashbox[];
   loading: boolean;
+  refreshIsSuccess: boolean;
   // Show invoice
   selectedInvoice: IInvoiceFull | null;
   selectedInvoiceOpened: boolean;
@@ -508,6 +509,7 @@ export interface IInvoicePageState {
   selectedInvoiceError: string | null;
   // STORE INVOICE
   formOpened: boolean;
+  counterSaleFormOpened: boolean;
   storeLoading: boolean;
   storeSuccess: boolean;
   storeError: unknown;

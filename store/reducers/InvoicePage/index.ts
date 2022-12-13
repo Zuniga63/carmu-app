@@ -8,6 +8,7 @@ const initialState: IInvoicePageState = {
   products: [],
   cashboxs: [],
   loading: true,
+  refreshIsSuccess: false,
   // Show invoice
   selectedInvoice: null,
   selectedInvoiceOpened: false,
@@ -15,6 +16,7 @@ const initialState: IInvoicePageState = {
   selectedInvoiceError: null,
   // STORE NEW INVOICE
   formOpened: false,
+  counterSaleFormOpened: false,
   storeLoading: false,
   storeSuccess: false,
   storeError: null,
@@ -36,6 +38,9 @@ export default function InvoicePageReducer(state = initialState, action: IAction
         formOpened: action.payload as boolean,
       };
     }
+    case ACTIONS.COUNTER_SALE_FORM_OPENED: {
+      return { ...state, counterSaleFormOpened: action.payload as boolean };
+    }
     case ACTIONS.INVOICE_STORE_LOADING: {
       return { ...state, storeLoading: action.payload as boolean };
     }
@@ -54,6 +59,9 @@ export default function InvoicePageReducer(state = initialState, action: IAction
     }
     case ACTIONS.LOADING_DATA: {
       return { ...state, loading: action.payload as boolean };
+    }
+    case ACTIONS.REFRESH_IS_SUCCESS: {
+      return { ...state, refreshIsSuccess: action.payload as boolean };
     }
     // ------------------------------------------------------------------------
     // CASES RELATED WITH SELECTED INVOICE
