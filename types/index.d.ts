@@ -509,6 +509,7 @@ export interface IInvoicePageState {
   selectedInvoiceError: string | null;
   // STORE INVOICE
   formOpened: boolean;
+  counterSaleFormOpened: boolean;
   storeLoading: boolean;
   storeSuccess: boolean;
   storeError: unknown;

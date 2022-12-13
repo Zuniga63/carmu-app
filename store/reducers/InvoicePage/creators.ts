@@ -107,6 +107,14 @@ export const closeNewInvoiceForm = (): AppThunkAction => {
   return dispatch => dispatch(actionBody(actions.FORM_NEW_INVOICE_OPENED, false));
 };
 
+export const openCounterSaleForm = (): AppThunkAction => {
+  return dispatch => dispatch(actionBody(actions.COUNTER_SALE_FORM_OPENED, true));
+};
+
+export const closeCounterSaleForm = (): AppThunkAction => {
+  return dispatch => dispatch(actionBody(actions.COUNTER_SALE_FORM_OPENED, false));
+};
+
 export const storeNewInvoice = (invoiceData: IInvoiceStoreData): AppThunkAction => {
   return async dispatch => {
     try {

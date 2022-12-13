@@ -16,6 +16,7 @@ const initialState: IInvoicePageState = {
   selectedInvoiceError: null,
   // STORE NEW INVOICE
   formOpened: false,
+  counterSaleFormOpened: false,
   storeLoading: false,
   storeSuccess: false,
   storeError: null,
@@ -36,6 +37,9 @@ export default function InvoicePageReducer(state = initialState, action: IAction
         ...state,
         formOpened: action.payload as boolean,
       };
+    }
+    case ACTIONS.COUNTER_SALE_FORM_OPENED: {
+      return { ...state, counterSaleFormOpened: action.payload as boolean };
     }
     case ACTIONS.INVOICE_STORE_LOADING: {
       return { ...state, storeLoading: action.payload as boolean };
