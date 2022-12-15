@@ -1,8 +1,8 @@
 import React from 'react';
-import { ScrollArea } from '@mantine/core';
+import { Table } from '@mantine/core';
 import { IInvoiceSummary, INewInvoicePayment } from 'types';
 import InvoiceFormPaymentListItem from './InvoiceFormPaymentListItem';
-import { currencyFormat } from 'utils';
+import InvoiceFormSummary from './InvoiceFormSummary';
 
 interface Props {
   payments: INewInvoicePayment[];
@@ -12,52 +12,41 @@ interface Props {
 
 const InvoiceFormPaymentList = ({ payments, removePayment, summary }: Props) => {
   return (
-    <div>
-      <ScrollArea className="relative mb-2 h-40 overflow-y-auto bg-dark">
-        <table className="w-full table-auto">
-          <thead className="sticky top-0 z-fixed bg-gray-dark">
+    <>
+      <div className="mb-4 min-h-[10rem] rounded border border-gray-200 dark:border-gray-600">
+        <Table striped highlightOnHover>
+          <thead>
             <tr className="whitespace-nowrap text-gray-100">
-              <th scope="col" className="px-2 py-1 text-center text-xs uppercase tracking-wide">
-                Descripción
+              <th>
+                <span className="block text-center">#</span>
               </th>
-              <th scope="col" className="px-2 py-1 text-center text-xs uppercase tracking-wide">
-                Importe
+              <th scope="col">Caja</th>
+              <th scope="col">
+                <span className="text-center">Forma de pago</span>
               </th>
-              <th scope="col" className="relative px-2 py-1 text-center text-xs uppercase tracking-wide">
+              <th scope="col">
+                <span className="text-center">Importe</span>
+              </th>
+              <th scope="col" className="relative">
                 <span className="sr-only">Actions</span>
               </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {payments.map(item => (
-              <InvoiceFormPaymentListItem key={item.id} payment={item} onRemove={removePayment} />
+            {payments.map((item, index) => (
+              <InvoiceFormPaymentListItem index={index} key={item.id} payment={item} onRemove={removePayment} />
             ))}
           </tbody>
-        </table>
-      </ScrollArea>
+        </Table>
+      </div>
 
       {/* Summary */}
-      <div className="flex flex-col gap-y-2">
-        {summary.cash && (
-          <div className="flex items-center justify-end gap-x-4">
-            <p className="tracking-wider">Efectivo: </p>
-            <p className="w-32 whitespace-nowrap text-right tracking-widest">{currencyFormat(summary.cash)}</p>
-          </div>
-        )}
-        {summary.balance && (
-          <div className="flex items-center justify-end gap-x-4">
-            <p className="tracking-wider">Crédito: </p>
-            <p className="w-32 whitespace-nowrap text-right tracking-widest">{currencyFormat(summary.balance)}</p>
-          </div>
-        )}
-        {summary.cashChange && (
-          <div className="flex items-center justify-end gap-x-4">
-            <p className="tracking-wider">Cambio: </p>
-            <p className="w-32 whitespace-nowrap text-right tracking-widest">{currencyFormat(summary.cashChange)}</p>
-          </div>
-        )}
+      <div className="flex justify-end">
+        <div className="w-80">
+          <InvoiceFormSummary summary={summary} full />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

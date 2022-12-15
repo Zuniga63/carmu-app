@@ -23,12 +23,14 @@ const InvoiceFormItemListItem = ({ item, onRemove }: Props) => {
     });
   }, []);
   return (
-    <tr className="group text-light transition-colors hover:bg-neutral-200 hover:text-dark">
+    <tr className="group transition-colors hover:bg-neutral-200 dark:text-light dark:hover:text-dark">
       <td className="whitespace-nowrap px-2 py-1 text-center text-sm">{item.quantity}</td>
       <td className="px-2 py-1 text-sm">
         <p>{item.description}</p>
         {itemCategories ? (
-          <p className="text-xs text-light text-opacity-80 transition-colors group-hover:text-dark">{itemCategories}</p>
+          <p className="text-xs text-gray-dark transition-colors group-hover:font-bold group-hover:text-dark dark:text-light dark:group-hover:text-dark">
+            {itemCategories}
+          </p>
         ) : null}
       </td>
       <td className="whitespace-nowrap px-2 py-1 text-center text-xs">

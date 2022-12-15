@@ -1,18 +1,20 @@
-import { Checkbox, NumberInput, Select } from '@mantine/core';
-import { IconBox, IconPlus } from '@tabler/icons';
+import { Button, Checkbox, NumberInput, Select } from '@mantine/core';
+import { IconBox, IconCirclePlus } from '@tabler/icons';
 import dayjs from 'dayjs';
 import React, { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { useAppSelector } from 'store/hooks';
-import { IInvoiceCashbox, INewInvoicePayment } from 'types';
+import { IInvoiceCashbox, IInvoiceSummary, INewInvoicePayment } from 'types';
 import InvoiceFormGroup from './InvoiceFormGroup';
+import InvoiceFormPaymentList from './InvoiceFormPaymentList';
 
 interface Props {
   invoiceDate: Date | null;
-  customerName: string;
-  addPayment(newPayment: INewInvoicePayment): void;
+  summary: IInvoiceSummary;
+  payments: INewInvoicePayment[];
+  setPayments: React.Dispatch<React.SetStateAction<INewInvoicePayment[]>>;
 }
 
-const InvoiceFormPayment = ({ customerName, invoiceDate, addPayment }: Props) => {
+const InvoiceFormPayment: React.FC<Props> = ({ invoiceDate, summary, payments, setPayments }) => {
   const { cashboxs } = useAppSelector(state => state.InvoicePageReducer);
   const input = useRef<HTMLInputElement>(null);
 
@@ -29,6 +31,35 @@ const InvoiceFormPayment = ({ customerName, invoiceDate, addPayment }: Props) =>
     }
 
     return result;
+  };
+
+  const addPayment = (newPayment: INewInvoicePayment) => {
+    const result = payments.slice();
+
+    const equalPayment = result.find(payment => {
+      let isEqual = true;
+      if (Boolean(payment.box) !== Boolean(newPayment.box)) isEqual = false;
+      else if (payment.box && newPayment.box && payment.box.id !== newPayment.box.id) isEqual = false;
+      else if (payment.description !== newPayment.description) isEqual = false;
+      else if (payment.register !== newPayment.register) isEqual = false;
+
+      return isEqual;
+    });
+
+    if (!equalPayment) result.push(newPayment);
+    else {
+      const index = result.findIndex(item => item.id === equalPayment.id);
+      equalPayment.amount += newPayment.amount;
+      result.splice(index, 1, equalPayment);
+    }
+
+    setPayments(result);
+  };
+
+  const removePayment = (paymentId: number) => {
+    setPayments(current => {
+      return current.filter(item => item.id !== paymentId);
+    });
   };
 
   const add = () => {
@@ -63,78 +94,78 @@ const InvoiceFormPayment = ({ customerName, invoiceDate, addPayment }: Props) =>
     setBoxId(null);
   }, [cashboxs.length, invoiceDate]);
 
+  useEffect(() => {
+    if (summary.balance && summary.balance > 0) {
+      setAmount(summary.balance);
+    }
+  }, [summary.balance]);
+
   return (
-    <InvoiceFormGroup title="Agregar Pago">
-      <div className="flex items-center gap-4 lg:h-16 lg:items-start">
-        <div className="grid flex-grow items-start gap-4 lg:grid-cols-3">
-          {/* BOX */}
-          <div className="flex flex-col gap-y-2">
-            <Select
-              placeholder="Selecciona una caja"
-              value={boxId}
-              onChange={setBoxId}
-              icon={<IconBox size={14} />}
-              data={boxList.map(box => ({
-                value: box.id,
-                label: box.name,
-              }))}
-              searchable
-              clearable
-              size="xs"
-              ref={input}
-            />
-          </div>
-          {/* DESCRIPTION */}
-          <Select
-            placeholder="Forma de pago"
-            value={description}
-            onChange={setDescription}
-            icon={<IconBox size={14} />}
-            data={['Efectivo', 'Consignación', 'Transferencia']}
+    <div className="grid grid-cols-3 items-start gap-x-4 pt-4">
+      <InvoiceFormGroup title="Registrar Pago">
+        {/* BOX */}
+        <Select
+          placeholder="Selecciona una caja"
+          value={boxId}
+          onChange={setBoxId}
+          icon={<IconBox size={14} />}
+          data={boxList.map(box => ({
+            value: box.id,
+            label: box.name,
+          }))}
+          searchable
+          clearable
+          size="xs"
+          ref={input}
+          className="mb-4"
+        />
+
+        {/* DESCRIPTION */}
+        <Select
+          placeholder="Forma de pago"
+          value={description}
+          onChange={setDescription}
+          icon={<IconBox size={14} />}
+          data={['Efectivo', 'Consignación', 'Transferencia']}
+          size="xs"
+          required
+          className="mb-4"
+        />
+
+        <NumberInput
+          placeholder="Importe del pago en $"
+          hideControls
+          size="xs"
+          value={amount}
+          parser={value => value?.replace(/\$\s?|(,*)/g, '')}
+          onChange={val => setAmount(val)}
+          formatter={formater}
+          onFocus={({ target }) => target.select()}
+          onKeyDown={handleKeyPress}
+        />
+
+        {!boxId && (
+          <Checkbox
+            label={<span className="font-sans">Registrar Transacción</span>}
             size="xs"
-            required
+            checked={register}
+            onChange={({ currentTarget }) => setRegister(currentTarget.checked)}
+            onKeyDown={handleKeyPress}
+            className="mt-2"
           />
-          {/* AMOUNT */}
-          <div className="flex flex-col gap-y-2">
-            <NumberInput
-              placeholder="Importe del pago en $"
-              hideControls
-              size="xs"
-              value={amount}
-              precision={2}
-              parser={value => value?.replace(/\$\s?|(,*)/g, '')}
-              onChange={val => setAmount(val)}
-              formatter={formater}
-              onFocus={({ target }) => target.select()}
-              onKeyDown={handleKeyPress}
-            />
-            {!boxId && (
-              <Checkbox
-                label={<span className="font-sans text-light">Registrar Transacción</span>}
-                size="xs"
-                checked={register}
-                onChange={({ currentTarget }) => setRegister(currentTarget.checked)}
-                onKeyDown={handleKeyPress}
-              />
-            )}
-          </div>
-        </div>
+        )}
 
-        <div className="hidden scale-90 transform rounded-full border-2 border-red-500 px-4 py-2 text-xs lg:absolute lg:bottom-2 lg:block">
-          <p>
-            Cliente: <span className="font-bold tracking-wider">{customerName || 'Mostrador'}</span>
-          </p>
+        <div className="mt-8 flex justify-end">
+          <Button leftIcon={<IconCirclePlus size={20} />} onClick={add}>
+            Agregar
+          </Button>
         </div>
+      </InvoiceFormGroup>
 
-        <button
-          className="rounded-full border border-green-400 border-opacity-50 p-2 text-green-500 transition-colors  hover:border-green-400 hover:text-light active:border-green-800 active:text-green-800 disabled:opacity-20"
-          disabled={!(description && amount)}
-          onClick={add}
-        >
-          <IconPlus size={20} stroke={3} />
-        </button>
+      <div className="col-span-2">
+        <InvoiceFormPaymentList payments={payments} removePayment={removePayment} summary={summary} />
       </div>
-    </InvoiceFormGroup>
+    </div>
   );
 };
 
