@@ -1,21 +1,21 @@
 import React from 'react';
 import { IInvoiceSummary, INewInvoiceItem } from 'types';
 import InvoiceFormItemListItem from './InvoiceFormItemListItem';
-import { currencyFormat } from 'utils';
+import InvoiceFormSummary from './InvoiceFormSummary';
 
 interface Props {
   items: INewInvoiceItem[];
   removeItem(itemId: string): void;
-  summary: IInvoiceSummary;
+  summary?: IInvoiceSummary;
 }
 
 const InvoiceFormItemList = ({ items, removeItem, summary }: Props) => {
   return (
-    <>
-      <div className="relative mb-2 min-h-[10rem] bg-dark">
+    <div className="relative grid grid-cols-1 items-start gap-4 lg:grid-cols-4">
+      <div className={`mb-2 min-h-[10rem] bg-gray-300 dark:bg-dark ${summary ? 'lg:col-span-3' : 'lg:col-span-4'}`}>
         <table className="w-full table-auto">
-          <thead className="sticky top-0 z-fixed bg-gray-dark">
-            <tr className="whitespace-nowrap text-gray-100">
+          <thead className="bg-gray-400 text-gray-dark dark:bg-gray-dark">
+            <tr className="whitespace-nowrap  dark:text-gray-100">
               <th scope="col" className="px-2 py-1 text-center text-xs uppercase tracking-wide">
                 Cant.
               </th>
@@ -40,26 +40,14 @@ const InvoiceFormItemList = ({ items, removeItem, summary }: Props) => {
           </tbody>
         </table>
       </div>
+
       {/* SUMMARY */}
-      <div className="flex gap-x-4">
-        {/* PROPERTIES */}
-        <div className="flex-grow">
-          <div className="flex flex-col gap-y-1 text-right">
-            <p>Subtotal</p>
-            {summary.discount && <p className="text-sm">Descuento</p>}
-            <p className="text-xl">Total</p>
-          </div>
+      {summary ? (
+        <div className="block lg:sticky lg:top-0">
+          <InvoiceFormSummary summary={summary} />
         </div>
-        {/* VALUES */}
-        <div className="flex-shrink-0">
-          <div className="flex flex-col gap-y-1 text-right tracking-widest">
-            <p>{currencyFormat(summary.subtotal)}</p>
-            {summary.discount && <p className="text-sm">{currencyFormat(summary.discount)}</p>}
-            <p className="text-xl font-bold">{currencyFormat(summary.amount)}</p>
-          </div>
-        </div>
-      </div>
-    </>
+      ) : null}
+    </div>
   );
 };
 

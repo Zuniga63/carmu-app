@@ -4,23 +4,46 @@ import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { closeNewInvoiceForm, storeNewInvoice } from 'store/reducers/InvoicePage/creators';
 import { useMediaQuery } from '@mantine/hooks';
-import { IInvoiceCashbox, IInvoiceStoreData, IInvoiceSummary, INewInvoiceItem, INewInvoicePayment } from 'types';
+import { IInvoiceStoreData, IInvoiceSummary, INewInvoiceItem, INewInvoicePayment } from 'types';
 
-import { DatePicker } from '@mantine/dates';
-import { Button, Checkbox, Modal, Select, Tabs, TextInput } from '@mantine/core';
-import { IconBox, IconCalendar, IconFileInvoice, IconHome, IconPhone, IconSearch } from '@tabler/icons';
+import { Button, Modal, Stepper, Switch } from '@mantine/core';
+import {
+  IconArrowBack,
+  IconArrowNarrowRight,
+  IconBox,
+  IconCircleCheck,
+  IconDatabase,
+  IconFileDollar,
+  IconFileInvoice,
+} from '@tabler/icons';
 
 import InvoiceFormHeader from './InvoiceFormHeader';
-import InvoiceFormGroup from './InvoiceFormGroup';
-import InvoiceFormNewItem from './InvoiceFormNewItem';
-import InvoiceFormItemList from './InvoiceFormItemList';
 import InvoiceFormPayment from './InvoiceFormPayment';
-import InvoiceFormPaymentList from './InvoiceFormPaymentList';
+import InvoiceFormCustomer from './InvoiceFormCustomer';
+import InvoiceFormDates from './InvoiceFormDates';
+import InvoiceFormItems from './InvoiceFormItems';
+import InvoiceFormConfirm from './InvoiceFormConfirm';
+
+export enum InvoiceSteps {
+  Invoicing,
+  Items,
+  Payments,
+  Confirm,
+  Complete,
+}
+
+export interface IInvoiceCustomer {
+  id: string | null;
+  name: string;
+  document: string;
+  documentType: string;
+  phone: string;
+  address: string;
+}
 
 const InvoiceForm = () => {
   const {
     formOpened: opened,
-    customers,
     storeLoading: loading,
     storeError: error,
     storeSuccess: success,
@@ -30,15 +53,24 @@ const InvoiceForm = () => {
   const [enabled, setEnabled] = useState(false);
   const largeScreen = useMediaQuery('(min-width: 768px)');
 
-  // CUSTOMER
-  const [customerId, setCustomerId] = useState<string | null>(null);
-  const [customerName, setCustomerName] = useState('');
-  const [documentType, setDocumentType] = useState<string | null>('CC');
-  const [document, setDocument] = useState('');
-  const [phone, setPhone] = useState('');
-  const [address, setAddress] = useState('');
+  // ------------------------------------------------------------------------------------------------------------------
+  // INVOICE STEP
+  // ------------------------------------------------------------------------------------------------------------------
+  const [step, setStep] = useState(InvoiceSteps.Invoicing);
+  const nextStep = () => setStep(current => (current < InvoiceSteps.Confirm ? current + 1 : current));
+  const prevStep = () => setStep(current => (current > InvoiceSteps.Invoicing ? current - 1 : current));
 
-  // FACTURATION
+  // CUSTOMER
+  const [customer, setCustomer] = useState<IInvoiceCustomer>({
+    id: null,
+    name: '',
+    document: '',
+    documentType: 'CC',
+    address: '',
+    phone: '',
+  });
+
+  // INVOICING
   const [expeditionDate, setExpeditionDate] = useState<Date | null>(dayjs().toDate());
   const [expirationDate, setExpirationDate] = useState<Date | null>(dayjs().add(1, 'month').toDate());
   const [isSeparate, setIsSeparate] = useState(false);
@@ -60,98 +92,6 @@ const InvoiceForm = () => {
   // --------------------------------------------------------------------------
   // METHODS
   // --------------------------------------------------------------------------
-
-  const addPayment = (newPayment: INewInvoicePayment) => {
-    const result = cashPayments.slice();
-
-    const equalPayment = result.find(payment => {
-      let isEqual = true;
-      if (Boolean(payment.box) !== Boolean(newPayment.box)) isEqual = false;
-      else if (payment.box && newPayment.box && payment.box.id !== newPayment.box.id) isEqual = false;
-      else if (payment.description !== newPayment.description) isEqual = false;
-      else if (payment.register !== newPayment.register) isEqual = false;
-
-      return isEqual;
-    });
-
-    if (!equalPayment) result.push(newPayment);
-    else {
-      const index = result.findIndex(item => item.id === equalPayment.id);
-      equalPayment.amount += newPayment.amount;
-      result.splice(index, 1, equalPayment);
-    }
-
-    setCashPayments(result);
-  };
-
-  const removePayment = (paymentId: number) => {
-    setCashPayments(current => {
-      return current.filter(item => item.id !== paymentId);
-    });
-  };
-
-  const addItem = (newItem: INewInvoiceItem, isCounterSale = false, box: IInvoiceCashbox | null = null) => {
-    // Verify if exist other item with this characteristics
-    const equalItem = items.find(item => {
-      let isEqual = true;
-      if (item.categories.length !== newItem.categories.length) isEqual = false;
-      else if (item.product !== newItem.product) isEqual = false;
-      else if (item.productColor !== newItem.productColor) isEqual = false;
-      else if (item.productSize !== newItem.productSize) isEqual = false;
-      else if (item.tags.length !== newItem.tags.length) isEqual = false;
-      else if (item.description !== newItem.description) isEqual = false;
-      else if (item.unitValue !== newItem.unitValue) isEqual = false;
-      else if (item.discount !== newItem.discount) isEqual = false;
-
-      // Verify categories
-      if (isEqual && item.categories.length > 0) {
-        newItem.categories.forEach(category => {
-          const exist = item.categories.some(ctg => ctg === category);
-          if (!exist) isEqual = false;
-        });
-      }
-
-      // Verify tags
-      if (isEqual && item.tags.length > 0) {
-        newItem.tags.forEach(tag => {
-          const exist = item.tags.some(tg => tg === tag);
-          if (!exist) isEqual = false;
-        });
-      }
-
-      return isEqual;
-    });
-
-    if (equalItem) {
-      const index = items.findIndex(item => item.id === equalItem.id);
-      equalItem.quantity += newItem.quantity;
-      equalItem.amount += newItem.amount;
-
-      setItems(current => {
-        const list = current.slice();
-        list.splice(index, 1, equalItem);
-        return list;
-      });
-    } else {
-      setItems(current => [...current, newItem]);
-    }
-
-    if (isCounterSale && box) {
-      addPayment({
-        id: new Date().getTime(),
-        box,
-        register: true,
-        description: 'Efectivo',
-        amount: newItem.amount,
-      });
-    }
-  };
-
-  const removeItem = (itemId: string) => {
-    const list = items.filter(item => item.id !== itemId);
-    setItems(list);
-  };
-
   const closeInvoice = () => {
     if (!loading) {
       dispatch(closeNewInvoiceForm());
@@ -161,13 +101,13 @@ const InvoiceForm = () => {
   const getData = (): IInvoiceStoreData => {
     return {
       sellerId: user?.id,
-      customerId: customerId || undefined,
+      customerId: customer.id || undefined,
       isSeparate,
-      customerName: customerName || undefined,
-      customerAddress: address.trim() || undefined,
-      customerDocument: document || undefined,
-      customerDocumentType: documentType || undefined,
-      customerPhone: phone || undefined,
+      customerName: customer.name || undefined,
+      customerAddress: customer.address.trim() || undefined,
+      customerDocument: customer.document || undefined,
+      customerDocumentType: customer.documentType || undefined,
+      customerPhone: customer.phone || undefined,
       sellerName: user?.name,
       expeditionDate: expeditionDate || undefined,
       expirationDate: expirationDate || undefined,
@@ -223,34 +163,16 @@ const InvoiceForm = () => {
   };
 
   const resetForm = () => {
-    setCustomerId(null);
+    setCustomer(current => ({ ...current, id: null }));
     setIsSeparate(false);
     setItems([]);
     setCashPayments([]);
+    setStep(InvoiceSteps.Invoicing);
   };
 
   // --------------------------------------------------------------------------
   // EFFECTS
   // --------------------------------------------------------------------------
-  useEffect(() => {
-    if (customerId) {
-      const customer = customers.find(c => c.id === customerId);
-      if (customer) {
-        setCustomerName(customer.fullName);
-        setDocumentType(current => customer.documentType || current);
-        setDocument(current => customer.documentNumber || current);
-        setAddress(current => customer.address || current);
-        setPhone(current => (customer.contacts.length ? customer.contacts[0].phone : current));
-      }
-    } else {
-      setCustomerName('');
-      setDocument('');
-      setDocumentType('CC');
-      setAddress('');
-      setPhone('');
-    }
-  }, [customerId]);
-
   useEffect(() => {
     if (expeditionDate) {
       setExpirationDate(dayjs(expeditionDate).add(1, 'month').toDate());
@@ -262,17 +184,16 @@ const InvoiceForm = () => {
   useEffect(() => {
     const summary = getSumary();
     setSummary(summary);
+    if (!summary.balance && step === InvoiceSteps.Payments) nextStep();
   }, [items, cashPayments]);
 
   // To determine wheter or not to save the invoice
   useEffect(() => {
-    let result = false;
-    if (summary.amount > 0 && !summary.balance) result = true;
-    else if (summary.balance && ((customerId && customerName) || (customerName && document && documentType))) {
-      result = true;
-    }
-    setEnabled(result);
-  }, [customerName, document, documentType, summary.amount, summary.balance]);
+    setEnabled(
+      (summary.amount > 0 && !summary.balance) ||
+        Boolean((customer.id && customer.name) || (customer.name && customer.document && customer.documentType))
+    );
+  }, [customer.name, customer.document, customer.documentType, summary.amount, summary.balance]);
 
   useEffect(() => {
     if (error) console.log(error);
@@ -295,166 +216,66 @@ const InvoiceForm = () => {
       onClose={closeInvoice}
     >
       <InvoiceFormHeader onClose={closeInvoice} isSeparate={isSeparate} />
-      <div className="px-6 py-2">
-        <Tabs defaultValue="new-item" className="mb-8">
-          <Tabs.List>
-            <Tabs.Tab value="new-customer" color="blue" icon={<IconFileInvoice size={14} />}>
-              Facturación
-            </Tabs.Tab>
-            <Tabs.Tab value="new-item" color="blue" icon={<IconBox size={14} />}>
-              Items
-            </Tabs.Tab>
-            <Tabs.Tab value="new-payment" icon={<IconFileInvoice size={14} />}>
-              Pagos
-            </Tabs.Tab>
-          </Tabs.List>
-
-          {/* CUSTOMER && DATE */}
-          <Tabs.Panel value="new-customer" pt="lg">
-            <div className="mb-6 grid gap-4 lg:grid-cols-12">
+      <div className="px-6 py-2 lg:py-6">
+        <Stepper active={step} onStepClick={setStep} size="xs">
+          <Stepper.Step label="Facturación" icon={<IconFileInvoice size={18} />} disabled={loading}>
+            <div className="grid gap-4 lg:grid-cols-12 lg:gap-y-2">
               {/* CUSTOMER */}
-              <InvoiceFormGroup title="Cliente" className="lg:col-span-9">
-                <div className="grid gap-2 lg:grid-cols-2">
-                  {/* SELECT CUSTOMER */}
-                  <Select
-                    className="lg:col-span-2"
-                    value={customerId}
-                    onChange={value => setCustomerId(value)}
-                    data={customers.map(customer => ({ value: customer.id, label: customer.fullName }))}
-                    size="xs"
-                    placeholder="Buscar cliente"
-                    icon={<IconSearch size={15} />}
-                    searchable
-                    clearable
-                  />
+              <InvoiceFormCustomer className="lg:col-span-9" customer={customer} onCustomerChange={setCustomer} />
 
-                  {/* Full Name */}
-                  <TextInput
-                    label="Nombre completo"
-                    value={customerName}
-                    placeholder="Nombre completo del cliente"
-                    size="xs"
-                    onChange={({ target }) => setCustomerName(target.value)}
-                  />
+              <InvoiceFormDates
+                expeditionDate={expeditionDate}
+                expirationDate={expirationDate}
+                onUpdateExpedition={setExpeditionDate}
+                onUpdateExpiration={setExpirationDate}
+                className="lg:col-span-3"
+              />
 
-                  {/* Document */}
-                  <div className="grid grid-cols-12 gap-2">
-                    <TextInput
-                      label="Documento"
-                      className="col-span-9"
-                      value={document}
-                      placeholder="Escribelo aquí"
-                      size="xs"
-                      onChange={({ target }) => setDocument(target.value)}
-                    />
-                    <Select
-                      className="col-span-3"
-                      label="Tipo"
-                      value={documentType}
-                      onChange={value => setDocumentType(value)}
-                      data={['CC', 'TI', 'NIT', 'PAP']}
-                      size="xs"
-                      allowDeselect={false}
-                    />
-                  </div>
-
-                  {/* ADDRESS */}
-                  <TextInput
-                    placeholder="Dirección del cliente"
-                    size="xs"
-                    icon={<IconHome size={15} />}
-                    value={address}
-                    onChange={({ target }) => setAddress(target.value)}
-                  />
-                  <TextInput
-                    placeholder="Telefono de contacto"
-                    size="xs"
-                    icon={<IconPhone size={15} />}
-                    value={phone}
-                    onChange={({ target }) => setPhone(target.value)}
-                    type="tel"
-                  />
-                </div>
-              </InvoiceFormGroup>
-
-              {/* DATES */}
-              <InvoiceFormGroup title="Facturación" className="lg:col-span-3">
-                {/* Expedition Date */}
-                <DatePicker
-                  label="Fecha de expedición"
-                  locale="es-do"
-                  icon={<IconCalendar size={14} />}
-                  placeholder="Selecciona una fecha"
-                  value={expeditionDate}
-                  onChange={value => setExpeditionDate(value)}
-                  maxDate={dayjs().toDate()}
-                  clearable
-                  className="mb-2"
-                  size="xs"
+              <div className="lg:col-span-12">
+                <Switch
+                  checked={isSeparate}
+                  label="Es un apartado"
+                  onChange={({ currentTarget }) => {
+                    setIsSeparate(currentTarget.checked);
+                  }}
                 />
-
-                {/* EXPIRATION DATE */}
-                <DatePicker
-                  label="Fecha de vencimiento"
-                  className="mb-2"
-                  locale="es-do"
-                  icon={<IconCalendar size={14} />}
-                  placeholder="Selecciona una fecha"
-                  value={expirationDate}
-                  onChange={value => setExpirationDate(value)}
-                  minDate={dayjs(expeditionDate).toDate()}
-                  clearable
-                  size="xs"
-                  disabled={!expeditionDate}
-                />
-              </InvoiceFormGroup>
+              </div>
             </div>
-          </Tabs.Panel>
+          </Stepper.Step>
 
-          <Tabs.Panel value="new-item" pt="lg">
-            <InvoiceFormNewItem
-              customerName={customerName}
+          <Stepper.Step label="Productos" icon={<IconBox size={18} />} disabled={loading}>
+            <InvoiceFormItems items={items} setItems={setItems} summary={summary} />
+          </Stepper.Step>
+
+          <Stepper.Step label="Forma de pago" icon={<IconFileDollar size={18} />} disabled={loading}>
+            <InvoiceFormPayment
               summary={summary}
-              addItem={addItem}
               invoiceDate={expeditionDate}
+              payments={cashPayments}
+              setPayments={setCashPayments}
             />
-          </Tabs.Panel>
+          </Stepper.Step>
+          <Stepper.Step label="Confirmar" icon={<IconCircleCheck size={18} />} loading={loading}>
+            <InvoiceFormConfirm customer={customer} items={items} payments={cashPayments} summary={summary} />
+          </Stepper.Step>
+          <Stepper.Completed>Validate</Stepper.Completed>
+        </Stepper>
 
-          <Tabs.Panel value="new-payment" pt="lg">
-            <InvoiceFormPayment customerName={customerName} invoiceDate={expeditionDate} addPayment={addPayment} />
-          </Tabs.Panel>
-        </Tabs>
-
-        {/* ITEM LIST AND PAYMENTS */}
-        <div className="mb-6 grid w-full items-start gap-4 lg:grid-cols-3">
-          {/* ITEM LIST */}
-          <div className="lg:col-span-2">
-            <InvoiceFormItemList items={items} removeItem={removeItem} summary={summary} />
-          </div>
-          {/* Payments */}
-          <div>
-            <InvoiceFormPaymentList payments={cashPayments} removePayment={removePayment} summary={summary} />
-          </div>
+        <div className="mt-8 flex justify-center gap-x-4">
+          <Button variant="default" onClick={prevStep} leftIcon={<IconArrowBack />} disabled={loading}>
+            Atras
+          </Button>
+          {step !== InvoiceSteps.Confirm ? (
+            <Button onClick={nextStep} rightIcon={<IconArrowNarrowRight />} disabled={loading}>
+              Siguiente
+            </Button>
+          ) : (
+            <Button onClick={checkIn} rightIcon={<IconDatabase />} loading={loading} disabled={!enabled}>
+              Guardar
+            </Button>
+          )}
         </div>
       </div>
-      <footer className="flex flex-col items-center justify-end gap-4 px-6 py-4 lg:flex-row">
-        <Checkbox
-          label="Es un apartado"
-          checked={isSeparate}
-          onChange={({ currentTarget }) => setIsSeparate(currentTarget.checked)}
-        />
-
-        <Button
-          size="md"
-          className="min-w-[300px]"
-          leftIcon={<IconFileInvoice size={18} />}
-          loading={loading}
-          disabled={!enabled}
-          onClick={checkIn}
-        >
-          {isSeparate ? 'Registrar Apartado' : summary.balance ? 'Registrar Credito' : 'Registrar Factura'}
-        </Button>
-      </footer>
     </Modal>
   );
 };
