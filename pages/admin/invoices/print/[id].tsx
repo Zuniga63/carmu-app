@@ -99,7 +99,7 @@ const PrintPage: NextPage<Props> = ({ invoice }) => {
       {/* PAYMENTS */}
       <div className="mb-4">
         <h3 className="mb-2 text-center">Forma de pago</h3>
-        {Boolean(invoice.cashChange) && (
+        {Boolean(invoice.cashChange) ? (
           <div className="flex justify-end gap-x-4">
             <div className="flex flex-col items-end">
               <p className="text-sm">Efectivo:</p>
@@ -110,8 +110,7 @@ const PrintPage: NextPage<Props> = ({ invoice }) => {
               <p className="text-sm">{currencyFormat(invoice.cashChange)}</p>
             </div>
           </div>
-        )}
-        {!invoice.cashChange && (
+        ) : (
           <div>
             {invoice.payments.map(payment => (
               <div key={payment.id} className="flex items-center justify-evenly gap-x-2 text-sm">
@@ -122,6 +121,17 @@ const PrintPage: NextPage<Props> = ({ invoice }) => {
             ))}
           </div>
         )}
+
+        {Boolean(invoice.balance) ? (
+          <div className="mx-auto mt-4 w-9/12 rounded-lg border-4 py-4 px-4">
+            <h3 className="mb-2 border-b-4 border-double border-gray-300 text-center text-lg tracking-wider text-dark">
+              Saldo
+            </h3>
+            <p className="text-center text-xl font-bold tracking-widest text-gray-dark">
+              {currencyFormat(invoice.balance)}
+            </p>
+          </div>
+        ) : null}
       </div>
 
       <p className="text-center text-sm">
