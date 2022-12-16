@@ -105,7 +105,7 @@ const CustomerTable = ({
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
               {filteredCustomers.map(customer => (
                 <CustomerTableItem
                   customer={customer}

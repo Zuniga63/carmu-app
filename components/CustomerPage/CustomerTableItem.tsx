@@ -1,7 +1,19 @@
 import { Loader, Tooltip } from '@mantine/core';
-import { IconCash, IconDeviceMobile, IconEdit, IconListCheck, IconMail, IconMapPin, IconTrash } from '@tabler/icons';
+import {
+  IconAlertCircle,
+  IconCash,
+  IconCircleCheck,
+  IconCircleX,
+  IconDeviceMobile,
+  IconEdit,
+  IconListCheck,
+  IconMail,
+  IconMapPin,
+  IconSkull,
+  IconTrash,
+} from '@tabler/icons';
 import dayjs from 'dayjs';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ICustomer } from 'types';
 import { currencyFormat } from 'utils';
 
@@ -15,18 +27,58 @@ interface Props {
 }
 
 const CustomerTableItem = ({ customer, mount, onDelete, mountToPayment, paymentLoading, onGetPayments }: Props) => {
+  const [customerState, setCustomerState] = useState(<IconCircleCheck size={40} className="text-green-500" />);
+
+  useEffect(() => {
+    const size = 40;
+    let Icon = IconCircleCheck;
+    let className = 'text-green-500';
+
+    if (customer.balance && customer.balance > 0) {
+      const date = customer.lastPayment ? dayjs(customer.lastPayment) : dayjs(customer.firstPendingInvoice);
+      const now = dayjs();
+      const backlogLevel = now.diff(date, 'days') / now.daysInMonth();
+
+      if (backlogLevel > 0.8) {
+        if (backlogLevel <= 1) {
+          className = 'text-amber-400';
+        } else if (backlogLevel < 3) {
+          Icon = IconAlertCircle;
+          className = 'text-amber-400';
+
+          if (backlogLevel > 2 && backlogLevel <= 2.8) {
+            className = 'text-orange-500';
+          } else if (backlogLevel > 2.8) {
+            className = 'text-red-500';
+          }
+        } else if (backlogLevel < 6) {
+          Icon = IconCircleX;
+          className = 'text-red-500';
+        } else {
+          Icon = IconSkull;
+          className = 'text-dark dark:text-purple-800';
+        }
+      }
+      console.log(customer.fullName, backlogLevel);
+    }
+
+    setCustomerState(<Icon size={size} className={className} />);
+  }, [customer.balance]);
   return (
     <tr className="text-dark dark:text-gray-300">
       {/* CUSTOMER */}
       <td className="whitespace-nowrap px-3 py-2">
-        <div className="text-center">
-          <p>{customer.fullName}</p>
-          {Boolean(customer.documentNumber) && (
-            <p className="text-sm">
-              <span>{customer.documentType}</span>: {customer.documentNumber}
-            </p>
-          )}
-          {Boolean(customer.alias) && <p className="text-xs text-light text-opacity-50">({customer.alias})</p>}
+        <div className="flex items-center gap-x-2">
+          {customerState}
+          <div className="text-center">
+            <p>{customer.fullName}</p>
+            {Boolean(customer.documentNumber) && (
+              <p className="text-sm">
+                <span>{customer.documentType}</span>: {customer.documentNumber}
+              </p>
+            )}
+            {Boolean(customer.alias) && <p className="text-xs text-light text-opacity-50">({customer.alias})</p>}
+          </div>
         </div>
       </td>
       {/* CONTACT */}
