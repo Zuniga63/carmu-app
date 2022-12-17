@@ -5,7 +5,12 @@ import { AxiosError } from 'axios';
 import dayjs from 'dayjs';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { ICustomer, IInvoiceCashbox, IInvoicePaymentData, IValidationErrors } from 'types';
+import {
+  ICustomer,
+  IInvoiceCashbox,
+  IInvoicePaymentData,
+  IValidationErrors,
+} from 'types';
 import { currencyFormat } from 'utils';
 
 interface Props {
@@ -18,13 +23,23 @@ interface Props {
   registerPayment(formData: unknown): Promise<void>;
 }
 
-const CustomerPaymentModal = ({ opened, customer, error, loading, onClose, cashboxs = [], registerPayment }: Props) => {
+const CustomerPaymentModal = ({
+  opened,
+  customer,
+  error,
+  loading,
+  onClose,
+  cashboxs = [],
+  registerPayment,
+}: Props) => {
   const defaultDescription = 'Efectivo';
 
   const [boxId, setBoxId] = useState<string | null>(null);
   const [paymentDate, setPaymentDate] = useState<Date | null>(dayjs().toDate());
   const [register, setRegister] = useState(true);
-  const [description, setDescription] = useState<string | null>(defaultDescription);
+  const [description, setDescription] = useState<string | null>(
+    defaultDescription
+  );
   const [amount, setAmount] = useState<number | undefined>(undefined);
   const [errors, setErrors] = useState<IValidationErrors | null>(null);
 
@@ -111,10 +126,14 @@ const CustomerPaymentModal = ({ opened, customer, error, loading, onClose, cashb
       <form onSubmit={onSubmitHandler}>
         <header className="mb-4 flex flex-col items-center">
           <h3>
-            Cliente <span className="font-bold text-red-500">{customer?.fullName}</span>
+            Cliente{' '}
+            <span className="font-bold text-red-500">{customer?.fullName}</span>
           </h3>
           <p className="text-xs text-gray-500">
-            Saldo: <span className="ml-1 inline-block font-bold text-light">{currencyFormat(customer?.balance)}</span>
+            Saldo:{' '}
+            <span className="ml-1 inline-block font-bold text-light">
+              {currencyFormat(customer?.balance)}
+            </span>
           </p>
         </header>
         <div className="mb-4">
@@ -183,15 +202,25 @@ const CustomerPaymentModal = ({ opened, customer, error, loading, onClose, cashb
           {!boxId && (
             <Checkbox
               className="mt-2"
-              label={<span className="font-sans text-light">Registrar Transacción</span>}
+              label={
+                <span className="font-sans text-light">
+                  Registrar Transacción
+                </span>
+              }
               size="xs"
               checked={register}
-              onChange={({ currentTarget }) => setRegister(currentTarget.checked)}
+              onChange={({ currentTarget }) =>
+                setRegister(currentTarget.checked)
+              }
             />
           )}
         </div>
         <footer className="flex justify-end">
-          <Button leftIcon={<IconCash size={16} />} type="submit" loading={loading}>
+          <Button
+            leftIcon={<IconCash size={16} />}
+            type="submit"
+            loading={loading}
+          >
             Registrar
           </Button>
         </footer>

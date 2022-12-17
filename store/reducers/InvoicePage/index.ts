@@ -27,7 +27,10 @@ const initialState: IInvoicePageState = {
   storePaymentError: null,
 };
 
-export default function InvoicePageReducer(state = initialState, action: IAction): IInvoicePageState {
+export default function InvoicePageReducer(
+  state = initialState,
+  action: IAction
+): IInvoicePageState {
   switch (action.type) {
     case ACTIONS.MOUNT_DATA: {
       return { ...state, ...(action.payload as object) };
@@ -73,7 +76,12 @@ export default function InvoicePageReducer(state = initialState, action: IAction
       return { ...state, selectedInvoiceLoading: Boolean(action.payload) };
     }
     case ACTIONS.SELECTED_INVOICE_ERROR: {
-      return { ...state, selectedInvoiceError: action.payload ? (action.payload as string) : null };
+      return {
+        ...state,
+        selectedInvoiceError: action.payload
+          ? (action.payload as string)
+          : null,
+      };
     }
     case ACTIONS.MOUNT_SELECTED_INVOICE: {
       return { ...state, selectedInvoice: action.payload as IInvoiceFull };
@@ -88,7 +96,10 @@ export default function InvoicePageReducer(state = initialState, action: IAction
       return { ...state, storePaymentLoading: action.payload as boolean };
     }
     case ACTIONS.PAYMENT_STORE_SUCCESS: {
-      return { ...state, storePaymentSuccess: action.payload as string | undefined };
+      return {
+        ...state,
+        storePaymentSuccess: action.payload as string | undefined,
+      };
     }
     case ACTIONS.PAYMENT_STORE_ERROR: {
       return { ...state, storePaymentError: action.payload };

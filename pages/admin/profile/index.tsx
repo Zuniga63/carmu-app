@@ -24,7 +24,11 @@ const ProfilePage: NextPage = () => {
     try {
       setLoading(true);
       setErrors(null);
-      await axios.put('/auth/local/update-password', { password, newPassword, confirmPassword });
+      await axios.put('/auth/local/update-password', {
+        password,
+        newPassword,
+        confirmPassword,
+      });
       toast.success('Contraseña actualizada');
       setPassword('');
       setNewPassword('');
@@ -61,7 +65,8 @@ const ProfilePage: NextPage = () => {
             <div className="px-4 sm:px-0">
               <h3 className="text-lg font-medium">Actualizar Contraseña</h3>
               <p className="mt-1 text-sm text-gray-400">
-                Aseguresé de que su cuenta esté usando una contraseña larga y aleatoria para mantenerse seguro.
+                Aseguresé de que su cuenta esté usando una contraseña larga y
+                aleatoria para mantenerse seguro.
               </p>
             </div>
           </div>
@@ -75,10 +80,16 @@ const ProfilePage: NextPage = () => {
                   required
                   className="col-span-6 md:col-span-4"
                   visibilityToggleIcon={({ reveal, size }) =>
-                    reveal ? <IconEyeOff size={size} /> : <IconEyeCheck size={size} />
+                    reveal ? (
+                      <IconEyeOff size={size} />
+                    ) : (
+                      <IconEyeCheck size={size} />
+                    )
                   }
                   value={password}
-                  onChange={({ currentTarget }) => setPassword(currentTarget.value)}
+                  onChange={({ currentTarget }) =>
+                    setPassword(currentTarget.value)
+                  }
                   disabled={loading}
                 />
                 <PasswordInput
@@ -87,10 +98,16 @@ const ProfilePage: NextPage = () => {
                   required
                   className="col-span-6 md:col-span-4"
                   visibilityToggleIcon={({ reveal, size }) =>
-                    reveal ? <IconEyeOff size={size} /> : <IconEyeCheck size={size} />
+                    reveal ? (
+                      <IconEyeOff size={size} />
+                    ) : (
+                      <IconEyeCheck size={size} />
+                    )
                   }
                   value={newPassword}
-                  onChange={({ currentTarget }) => setNewPassword(currentTarget.value)}
+                  onChange={({ currentTarget }) =>
+                    setNewPassword(currentTarget.value)
+                  }
                   disabled={loading}
                   error={errors?.password?.message}
                 />
@@ -100,10 +117,16 @@ const ProfilePage: NextPage = () => {
                   required
                   className="col-span-6 md:col-span-4"
                   visibilityToggleIcon={({ reveal, size }) =>
-                    reveal ? <IconEyeOff size={size} /> : <IconEyeCheck size={size} />
+                    reveal ? (
+                      <IconEyeOff size={size} />
+                    ) : (
+                      <IconEyeCheck size={size} />
+                    )
                   }
                   value={confirmPassword}
-                  onChange={({ currentTarget }) => setConfirmPassword(currentTarget.value)}
+                  onChange={({ currentTarget }) =>
+                    setConfirmPassword(currentTarget.value)
+                  }
                   disabled={loading}
                   error={errors?.confirmPassword?.message}
                 />

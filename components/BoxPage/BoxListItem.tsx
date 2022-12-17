@@ -12,7 +12,12 @@ import {
 } from '@tabler/icons';
 import { currencyFormat } from 'utils';
 import { useAppDispatch } from 'store/hooks';
-import { destroyBox, mountBoxToClose, mountBoxToOpen, mountSelectedBox } from 'store/reducers/BoxPage/creators';
+import {
+  destroyBox,
+  mountBoxToClose,
+  mountBoxToOpen,
+  mountSelectedBox,
+} from 'store/reducers/BoxPage/creators';
 import { Button } from '@mantine/core';
 
 interface Props {
@@ -57,7 +62,11 @@ const BoxListItem = ({ box }: Props) => {
     }
 
     return () => {
-      console.log('Clear interval in second hook of %s: %s', box.name, intervalId);
+      console.log(
+        'Clear interval in second hook of %s: %s',
+        box.name,
+        intervalId
+      );
       clearInterval(intervalId);
     };
   }, [box.openBox, box.closed, box.createdAt, box.updatedAt]);
@@ -69,7 +78,9 @@ const BoxListItem = ({ box }: Props) => {
           {box.openBox && (
             <div className="flex items-center justify-center gap-x-2 text-gray-dark dark:text-gray-400">
               <IconAward size={18} />
-              <p className="text-xs">{box.cashier ? box.cashier.name : box.cashierName}</p>
+              <p className="text-xs">
+                {box.cashier ? box.cashier.name : box.cashierName}
+              </p>
             </div>
           )}
 
@@ -88,14 +99,17 @@ const BoxListItem = ({ box }: Props) => {
             <>
               <div className="flex justify-between text-xs text-gray-dark dark:text-gray-400">
                 <p>
-                  Base: <span className="font-bold">{currencyFormat(box.base)}</span>
+                  Base:{' '}
+                  <span className="font-bold">{currencyFormat(box.base)}</span>
                 </p>
                 <div className="flex items-center gap-x-2 ">
                   <IconLockOpen size={18} />
                   <span>{openFromNow}</span>
                 </div>
               </div>
-              <p className="text-center text-2xl font-bold tracking-wider">{currencyFormat(box.balance)}</p>
+              <p className="text-center text-2xl font-bold tracking-wider">
+                {currencyFormat(box.balance)}
+              </p>
               <p className="text-center text-xs font-bold">Saldo</p>
             </>
           )}
@@ -149,7 +163,11 @@ const BoxListItem = ({ box }: Props) => {
                   Cerrar
                 </Button>
 
-                <Button size="xs" leftIcon={<IconFolder size={14} />} onClick={() => dispatch(mountSelectedBox(box))}>
+                <Button
+                  size="xs"
+                  leftIcon={<IconFolder size={14} />}
+                  onClick={() => dispatch(mountSelectedBox(box))}
+                >
                   Ver
                 </Button>
               </>

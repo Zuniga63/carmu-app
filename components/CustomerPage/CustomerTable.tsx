@@ -1,5 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Loader, ScrollArea, Switch, TextInput, Tooltip } from '@mantine/core';
+import {
+  Button,
+  Loader,
+  ScrollArea,
+  Switch,
+  TextInput,
+  Tooltip,
+} from '@mantine/core';
 import { ICustomer } from 'types';
 import CustomerTableItem from './CustomerTableItem';
 import {
@@ -63,7 +70,11 @@ const CustomerTable = ({
       if (onlyCustomerWithDebt) isOk = Boolean(customer.balance);
 
       if (isOk && search) {
-        const text = normalizeText([customer.fullName, customer.documentNumber || '', customer.alias].join(' ').trim());
+        const text = normalizeText(
+          [customer.fullName, customer.documentNumber || '', customer.alias]
+            .join(' ')
+            .trim()
+        );
         isOk = text.includes(normalizeText(search));
       }
 
@@ -89,9 +100,13 @@ const CustomerTable = ({
       result.sort((currentCustomer, lastCustomer) => {
         let result = 0;
 
-        const currentCustomerDiff = dayjs().diff(currentCustomer.lastPayment || currentCustomer.firstPendingInvoice);
+        const currentCustomerDiff = dayjs().diff(
+          currentCustomer.lastPayment || currentCustomer.firstPendingInvoice
+        );
 
-        const lastCustomerDiff = dayjs().diff(lastCustomer.lastPayment || lastCustomer.firstPendingInvoice);
+        const lastCustomerDiff = dayjs().diff(
+          lastCustomer.lastPayment || lastCustomer.firstPendingInvoice
+        );
 
         if (currentCustomerDiff < lastCustomerDiff) result = -1;
         else if (currentCustomerDiff > lastCustomerDiff) result = 1;
@@ -108,7 +123,14 @@ const CustomerTable = ({
 
   useEffect(() => {
     filterCustomers();
-  }, [customers, search, onlyCustomerWithDebt, sortByBalance, reverse, sortByRecentPayment]);
+  }, [
+    customers,
+    search,
+    onlyCustomerWithDebt,
+    sortByBalance,
+    reverse,
+    sortByRecentPayment,
+  ]);
 
   useEffect(() => {
     setCustomerList(filteredCustomers.slice(0, show));
@@ -117,10 +139,18 @@ const CustomerTable = ({
   return (
     <div className="mx-auto w-11/12 pt-4 text-dark dark:text-light">
       <header className="relative rounded-t-md bg-gray-300 px-6 pt-2 pb-4 dark:bg-header">
-        <h2 className="mb-4 text-center text-xl font-bold tracking-wider">Listado de Clientes</h2>
+        <h2 className="mb-4 text-center text-xl font-bold tracking-wider">
+          Listado de Clientes
+        </h2>
         <TextInput
           size="sm"
-          icon={loading ? <Loader size={14} variant="dots" /> : <IconSearch size={14} stroke={1.5} />}
+          icon={
+            loading ? (
+              <Loader size={14} variant="dots" />
+            ) : (
+              <IconSearch size={14} stroke={1.5} />
+            )
+          }
           placeholder="Buscar Cliente"
           className="col-span-3 flex-grow lg:col-span-1"
           onChange={({ target }) => updateSearch(target.value)}
@@ -133,17 +163,23 @@ const CustomerTable = ({
           <Switch
             label="Clientes con saldo"
             checked={onlyCustomerWithDebt}
-            onChange={({ currentTarget }) => setOnlyCustomerWithDebt(currentTarget.checked)}
+            onChange={({ currentTarget }) =>
+              setOnlyCustomerWithDebt(currentTarget.checked)
+            }
           />
           <Switch
             label="Ordenados por saldo"
             checked={sortByBalance}
-            onChange={({ currentTarget }) => setSortByBalance(currentTarget.checked)}
+            onChange={({ currentTarget }) =>
+              setSortByBalance(currentTarget.checked)
+            }
           />
           <Switch
             label="Ordenar por fecha ultimo pago"
             checked={sortByRecentPayment}
-            onChange={({ currentTarget }) => setSortByRecentPayment(currentTarget.checked)}
+            onChange={({ currentTarget }) =>
+              setSortByRecentPayment(currentTarget.checked)
+            }
           />
           <Switch
             label="Invertir orden"
@@ -166,16 +202,28 @@ const CustomerTable = ({
           <table className="min-w-full table-auto">
             <thead className="sticky top-0 bg-gray-300 dark:bg-dark">
               <tr className="text-gray-dark dark:text-gray-300">
-                <th scope="col" className="px-4 py-3 text-center uppercase tracking-wide">
+                <th
+                  scope="col"
+                  className="px-4 py-3 text-center uppercase tracking-wide"
+                >
                   Cliente
                 </th>
-                <th scope="col" className="hidden px-4 py-3 text-center uppercase tracking-wide lg:table-cell">
+                <th
+                  scope="col"
+                  className="hidden px-4 py-3 text-center uppercase tracking-wide lg:table-cell"
+                >
                   Contacto
                 </th>
-                <th scope="col" className="hidden px-4 py-3 text-center uppercase tracking-wide lg:table-cell">
+                <th
+                  scope="col"
+                  className="hidden px-4 py-3 text-center uppercase tracking-wide lg:table-cell"
+                >
                   Historial
                 </th>
-                <th scope="col" className="px-4 py-3 text-center uppercase tracking-wide">
+                <th
+                  scope="col"
+                  className="px-4 py-3 text-center uppercase tracking-wide"
+                >
                   Saldo
                 </th>
                 <th scope="col" className="relative px-6 py-3">
@@ -199,7 +247,11 @@ const CustomerTable = ({
           </table>
           {filteredCustomers.length > 0 && show < filteredCustomers.length ? (
             <div className="mx-auto w-1/2 py-4">
-              <Button className="w-full" fullWidth onClick={() => setShow(current => current + 25)}>
+              <Button
+                className="w-full"
+                fullWidth
+                onClick={() => setShow(current => current + 25)}
+              >
                 Mostrar mas Clientes
               </Button>
             </div>
@@ -209,7 +261,9 @@ const CustomerTable = ({
         <div className="flex h-96 animate-pulse items-center justify-center">
           <div className="flex flex-col items-center">
             <Loader size={40} color="red" />
-            <span className="tracking-widest">Cargando la información de los clientes...</span>
+            <span className="tracking-widest">
+              Cargando la información de los clientes...
+            </span>
           </div>
         </div>
       )}
@@ -260,7 +314,11 @@ const CustomerTable = ({
             </div>
           </Tooltip>
         </div>
-        <Button leftIcon={<IconWriting />} onClick={() => openForm()} disabled={fetchLoading}>
+        <Button
+          leftIcon={<IconWriting />}
+          onClick={() => openForm()}
+          disabled={fetchLoading}
+        >
           Agregar Cliente
         </Button>
       </footer>

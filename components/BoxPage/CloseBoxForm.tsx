@@ -91,7 +91,12 @@ function CloseBoxForm() {
     setLeftover(0);
     setMissign(0);
 
-    if (typeof cash !== 'undefined' && cash >= 0 && box && typeof box.balance !== 'undefined') {
+    if (
+      typeof cash !== 'undefined' &&
+      cash >= 0 &&
+      box &&
+      typeof box.balance !== 'undefined'
+    ) {
       setEnabled(true);
 
       if (cash > box.balance) setLeftover(cash - box.balance);
@@ -146,7 +151,12 @@ function CloseBoxForm() {
           </div>
         </div>
         <footer className="flex items-center justify-end">
-          <Button leftIcon={<IconLock />} loading={loading} type="submit" disabled={!enabled}>
+          <Button
+            leftIcon={<IconLock />}
+            loading={loading}
+            type="submit"
+            disabled={!enabled}
+          >
             Cerrar Caja
           </Button>
         </footer>

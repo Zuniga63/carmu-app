@@ -8,7 +8,12 @@ interface Props {
   bold?: boolean;
 }
 
-const InvoiceFormSummaryItem: React.FC<Props> = ({ title, value = 0, small = false, bold }) => {
+const InvoiceFormSummaryItem: React.FC<Props> = ({
+  title,
+  value = 0,
+  small = false,
+  bold,
+}) => {
   return (
     <div
       className={`group relative rounded border border-gray-200 border-transparent bg-light px-4 pt-2 hover:border hover:border-gray-300 hover:shadow dark:bg-slate-900`}
@@ -22,7 +27,11 @@ const InvoiceFormSummaryItem: React.FC<Props> = ({ title, value = 0, small = fal
           {title}
         </span>
       ) : null}
-      <p className={`text-right tracking-widest ${small ? 'text-xs' : 'text-base'} ${bold && 'font-bold'}`}>
+      <p
+        className={`text-right tracking-widest ${
+          small ? 'text-xs' : 'text-base'
+        } ${bold && 'font-bold'}`}
+      >
         {currencyFormat(value)}
       </p>
     </div>

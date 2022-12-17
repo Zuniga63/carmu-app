@@ -26,8 +26,17 @@ interface Props {
   onGetPayments(customer: ICustomer): Promise<void>;
 }
 
-const CustomerTableItem = ({ customer, mount, onDelete, mountToPayment, paymentLoading, onGetPayments }: Props) => {
-  const [customerState, setCustomerState] = useState(<IconCircleCheck size={40} className="text-green-500" />);
+const CustomerTableItem = ({
+  customer,
+  mount,
+  onDelete,
+  mountToPayment,
+  paymentLoading,
+  onGetPayments,
+}: Props) => {
+  const [customerState, setCustomerState] = useState(
+    <IconCircleCheck size={40} className="text-green-500" />
+  );
 
   useEffect(() => {
     const size = 40;
@@ -35,7 +44,9 @@ const CustomerTableItem = ({ customer, mount, onDelete, mountToPayment, paymentL
     let className = 'text-green-500';
 
     if (customer.balance && customer.balance > 0) {
-      const lastPayment = customer.lastPayment ? dayjs(customer.lastPayment) : null;
+      const lastPayment = customer.lastPayment
+        ? dayjs(customer.lastPayment)
+        : null;
       const firstInvoice = dayjs(customer.firstPendingInvoice);
       const effectiveDate = lastPayment || firstInvoice;
       const now = dayjs();
@@ -70,7 +81,11 @@ const CustomerTableItem = ({ customer, mount, onDelete, mountToPayment, paymentL
                 <span>{customer.documentType}</span>: {customer.documentNumber}
               </p>
             )}
-            {Boolean(customer.alias) && <p className="text-xs text-light text-opacity-50">({customer.alias})</p>}
+            {Boolean(customer.alias) && (
+              <p className="text-xs text-light text-opacity-50">
+                ({customer.alias})
+              </p>
+            )}
           </div>
         </div>
       </td>
@@ -92,7 +107,10 @@ const CustomerTableItem = ({ customer, mount, onDelete, mountToPayment, paymentL
           {Boolean(customer.contacts.length) && (
             <div className="flex gap-x-2">
               {customer.contacts.map(contact => (
-                <div className="flex items-center gap-x-2 text-xs" key={contact.id}>
+                <div
+                  className="flex items-center gap-x-2 text-xs"
+                  key={contact.id}
+                >
                   <IconDeviceMobile size={16} />
                   <p>{contact.phone}</p>
                 </div>
@@ -105,13 +123,22 @@ const CustomerTableItem = ({ customer, mount, onDelete, mountToPayment, paymentL
       <td className="hidden px-3 py-2 text-right text-sm lg:table-cell">
         <div className="flex flex-col items-center text-xs">
           {customer.firstPendingInvoice ? (
-            <p>Fact. más antigua {dayjs(customer.firstPendingInvoice).fromNow()}</p>
+            <p>
+              Fact. más antigua {dayjs(customer.firstPendingInvoice).fromNow()}
+            </p>
           ) : null}
-          {customer.lastPendingInvoice && customer.lastPendingInvoice !== customer.firstPendingInvoice ? (
-            <p>Fact. más reciente {dayjs(customer.lastPendingInvoice).fromNow()}</p>
+          {customer.lastPendingInvoice &&
+          customer.lastPendingInvoice !== customer.firstPendingInvoice ? (
+            <p>
+              Fact. más reciente {dayjs(customer.lastPendingInvoice).fromNow()}
+            </p>
           ) : null}
-          {customer.lastPayment ? <p>Ultimo pago {dayjs(customer.lastPayment).fromNow()}</p> : null}
-          <p className="italic text-gray-dark dark:text-neutral-400">Registro {dayjs(customer.createdAt).fromNow()}</p>
+          {customer.lastPayment ? (
+            <p>Ultimo pago {dayjs(customer.lastPayment).fromNow()}</p>
+          ) : null}
+          <p className="italic text-gray-dark dark:text-neutral-400">
+            Registro {dayjs(customer.createdAt).fromNow()}
+          </p>
         </div>
       </td>
       <td className={`px-3 py-2 text-right tracking-widest`}>
@@ -135,7 +162,11 @@ const CustomerTableItem = ({ customer, mount, onDelete, mountToPayment, paymentL
                   className="rounded-full border-2 border-purple-600 border-opacity-50 p-2 text-purple-600 text-opacity-50 transition-colors hover:border-opacity-80 hover:text-opacity-80 active:border-opacity-100 active:text-opacity-100"
                   onClick={() => onGetPayments(customer)}
                 >
-                  {paymentLoading ? <Loader size={16} /> : <IconListCheck size={16} stroke={2} />}
+                  {paymentLoading ? (
+                    <Loader size={16} />
+                  ) : (
+                    <IconListCheck size={16} stroke={2} />
+                  )}
                 </button>
               </Tooltip>
             </>

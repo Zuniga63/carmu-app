@@ -32,7 +32,13 @@ export default function UserAvatar() {
   return (
     <Menu shadow="xl" transition="pop-top-right" transitionDuration={150}>
       <Menu.Target>
-        <Avatar src={user?.profilePhoto?.url} alt={user?.name} radius="xl" color="blue" className="cursor-pointer">
+        <Avatar
+          src={user?.profilePhoto?.url}
+          alt={user?.name}
+          radius="xl"
+          color="blue"
+          className="cursor-pointer"
+        >
           <span className="text-cyan-600">{initials}</span>
         </Avatar>
       </Menu.Target>
@@ -44,7 +50,9 @@ export default function UserAvatar() {
               Administrador
             </p>
           )}
-          <p className="scale-90 text-center text-sm text-dark dark:text-gray-100">{user?.email}</p>
+          <p className="scale-90 text-center text-sm text-dark dark:text-gray-100">
+            {user?.email}
+          </p>
         </div>
         <Menu.Divider />
         <Menu.Item>
@@ -54,7 +62,11 @@ export default function UserAvatar() {
           <Link href="/admin/categories">Administrar Categorías</Link>
         </Menu.Item>
         <Menu.Divider />
-        <Menu.Item color="red" onClick={logoutHandle} icon={<IconLogout size={16} />}>
+        <Menu.Item
+          color="red"
+          onClick={logoutHandle}
+          icon={<IconLogout size={16} />}
+        >
           Cerrar Sesión
         </Menu.Item>
       </Menu.Dropdown>

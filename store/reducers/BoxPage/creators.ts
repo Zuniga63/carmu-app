@@ -18,7 +18,9 @@ const normalizeBox = (box: IBox | IBoxWithDayjs): IBoxWithDayjs => {
   const timeUnit = 'minutes';
   const timeDiffs: number[] = [];
 
-  let openBox: Dayjs | undefined, closed: Dayjs | undefined, dateRefreshRate: number | undefined;
+  let openBox: Dayjs | undefined,
+    closed: Dayjs | undefined,
+    dateRefreshRate: number | undefined;
 
   // Convert Date string to Dayjs
   const createdAt = dayjs(box.createdAt);
@@ -47,10 +49,22 @@ const normalizeBox = (box: IBox | IBoxWithDayjs): IBoxWithDayjs => {
     if (minDiff >= 60 && minDiff < 60 * 24) dateRefreshRate = 1000 * 60 * 60; // each hour
   }
 
-  return { ...box, openBox, closed, createdAt, updatedAt, createIsSameUpdate, neverUsed, dateRefreshRate };
+  return {
+    ...box,
+    openBox,
+    closed,
+    createdAt,
+    updatedAt,
+    createIsSameUpdate,
+    neverUsed,
+    dateRefreshRate,
+  };
 };
 
-const buildTransaction = (transaction: ITransactionResponse, balance = 0): ITransaction => ({
+const buildTransaction = (
+  transaction: ITransactionResponse,
+  balance = 0
+): ITransaction => ({
   ...transaction,
   transactionDate: dayjs(transaction.transactionDate),
   balance,
@@ -74,7 +88,9 @@ export const setMainBox = (mainBox: IMainBox | null): AppThunkAction => {
 export const fetchBoxes = (): AppThunkAction => {
   return async dispatch => {
     try {
-      const res = await axios.get<{ boxes: IBox[]; mainBox: IMainBox | null }>('/boxes');
+      const res = await axios.get<{ boxes: IBox[]; mainBox: IMainBox | null }>(
+        '/boxes'
+      );
       dispatch(setBoxes(res.data.boxes));
       dispatch(setMainBox(res.data.mainBox));
     } catch (error) {
@@ -137,14 +153,18 @@ export const destroyBox = (boxToDelete: IBoxWithDayjs): AppThunkAction => {
   };
 };
 
-export const mountSelectedBox = (boxSelected: IBoxWithDayjs): AppThunkAction => {
+export const mountSelectedBox = (
+  boxSelected: IBoxWithDayjs
+): AppThunkAction => {
   return async dispatch => {
     dispatch(actionBody(ACTIONS.UNMOUT_SELECTED_BOX));
     dispatch(actionBody(ACTIONS.LOADING_TRANSACTIONS, true));
     let balance = boxSelected.base;
 
     try {
-      const res = await axios.get<{ transactions: ITransactionResponse[] }>(`/boxes/${boxSelected.id}/transactions`);
+      const res = await axios.get<{ transactions: ITransactionResponse[] }>(
+        `/boxes/${boxSelected.id}/transactions`
+      );
       const transactions = res.data.transactions.map<ITransaction>(item => {
         balance += item.amount;
         return buildTransaction(item, balance);
@@ -167,7 +187,9 @@ export const mountMainBox = (): AppThunkAction => {
     let balance = 0;
 
     try {
-      const res = await axios.get<{ transactions: ITransactionResponse[] }>(`/main-box/transactions`);
+      const res = await axios.get<{ transactions: ITransactionResponse[] }>(
+        `/main-box/transactions`
+      );
       const transactions = res.data.transactions.map<ITransaction>(item => {
         if (!item.cashbox) balance += item.amount;
         return buildTransaction(item, balance);
@@ -187,8 +209,10 @@ export const unmountTransactions = (): AppThunkAction => {
   return dispatch => dispatch(actionBody(ACTIONS.UNMOUNT_TRANSACTIONS));
 };
 
-export const openCreateForm = (): AppThunkAction => dispatch => dispatch({ type: ACTIONS.OPEN_CREATE_BOX_FORM });
-export const closeCreateForm = (): AppThunkAction => dispatch => dispatch({ type: ACTIONS.CLOSE_CREATE_BOX_FORM });
+export const openCreateForm = (): AppThunkAction => dispatch =>
+  dispatch({ type: ACTIONS.OPEN_CREATE_BOX_FORM });
+export const closeCreateForm = (): AppThunkAction => dispatch =>
+  dispatch({ type: ACTIONS.CLOSE_CREATE_BOX_FORM });
 export const storeBox = (formData: { name: string }): AppThunkAction => {
   return async dispatch => {
     try {
@@ -216,9 +240,13 @@ export const mountBoxToOpen = (boxToOpen: IBoxWithDayjs): AppThunkAction => {
   return dispatch => dispatch(actionBody(ACTIONS.MOUNT_BOX_TO_OPEN, boxToOpen));
 };
 
-export const unmountBoxToOpen = (): AppThunkAction => dispatch => dispatch({ type: ACTIONS.UNMOUNT_BOX_TO_OPEN });
+export const unmountBoxToOpen = (): AppThunkAction => dispatch =>
+  dispatch({ type: ACTIONS.UNMOUNT_BOX_TO_OPEN });
 
-export const openBox = (boxToOpen: IBoxWithDayjs, formData: { base: number; cashierId?: string }): AppThunkAction => {
+export const openBox = (
+  boxToOpen: IBoxWithDayjs,
+  formData: { base: number; cashierId?: string }
+): AppThunkAction => {
   return async dispatch => {
     const url = `/boxes/${boxToOpen.id}/open`;
     try {
@@ -233,7 +261,10 @@ export const openBox = (boxToOpen: IBoxWithDayjs, formData: { base: number; cash
       dispatch(actionBody(ACTIONS.OPEN_BOX_ERROR, error));
     } finally {
       dispatch(actionBody(ACTIONS.OPEN_BOX_LOADING, false));
-      setTimeout(() => dispatch(actionBody(ACTIONS.OPEN_BOX_IS_SUCCESS, false)), 3000);
+      setTimeout(
+        () => dispatch(actionBody(ACTIONS.OPEN_BOX_IS_SUCCESS, false)),
+        3000
+      );
     }
   };
 };
@@ -242,10 +273,12 @@ export const openBox = (boxToOpen: IBoxWithDayjs, formData: { base: number; cash
 //  CREATOR FOR CLOSE BOX
 //---------------------------------------------------------------------------------------------------------------------
 export const mountBoxToClose = (boxToClose: IBoxWithDayjs): AppThunkAction => {
-  return dispatch => dispatch(actionBody(ACTIONS.MOUNT_BOX_TO_CLOSE, boxToClose));
+  return dispatch =>
+    dispatch(actionBody(ACTIONS.MOUNT_BOX_TO_CLOSE, boxToClose));
 };
 
-export const unmountBoxToClose = (): AppThunkAction => dispatch => dispatch(actionBody(ACTIONS.UNMOUNT_BOX_TO_CLOSE));
+export const unmountBoxToClose = (): AppThunkAction => dispatch =>
+  dispatch(actionBody(ACTIONS.UNMOUNT_BOX_TO_CLOSE));
 
 export const closeBox = (
   boxToClose: IBoxWithDayjs,
@@ -284,12 +317,18 @@ export const showCreateTransactionForm = (): AppThunkAction => dispatch =>
 export const hideCreateTransactionForm = (): AppThunkAction => dispatch =>
   dispatch(actionBody(ACTIONS.HIDE_CREATE_TRANSACTION_FORM));
 
-export const storeTransaction = (box: IBoxWithDayjs, formData: ITransactionRequest): AppThunkAction => {
+export const storeTransaction = (
+  box: IBoxWithDayjs,
+  formData: ITransactionRequest
+): AppThunkAction => {
   return async dispatch => {
     const url = `/boxes/${box.id}/transactions`;
     dispatch(actionBody(ACTIONS.STORE_TRANSACTION_LOADING, true));
     try {
-      const res = await axios.post<{ transaction: ITransactionResponse }>(url, formData);
+      const res = await axios.post<{ transaction: ITransactionResponse }>(
+        url,
+        formData
+      );
       const { transaction } = res.data;
 
       if (box.balance) {
@@ -298,7 +337,12 @@ export const storeTransaction = (box: IBoxWithDayjs, formData: ITransactionReque
       }
 
       dispatch(actionBody(ACTIONS.UPDATE_BOX, normalizeBox(box)));
-      dispatch(actionBody(ACTIONS.ADD_TRANSACTION, buildTransaction(transaction, box.balance)));
+      dispatch(
+        actionBody(
+          ACTIONS.ADD_TRANSACTION,
+          buildTransaction(transaction, box.balance)
+        )
+      );
       dispatch(actionBody(ACTIONS.STORE_TRANSACTION_IS_SUCCESS, true));
     } catch (error) {
       dispatch(actionBody(ACTIONS.STORE_TRANSACTION_ERROR, error));
@@ -308,17 +352,28 @@ export const storeTransaction = (box: IBoxWithDayjs, formData: ITransactionReque
   };
 };
 
-export const storeMainTransaction = (box: IMainBox, formData: ITransactionRequest): AppThunkAction => {
+export const storeMainTransaction = (
+  box: IMainBox,
+  formData: ITransactionRequest
+): AppThunkAction => {
   return async dispatch => {
     const url = `/main-box/transactions`;
     dispatch(actionBody(ACTIONS.STORE_TRANSACTION_LOADING, true));
     try {
-      const res = await axios.post<{ transaction: ITransactionResponse }>(url, formData);
+      const res = await axios.post<{ transaction: ITransactionResponse }>(
+        url,
+        formData
+      );
       const { transaction } = res.data;
       const balance = box.balance + transaction.amount;
 
       dispatch(actionBody(ACTIONS.UPDATE_MAIN_BOX_BALANCE, transaction.amount));
-      dispatch(actionBody(ACTIONS.ADD_TRANSACTION, buildTransaction(transaction, balance)));
+      dispatch(
+        actionBody(
+          ACTIONS.ADD_TRANSACTION,
+          buildTransaction(transaction, balance)
+        )
+      );
       dispatch(actionBody(ACTIONS.STORE_TRANSACTION_IS_SUCCESS, true));
     } catch (error) {
       dispatch(actionBody(ACTIONS.STORE_TRANSACTION_ERROR, error));
@@ -328,12 +383,17 @@ export const storeMainTransaction = (box: IMainBox, formData: ITransactionReques
   };
 };
 
-export const destroyTransaction = (box: IBoxWithDayjs, transactionToDestroy: ITransaction): AppThunkAction => {
+export const destroyTransaction = (
+  box: IBoxWithDayjs,
+  transactionToDestroy: ITransaction
+): AppThunkAction => {
   return async dispatch => {
     const url = `/boxes/${box.id}/transactions/${transactionToDestroy.id}`;
     const message = /*html */ `
       La transacción "<strong>${transactionToDestroy.description}</strong>" 
-      por valor de <strong>${currencyFormat(transactionToDestroy.amount)}</strong> 
+      por valor de <strong>${currencyFormat(
+        transactionToDestroy.amount
+      )}</strong> 
       será eliminada permanentemente y esta acción no puede revertirse.`;
 
     const result = await Swal.fire({
@@ -350,7 +410,9 @@ export const destroyTransaction = (box: IBoxWithDayjs, transactionToDestroy: ITr
         let updateBoxes = false;
 
         try {
-          const res = await axios.delete<{ transaction: ITransactionResponse }>(url);
+          const res = await axios.delete<{ transaction: ITransactionResponse }>(
+            url
+          );
           const { transaction: transactionDeleted } = res.data;
           result.ok = true;
           result.message = `
@@ -363,7 +425,10 @@ export const destroyTransaction = (box: IBoxWithDayjs, transactionToDestroy: ITr
         } catch (error) {
           if (error instanceof AxiosError) {
             const { response } = error;
-            if (response?.status === 404) dispatch(actionBody(ACTIONS.REMOVE_TRANSACTION, transactionToDestroy));
+            if (response?.status === 404)
+              dispatch(
+                actionBody(ACTIONS.REMOVE_TRANSACTION, transactionToDestroy)
+              );
             result.message = response?.data.message;
             updateBoxes = true;
           } else {
@@ -379,7 +444,9 @@ export const destroyTransaction = (box: IBoxWithDayjs, transactionToDestroy: ITr
 
     if (result.isConfirmed && result.value) {
       const { ok, message } = result.value;
-      const title = ok ? '<strong>¡Transacción Eliminada!</strong>' : '¡Ops, algo salio mal!';
+      const title = ok
+        ? '<strong>¡Transacción Eliminada!</strong>'
+        : '¡Ops, algo salio mal!';
       const icon = ok ? 'success' : 'error';
 
       Swal.fire({ title, html: message, icon });
@@ -387,12 +454,16 @@ export const destroyTransaction = (box: IBoxWithDayjs, transactionToDestroy: ITr
   };
 };
 
-export const destroyMainTransaction = (transactionToDestroy: ITransaction): AppThunkAction => {
+export const destroyMainTransaction = (
+  transactionToDestroy: ITransaction
+): AppThunkAction => {
   return async dispatch => {
     const url = `/main-box/transactions/${transactionToDestroy.id}`;
     const message = /*html */ `
       La transacción "<strong>${transactionToDestroy.description}</strong>" 
-      por valor de <strong>${currencyFormat(transactionToDestroy.amount)}</strong> 
+      por valor de <strong>${currencyFormat(
+        transactionToDestroy.amount
+      )}</strong> 
       será eliminada permanentemente y esta acción no puede revertirse.`;
 
     const result = await Swal.fire({
@@ -409,7 +480,9 @@ export const destroyMainTransaction = (transactionToDestroy: ITransaction): AppT
         let updateBoxes = false;
 
         try {
-          const res = await axios.delete<{ transaction: ITransactionResponse }>(url);
+          const res = await axios.delete<{ transaction: ITransactionResponse }>(
+            url
+          );
           const { transaction: transactionDeleted } = res.data;
           result.ok = true;
           result.message = `
@@ -422,7 +495,10 @@ export const destroyMainTransaction = (transactionToDestroy: ITransaction): AppT
         } catch (error) {
           if (error instanceof AxiosError) {
             const { response } = error;
-            if (response?.status === 404) dispatch(actionBody(ACTIONS.REMOVE_TRANSACTION, transactionToDestroy));
+            if (response?.status === 404)
+              dispatch(
+                actionBody(ACTIONS.REMOVE_TRANSACTION, transactionToDestroy)
+              );
             result.message = response?.data.message;
             updateBoxes = true;
           } else {
@@ -438,7 +514,9 @@ export const destroyMainTransaction = (transactionToDestroy: ITransaction): AppT
 
     if (result.isConfirmed && result.value) {
       const { ok, message } = result.value;
-      const title = ok ? '<strong>¡Transacción Eliminada!</strong>' : '¡Ops, algo salio mal!';
+      const title = ok
+        ? '<strong>¡Transacción Eliminada!</strong>'
+        : '¡Ops, algo salio mal!';
       const icon = ok ? 'success' : 'error';
 
       Swal.fire({ title, html: message, icon });

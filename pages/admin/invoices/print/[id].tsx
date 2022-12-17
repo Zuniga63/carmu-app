@@ -17,13 +17,17 @@ const PrintPage: NextPage<Props> = ({ invoice }) => {
         <figure className="mx-auto mb-2 flex w-10/12 items-center">
           <Image src={brandLogo} alt="Carmú Logo" />
         </figure>
-        <h1 className="text-center text-2xl font-bold italic tracking-wider">Tienda Carmú</h1>
+        <h1 className="text-center text-2xl font-bold italic tracking-wider">
+          Tienda Carmú
+        </h1>
         <p className="text-center text-sm">
           Nit: <span className="font-bold tracking-widest">1098617663-1</span>
         </p>
         <div className="flex items-center justify-center gap-x-2 text-gray-800">
           <IconMapPin size={16} className="inline-block" />
-          <p className="text-sm font-bold tracking-widest">C.C Ibirico plaza Local 15 al 17</p>
+          <p className="text-sm font-bold tracking-widest">
+            C.C Ibirico plaza Local 15 al 17
+          </p>
         </div>
         <div className="flex items-center justify-center gap-x-2">
           <IconBrandWhatsapp size={16} className="inline-block" />
@@ -44,7 +48,11 @@ const PrintPage: NextPage<Props> = ({ invoice }) => {
         {/* Customer */}
         <div className="flex justify-between text-sm">
           <p>Cliente:</p>
-          <p className="line-clamp-1">{invoice.customer ? invoice.customer.fullName : invoice.customerName}</p>
+          <p className="line-clamp-1">
+            {invoice.customer
+              ? invoice.customer.fullName
+              : invoice.customerName}
+          </p>
         </div>
         {/* DOCUMENT */}
         {invoice.customerDocument && (
@@ -66,18 +74,27 @@ const PrintPage: NextPage<Props> = ({ invoice }) => {
         <div className="mb-2 border-b border-dashed pb-2">
           <div className="mb-2 flex justify-between font-bold">
             <h3 className="text-sm uppercase">Cant.</h3>
-            <h3 className="justify-self-start text-sm uppercase">Descripción</h3>
+            <h3 className="justify-self-start text-sm uppercase">
+              Descripción
+            </h3>
             <h3 className="text-sm uppercase">Vlr. Unt</h3>
           </div>
           {invoice.items.map(item => (
-            <div key={item.id} className="mb-1 flex items-center justify-between gap-x-2 text-sm">
+            <div
+              key={item.id}
+              className="mb-1 flex items-center justify-between gap-x-2 text-sm"
+            >
               <p className="flex-shrink-0 px-2">{item.quantity}</p>
               <p className="flex-grow uppercase">{item.description}</p>
               <div className="flex flex-col items-end justify-center">
                 {item.discount && (
-                  <p className="text-xs text-gray-700 line-through">{currencyFormat(item.unitValue)}</p>
+                  <p className="text-xs text-gray-700 line-through">
+                    {currencyFormat(item.unitValue)}
+                  </p>
                 )}
-                <p className="flex-shrink-0 tracking-widest">{currencyFormat(item.unitValue - (item.discount || 0))}</p>
+                <p className="flex-shrink-0 tracking-widest">
+                  {currencyFormat(item.unitValue - (item.discount || 0))}
+                </p>
               </div>
             </div>
           ))}
@@ -91,8 +108,12 @@ const PrintPage: NextPage<Props> = ({ invoice }) => {
           </div>
           <div className="flex flex-col items-end">
             <p className="text-sm">{currencyFormat(invoice.subtotal)}</p>
-            {invoice.discount && <p className="text-sm">{currencyFormat(invoice.discount)}</p>}
-            <p className="text-lg font-bold">{currencyFormat(invoice.amount)}</p>
+            {invoice.discount && (
+              <p className="text-sm">{currencyFormat(invoice.discount)}</p>
+            )}
+            <p className="text-lg font-bold">
+              {currencyFormat(invoice.amount)}
+            </p>
           </div>
         </div>
       </div>
@@ -113,10 +134,17 @@ const PrintPage: NextPage<Props> = ({ invoice }) => {
         ) : (
           <div>
             {invoice.payments.map(payment => (
-              <div key={payment.id} className="flex items-center justify-evenly gap-x-2 text-sm">
-                <p className="flex-shrink-0">{dayjs(payment.paymentDate).format('DD-MM-YY')}</p>
+              <div
+                key={payment.id}
+                className="flex items-center justify-evenly gap-x-2 text-sm"
+              >
+                <p className="flex-shrink-0">
+                  {dayjs(payment.paymentDate).format('DD-MM-YY')}
+                </p>
                 <p className="flex-grow">{payment.description}</p>
-                <p className="flex-shrink-0">{currencyFormat(payment.amount)}</p>
+                <p className="flex-shrink-0">
+                  {currencyFormat(payment.amount)}
+                </p>
               </div>
             ))}
           </div>

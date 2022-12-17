@@ -6,7 +6,10 @@ import dayjs from 'dayjs';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { closePaymentForm, registerPayment } from 'store/reducers/InvoicePage/creators';
+import {
+  closePaymentForm,
+  registerPayment,
+} from 'store/reducers/InvoicePage/creators';
 import { IInvoicePaymentData, IValidationErrors } from 'types';
 import { currencyFormat } from 'utils';
 
@@ -26,7 +29,9 @@ const InvoicePaymentForm = () => {
   const [boxId, setBoxId] = useState<string | null>(null);
   const [paymentDate, setPaymentDate] = useState<Date | null>(dayjs().toDate());
   const [register, setRegister] = useState(true);
-  const [description, setDescription] = useState<string | null>(defaultDescription);
+  const [description, setDescription] = useState<string | null>(
+    defaultDescription
+  );
   const [amount, setAmount] = useState<number | undefined>(undefined);
   const [errors, setErrors] = useState<IValidationErrors | null>(null);
 
@@ -55,7 +60,8 @@ const InvoicePaymentForm = () => {
 
   const getData = (): IInvoicePaymentData => {
     let date = dayjs(paymentDate);
-    if (date.isValid() && invoice && date.isBefore(invoice?.expeditionDate)) date = invoice?.expeditionDate;
+    if (date.isValid() && invoice && date.isBefore(invoice?.expeditionDate))
+      date = invoice?.expeditionDate;
     return {
       cashboxId: boxId || undefined,
       paymentDate: date.toDate(),
@@ -120,10 +126,16 @@ const InvoicePaymentForm = () => {
       <form onSubmit={onSubmitHandler}>
         <header className="mb-4 flex flex-col items-center">
           <h3>
-            Factura N° <span className="font-bold text-red-500">{invoice?.prefixNumber}</span>
+            Factura N°{' '}
+            <span className="font-bold text-red-500">
+              {invoice?.prefixNumber}
+            </span>
           </h3>
           <p className="text-xs text-gray-500">
-            Saldo: <span className="ml-1 inline-block font-bold text-light">{currencyFormat(invoice?.balance)}</span>
+            Saldo:{' '}
+            <span className="ml-1 inline-block font-bold text-light">
+              {currencyFormat(invoice?.balance)}
+            </span>
           </p>
         </header>
         <div className="mb-4">
@@ -194,15 +206,25 @@ const InvoicePaymentForm = () => {
           {!boxId && (
             <Checkbox
               className="mt-2"
-              label={<span className="font-sans text-light">Registrar Transacción</span>}
+              label={
+                <span className="font-sans text-light">
+                  Registrar Transacción
+                </span>
+              }
               size="xs"
               checked={register}
-              onChange={({ currentTarget }) => setRegister(currentTarget.checked)}
+              onChange={({ currentTarget }) =>
+                setRegister(currentTarget.checked)
+              }
             />
           )}
         </div>
         <footer className="flex justify-end">
-          <Button leftIcon={<IconCash size={16} />} type="submit" loading={loading}>
+          <Button
+            leftIcon={<IconCash size={16} />}
+            type="submit"
+            loading={loading}
+          >
             Registrar
           </Button>
         </footer>

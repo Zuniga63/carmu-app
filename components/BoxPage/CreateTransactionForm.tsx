@@ -1,10 +1,19 @@
 import React, { FormEvent, useEffect, useState } from 'react';
 import { Button, Checkbox, Modal, NumberInput, Textarea } from '@mantine/core';
-import { IconCalendar, IconClock, IconDeviceFloppy, IconX } from '@tabler/icons';
+import {
+  IconCalendar,
+  IconClock,
+  IconDeviceFloppy,
+  IconX,
+} from '@tabler/icons';
 import { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { hideCreateTransactionForm, storeMainTransaction, storeTransaction } from 'store/reducers/BoxPage/creators';
+import {
+  hideCreateTransactionForm,
+  storeMainTransaction,
+  storeTransaction,
+} from 'store/reducers/BoxPage/creators';
 import { IValidationErrors } from 'types';
 import { currencyFormat } from 'utils';
 import { DatePicker, TimeInput } from '@mantine/dates';
@@ -46,7 +55,11 @@ const CreateTransactionForm = () => {
       if (date) {
         transactionDate = dayjs(date);
         if (time) {
-          transactionDate = transactionDate.hour(time.getHours()).minute(time.getMinutes()).second(0).millisecond(0);
+          transactionDate = transactionDate
+            .hour(time.getHours())
+            .minute(time.getMinutes())
+            .second(0)
+            .millisecond(0);
         }
       } else {
         transactionDate = dayjs(time);
@@ -108,12 +121,22 @@ const CreateTransactionForm = () => {
   }, [amount, description]);
 
   return (
-    <Modal opened={opened} onClose={closeHandler} size="sm" padding={0} withCloseButton={false}>
+    <Modal
+      opened={opened}
+      onClose={closeHandler}
+      size="sm"
+      padding={0}
+      withCloseButton={false}
+    >
       <form onSubmit={submitHandler} className="px-4 py-6">
         <header className="mb-4 border-b-2 pb-2 text-center">
-          <h2 className="text-center text-xl font-bold"> Registrar Transacción</h2>
+          <h2 className="text-center text-xl font-bold">
+            {' '}
+            Registrar Transacción
+          </h2>
           <p className="text-xs text-gray-600">
-            {box?.name || mainBox?.name} ({currencyFormat(box?.balance || mainBox?.balance)})
+            {box?.name || mainBox?.name} (
+            {currencyFormat(box?.balance || mainBox?.balance)})
           </p>
         </header>
         <div className="mb-4 py-4">
@@ -176,7 +199,9 @@ const CreateTransactionForm = () => {
           <Checkbox
             label="Es un egreso."
             checked={isExpense}
-            onChange={({ currentTarget }) => setIsExpense(currentTarget.checked)}
+            onChange={({ currentTarget }) =>
+              setIsExpense(currentTarget.checked)
+            }
           />
         </div>
         <footer className="flex items-center justify-between">

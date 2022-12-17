@@ -31,7 +31,9 @@ export default function Header({ title }: Props) {
             <BurgerToggle opened={drawerOpened} onClick={toggle} />
             <BrandLogo />
           </div>
-          <h2 className="text-base font-bold tracking-wider sm:text-xl md:text-2xl">{title}</h2>
+          <h2 className="text-base font-bold tracking-wider sm:text-xl md:text-2xl">
+            {title}
+          </h2>
           <div className="flex items-center gap-x-4">
             <DarkButtom />
             <UserAvatar />

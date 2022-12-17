@@ -14,7 +14,12 @@ interface Props {
   setPayments: React.Dispatch<React.SetStateAction<INewInvoicePayment[]>>;
 }
 
-const InvoiceFormPayment: React.FC<Props> = ({ invoiceDate, summary, payments, setPayments }) => {
+const InvoiceFormPayment: React.FC<Props> = ({
+  invoiceDate,
+  summary,
+  payments,
+  setPayments,
+}) => {
   const { cashboxs } = useAppSelector(state => state.InvoicePageReducer);
   const input = useRef<HTMLInputElement>(null);
 
@@ -39,7 +44,12 @@ const InvoiceFormPayment: React.FC<Props> = ({ invoiceDate, summary, payments, s
     const equalPayment = result.find(payment => {
       let isEqual = true;
       if (Boolean(payment.box) !== Boolean(newPayment.box)) isEqual = false;
-      else if (payment.box && newPayment.box && payment.box.id !== newPayment.box.id) isEqual = false;
+      else if (
+        payment.box &&
+        newPayment.box &&
+        payment.box.id !== newPayment.box.id
+      )
+        isEqual = false;
       else if (payment.description !== newPayment.description) isEqual = false;
       else if (payment.register !== newPayment.register) isEqual = false;
 
@@ -90,7 +100,11 @@ const InvoiceFormPayment: React.FC<Props> = ({ invoiceDate, summary, payments, s
   useEffect(() => {
     let date = dayjs();
     if (invoiceDate && dayjs(invoiceDate).isValid()) date = dayjs(invoiceDate);
-    setBoxList(cashboxs.filter(box => Boolean(box.openBox && dayjs(box.openBox).isBefore(date))));
+    setBoxList(
+      cashboxs.filter(box =>
+        Boolean(box.openBox && dayjs(box.openBox).isBefore(date))
+      )
+    );
     setBoxId(null);
   }, [cashboxs.length, invoiceDate]);
 
@@ -163,7 +177,11 @@ const InvoiceFormPayment: React.FC<Props> = ({ invoiceDate, summary, payments, s
       </InvoiceFormGroup>
 
       <div className="col-span-2">
-        <InvoiceFormPaymentList payments={payments} removePayment={removePayment} summary={summary} />
+        <InvoiceFormPaymentList
+          payments={payments}
+          removePayment={removePayment}
+          summary={summary}
+        />
       </div>
     </div>
   );

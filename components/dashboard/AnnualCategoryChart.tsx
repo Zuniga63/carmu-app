@@ -52,7 +52,9 @@ const initalData: CategoryData = {
 };
 
 const AnnualCategoryChart = ({ annualReports }: Props) => {
-  const [chartData, setChartData] = useState<ChartData<'doughnut'> | null>(null);
+  const [chartData, setChartData] = useState<ChartData<'doughnut'> | null>(
+    null
+  );
   const [categoryData, setCategoryData] = useState(initalData);
   const [yearSelected, selectYear] = useState<string | null>(null);
   const [categoryReports, setCategoryReports] = useState<ICategoryReport[]>([]);
@@ -63,20 +65,30 @@ const AnnualCategoryChart = ({ annualReports }: Props) => {
 
     if (yearSelected && categoryId) {
       if (categoryId !== 'all') {
-        const categoryReportToAdd = categoryReports.find(report => report.category.id === categoryId);
+        const categoryReportToAdd = categoryReports.find(
+          report => report.category.id === categoryId
+        );
 
         if (categoryReportToAdd) {
           const { category: categoryToAdd } = categoryReportToAdd;
-          const annualReport = categoryAnnualReports.find(report => report.year === yearSelected);
+          const annualReport = categoryAnnualReports.find(
+            report => report.year === yearSelected
+          );
 
           // Add category name if not exits
-          if (!categories.some(categoryName => categoryName === categoryToAdd.name)) {
+          if (
+            !categories.some(
+              categoryName => categoryName === categoryToAdd.name
+            )
+          ) {
             categories.push(categoryToAdd.name);
           }
 
           // Add category report to year if no existe in the category reports
           if (annualReport) {
-            const exists = annualReport.categoryReports.some(report => report.category.id === categoryId);
+            const exists = annualReport.categoryReports.some(
+              report => report.category.id === categoryId
+            );
             if (!exists) annualReport.categoryReports.push(categoryReportToAdd);
           } else {
             categoryAnnualReports.push({
@@ -88,16 +100,24 @@ const AnnualCategoryChart = ({ annualReports }: Props) => {
       } else {
         categoryReports.forEach(categoryReportToAdd => {
           const { category: categoryToAdd } = categoryReportToAdd;
-          const annualReport = categoryAnnualReports.find(report => report.year === yearSelected);
+          const annualReport = categoryAnnualReports.find(
+            report => report.year === yearSelected
+          );
 
           // Add category name if not exits
-          if (!categories.some(categoryName => categoryName === categoryToAdd.name)) {
+          if (
+            !categories.some(
+              categoryName => categoryName === categoryToAdd.name
+            )
+          ) {
             categories.push(categoryToAdd.name);
           }
 
           // Add category report to year if no existe in the category reports
           if (annualReport) {
-            const exists = annualReport.categoryReports.some(report => report.category.id === categoryId);
+            const exists = annualReport.categoryReports.some(
+              report => report.category.id === categoryId
+            );
             if (!exists) annualReport.categoryReports.push(categoryReportToAdd);
           } else {
             categoryAnnualReports.push({
@@ -120,7 +140,9 @@ const AnnualCategoryChart = ({ annualReports }: Props) => {
       const lastCategory = categories.pop();
 
       categoryData.annualReports.forEach(annualReport => {
-        const categoryReports = annualReport.categoryReports.filter(({ category }) => category.name !== lastCategory);
+        const categoryReports = annualReport.categoryReports.filter(
+          ({ category }) => category.name !== lastCategory
+        );
         if (categoryReports.length > 0) {
           reports.push({
             year: annualReport.year,
@@ -145,7 +167,11 @@ const AnnualCategoryChart = ({ annualReports }: Props) => {
       categoryData.categories.forEach(categoryName => {
         const exists: boolean[] = [];
         annualReports.forEach(({ categoryReports }) => {
-          exists.push(categoryReports.some(({ category }) => category.name === categoryName));
+          exists.push(
+            categoryReports.some(
+              ({ category }) => category.name === categoryName
+            )
+          );
         });
 
         const existsForAtLeastOneYear = exists.some(result => result === true);
@@ -160,7 +186,10 @@ const AnnualCategoryChart = ({ annualReports }: Props) => {
   const buildCategoryChartData = () => {
     let newChartData: ChartData<'doughnut'> | null = null;
 
-    if (categoryData.categories.length > 0 && categoryData.annualReports.length > 0) {
+    if (
+      categoryData.categories.length > 0 &&
+      categoryData.annualReports.length > 0
+    ) {
       const labels = categoryData.categories.slice();
       const datasets: ChartDataset<'doughnut', number[]>[] = [];
 
@@ -168,7 +197,9 @@ const AnnualCategoryChart = ({ annualReports }: Props) => {
         const amounts: number[] = [];
 
         labels.forEach(categoryName => {
-          const categoryReport = annualReport.categoryReports.find(report => report.category.name === categoryName);
+          const categoryReport = annualReport.categoryReports.find(
+            report => report.category.name === categoryName
+          );
           const amount = categoryReport?.amount || 0;
           amounts.push(amount);
         });
@@ -211,7 +242,9 @@ const AnnualCategoryChart = ({ annualReports }: Props) => {
   return (
     <div>
       <header className="rounded-t-md bg-gray-300 px-4 py-2 dark:bg-header">
-        <h2 className="text-center text-sm font-bold tracking-wider text-dark dark:text-light">Comparativa Anual</h2>
+        <h2 className="text-center text-sm font-bold tracking-wider text-dark dark:text-light">
+          Comparativa Anual
+        </h2>
         <p className="mb-2 text-center text-xs italic">Categorías</p>
         {/* Controllers */}
         <div className="flex justify-between gap-2">
@@ -226,7 +259,10 @@ const AnnualCategoryChart = ({ annualReports }: Props) => {
             value={null}
             onChange={addCategory}
             data={[
-              ...categoryReports.map(report => ({ value: report.category.id, label: report.category.name })),
+              ...categoryReports.map(report => ({
+                value: report.category.id,
+                label: report.category.name,
+              })),
               { value: 'all', label: 'Agregar todas' },
             ]}
             size="xs"
@@ -245,7 +281,9 @@ const AnnualCategoryChart = ({ annualReports }: Props) => {
         ) : (
           <div className="flex h-full flex-col items-center justify-center gap-y-4">
             <IconChartDonut size={60} />
-            <span className="text-sm italic">Agrega una categoría para rederizar una gráfica</span>
+            <span className="text-sm italic">
+              Agrega una categoría para rederizar una gráfica
+            </span>
           </div>
         )}
       </div>

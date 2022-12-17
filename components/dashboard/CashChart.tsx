@@ -30,7 +30,8 @@ export const options: ChartOptions = {
           let label = context.dataset.label || '';
 
           if (label) label += ': ';
-          if (context.parsed.y !== null) label += currencyFormat(context.parsed.y);
+          if (context.parsed.y !== null)
+            label += currencyFormat(context.parsed.y);
 
           return label;
         },

@@ -354,7 +354,10 @@ export type IInvoiceCustomer = Pick<
   'id' | 'firstName' | 'lastName' | 'fullName' | 'documentNumber' | 'address'
 >;
 export type IInvoiceCategory = Pick<Category, 'id' | 'name'>;
-export type IInvoiceProduct = Omit<IProduct, 'images' | 'isInventoriable' | 'sold' | 'returned'>;
+export type IInvoiceProduct = Omit<
+  IProduct,
+  'images' | 'isInventoriable' | 'sold' | 'returned'
+>;
 export type IInvoiceCashbox = Pick<IBox, 'id' | 'name' | 'openBox'>;
 
 export interface IInvoiceBase {
@@ -401,7 +404,10 @@ export interface IInvoiceItemBase {
   cancelMessage?: string;
 }
 
-export type INewInvoiceItem = Omit<IInvoiceItemBase, 'balance' | 'cancel' | 'cancelMessage'>;
+export type INewInvoiceItem = Omit<
+  IInvoiceItemBase,
+  'balance' | 'cancel' | 'cancelMessage'
+>;
 
 export interface INewInvoicePayment {
   id: number;
@@ -523,7 +529,12 @@ export interface IInvoicePageState {
 export interface ISaleHistory {
   id: string;
   operationDate: string;
-  operationType: 'sale' | 'credit' | 'separate' | 'credit_payment' | 'separate_payment';
+  operationType:
+    | 'sale'
+    | 'credit'
+    | 'separate'
+    | 'credit_payment'
+    | 'separate_payment';
   description?: string;
   amount: number;
 }

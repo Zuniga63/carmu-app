@@ -32,7 +32,10 @@ const initialState: ICategoryPageState = {
   formIsLoading: false,
 };
 
-export default function CategoryPageReducer(state = initialState, action: IAction): ICategoryPageState {
+export default function CategoryPageReducer(
+  state = initialState,
+  action: IAction
+): ICategoryPageState {
   switch (action.type) {
     case SET_CATEGORIES: {
       return {
@@ -84,7 +87,8 @@ export default function CategoryPageReducer(state = initialState, action: IActio
     case UPDATE_MAIN_CATEGORY: {
       const categoryUpdate = action.payload as Category;
       const updatedList = state.categories.map(category => {
-        if (category.id === categoryUpdate.id) return { ...category, ...categoryUpdate };
+        if (category.id === categoryUpdate.id)
+          return { ...category, ...categoryUpdate };
         return category;
       });
 
@@ -122,7 +126,8 @@ export default function CategoryPageReducer(state = initialState, action: IActio
       const newList = state.categories
         .filter(item => item.id !== categoryDeleted.id)
         .map(item => {
-          const order = item.order > categoryDeleted.order ? item.order - 1 : item.order;
+          const order =
+            item.order > categoryDeleted.order ? item.order - 1 : item.order;
           return { ...item, order };
         });
 

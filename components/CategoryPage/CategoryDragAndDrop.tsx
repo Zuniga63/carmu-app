@@ -1,7 +1,12 @@
 import React from 'react';
 import { Category } from 'types';
 import { useEffect, useState } from 'react';
-import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from '@hello-pangea/dnd';
 import { IconCirclePlus } from '@tabler/icons';
 import DragAndDropCategoryItem from './DragAndDropCategoryItem';
 import Button from 'components/CustomButton';
@@ -29,7 +34,11 @@ export default function CategoryDragAndDrop({
     setIsBrowser(typeof window !== undefined);
   }, []);
 
-  const reorderList = (list: Category[], fromIndex: number, toIndex: number): Category[] => {
+  const reorderList = (
+    list: Category[],
+    fromIndex: number,
+    toIndex: number
+  ): Category[] => {
     const result = [...list];
     const [removed] = result.splice(fromIndex, 1);
     result.splice(toIndex, 0, removed);
@@ -37,7 +46,12 @@ export default function CategoryDragAndDrop({
   };
 
   const dragEndHanler = ({ source, destination }: DropResult) => {
-    if (!destination || (source.index === destination.index && source.droppableId === destination.droppableId)) return;
+    if (
+      !destination ||
+      (source.index === destination.index &&
+        source.droppableId === destination.droppableId)
+    )
+      return;
     const newList = reorderList(categories, source.index, destination.index);
     saveOrder(newList);
   };
@@ -55,10 +69,22 @@ export default function CategoryDragAndDrop({
             <div className="scrollbar max-h-80 overflow-y-auto">
               <Droppable droppableId="mainCategories">
                 {droppableProvided => (
-                  <ul {...droppableProvided.droppableProps} ref={droppableProvided.innerRef}>
+                  <ul
+                    {...droppableProvided.droppableProps}
+                    ref={droppableProvided.innerRef}
+                  >
                     {categories.map((item, index) => (
-                      <Draggable key={item.id} draggableId={item.id} index={index}>
-                        {draggableProvided => <DragAndDropCategoryItem provided={draggableProvided} category={item} />}
+                      <Draggable
+                        key={item.id}
+                        draggableId={item.id}
+                        index={index}
+                      >
+                        {draggableProvided => (
+                          <DragAndDropCategoryItem
+                            provided={draggableProvided}
+                            category={item}
+                          />
+                        )}
                       </Draggable>
                     ))}
                     {droppableProvided.placeholder}
@@ -71,7 +97,9 @@ export default function CategoryDragAndDrop({
       </div>
 
       <footer className="flex min-h-[40px] items-center justify-end gap-x-2 rounded-b-md border-x border-b border-dark bg-header px-4 py-2">
-        {newOrderSaved && <span className="text-xs text-gray-500">Guardado.</span>}
+        {newOrderSaved && (
+          <span className="text-xs text-gray-500">Guardado.</span>
+        )}
         {btnAction && (
           <Button onClick={btnAction}>
             <div className="flex gap-x-2">

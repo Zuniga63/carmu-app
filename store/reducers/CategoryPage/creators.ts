@@ -62,7 +62,10 @@ export const storeCategoriesOrder = (
     try {
       dispatch(actionBody(SET_CATEGORIES, newList));
 
-      const requestData = { mainCategory, categoryIds: newList.map(item => item.id) };
+      const requestData = {
+        mainCategory,
+        categoryIds: newList.map(item => item.id),
+      };
       await axios.post('/categories/update-order', requestData);
       dispatch(actionBody(STORE_NEW_ORDER_IS_SUCCESS, true));
     } catch (error) {
@@ -111,7 +114,10 @@ export const storeNewCategory = (formData: FormData): AppThunkAction => {
   };
 };
 
-export const updateCategory = (categoryToUpdate: Category, formData: FormData): AppThunkAction => {
+export const updateCategory = (
+  categoryToUpdate: Category,
+  formData: FormData
+): AppThunkAction => {
   return async dispatch => {
     const url = `/categories/${categoryToUpdate.id}`;
     dispatch(actionBody(FORM_IS_LOADING, true));
@@ -153,7 +159,11 @@ export const destroyCategory = (categoryToDelete: Category): AppThunkAction => {
       icon: 'warning',
       showLoaderOnConfirm: true,
       preConfirm: async () => {
-        const result: { ok: boolean; message: string | undefined; categoryDeleted: unknown } = {
+        const result: {
+          ok: boolean;
+          message: string | undefined;
+          categoryDeleted: unknown;
+        } = {
           ok: false,
           message: undefined,
           categoryDeleted: undefined,
@@ -214,14 +224,20 @@ export const connectToSocket = (): AppThunkAction => {
       });
 
       // Update
-      socket.on(`server:${event.updateCategory}`, (categoryToUpdate: Category) => {
-        dispath(actionBody(UPDATE_MAIN_CATEGORY, categoryToUpdate));
-      });
+      socket.on(
+        `server:${event.updateCategory}`,
+        (categoryToUpdate: Category) => {
+          dispath(actionBody(UPDATE_MAIN_CATEGORY, categoryToUpdate));
+        }
+      );
 
       // Delete
-      socket.on(`server:${event.deleteCategory}`, (categoryToDelete: Category) => {
-        dispath(actionBody(REMOVE_MAIN_CATEGORY, categoryToDelete));
-      });
+      socket.on(
+        `server:${event.deleteCategory}`,
+        (categoryToDelete: Category) => {
+          dispath(actionBody(REMOVE_MAIN_CATEGORY, categoryToDelete));
+        }
+      );
 
       // Close websocket
       dispath(actionBody(CONNECT_TO_WEB_SOCKET, socket));
@@ -229,4 +245,5 @@ export const connectToSocket = (): AppThunkAction => {
   };
 };
 
-export const disconnectWebSocket = (): AppThunkAction => dispatch => dispatch(actionBody(DISCONNECT_TO_WEB_SOCKET));
+export const disconnectWebSocket = (): AppThunkAction => dispatch =>
+  dispatch(actionBody(DISCONNECT_TO_WEB_SOCKET));

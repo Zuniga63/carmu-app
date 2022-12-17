@@ -92,7 +92,12 @@ const CreateForm = () => {
           />
         </div>
         <footer className="flex items-center justify-end">
-          <Button leftIcon={<IconDeviceFloppy />} loading={loading} type="submit" disabled={!enabled}>
+          <Button
+            leftIcon={<IconDeviceFloppy />}
+            loading={loading}
+            type="submit"
+            disabled={!enabled}
+          >
             Guardar
           </Button>
         </footer>

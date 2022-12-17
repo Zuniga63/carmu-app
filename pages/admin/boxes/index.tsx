@@ -7,7 +7,11 @@ import Layout from 'components/Layout';
 import { GetServerSideProps, NextPage } from 'next';
 import { useEffect } from 'react';
 import { useAppDispatch } from 'store/hooks';
-import { setBoxes, setMainBox, unmountTransactions } from 'store/reducers/BoxPage/creators';
+import {
+  setBoxes,
+  setMainBox,
+  unmountTransactions,
+} from 'store/reducers/BoxPage/creators';
 import { IBox, IMainBox } from 'types';
 
 interface Props {

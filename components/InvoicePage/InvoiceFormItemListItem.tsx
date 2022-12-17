@@ -16,7 +16,9 @@ const InvoiceFormItemListItem = ({ item, onRemove }: Props) => {
   useEffect(() => {
     item.categories.forEach(categoryId => {
       let result = '';
-      const categoryName = categories.find(category => category.id === categoryId)?.name;
+      const categoryName = categories.find(
+        category => category.id === categoryId
+      )?.name;
       if (categoryName) result += `${categoryName} `;
 
       setItemCategories(result.trim());
@@ -24,7 +26,9 @@ const InvoiceFormItemListItem = ({ item, onRemove }: Props) => {
   }, []);
   return (
     <tr className="group transition-colors hover:bg-neutral-200 dark:text-light dark:hover:text-dark">
-      <td className="whitespace-nowrap px-2 py-1 text-center text-sm">{item.quantity}</td>
+      <td className="whitespace-nowrap px-2 py-1 text-center text-sm">
+        {item.quantity}
+      </td>
       <td className="px-2 py-1 text-sm">
         <p>{item.description}</p>
         {itemCategories ? (
@@ -35,13 +39,22 @@ const InvoiceFormItemListItem = ({ item, onRemove }: Props) => {
       </td>
       <td className="whitespace-nowrap px-2 py-1 text-center text-xs">
         <div className="flex flex-col text-sm">
-          <span className={`${Boolean(item.discount) && 'scale-90 text-xs line-through opacity-70'}`}>
+          <span
+            className={`${
+              Boolean(item.discount) &&
+              'scale-90 text-xs line-through opacity-70'
+            }`}
+          >
             {currencyFormat(item.unitValue)}
           </span>
-          {Boolean(item.discount) && <span>{currencyFormat(item.unitValue - (item.discount || 0))}</span>}
+          {Boolean(item.discount) && (
+            <span>{currencyFormat(item.unitValue - (item.discount || 0))}</span>
+          )}
         </div>
       </td>
-      <td className="whitespace-nowrap px-2 py-1 text-right">{currencyFormat(item.amount)}</td>
+      <td className="whitespace-nowrap px-2 py-1 text-right">
+        {currencyFormat(item.amount)}
+      </td>
       <td className="px-3">
         <div className="flex items-center justify-center">
           <button

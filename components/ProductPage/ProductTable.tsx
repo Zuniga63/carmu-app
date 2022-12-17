@@ -12,7 +12,12 @@ interface Props {
   deleteProduct(product: IProductWithCategories): Promise<void>;
 }
 
-const ProductTable = ({ allProducts, openForm, mountProduct, deleteProduct }: Props) => {
+const ProductTable = ({
+  allProducts,
+  openForm,
+  mountProduct,
+  deleteProduct,
+}: Props) => {
   const [search, setSearch] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState<IProductWithCategories[]>([]);
@@ -32,7 +37,14 @@ const ProductTable = ({ allProducts, openForm, mountProduct, deleteProduct }: Pr
     if (search) {
       result = result.filter(item => {
         const text = normalizeText(
-          [item.name, item.description || '', item.ref || '', item.barcode || ''].join(' ').trim()
+          [
+            item.name,
+            item.description || '',
+            item.ref || '',
+            item.barcode || '',
+          ]
+            .join(' ')
+            .trim()
         );
         return text.includes(normalizeText(search));
       });
@@ -48,11 +60,19 @@ const ProductTable = ({ allProducts, openForm, mountProduct, deleteProduct }: Pr
   return (
     <div className="mx-auto w-11/12 pt-4 dark:text-light">
       <header className="rounded-t-md bg-gray-300 px-6 py-2 dark:bg-header">
-        <h2 className="text-center text-xl font-bold tracking-wider">Listado de productos</h2>
+        <h2 className="text-center text-xl font-bold tracking-wider">
+          Listado de productos
+        </h2>
         <div className="grid grid-cols-3">
           <TextInput
             size="xs"
-            icon={loading ? <Loader size={14} variant="dots" /> : <IconSearch size={14} stroke={1.5} />}
+            icon={
+              loading ? (
+                <Loader size={14} variant="dots" />
+              ) : (
+                <IconSearch size={14} stroke={1.5} />
+              )
+            }
             placeholder="Buscar producto"
             className="col-span-3 flex-grow lg:col-span-1"
             onChange={({ target }) => updateSearch(target.value)}
@@ -66,19 +86,34 @@ const ProductTable = ({ allProducts, openForm, mountProduct, deleteProduct }: Pr
         <table className='class="relative mb-2" min-w-full table-auto'>
           <thead className="sticky top-0 bg-gray-400 dark:bg-dark">
             <tr className="text-dark dark:text-gray-300">
-              <th scope="col" className="px-4 py-3 text-center uppercase tracking-wide">
+              <th
+                scope="col"
+                className="px-4 py-3 text-center uppercase tracking-wide"
+              >
                 Producto
               </th>
-              <th scope="col" className="px-4 py-3 text-center uppercase tracking-wide">
+              <th
+                scope="col"
+                className="px-4 py-3 text-center uppercase tracking-wide"
+              >
                 Referencias
               </th>
-              <th scope="col" className="whitespace-nowrap px-4 py-3 text-center uppercase tracking-wide">
+              <th
+                scope="col"
+                className="whitespace-nowrap px-4 py-3 text-center uppercase tracking-wide"
+              >
                 Categorías
               </th>
-              <th scope="col" className="whitespace-nowrap px-4 py-3 text-center uppercase tracking-wide">
+              <th
+                scope="col"
+                className="whitespace-nowrap px-4 py-3 text-center uppercase tracking-wide"
+              >
                 Stock
               </th>
-              <th scope="col" className="px-4 py-3 text-center uppercase tracking-wide">
+              <th
+                scope="col"
+                className="px-4 py-3 text-center uppercase tracking-wide"
+              >
                 Precio
               </th>
               <th scope="col" className="relative px-6 py-3">
@@ -88,7 +123,12 @@ const ProductTable = ({ allProducts, openForm, mountProduct, deleteProduct }: Pr
           </thead>
           <tbody className="divide-y divide-gray-400">
             {products.map(product => (
-              <ProductTableItem product={product} key={product.id} mount={mountProduct} onDelete={deleteProduct} />
+              <ProductTableItem
+                product={product}
+                key={product.id}
+                mount={mountProduct}
+                onDelete={deleteProduct}
+              />
             ))}
           </tbody>
         </table>

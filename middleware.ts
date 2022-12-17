@@ -19,8 +19,10 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  if (isLoginPage && isAuthenticated) return NextResponse.redirect(new URL('/', request.url));
-  if ((isLoginPage && !isAuthenticated) || isAuthenticated) return NextResponse.next();
+  if (isLoginPage && isAuthenticated)
+    return NextResponse.redirect(new URL('/', request.url));
+  if ((isLoginPage && !isAuthenticated) || isAuthenticated)
+    return NextResponse.next();
   else return NextResponse.redirect(new URL('/login', request.url));
 }
 

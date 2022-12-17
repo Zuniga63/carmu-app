@@ -14,7 +14,10 @@ export function normalizeText(text: string): string {
 //-----------------------------------------------------------------------------
 // UTILS FOR REDUX AND REDUX THUNK
 //-----------------------------------------------------------------------------
-export const actionBody = (type: string, payload?: unknown): IAction => ({ type, payload });
+export const actionBody = (type: string, payload?: unknown): IAction => ({
+  type,
+  payload,
+});
 
 /**
  * Build a option for next-cookie
@@ -30,7 +33,10 @@ export const buildCookieOption = (duration = 1) => ({
 //-----------------------------------------------------------------------------
 // UTIL FOR FORMAT CURRENCY
 //-----------------------------------------------------------------------------
-export function currencyFormat(value: string | number | undefined, fractionDigits = 0): string {
+export function currencyFormat(
+  value: string | number | undefined,
+  fractionDigits = 0
+): string {
   const parseValue = parseFloat(String(value));
 
   if (!isNaN(parseValue)) {
@@ -115,7 +121,10 @@ export const CHART_COLORS = {
   indigo: '#2B4162',
 };
 
-export function transparentize(value: string | number[] | Color | RGBA, opacity?: number) {
+export function transparentize(
+  value: string | number[] | Color | RGBA,
+  opacity?: number
+) {
   const alpha = opacity === undefined ? 0.5 : 1 - opacity;
   return colorLib(value).alpha(alpha).rgbString();
 }

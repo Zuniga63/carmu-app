@@ -8,7 +8,12 @@ interface Props {
   onClose(): void;
 }
 
-const InvoiceCardModalHeader = ({ title, invoiceNumber, onClose, invoiceType = 'Factura' }: Props) => {
+const InvoiceCardModalHeader = ({
+  title,
+  invoiceNumber,
+  onClose,
+  invoiceType = 'Factura',
+}: Props) => {
   return (
     <header className="relative rounded-t-lg bg-gray-300 p-4 dark:bg-header">
       <h2 className="text-center text-xl tracking-wider">
@@ -17,7 +22,10 @@ const InvoiceCardModalHeader = ({ title, invoiceNumber, onClose, invoiceType = '
       </h2>
       {invoiceNumber ? (
         <p className="text-center text-sm italic">
-          N°: <span className="ml-2 inline-block font-bold text-red-500">{invoiceNumber}</span>
+          N°:{' '}
+          <span className="ml-2 inline-block font-bold text-red-500">
+            {invoiceNumber}
+          </span>
         </p>
       ) : null}
 

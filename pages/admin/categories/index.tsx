@@ -20,7 +20,9 @@ interface Props {
 }
 
 const Categories: NextPage<Props> = ({ data }: Props) => {
-  const { categories, storeNewOrderIsSuccess: mainOrderSaved } = useAppSelector(state => state.CategoryPageReducer);
+  const { categories, storeNewOrderIsSuccess: mainOrderSaved } = useAppSelector(
+    state => state.CategoryPageReducer
+  );
   const dispatch = useAppDispatch();
 
   useEffect(() => {
