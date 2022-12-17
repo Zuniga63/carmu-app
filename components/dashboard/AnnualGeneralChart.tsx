@@ -5,7 +5,14 @@ import isLeapYear from 'dayjs/plugin/isLeapYear';
 
 import { Bar, Line } from 'react-chartjs-2';
 import { IAnnualReport } from 'types';
-import { ChartPeriod, CHART_COLORS, COLORS, currencyFormat, MONTHS, transparentize } from 'utils';
+import {
+  ChartPeriod,
+  CHART_COLORS,
+  COLORS,
+  currencyFormat,
+  MONTHS,
+  transparentize,
+} from 'utils';
 
 dayjs.extend(isLeapYear);
 
@@ -32,7 +39,8 @@ export const barOptions: ChartOptions<'bar'> = {
           let label = context.dataset.label || '';
 
           if (label) label += ': ';
-          if (context.parsed.y !== null) label += currencyFormat(context.parsed.y);
+          if (context.parsed.y !== null)
+            label += currencyFormat(context.parsed.y);
 
           return label;
         },
@@ -66,7 +74,8 @@ export const lineOptions: ChartOptions<'line'> = {
           let label = dataset.label || '';
 
           if (label) label += ': ';
-          if (context.parsed.y !== null) label += currencyFormat(context.parsed.y);
+          if (context.parsed.y !== null)
+            label += currencyFormat(context.parsed.y);
 
           return label;
         },
@@ -96,31 +105,53 @@ interface Props {
   monthSelected: string | null;
 }
 
-const AnnualGeneralChart = ({ annualReports, period, monthSelected }: Props) => {
-  const [annualChartData, setAnnualChartData] = useState<ChartData<'bar'> | null>(null);
-  const [monthlyChartData, setMonthlyChartData] = useState<ChartData<'line'> | null>(null);
+const AnnualGeneralChart = ({
+  annualReports,
+  period,
+  monthSelected,
+}: Props) => {
+  const [annualChartData, setAnnualChartData] =
+    useState<ChartData<'bar'> | null>(null);
+  const [monthlyChartData, setMonthlyChartData] =
+    useState<ChartData<'line'> | null>(null);
 
-  const getLabels = (period: string, leapYear = false, month = NaN, annualReports: IAnnualReport[] = []): string[] => {
+  const getLabels = (
+    period: string,
+    leapYear = false,
+    month = NaN,
+    annualReports: IAnnualReport[] = []
+  ): string[] => {
     const labels: string[] = [];
     // If the period is annual then it is just the names of the months
     // shortened to three characters
-    if (period === ChartPeriod.annual) labels.push(...MONTHS.map(month => month.slice(0, 3)));
+    if (period === ChartPeriod.annual)
+      labels.push(...MONTHS.map(month => month.slice(0, 3)));
     // The labels correspond to the number of day contained
     // in the month selected
-    else if (period === ChartPeriod.monthly && !isNaN(month) && annualReports.length > 0) {
+    else if (
+      period === ChartPeriod.monthly &&
+      !isNaN(month) &&
+      annualReports.length > 0
+    ) {
       let daysInMonth = dayjs().month(month).daysInMonth();
       if (leapYear && month === 1) daysInMonth += 1;
-      for (let day = 1; day <= daysInMonth; day += 1) labels.push(day < 10 ? '0'.concat(String(day)) : String(day));
+      for (let day = 1; day <= daysInMonth; day += 1)
+        labels.push(day < 10 ? '0'.concat(String(day)) : String(day));
     }
 
     return labels;
   };
 
-  const getAnnualDatasets = (annualReports: IAnnualReport[]): ChartDataset<'bar'>[] => {
+  const getAnnualDatasets = (
+    annualReports: IAnnualReport[]
+  ): ChartDataset<'bar'>[] => {
     const datasets: ChartDataset<'bar'>[] = [];
 
     annualReports.forEach(({ year, monthlyReports }, index) => {
-      const color = CHART_COLORS[COLORS[index % COLORS.length] as keyof typeof CHART_COLORS];
+      const color =
+        CHART_COLORS[
+          COLORS[index % COLORS.length] as keyof typeof CHART_COLORS
+        ];
       datasets.push({
         label: String(year),
         data: monthlyReports.map(item => item.amount),
@@ -133,11 +164,17 @@ const AnnualGeneralChart = ({ annualReports, period, monthSelected }: Props) => 
     return datasets;
   };
 
-  const getMonthlyDatasets = (annualReports: IAnnualReport[], month: number): ChartDataset<'line'>[] => {
+  const getMonthlyDatasets = (
+    annualReports: IAnnualReport[],
+    month: number
+  ): ChartDataset<'line'>[] => {
     const datasets: ChartDataset<'line'>[] = [];
 
     annualReports.forEach(({ year, monthlyReports }, index) => {
-      const color = CHART_COLORS[COLORS[index % COLORS.length] as keyof typeof CHART_COLORS];
+      const color =
+        CHART_COLORS[
+          COLORS[index % COLORS.length] as keyof typeof CHART_COLORS
+        ];
 
       const { dailyReports, fromDate, toDate } = monthlyReports[month];
       const now = dayjs();
@@ -150,7 +187,9 @@ const AnnualGeneralChart = ({ annualReports, period, monthSelected }: Props) => 
       if (date.isSame(now.startOf('month'))) endDate = now;
 
       while (date.isBefore(endDate)) {
-        const dailyReport = dailyReports.find(daily => dayjs(daily.fromDate).isSame(date));
+        const dailyReport = dailyReports.find(daily =>
+          dayjs(daily.fromDate).isSame(date)
+        );
         if (dailyReport) accumulated += dailyReport.amount;
         data.push(accumulated);
         date = date.add(1, 'day');
@@ -176,11 +215,18 @@ const AnnualGeneralChart = ({ annualReports, period, monthSelected }: Props) => 
   };
 
   const buildMonthlyChartData = () => {
-    const leapYear = annualReports.map(({ year }) => dayjs().year(year).isLeapYear()).some(item => item === true);
+    const leapYear = annualReports
+      .map(({ year }) => dayjs().year(year).isLeapYear())
+      .some(item => item === true);
     const month = Number(monthSelected);
 
     if (!isNaN(month)) {
-      const labels = getLabels(ChartPeriod.monthly, leapYear, Number(monthSelected), annualReports);
+      const labels = getLabels(
+        ChartPeriod.monthly,
+        leapYear,
+        Number(monthSelected),
+        annualReports
+      );
       const datasets = getMonthlyDatasets(annualReports, month);
       setMonthlyChartData({ labels, datasets });
     } else {
@@ -201,7 +247,9 @@ const AnnualGeneralChart = ({ annualReports, period, monthSelected }: Props) => 
 
   return (
     <div className="relative h-96 w-full 3xl:h-[60vh]">
-      {period === ChartPeriod.annual && annualChartData ? <Bar options={barOptions} data={annualChartData} /> : null}
+      {period === ChartPeriod.annual && annualChartData ? (
+        <Bar options={barOptions} data={annualChartData} />
+      ) : null}
       {period === ChartPeriod.monthly && monthlyChartData ? (
         <Line options={lineOptions} data={monthlyChartData} />
       ) : null}

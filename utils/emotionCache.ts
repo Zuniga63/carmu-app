@@ -6,7 +6,11 @@ let cache: EmotionCache | undefined;
 
 const getInsertionPoint = () =>
   typeof document !== 'undefined' && process.env.NODE_ENV === 'production'
-    ? last([...(document.querySelector('head')?.querySelectorAll<HTMLElement>(`script`) ?? [])])
+    ? last([
+        ...(document
+          .querySelector('head')
+          ?.querySelectorAll<HTMLElement>(`script`) ?? []),
+      ])
     : undefined;
 
 const creatCache = () =>

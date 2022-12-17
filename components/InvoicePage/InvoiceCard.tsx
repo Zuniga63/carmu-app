@@ -22,7 +22,9 @@ const InvoiceCard = ({ invoice }: Props) => {
               {/* CUSTOMER NAME */}
               <div className="lg:col-span-8">
                 <InvoiceCardField title="Cliente">
-                  <p className="italic">{invoice?.customer?.fullName || invoice?.customerName}</p>
+                  <p className="italic">
+                    {invoice?.customer?.fullName || invoice?.customerName}
+                  </p>
                 </InvoiceCardField>
               </div>
               {/* DOCUMENT */}
@@ -32,7 +34,9 @@ const InvoiceCard = ({ invoice }: Props) => {
                     <span>{invoice?.customerDocumentType}</span>
                     {': '}
                     <span className="font-bold">
-                      {invoice?.customer?.documentNumber || invoice?.customerDocument || 'No reporta'}
+                      {invoice?.customer?.documentNumber ||
+                        invoice?.customerDocument ||
+                        'No reporta'}
                     </span>
                   </p>
                 </InvoiceCardField>
@@ -40,14 +44,20 @@ const InvoiceCard = ({ invoice }: Props) => {
               {/* CUSTOMER ADDRESS */}
               <div className="lg:col-span-8">
                 <InvoiceCardField title="Dirección">
-                  <p className="italic">{invoice.customer?.address || invoice?.customerAddress || 'No reporta'}</p>
+                  <p className="italic">
+                    {invoice.customer?.address ||
+                      invoice?.customerAddress ||
+                      'No reporta'}
+                  </p>
                 </InvoiceCardField>
               </div>
               {/* DOCUMENT */}
               <div className="lg:col-span-4">
                 <InvoiceCardField title="Teléfono">
                   <p className="text-center italic">
-                    <span className="font-bold">{invoice?.customerPhone || 'No reporta'}</span>
+                    <span className="font-bold">
+                      {invoice?.customerPhone || 'No reporta'}
+                    </span>
                   </p>
                 </InvoiceCardField>
               </div>
@@ -58,12 +68,16 @@ const InvoiceCard = ({ invoice }: Props) => {
         <div className="rounded-lg bg-gray-dark bg-opacity-20 px-4 py-6">
           <div className="mb-4">
             <InvoiceCardField title="Expedición">
-              <p className="italic">{invoice?.expeditionDate.format('DD-MM-YYYY')}</p>
+              <p className="italic">
+                {invoice?.expeditionDate.format('DD-MM-YYYY')}
+              </p>
             </InvoiceCardField>
           </div>
           <div>
             <InvoiceCardField title="Vencimiento">
-              <p className="italic">{invoice?.expirationDate.format('DD-MM-YYYY')}</p>
+              <p className="italic">
+                {invoice?.expirationDate.format('DD-MM-YYYY')}
+              </p>
             </InvoiceCardField>
           </div>
         </div>
@@ -74,7 +88,11 @@ const InvoiceCard = ({ invoice }: Props) => {
           <div className="lg:col-span-3">
             <Tabs defaultValue="items" color="blue">
               <Tabs.List>
-                <Tabs.Tab value="items" color="blue" icon={<IconBox size={14} />}>
+                <Tabs.Tab
+                  value="items"
+                  color="blue"
+                  icon={<IconBox size={14} />}
+                >
                   Articulos
                 </Tabs.Tab>
                 <Tabs.Tab value="payments" icon={<IconFileInvoice size={14} />}>

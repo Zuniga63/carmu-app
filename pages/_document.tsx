@@ -14,7 +14,11 @@ class MyDocument extends Document {
             href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Zen+Dots&display=swap"
             rel="stylesheet"
           />
-          <link rel="shortcut icon" href="images/logo_62601199d793d.png" type="image/x-icon" />
+          <link
+            rel="shortcut icon"
+            href="images/logo_62601199d793d.png"
+            type="image/x-icon"
+          />
         </Head>
         <body className="bg-light dark:bg-defaul-body">
           <Main />

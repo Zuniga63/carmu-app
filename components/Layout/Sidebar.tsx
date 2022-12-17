@@ -6,7 +6,9 @@ import NavLinks from './NavLinks';
 export default function Sidebar() {
   const largeScreen = useMediaQuery('(min-width: 1280px)');
   const [showAside, setShowAside] = useState(true);
-  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | undefined>(undefined);
+  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | undefined>(
+    undefined
+  );
   const firstRenderRef = useRef(true);
 
   useEffect(() => {

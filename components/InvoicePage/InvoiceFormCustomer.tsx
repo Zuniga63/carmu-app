@@ -11,7 +11,11 @@ interface Props {
   className?: string;
 }
 
-const InvoiceFormCustomer = ({ customer, onCustomerChange, className }: Props) => {
+const InvoiceFormCustomer = ({
+  customer,
+  onCustomerChange,
+  className,
+}: Props) => {
   const { customers } = useAppSelector(state => state.InvoicePageReducer);
 
   useEffect(() => {
@@ -22,7 +26,9 @@ const InvoiceFormCustomer = ({ customer, onCustomerChange, className }: Props) =
         name: customerData.fullName,
         document: customerData.documentNumber || current.document,
         documentType: customerData.documentType || current.documentType,
-        phone: customerData.contacts.length ? customerData.contacts[0].phone : current.phone,
+        phone: customerData.contacts.length
+          ? customerData.contacts[0].phone
+          : current.phone,
         address: customerData.address || current.address,
       }));
     } else {
@@ -44,8 +50,13 @@ const InvoiceFormCustomer = ({ customer, onCustomerChange, className }: Props) =
         <Select
           className="lg:col-span-2"
           value={customer.id}
-          data={customers.map(customer => ({ value: customer.id, label: customer.fullName }))}
-          onChange={value => onCustomerChange(current => ({ ...current, id: value }))}
+          data={customers.map(customer => ({
+            value: customer.id,
+            label: customer.fullName,
+          }))}
+          onChange={value =>
+            onCustomerChange(current => ({ ...current, id: value }))
+          }
           size="xs"
           placeholder="Buscar cliente"
           icon={<IconSearch size={15} />}
@@ -59,7 +70,9 @@ const InvoiceFormCustomer = ({ customer, onCustomerChange, className }: Props) =
           value={customer.name}
           placeholder="Nombre completo del cliente"
           size="xs"
-          onChange={({ target }) => onCustomerChange(current => ({ ...current, name: target.value }))}
+          onChange={({ target }) =>
+            onCustomerChange(current => ({ ...current, name: target.value }))
+          }
         />
 
         {/* Document */}
@@ -70,13 +83,23 @@ const InvoiceFormCustomer = ({ customer, onCustomerChange, className }: Props) =
             value={customer.document}
             placeholder="Escribelo aquí"
             size="xs"
-            onChange={({ target }) => onCustomerChange(current => ({ ...current, document: target.value }))}
+            onChange={({ target }) =>
+              onCustomerChange(current => ({
+                ...current,
+                document: target.value,
+              }))
+            }
           />
           <Select
             className="col-span-3"
             label="Tipo"
             value={customer.documentType}
-            onChange={value => onCustomerChange(current => ({ ...current, documentType: value || 'CC' }))}
+            onChange={value =>
+              onCustomerChange(current => ({
+                ...current,
+                documentType: value || 'CC',
+              }))
+            }
             data={['CC', 'TI', 'NIT', 'PAP']}
             size="xs"
             allowDeselect={false}
@@ -89,14 +112,18 @@ const InvoiceFormCustomer = ({ customer, onCustomerChange, className }: Props) =
           size="xs"
           icon={<IconHome size={15} />}
           value={customer.address}
-          onChange={({ target }) => onCustomerChange(current => ({ ...current, address: target.value }))}
+          onChange={({ target }) =>
+            onCustomerChange(current => ({ ...current, address: target.value }))
+          }
         />
         <TextInput
           placeholder="Telefono de contacto"
           size="xs"
           icon={<IconPhone size={15} />}
           value={customer.phone}
-          onChange={({ target }) => onCustomerChange(current => ({ ...current, phone: target.value }))}
+          onChange={({ target }) =>
+            onCustomerChange(current => ({ ...current, phone: target.value }))
+          }
           type="tel"
         />
       </div>

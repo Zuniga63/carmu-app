@@ -15,7 +15,9 @@ const InvoiceCardPaymentRow = ({ payment }: Props) => {
       </td>
       <td>
         <p>{payment.description}</p>
-        <p className="text-xs text-light text-opacity-50">{payment.paymentDate.fromNow()}</p>
+        <p className="text-xs text-light text-opacity-50">
+          {payment.paymentDate.fromNow()}
+        </p>
       </td>
       <td className="text-right">{currencyFormat(payment.amount)}</td>
       <td></td>

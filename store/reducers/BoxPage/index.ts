@@ -1,4 +1,11 @@
-import { IAction, IBoxPageState, IBoxWithDayjs, IMainBox, ITransaction, ITransactionResponse } from 'types';
+import {
+  IAction,
+  IBoxPageState,
+  IBoxWithDayjs,
+  IMainBox,
+  ITransaction,
+  ITransactionResponse,
+} from 'types';
 import * as ACTIONS from './actions';
 
 const initialState: IBoxPageState = {
@@ -43,7 +50,10 @@ const unmountBoxSelectedToState = (state: IBoxPageState): IBoxPageState => {
   };
 };
 
-export default function BoxPageReducer(state = initialState, action: IAction): IBoxPageState {
+export default function BoxPageReducer(
+  state = initialState,
+  action: IAction
+): IBoxPageState {
   switch (action.type) {
     case ACTIONS.SET_BOXES: {
       let boxSelected: IBoxWithDayjs | undefined;
@@ -84,7 +94,11 @@ export default function BoxPageReducer(state = initialState, action: IAction): I
       if (index >= 0) {
         boxes.splice(index, 1, boxToUpdate);
         newState = { ...state, boxes };
-        if (state.boxSelected && state.boxSelected.id === boxToUpdate.id && !boxToUpdate.openBox) {
+        if (
+          state.boxSelected &&
+          state.boxSelected.id === boxToUpdate.id &&
+          !boxToUpdate.openBox
+        ) {
           newState = unmountBoxSelectedToState(newState);
         }
       }
@@ -258,8 +272,14 @@ export default function BoxPageReducer(state = initialState, action: IAction): I
       const { boxSelected, transactions, mainBox } = state;
       let newState = state;
 
-      if ((boxSelected && boxSelected.id === newTransaction.cashbox) || mainBox) {
-        newState = { ...state, transactions: [...transactions, newTransaction] };
+      if (
+        (boxSelected && boxSelected.id === newTransaction.cashbox) ||
+        mainBox
+      ) {
+        newState = {
+          ...state,
+          transactions: [...transactions, newTransaction],
+        };
       }
 
       return newState;

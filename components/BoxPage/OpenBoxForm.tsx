@@ -98,7 +98,9 @@ const OpenBoxForm = () => {
             parser={value => value?.replace(/\$\s?|(,*)/g, '')}
             formatter={value => {
               if (value) {
-                return !Number.isNaN(parseFloat(value)) ? `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '$ ';
+                return !Number.isNaN(parseFloat(value))
+                  ? `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                  : '$ ';
               }
 
               return '$ ';
@@ -106,7 +108,12 @@ const OpenBoxForm = () => {
           />
         </div>
         <footer className="flex items-center justify-end">
-          <Button leftIcon={<IconLockOpen />} loading={loading} type="submit" disabled={!enabled}>
+          <Button
+            leftIcon={<IconLockOpen />}
+            loading={loading}
+            type="submit"
+            disabled={!enabled}
+          >
             Abrir Caja
           </Button>
         </footer>

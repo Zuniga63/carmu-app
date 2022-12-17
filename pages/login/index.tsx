@@ -6,8 +6,20 @@ import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { authUser } from 'store/reducers/Auth/creators';
 
 import AuthenticationCard from 'components/AuthenticationCard';
-import { TextInput, PasswordInput, Alert, Notification, Button } from '@mantine/core';
-import { IconAt, IconLock, IconEyeOff, IconEyeCheck, IconAlertCircle } from '@tabler/icons';
+import {
+  TextInput,
+  PasswordInput,
+  Alert,
+  Notification,
+  Button,
+} from '@mantine/core';
+import {
+  IconAt,
+  IconLock,
+  IconEyeOff,
+  IconEyeCheck,
+  IconAlertCircle,
+} from '@tabler/icons';
 import brandLogo from 'public/images/logo_62601199d793d.png';
 import Image from 'next/image';
 
@@ -19,7 +31,9 @@ const Login: NextPage = () => {
   //---------------------------------------------------------------------------
   // AUTH STATE
   //---------------------------------------------------------------------------
-  const { loading, error, loginIsSuccess, isAuth } = useAppSelector(state => state.AuthReducer);
+  const { loading, error, loginIsSuccess, isAuth } = useAppSelector(
+    state => state.AuthReducer
+  );
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -66,7 +80,11 @@ const Login: NextPage = () => {
               required
               icon={<IconLock size={20} />}
               visibilityToggleIcon={({ reveal, size }) =>
-                reveal ? <IconEyeOff size={size} /> : <IconEyeCheck size={size} />
+                reveal ? (
+                  <IconEyeOff size={size} />
+                ) : (
+                  <IconEyeCheck size={size} />
+                )
               }
               disabled={loading || isAuth}
             />
@@ -95,7 +113,11 @@ const Login: NextPage = () => {
           )}
 
           <footer className="mt-4 flex items-center justify-end">
-            <Button type="submit" variant="outline" disabled={loading || loginIsSuccess}>
+            <Button
+              type="submit"
+              variant="outline"
+              disabled={loading || loginIsSuccess}
+            >
               Iniciar Sesión
             </Button>
           </footer>

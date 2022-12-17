@@ -1,7 +1,14 @@
 import axios, { AxiosError } from 'axios';
 import { AppThunkAction, AuthResponse, LoginData } from 'types';
 import { actionBody, buildCookieOption } from 'utils';
-import { SET_ERROR, USER_IS_AUTH, LOADING, LOGIN_IS_SUCCESS, SET_USER, LOGOUT } from './actions';
+import {
+  SET_ERROR,
+  USER_IS_AUTH,
+  LOADING,
+  LOGIN_IS_SUCCESS,
+  SET_USER,
+  LOGOUT,
+} from './actions';
 import { setCookie } from 'cookies-next';
 
 const baseUrl = '/auth/local/signin';

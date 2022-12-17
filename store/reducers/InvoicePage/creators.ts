@@ -100,29 +100,38 @@ export const fetchInvoiceData = (): AppThunkAction => {
 };
 
 export const openNewInvoiceForm = (): AppThunkAction => {
-  return dispatch => dispatch(actionBody(actions.FORM_NEW_INVOICE_OPENED, true));
+  return dispatch =>
+    dispatch(actionBody(actions.FORM_NEW_INVOICE_OPENED, true));
 };
 
 export const closeNewInvoiceForm = (): AppThunkAction => {
-  return dispatch => dispatch(actionBody(actions.FORM_NEW_INVOICE_OPENED, false));
+  return dispatch =>
+    dispatch(actionBody(actions.FORM_NEW_INVOICE_OPENED, false));
 };
 
 export const openCounterSaleForm = (): AppThunkAction => {
-  return dispatch => dispatch(actionBody(actions.COUNTER_SALE_FORM_OPENED, true));
+  return dispatch =>
+    dispatch(actionBody(actions.COUNTER_SALE_FORM_OPENED, true));
 };
 
 export const closeCounterSaleForm = (): AppThunkAction => {
-  return dispatch => dispatch(actionBody(actions.COUNTER_SALE_FORM_OPENED, false));
+  return dispatch =>
+    dispatch(actionBody(actions.COUNTER_SALE_FORM_OPENED, false));
 };
 
-export const storeNewInvoice = (invoiceData: IInvoiceStoreData): AppThunkAction => {
+export const storeNewInvoice = (
+  invoiceData: IInvoiceStoreData
+): AppThunkAction => {
   return async dispatch => {
     try {
       // Start Loading
       dispatch(actionBody(actions.INVOICE_STORE_LOADING, true));
       dispatch(actionBody(actions.INVOICE_STORE_ERROR, null));
       // Request
-      const res = await axios.post<{ invoice: IInvoiceBase }>('/invoices', invoiceData);
+      const res = await axios.post<{ invoice: IInvoiceBase }>(
+        '/invoices',
+        invoiceData
+      );
       const invoice = buildInvoice(res.data.invoice);
       dispatch(actionBody(actions.ADD_NEW_INVOICE, invoice));
       dispatch(actionBody(actions.INVOICE_STORE_SUCCESS, true));
@@ -181,14 +190,20 @@ export const closePaymentForm = (): AppThunkAction => {
   };
 };
 
-export const registerPayment = (paymentData: IInvoicePaymentData, invoiceId: string): AppThunkAction => {
+export const registerPayment = (
+  paymentData: IInvoicePaymentData,
+  invoiceId: string
+): AppThunkAction => {
   return async dispatch => {
     dispatch(actionBody(actions.PAYMENT_STORE_LOADING, true));
     dispatch(actionBody(actions.PAYMENT_STORE_ERROR, null));
 
     try {
       const url = `/invoices/${invoiceId}/add-payment`;
-      const res = await axios.post<{ invoice: IInvoiceBaseFull; message: string }>(url, paymentData);
+      const res = await axios.post<{
+        invoice: IInvoiceBaseFull;
+        message: string;
+      }>(url, paymentData);
       const invoice = buildInvoiceFull(res.data.invoice);
       dispatch(actionBody(actions.ADD_PAYMENT_TO_INVOICE, invoice));
       dispatch(actionBody(actions.PAYMENT_STORE_SUCCESS, res.data.message));

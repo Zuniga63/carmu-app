@@ -1,6 +1,11 @@
 import { NextPage } from 'next';
 import Layout from 'components/Layout';
-import { ICustomer, IInvoiceCashbox, IInvoicePaymentBase, IValidationErrors } from 'types';
+import {
+  ICustomer,
+  IInvoiceCashbox,
+  IInvoicePaymentBase,
+  IValidationErrors,
+} from 'types';
 import CustomerTable from 'components/CustomerPage/CustomerTable';
 import { useEffect, useState } from 'react';
 import CustomerForm from 'components/CustomerPage/CustomerForm';
@@ -20,10 +25,14 @@ const CustomerPage: NextPage = () => {
 
   const [formOpened, setFormOpened] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<IValidationErrors | null | undefined>(null);
+  const [errors, setErrors] = useState<IValidationErrors | null | undefined>(
+    null
+  );
   const [customers, setCustomers] = useState<ICustomer[]>([]);
   const [cashboxs, setCashboxs] = useState<IInvoiceCashbox[]>([]);
-  const [customerToUpdate, setCustomerToUpdate] = useState<ICustomer | null>(null);
+  const [customerToUpdate, setCustomerToUpdate] = useState<ICustomer | null>(
+    null
+  );
   const [customerToPay, setCustomerToPay] = useState<ICustomer | null>(null);
   const [paymentModalOpened, setPaymentModalOpened] = useState(false);
   const [paymentModalLoading, setPaymentModalLoading] = useState(false);
@@ -37,7 +46,10 @@ const CustomerPage: NextPage = () => {
   const fetchData = async () => {
     setFetchLoading(true);
     try {
-      const res = await axios.get<{ customers: ICustomer[]; cashboxs: IInvoiceCashbox[] }>('/customers');
+      const res = await axios.get<{
+        customers: ICustomer[];
+        cashboxs: IInvoiceCashbox[];
+      }>('/customers');
       setCustomers(res.data.customers);
       setCashboxs(res.data.cashboxs);
     } catch (error) {
@@ -113,7 +125,9 @@ const CustomerPage: NextPage = () => {
         const res = await axios.put<{ customer: ICustomer }>(url, formData);
         const customerUpdated = res.data.customer;
 
-        const customerIndex = customers.findIndex(customer => customer.id === customerUpdated.id);
+        const customerIndex = customers.findIndex(
+          customer => customer.id === customerUpdated.id
+        );
         if (customerIndex >= 0) {
           const customerList = customers.slice();
           customerList.splice(customerIndex, 1, customerUpdated);
@@ -132,7 +146,9 @@ const CustomerPage: NextPage = () => {
   };
 
   const removeCustomer = (customerToRemove: ICustomer) => {
-    const customerIndex = customers.findIndex(customer => customer.id === customerToRemove.id);
+    const customerIndex = customers.findIndex(
+      customer => customer.id === customerToRemove.id
+    );
     if (customerIndex >= 0) {
       const newList = customers.slice();
       newList.splice(customerIndex, 1);
@@ -172,7 +188,8 @@ const CustomerPage: NextPage = () => {
             if (response?.status === 404) removeCustomer(customer);
             result.message = response?.data.message;
           } else {
-            result.message = '¡Intentalo nuevmanete mas tarde o recarga la pagina.';
+            result.message =
+              '¡Intentalo nuevmanete mas tarde o recarga la pagina.';
             console.log(error);
           }
         }
@@ -183,7 +200,9 @@ const CustomerPage: NextPage = () => {
 
     if (result.isConfirmed && result.value) {
       const { ok, message } = result.value;
-      const title = ok ? '<strong>¡Cliente Eliminado!</strong>' : '¡Ops, algo salio mal!';
+      const title = ok
+        ? '<strong>¡Cliente Eliminado!</strong>'
+        : '¡Ops, algo salio mal!';
       const icon = ok ? 'success' : 'error';
 
       Swal.fire({ title, html: message, icon });
@@ -276,19 +295,34 @@ const CustomerPage: NextPage = () => {
         registerPayment={registerPayment}
       />
 
-      <Modal opened={paymentsOpened} onClose={hidePayments} title={customer?.fullName}>
+      <Modal
+        opened={paymentsOpened}
+        onClose={hidePayments}
+        title={customer?.fullName}
+      >
         <ul className="flex flex-col gap-y-4">
           {payments.map(payment => (
-            <li key={payment.id} className="rounded-lg border border-gray-400 px-4 py-2">
+            <li
+              key={payment.id}
+              className="rounded-lg border border-gray-400 px-4 py-2"
+            >
               <div className="flex items-center justify-between gap-x-2">
                 <div className="text-sm">
-                  <p>{dayjs(payment.paymentDate).format('ddd DD-MM-YYYY hh:mm a')}</p>
+                  <p>
+                    {dayjs(payment.paymentDate).format(
+                      'ddd DD-MM-YYYY hh:mm a'
+                    )}
+                  </p>
                   <p>
                     {payment.description}{' '}
-                    <span className="text-xs text-gray-600">({dayjs(payment.paymentDate).fromNow()})</span>
+                    <span className="text-xs text-gray-600">
+                      ({dayjs(payment.paymentDate).fromNow()})
+                    </span>
                   </p>
                 </div>
-                <div className="text-sm font-bold">{currencyFormat(payment.amount)}</div>
+                <div className="text-sm font-bold">
+                  {currencyFormat(payment.amount)}
+                </div>
               </div>
             </li>
           ))}

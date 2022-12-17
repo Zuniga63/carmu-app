@@ -1,4 +1,12 @@
-import { Button, Checkbox, Drawer, NumberInput, Select, Textarea, TextInput } from '@mantine/core';
+import {
+  Button,
+  Checkbox,
+  Drawer,
+  NumberInput,
+  Select,
+  Textarea,
+  TextInput,
+} from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import DrawerBody from 'components/DrawerBody';
 import DrawerHeader from 'components/DrawerHeader';
@@ -16,7 +24,16 @@ interface Props {
   update(formData: unknown): Promise<void>;
 }
 
-const ProductForm = ({ product, categories, opened, loading, errors, close, store, update }: Props) => {
+const ProductForm = ({
+  product,
+  categories,
+  opened,
+  loading,
+  errors,
+  close,
+  store,
+  update,
+}: Props) => {
   const [formTitle, setFormTitle] = useState('Registrar Producto');
   const [btnMessage, setBtnMessage] = useState('Guardar');
   const [productCategory, setProductCategory] = useState<string | null>(null);
@@ -26,7 +43,9 @@ const ProductForm = ({ product, categories, opened, loading, errors, close, stor
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState<number | undefined>(undefined);
   const [hasDiscount, setHasDiscount] = useState(false);
-  const [priceWithDiscount, setPriceWithDiscount] = useState<number | undefined>(undefined);
+  const [priceWithDiscount, setPriceWithDiscount] = useState<
+    number | undefined
+  >(undefined);
   const [stock, setStock] = useState<number | undefined>(0);
   const [productIsNew, setProductIsNew] = useState(false);
   const [published, setPublished] = useState(false);
@@ -77,7 +96,8 @@ const ProductForm = ({ product, categories, opened, loading, errors, close, stor
     }
     if (productIsNew) formData.append('productIsNew', String(productIsNew));
     if (published) formData.append('published', String(published));
-    if (stock && stock >= 0) formData.append(!product ? 'initialStock' : 'stock', String(stock));
+    if (stock && stock >= 0)
+      formData.append(!product ? 'initialStock' : 'stock', String(stock));
     if (isInventoriable) formData.append('isInventoriable', 'true');
 
     return formData;
@@ -103,7 +123,8 @@ const ProductForm = ({ product, categories, opened, loading, errors, close, stor
         setName(product.name);
         setRef(product.ref || '');
         setBarcode(product.barcode || '');
-        if (product.categories.length > 0) setProductCategory(product.categories[0].id);
+        if (product.categories.length > 0)
+          setProductCategory(product.categories[0].id);
         setDescription(product.description || '');
         setPrice(product.price);
         setHasDiscount(Boolean(product.hasDiscount));
@@ -164,7 +185,9 @@ const ProductForm = ({ product, categories, opened, loading, errors, close, stor
 
               {/* BARCODE */}
               <TextInput
-                label={<span className="font-sans dark:text-light">Codigo</span>}
+                label={
+                  <span className="font-sans dark:text-light">Codigo</span>
+                }
                 placeholder="Escribe el codigo aquí."
                 id="productBarcode"
                 value={barcode}
@@ -176,19 +199,26 @@ const ProductForm = ({ product, categories, opened, loading, errors, close, stor
 
             {/* CATEGORY */}
             <Select
-              label={<span className="font-sans dark:text-light">Categoría</span>}
+              label={
+                <span className="font-sans dark:text-light">Categoría</span>
+              }
               placeholder="Selecciona una"
               className="mb-2"
               value={productCategory}
               clearable
               onChange={setProductCategory}
-              data={categories.map(category => ({ value: category.id, label: category.name }))}
+              data={categories.map(category => ({
+                value: category.id,
+                label: category.name,
+              }))}
               error={errors?.['categoryIds.0']?.message}
             />
 
             {/* DESCRIPTION */}
             <Textarea
-              label={<span className="font-sans dark:text-light">Descripción</span>}
+              label={
+                <span className="font-sans dark:text-light">Descripción</span>
+              }
               id="productDescription"
               placeholder="Describe el producto aquí."
               className="mb-2"
@@ -203,7 +233,9 @@ const ProductForm = ({ product, categories, opened, loading, errors, close, stor
               {/* PRICE AND CHECK */}
               <div className=" flex flex-col">
                 <NumberInput
-                  label={<span className="font-sans dark:text-light">Precio</span>}
+                  label={
+                    <span className="font-sans dark:text-light">Precio</span>
+                  }
                   id="productPrice"
                   required
                   placeholder="Escribe el precio aquí."
@@ -222,17 +254,27 @@ const ProductForm = ({ product, categories, opened, loading, errors, close, stor
 
                 {/* HAS DISCOUNT */}
                 <Checkbox
-                  label={<span className="font-sans dark:text-light">Tiene descuento</span>}
+                  label={
+                    <span className="font-sans dark:text-light">
+                      Tiene descuento
+                    </span>
+                  }
                   size="xs"
                   checked={hasDiscount}
-                  onChange={({ currentTarget }) => setHasDiscount(currentTarget.checked)}
+                  onChange={({ currentTarget }) =>
+                    setHasDiscount(currentTarget.checked)
+                  }
                   disabled={loading}
                 />
               </div>
 
               {/* PRICE WITH DISCOUNT */}
               <NumberInput
-                label={<span className="font-sans dark:text-light">Precio con descuento</span>}
+                label={
+                  <span className="font-sans dark:text-light">
+                    Precio con descuento
+                  </span>
+                }
                 id="productPriceWithDiscount"
                 required
                 placeholder="Escribe el precio aquí."
@@ -252,7 +294,11 @@ const ProductForm = ({ product, categories, opened, loading, errors, close, stor
 
             {/* STOCK */}
             <NumberInput
-              label={<span className="font-sans dark:text-light">Unidades en stock</span>}
+              label={
+                <span className="font-sans dark:text-light">
+                  Unidades en stock
+                </span>
+              }
               id="productStock"
               placeholder="Escribe las unidades en stock"
               className="mb-4"
@@ -270,21 +316,33 @@ const ProductForm = ({ product, categories, opened, loading, errors, close, stor
               <Checkbox
                 label={<span className="font-sans dark:text-light">Nuevo</span>}
                 checked={published}
-                onChange={({ currentTarget }) => setPublished(currentTarget.checked)}
+                onChange={({ currentTarget }) =>
+                  setPublished(currentTarget.checked)
+                }
                 disabled={loading}
               />
 
               <Checkbox
-                label={<span className="font-sans dark:text-light">Publicar</span>}
+                label={
+                  <span className="font-sans dark:text-light">Publicar</span>
+                }
                 checked={productIsNew}
-                onChange={({ currentTarget }) => setProductIsNew(currentTarget.checked)}
+                onChange={({ currentTarget }) =>
+                  setProductIsNew(currentTarget.checked)
+                }
                 disabled={loading}
               />
 
               <Checkbox
-                label={<span className="font-sans dark:text-light">Es inventariable</span>}
+                label={
+                  <span className="font-sans dark:text-light">
+                    Es inventariable
+                  </span>
+                }
                 checked={isInventoriable}
-                onChange={({ currentTarget }) => setIsInventoriable(currentTarget.checked)}
+                onChange={({ currentTarget }) =>
+                  setIsInventoriable(currentTarget.checked)
+                }
                 disabled={loading}
               />
             </div>

@@ -3,7 +3,11 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/es-do';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import type { AppProps } from 'next/app';
-import { ColorScheme, ColorSchemeProvider, MantineProvider } from '@mantine/core';
+import {
+  ColorScheme,
+  ColorSchemeProvider,
+  MantineProvider,
+} from '@mantine/core';
 import { ToastContainer } from 'react-toastify';
 
 // For route progress with NProgress
@@ -93,7 +97,10 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
+    <ColorSchemeProvider
+      colorScheme={colorScheme}
+      toggleColorScheme={toggleColorScheme}
+    >
       <MantineProvider
         withGlobalStyles
         theme={{

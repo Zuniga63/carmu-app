@@ -2,7 +2,10 @@ import { NextPage } from 'next';
 import Layout from 'components/Layout';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { useEffect } from 'react';
-import { fetchInvoiceData, openCounterSaleForm } from 'store/reducers/InvoicePage/creators';
+import {
+  fetchInvoiceData,
+  openCounterSaleForm,
+} from 'store/reducers/InvoicePage/creators';
 import InvoiceList from 'components/InvoicePage/InvoiceList';
 import InvoiceForm from 'components/InvoicePage/InvoiceForm';
 import InvoicePaymentForm from 'components/InvoicePage/InvoicePaymentForm';
@@ -31,7 +34,10 @@ const InvoicePage: NextPage = () => {
           <WeeklyInvoiceChart />
         </div>
         <div className="fixed right-4 bottom-4 hidden lg:block">
-          <Button leftIcon={<IconFileInvoice />} onClick={() => dispatch(openCounterSaleForm())}>
+          <Button
+            leftIcon={<IconFileInvoice />}
+            onClick={() => dispatch(openCounterSaleForm())}
+          >
             Ventas por mostrador
           </Button>
         </div>

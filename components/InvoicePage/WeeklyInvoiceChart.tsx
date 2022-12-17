@@ -41,7 +41,8 @@ export const barOptions: ChartOptions<'bar'> = {
           let label = context.dataset.label || '';
 
           if (label) label += ': ';
-          if (context.parsed.y !== null) label += currencyFormat(context.parsed.y);
+          if (context.parsed.y !== null)
+            label += currencyFormat(context.parsed.y);
 
           return label;
         },
@@ -51,9 +52,13 @@ export const barOptions: ChartOptions<'bar'> = {
 };
 
 const WeeklyInvoiceChart = () => {
-  const { storeSuccess, storePaymentSuccess, refreshIsSuccess } = useAppSelector(state => state.InvoicePageReducer);
+  const { storeSuccess, storePaymentSuccess, refreshIsSuccess } =
+    useAppSelector(state => state.InvoicePageReducer);
   const { isAuth } = useAppSelector(state => state.AuthReducer);
-  const [chartData, setChartData] = useState<ChartData<'bar'>>({ labels: [], datasets: [] });
+  const [chartData, setChartData] = useState<ChartData<'bar'>>({
+    labels: [],
+    datasets: [],
+  });
   const [history, setHistory] = useState<ISaleHistory[]>([]);
   const [initialData, setInitialData] = useState(true);
   const [waiting, setWaiting] = useState(false);
@@ -167,12 +172,15 @@ const WeeklyInvoiceChart = () => {
 
     try {
       setWaiting(true);
-      const res = await axios.get<{ history: ISaleHistory[] }>('/sale-history', {
-        cancelToken: source?.token,
-        params: {
-          from: weekAgo.toDate(),
-        },
-      });
+      const res = await axios.get<{ history: ISaleHistory[] }>(
+        '/sale-history',
+        {
+          cancelToken: source?.token,
+          params: {
+            from: weekAgo.toDate(),
+          },
+        }
+      );
 
       datasets = getDatasets(res.data.history);
       setHistory(res.data.history.reverse());
@@ -188,7 +196,10 @@ const WeeklyInvoiceChart = () => {
   };
 
   useEffect(() => {
-    if (isAuth && (storeSuccess || storePaymentSuccess || refreshIsSuccess || initialData)) {
+    if (
+      isAuth &&
+      (storeSuccess || storePaymentSuccess || refreshIsSuccess || initialData)
+    ) {
       if (waiting) source.cancel('El estado cambió');
       source = CancelToken.source();
       fetchData();
@@ -223,18 +234,25 @@ const WeeklyInvoiceChart = () => {
 
           <ul className="mx-auto w-10/12 text-sm">
             <li className="mb-4 rounded-lg bg-gray-300 px-4 py-2 dark:bg-header">
-              <span className="font-bold text-indigo-600">Facturado</span>: Corresponde a la suma de los valores de
-              todas las facturas tanto por <strong className="font-bold text-emerald-500">venta directa</strong> y{' '}
-              <strong className="font-bold text-red-600">créditos</strong> junto con los pagos individuales de cada uno
-              de los <strong className="font-bold text-cyan-500">apartados</strong>.
+              <span className="font-bold text-indigo-600">Facturado</span>:
+              Corresponde a la suma de los valores de todas las facturas tanto
+              por{' '}
+              <strong className="font-bold text-emerald-500">
+                venta directa
+              </strong>{' '}
+              y <strong className="font-bold text-red-600">créditos</strong>{' '}
+              junto con los pagos individuales de cada uno de los{' '}
+              <strong className="font-bold text-cyan-500">apartados</strong>.
             </li>
             <li className="rounded-lg bg-gray-300 px-4 py-2 dark:bg-header">
-              <span className="font-bold text-emerald-600">Efectivo</span>: Es la suma de los{' '}
-              <strong className="font-bold">importes</strong> en efectivo de cada una de las facturas,{' '}
+              <span className="font-bold text-emerald-600">Efectivo</span>: Es
+              la suma de los <strong className="font-bold">importes</strong> en
+              efectivo de cada una de las facturas,{' '}
               <span className="underline">los pagos iniciales</span> de los{' '}
               <strong className="font-bold text-red-600">créditos</strong>,{' '}
-              <span className="underline">los pagos iniciales</span> y abonos de los{' '}
-              <strong className="font-bold text-cyan-500">apartados</strong>.
+              <span className="underline">los pagos iniciales</span> y abonos de
+              los <strong className="font-bold text-cyan-500">apartados</strong>
+              .
             </li>
           </ul>
         </div>

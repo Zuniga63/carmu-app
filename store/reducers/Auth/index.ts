@@ -1,5 +1,12 @@
 import { IAction, IAuthState, IUser } from 'types';
-import { SET_ERROR, USER_IS_AUTH, LOADING, LOGIN_IS_SUCCESS, SET_USER, LOGOUT } from './actions';
+import {
+  SET_ERROR,
+  USER_IS_AUTH,
+  LOADING,
+  LOGIN_IS_SUCCESS,
+  SET_USER,
+  LOGOUT,
+} from './actions';
 
 const initialState: IAuthState = {
   isAuth: false,
@@ -10,7 +17,10 @@ const initialState: IAuthState = {
   loginIsSuccess: false,
 };
 
-export default function AuthReducer(state = initialState, action: IAction): IAuthState {
+export default function AuthReducer(
+  state = initialState,
+  action: IAction
+): IAuthState {
   switch (action.type) {
     case LOADING: {
       return {

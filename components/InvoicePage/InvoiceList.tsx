@@ -1,15 +1,27 @@
-import { ActionIcon, Button, Loader, ScrollArea, SegmentedControl, TextInput } from '@mantine/core';
+import {
+  ActionIcon,
+  Button,
+  Loader,
+  ScrollArea,
+  SegmentedControl,
+  TextInput,
+} from '@mantine/core';
 import { IconFileInvoice, IconReload, IconSearch } from '@tabler/icons';
 import React, { useEffect, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { fetchInvoiceData, openNewInvoiceForm } from 'store/reducers/InvoicePage/creators';
+import {
+  fetchInvoiceData,
+  openNewInvoiceForm,
+} from 'store/reducers/InvoicePage/creators';
 import { IInvoice } from 'types';
 import { normalizeText } from 'utils';
 import InvoiceListItem from './InvoiceListItem';
 import InvoiceRated from './InvoiceRated';
 
 const InvoiceList = () => {
-  const { invoices, loading: loadingData } = useAppSelector(state => state.InvoicePageReducer);
+  const { invoices, loading: loadingData } = useAppSelector(
+    state => state.InvoicePageReducer
+  );
   const dispatch = useAppDispatch();
   const growRate = 25;
 
@@ -95,18 +107,30 @@ const InvoiceList = () => {
   return (
     <div className="relative rounded bg-gray-300 px-3 pt-4 pb-2 dark:bg-header">
       <div className="absolute top-2 right-2">
-        <ActionIcon loading={loadingData} color="blue" onClick={() => dispatch(fetchInvoiceData())}>
+        <ActionIcon
+          loading={loadingData}
+          color="blue"
+          onClick={() => dispatch(fetchInvoiceData())}
+        >
           <IconReload size={18} />
         </ActionIcon>
       </div>
       <header className="mb-2 px-2">
-        <h2 className="mb-2 text-center text-xl font-bold tracking-widest text-dark dark:text-light">Facturas</h2>
+        <h2 className="mb-2 text-center text-xl font-bold tracking-widest text-dark dark:text-light">
+          Facturas
+        </h2>
 
         {/* SEARCH AND NEW INVOICE */}
         <div className="mb-2 flex gap-x-3">
           <TextInput
             size="xs"
-            icon={loading ? <Loader size={14} variant="dots" /> : <IconSearch size={14} stroke={1.5} />}
+            icon={
+              loading ? (
+                <Loader size={14} variant="dots" />
+              ) : (
+                <IconSearch size={14} stroke={1.5} />
+              )
+            }
             placeholder="Buscar Factura"
             className="flex-grow"
             onChange={({ target }) => updateSearch(target.value)}
@@ -151,9 +175,12 @@ const InvoiceList = () => {
               {invoiceList.map(invoice => (
                 <InvoiceListItem key={invoice.id} invoice={invoice} />
               ))}
-              {Boolean(filteredInvoices.length && !loadingData) && invoiceLegth <= filteredInvoices.length + 1 && (
-                <Button onClick={showMoreInvoices}>Mostrar más facturas</Button>
-              )}
+              {Boolean(filteredInvoices.length && !loadingData) &&
+                invoiceLegth <= filteredInvoices.length + 1 && (
+                  <Button onClick={showMoreInvoices}>
+                    Mostrar más facturas
+                  </Button>
+                )}
             </div>
           </ScrollArea>
         )}

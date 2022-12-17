@@ -26,7 +26,9 @@ export default function Layout({ title, children }: Props) {
           <div className="h-full flex-grow overflow-y-auto transition-all duration-200">
             <ScrollArea className="h-full">
               {/* 208 px is the width of sidebar in xl */}
-              <main className="w-screen xl:w-[calc(100vw-208px)]">{children}</main>
+              <main className="w-screen xl:w-[calc(100vw-208px)]">
+                {children}
+              </main>
             </ScrollArea>
           </div>
         </div>

@@ -7,7 +7,11 @@ import CustomButton from 'components/CustomButton';
 import { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { hideCategoryForm, storeNewCategory, updateCategory } from 'store/reducers/CategoryPage/creators';
+import {
+  hideCategoryForm,
+  storeNewCategory,
+  updateCategory,
+} from 'store/reducers/CategoryPage/creators';
 import DrawerHeader from 'components/DrawerHeader';
 import DrawerBody from 'components/DrawerBody';
 
@@ -78,7 +82,10 @@ export default function CategoryForm() {
 
   useEffect(() => {
     if (storeIsSuccess || updateIsSuccess) {
-      if (updateIsSuccess) toast.success(`La categoría "${categoryToUpdate?.name}" fue actualizada`);
+      if (updateIsSuccess)
+        toast.success(
+          `La categoría "${categoryToUpdate?.name}" fue actualizada`
+        );
       else toast.success('¡Categoría guardada con éxito!');
       close();
     }
@@ -95,7 +102,8 @@ export default function CategoryForm() {
         const { response } = error;
         if (response?.data) {
           if (response.status === 422) {
-            if (response.data.validationErrors) setErrors(response.data.validationErrors);
+            if (response.data.validationErrors)
+              setErrors(response.data.validationErrors);
           } else if (response.status === 401) {
             toast.error(response.data.message);
           } else {
@@ -118,7 +126,10 @@ export default function CategoryForm() {
       position="left"
     >
       <>
-        <DrawerHeader title={!isUpdate ? 'Nueva Categoría' : String(categoryToUpdate?.name)} onClose={close} />
+        <DrawerHeader
+          title={!isUpdate ? 'Nueva Categoría' : String(categoryToUpdate?.name)}
+          onClose={close}
+        />
         <DrawerBody>
           <form onSubmit={submitHandler}>
             <div className="mx-auto mb-4 w-11/12">
@@ -134,7 +145,9 @@ export default function CategoryForm() {
               />
 
               <Textarea
-                label={<span className="font-sans text-light">Descripción</span>}
+                label={
+                  <span className="font-sans text-light">Descripción</span>
+                }
                 placeholder="Escribe una descripción aqui."
                 value={description}
                 onChange={({ target }) => setDescription(target.value)}
@@ -151,7 +164,9 @@ export default function CategoryForm() {
               <CustomButton disabled={loading} type="submit">
                 <div className="flex items-center gap-x-2">
                   <IconDatabase size={16} />{' '}
-                  <span className="text-base">{isUpdate ? <span>Actualizar</span> : <span>Guardar</span>}</span>
+                  <span className="text-base">
+                    {isUpdate ? <span>Actualizar</span> : <span>Guardar</span>}
+                  </span>
                 </div>
               </CustomButton>
             </footer>

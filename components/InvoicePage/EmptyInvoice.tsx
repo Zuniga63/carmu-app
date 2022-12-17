@@ -13,7 +13,9 @@ const EmptyInvoice = ({ loading, error }: Props) => {
       {loading ? (
         <div className="flex items-center gap-x-2">
           <Loader size={30} color="dark"></Loader>
-          <p className="animate-pulse text-light">Recuperando la información...</p>
+          <p className="animate-pulse text-light">
+            Recuperando la información...
+          </p>
         </div>
       ) : null}
       {error && !loading ? (

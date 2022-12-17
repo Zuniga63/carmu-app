@@ -16,7 +16,9 @@ ChartJS.register();
 dayjs.extend(isLeapYear);
 
 const Home: NextPage = () => {
-  const { isAuth, loginIsSuccess, user, isAdmin } = useAppSelector(state => state.AuthReducer);
+  const { isAuth, loginIsSuccess, user, isAdmin } = useAppSelector(
+    state => state.AuthReducer
+  );
   const router = useRouter();
   const firtsRenderRef = useRef(true);
 
@@ -43,10 +45,12 @@ const Home: NextPage = () => {
     <Layout title="Dashboard">
       <div className="px-4 pb-40 lg:px-8">
         <div className="mb-2 flex flex-col items-center justify-center py-8 text-dark dark:text-light">
-          <h1 className="m-0 text-center text-2xl leading-tight">Bienvenido {user?.name}</h1>
+          <h1 className="m-0 text-center text-2xl leading-tight">
+            Bienvenido {user?.name}
+          </h1>
           <p className="mt-4 text-center text-sm leading-tight">
-            Sección en continua actualización, actualmente se encuentra implementado el flujo de caja y el flujo de
-            ventas.
+            Sección en continua actualización, actualmente se encuentra
+            implementado el flujo de caja y el flujo de ventas.
           </p>
         </div>
         {isAdmin && (
