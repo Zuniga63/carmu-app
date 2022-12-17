@@ -12,7 +12,7 @@ const buildPrettierCommand = filenames =>
 
 module.exports = {
   // Type check TypeScript files
-  '**/*.(ts|tsx)': () => 'yarn tsc --noEmit',
+  '**/*.(ts|tsx)': () => 'pnpm tsc --noEmit',
 
   // Lint & Prettify TS and JS files
   '*.{js,jsx,ts,tsx}': [buildEslintCommand, buildPrettierCommand],
