@@ -45,7 +45,7 @@ const CustomerTableItem = ({ customer, mount, onDelete, mountToPayment, paymentL
       if (backlog >= 28) {
         if (backlog <= 45) className = 'text-amber-500';
         else if (backlog <= 90) className = 'text-red-500';
-        else className = 'text-indigo-500';
+        else className = 'text-purple-500';
       }
 
       if (debtAge > 3) {
