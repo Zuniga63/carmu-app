@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Loader, ScrollArea, TextInput } from '@mantine/core';
+import { Button, Loader, ScrollArea, Switch, TextInput } from '@mantine/core';
 import { ICustomer } from 'types';
 import CustomerTableItem from './CustomerTableItem';
 import { IconRefresh, IconSearch, IconWriting } from '@tabler/icons';
 import { normalizeText } from 'utils';
+import dayjs from 'dayjs';
 
 interface Props {
   customers: ICustomer[];
@@ -30,8 +31,14 @@ const CustomerTable = ({
 }: Props) => {
   const [search, setSearch] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
+  const [onlyCustomerWithDebt, setOnlyCustomerWithDebt] = useState(false);
+  const [sortByBalance, setSortByBalance] = useState(false);
+  const [reverse, setReverse] = useState(false);
+  const [sortByRecentPayment, setSortByRecentPayment] = useState(false);
   const [filteredCustomers, setFilteredCustomers] = useState<ICustomer[]>([]);
   const debounceInterval = useRef<undefined | NodeJS.Timeout>(undefined);
+  const [show, setShow] = useState(10);
+  const [customerList, setCustomerList] = useState<ICustomer[]>([]);
 
   const updateSearch = (value: string) => {
     if (debounceInterval.current) clearTimeout(debounceInterval.current);
@@ -42,36 +49,99 @@ const CustomerTable = ({
     }, 250);
   };
 
-  const filterCustomers = () => {
-    let result = customers.slice();
-    if (search) {
-      result = result.filter(customer => {
-        const text = normalizeText([customer.fullName, customer.documentNumber || ''].join(' ').trim());
-        return text.includes(normalizeText(search));
+  const filterCustomers = async () => {
+    const result = customers.slice().filter(customer => {
+      let isOk = true;
+      if (onlyCustomerWithDebt) isOk = Boolean(customer.balance);
+
+      if (isOk && search) {
+        const text = normalizeText([customer.fullName, customer.documentNumber || '', customer.alias].join(' ').trim());
+        isOk = text.includes(normalizeText(search));
+      }
+
+      return isOk;
+    });
+
+    if (sortByBalance) {
+      result.sort((currentCustomer, lastCustomer) => {
+        let result = 0;
+
+        if (!currentCustomer.balance) result = -1;
+        else if (!lastCustomer.balance) result = 1;
+        else if (currentCustomer.balance < lastCustomer.balance) result = -1;
+        else if (currentCustomer.balance > lastCustomer.balance) result = 1;
+
+        if (reverse) result *= -1;
+
+        return result;
+      });
+    }
+
+    if (sortByRecentPayment) {
+      result.sort((currentCustomer, lastCustomer) => {
+        let result = 0;
+
+        const currentCustomerDiff = dayjs().diff(currentCustomer.lastPayment || currentCustomer.firstPendingInvoice);
+
+        const lastCustomerDiff = dayjs().diff(lastCustomer.lastPayment || lastCustomer.firstPendingInvoice);
+
+        if (currentCustomerDiff < lastCustomerDiff) result = -1;
+        else if (currentCustomerDiff > lastCustomerDiff) result = 1;
+
+        if (reverse) result *= -1;
+
+        return result;
       });
     }
 
     setFilteredCustomers(result);
+    setShow(10);
   };
 
   useEffect(() => {
     filterCustomers();
-  }, [customers, search]);
+  }, [customers, search, onlyCustomerWithDebt, sortByBalance, reverse, sortByRecentPayment]);
+
+  useEffect(() => {
+    setCustomerList(filteredCustomers.slice(0, show));
+  }, [filteredCustomers, show]);
 
   return (
     <div className="mx-auto w-11/12 pt-4 text-dark dark:text-light">
       <header className="relative rounded-t-md bg-gray-300 px-6 pt-2 pb-4 dark:bg-header">
         <h2 className="mb-4 text-center text-xl font-bold tracking-wider">Listado de Clientes</h2>
-        <div className="grid grid-cols-3">
-          <TextInput
-            size="sm"
-            icon={loading ? <Loader size={14} variant="dots" /> : <IconSearch size={14} stroke={1.5} />}
-            placeholder="Buscar Cliente"
-            className="col-span-3 flex-grow lg:col-span-1"
-            onChange={({ target }) => updateSearch(target.value)}
-            onFocus={({ target }) => {
-              target.select();
-            }}
+        <TextInput
+          size="sm"
+          icon={loading ? <Loader size={14} variant="dots" /> : <IconSearch size={14} stroke={1.5} />}
+          placeholder="Buscar Cliente"
+          className="col-span-3 flex-grow lg:col-span-1"
+          onChange={({ target }) => updateSearch(target.value)}
+          onFocus={({ target }) => {
+            target.select();
+          }}
+        />
+        <div className="flex gap-x-2">
+          {/* Customer With Debt */}
+          <Switch
+            label="Clientes con saldo"
+            checked={onlyCustomerWithDebt}
+            onChange={({ currentTarget }) => setOnlyCustomerWithDebt(currentTarget.checked)}
+          />
+          <Switch
+            label="Ordenados por saldo"
+            checked={sortByBalance}
+            onChange={({ currentTarget }) => setSortByBalance(currentTarget.checked)}
+          />
+          <Switch
+            label="Ordenar por fecha ultimo pago"
+            checked={sortByRecentPayment}
+            onChange={({ currentTarget }) => setSortByRecentPayment(currentTarget.checked)}
+          />
+          <Switch
+            label="Invertir orden"
+            checked={reverse}
+            disabled={!sortByBalance && !sortByRecentPayment}
+            onChange={({ currentTarget }) => setReverse(currentTarget.checked)}
           />
         </div>
 
@@ -106,7 +176,7 @@ const CustomerTable = ({
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-              {filteredCustomers.map(customer => (
+              {customerList.map(customer => (
                 <CustomerTableItem
                   customer={customer}
                   key={customer.id}
@@ -119,6 +189,13 @@ const CustomerTable = ({
               ))}
             </tbody>
           </table>
+          {filteredCustomers.length > 0 && show < filteredCustomers.length ? (
+            <div className="mx-auto w-1/2 py-4">
+              <Button className="w-full" fullWidth onClick={() => setShow(current => current + 25)}>
+                Mostrar mas Clientes
+              </Button>
+            </div>
+          ) : null}
         </ScrollArea>
       ) : (
         <div className="flex h-96 animate-pulse items-center justify-center">

@@ -35,31 +35,24 @@ const CustomerTableItem = ({ customer, mount, onDelete, mountToPayment, paymentL
     let className = 'text-green-500';
 
     if (customer.balance && customer.balance > 0) {
-      const date = customer.lastPayment ? dayjs(customer.lastPayment) : dayjs(customer.firstPendingInvoice);
+      const lastPayment = customer.lastPayment ? dayjs(customer.lastPayment) : null;
+      const firstInvoice = dayjs(customer.firstPendingInvoice);
+      const effectiveDate = lastPayment || firstInvoice;
       const now = dayjs();
-      const backlogLevel = now.diff(date, 'days') / now.daysInMonth();
+      const backlog = now.diff(effectiveDate, 'days');
+      const debtAge = now.diff(firstInvoice, 'month');
 
-      if (backlogLevel > 0.8) {
-        if (backlogLevel <= 1) {
-          className = 'text-amber-400';
-        } else if (backlogLevel < 3) {
-          Icon = IconAlertCircle;
-          className = 'text-amber-400';
-
-          if (backlogLevel > 2 && backlogLevel <= 2.8) {
-            className = 'text-orange-500';
-          } else if (backlogLevel > 2.8) {
-            className = 'text-red-500';
-          }
-        } else if (backlogLevel < 6) {
-          Icon = IconCircleX;
-          className = 'text-red-500';
-        } else {
-          Icon = IconSkull;
-          className = 'text-dark dark:text-purple-800';
-        }
+      if (backlog >= 28) {
+        if (backlog <= 45) className = 'text-amber-500';
+        else if (backlog <= 90) className = 'text-red-500';
+        else className = 'text-indigo-500';
       }
-      console.log(customer.fullName, backlogLevel);
+
+      if (debtAge > 3) {
+        if (debtAge <= 6) Icon = IconAlertCircle;
+        else if (debtAge <= 9) Icon = IconCircleX;
+        else Icon = IconSkull;
+      }
     }
 
     setCustomerState(<Icon size={size} className={className} />);
