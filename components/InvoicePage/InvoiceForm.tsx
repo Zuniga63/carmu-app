@@ -271,7 +271,9 @@ const InvoiceForm = () => {
             </Button>
           ) : (
             <Button onClick={checkIn} rightIcon={<IconDatabase />} loading={loading} disabled={!enabled}>
-              Guardar
+              {isSeparate ? <span>Registrar Apartado</span> : null}
+              {!isSeparate && summary.balance ? <span>Registrar Crédito</span> : null}
+              {!isSeparate && !summary.balance ? <span>Registrar Venta</span> : null}
             </Button>
           )}
         </div>
