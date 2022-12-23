@@ -7,7 +7,8 @@
   "bracketSameLine": false,
   "bracketSpacing": true,
   "tabWidth": 2,
-  "printWidth": 120,
+  "printWidth": 80,
   "endOfLine": "lf",
-  "semi": true
+  "semi": true,
+  "plugins": ["prettier-plugin-tailwindcss"]
 }
