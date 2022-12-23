@@ -11,6 +11,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import {
   fetchInvoiceData,
   invoicePageSelector,
+  showCounterSaleForm,
   showNewInvoiceForm,
 } from 'src/features/InvoicePage';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
@@ -108,47 +109,36 @@ const InvoiceList = () => {
 
   return (
     <div className="relative rounded bg-gray-300 px-3 pt-4 pb-2 dark:bg-header">
-      <div className="absolute top-2 right-2">
-        <ActionIcon
-          loading={loadingData}
-          color="blue"
-          onClick={() => dispatch(fetchInvoiceData())}
-        >
-          <IconReload size={18} />
-        </ActionIcon>
+      <div className="absolute top-4 right-2">
+        <div className="flex items-center">
+          <ActionIcon
+            loading={loadingData}
+            color="blue"
+            onClick={() => dispatch(fetchInvoiceData())}
+          >
+            <IconReload size={18} />
+          </ActionIcon>
+        </div>
       </div>
       <header className="mb-2 px-2">
         <h2 className="mb-2 text-center text-xl font-bold tracking-widest text-dark dark:text-light">
           Facturas
         </h2>
 
-        {/* SEARCH AND NEW INVOICE */}
-        <div className="mb-2 flex gap-x-3">
-          <TextInput
-            size="xs"
-            icon={
-              loading ? (
-                <Loader size={14} variant="dots" />
-              ) : (
-                <IconSearch size={14} stroke={1.5} />
-              )
-            }
-            placeholder="Buscar Factura"
-            className="flex-grow"
-            onChange={({ target }) => updateSearch(target.value)}
-          />
-
-          <Button
-            className="flex-shrink-0"
-            size="xs"
-            leftIcon={<IconFileInvoice size={16} />}
-            onClick={() => dispatch(showNewInvoiceForm())}
-          >
-            Nueva
-          </Button>
-        </div>
-
         {/* FILTERS */}
+        <TextInput
+          size="xs"
+          icon={
+            loading ? (
+              <Loader size={14} variant="dots" />
+            ) : (
+              <IconSearch size={14} stroke={1.5} />
+            )
+          }
+          placeholder="Buscar Factura"
+          className="mb-2"
+          onChange={({ target }) => updateSearch(target.value)}
+        />
         <SegmentedControl
           size="xs"
           value={filter}
@@ -194,6 +184,26 @@ const InvoiceList = () => {
         separated={separatedInvoices.length}
         canceled={canceledInvoices.length}
       />
+
+      <div className="mt-2 flex justify-center gap-x-4">
+        <Button
+          className="flex-shrink-0"
+          size="xs"
+          leftIcon={<IconFileInvoice size={16} />}
+          onClick={() => dispatch(showCounterSaleForm())}
+        >
+          Fact. Rapida
+        </Button>
+        <Button
+          className="flex-shrink-0"
+          size="xs"
+          leftIcon={<IconFileInvoice size={16} />}
+          onClick={() => dispatch(showNewInvoiceForm())}
+          color="green"
+        >
+          Fact. Normal
+        </Button>
+      </div>
     </div>
   );
 };
