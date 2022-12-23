@@ -1,28 +1,24 @@
-import {
-  legacy_createStore as createStore,
-  combineReducers,
-  applyMiddleware,
-} from 'redux';
-import { composeWithDevTools } from '@redux-devtools/extension';
-import thunkMiddleware from 'redux-thunk';
-import { createWrapper } from 'next-redux-wrapper';
-import AuthReducer from './reducers/Auth';
-import CategoryPageReducer from './reducers/CategoryPage';
-import BoxPageReducer from './reducers/BoxPage';
-import InvoicePageReducer from './reducers/InvoicePage';
+import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
+import { authReducer } from 'src/features/Auth';
+import { boxPageReducer } from 'src/features/BoxPage';
+import { categoryPageReducer } from 'src/features/CategoryPage';
+import { invoicePageReducer } from 'src/features/InvoicePage';
 
-const rootReducer = combineReducers({
-  AuthReducer,
-  CategoryPageReducer,
-  BoxPageReducer,
-  InvoicePageReducer,
+export const store = configureStore({
+  reducer: {
+    auth: authReducer,
+    categoryPage: categoryPageReducer,
+    boxPage: boxPageReducer,
+    invoicePage: invoicePageReducer,
+  },
 });
-export type RootState = ReturnType<typeof rootReducer>;
 
-export const store = createStore(
-  rootReducer,
-  composeWithDevTools(applyMiddleware(thunkMiddleware))
-);
+export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<typeof store.getState>;
 
-const makeStore = () => store;
-export const wrapper = createWrapper(makeStore);
+export type AppThunk<ReturnType = void> = ThunkAction<
+  ReturnType,
+  RootState,
+  unknown,
+  Action<string>
+>;

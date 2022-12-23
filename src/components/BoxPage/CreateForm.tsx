@@ -1,10 +1,13 @@
 import { Button, Modal, TextInput } from '@mantine/core';
 import { IconDeviceFloppy } from '@tabler/icons';
-import { AxiosError } from 'axios';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import {
+  boxPageSelector,
+  hideCreateForm,
+  storeBox,
+} from 'src/features/BoxPage';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import { closeCreateForm, storeBox } from 'src/store/reducers/BoxPage/creators';
 import { IValidationErrors } from 'src/types';
 
 const CreateForm = () => {
@@ -17,7 +20,7 @@ const CreateForm = () => {
     storeBoxLoading: loading,
     storeBoxIsSuccess: isSuccess,
     storeBoxError: error,
-  } = useAppSelector(state => state.BoxPageReducer);
+  } = useAppSelector(boxPageSelector);
 
   const dispatch = useAppDispatch();
 
@@ -33,25 +36,17 @@ const CreateForm = () => {
     if (isSuccess) {
       toast.success(`¡La caja ${name} fue creada con éxito!`);
       setName('');
-      dispatch(closeCreateForm());
+      dispatch(hideCreateForm());
     }
   }, [isSuccess]);
 
   useEffect(() => {
     if (error) {
-      if (error instanceof AxiosError) {
-        const { response } = error;
-        const data = response?.data;
-
-        if (data) {
-          if (response.status === 422 && data.validationErrors) {
-            setErrors(data.validationErrors);
-          } else if (response.status === 401) {
-            toast.error(response.data.message);
-          } else {
-            console.log(error);
-          }
-        }
+      const { data, status } = error;
+      if (status === 422 && data.validationErrors) {
+        setErrors(data.validationErrors);
+      } else if (status === 401) {
+        toast.error(data.message);
       } else {
         console.log(error);
       }
@@ -65,7 +60,7 @@ const CreateForm = () => {
     if (!loading) {
       setName('');
       setErrors(null);
-      dispatch(closeCreateForm());
+      dispatch(hideCreateForm());
     }
   };
 

@@ -4,16 +4,19 @@ import { Drawer, Textarea, TextInput } from '@mantine/core';
 import { IconDatabase } from '@tabler/icons';
 import { IValidationErrors } from 'src/types';
 import CustomButton from 'src/components/CustomButton';
-import { AxiosError } from 'axios';
+import { AxiosResponse } from 'axios';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import {
-  hideCategoryForm,
-  storeNewCategory,
-  updateCategory,
-} from 'src/store/reducers/CategoryPage/creators';
 import DrawerHeader from 'src/components/DrawerHeader';
 import DrawerBody from 'src/components/DrawerBody';
+import {
+  categoryPageSelector,
+  hideCategoryForm,
+  setStoreIsSuccess,
+  setUpdateIsSuccess,
+  storeCategory,
+  updateCategory,
+} from 'src/features/CategoryPage';
 
 export default function CategoryForm() {
   //---------------------------------------------------------------------------
@@ -27,7 +30,7 @@ export default function CategoryForm() {
     updateError,
     storeIsSuccess,
     updateIsSuccess,
-  } = useAppSelector(state => state.CategoryPageReducer);
+  } = useAppSelector(categoryPageSelector);
   const dispatch = useAppDispatch();
 
   const [name, setName] = useState('');
@@ -63,8 +66,10 @@ export default function CategoryForm() {
     e.preventDefault();
     const formData = getData();
 
-    if (categoryToUpdate) dispatch(updateCategory(categoryToUpdate, formData));
-    else dispatch(storeNewCategory(formData));
+    if (categoryToUpdate) {
+      const arg = { category: categoryToUpdate, data: formData };
+      dispatch(updateCategory(arg));
+    } else dispatch(storeCategory(formData));
   };
 
   //---------------------------------------------------------------------------
@@ -82,11 +87,15 @@ export default function CategoryForm() {
 
   useEffect(() => {
     if (storeIsSuccess || updateIsSuccess) {
-      if (updateIsSuccess)
+      if (updateIsSuccess) {
         toast.success(
           `La categoría "${categoryToUpdate?.name}" fue actualizada`
         );
-      else toast.success('¡Categoría guardada con éxito!');
+        dispatch(setUpdateIsSuccess(false));
+      } else {
+        toast.success('¡Categoría guardada con éxito!');
+        dispatch(setStoreIsSuccess(false));
+      }
       close();
     }
   }, [storeIsSuccess, updateIsSuccess]);
@@ -98,18 +107,11 @@ export default function CategoryForm() {
     else if (storeError) error = storeError;
 
     if (error) {
-      if (error instanceof AxiosError) {
-        const { response } = error;
-        if (response?.data) {
-          if (response.status === 422) {
-            if (response.data.validationErrors)
-              setErrors(response.data.validationErrors);
-          } else if (response.status === 401) {
-            toast.error(response.data.message);
-          } else {
-            console.log(error);
-          }
-        }
+      const { data, status } = error as AxiosResponse;
+      if (status === 422) {
+        if (data.validationErrors) setErrors(data.validationErrors);
+      } else if (status === 401) {
+        toast.error(data.message);
       } else {
         console.log(error);
       }

@@ -20,6 +20,7 @@
     "@mantine/hooks": "^5.2.3",
     "@mantine/next": "^5.2.3",
     "@redux-devtools/extension": "^3.2.3",
+    "@reduxjs/toolkit": "^1.9.1",
     "@tabler/icons": "^1.88.0",
     "axios": "^0.27.2",
     "chart.js": "^3.9.1",

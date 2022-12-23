@@ -12,13 +12,16 @@ import {
 } from '@tabler/icons';
 import { currencyFormat } from 'src/utils';
 import { useAppDispatch } from 'src/store/hooks';
-import {
-  destroyBox,
-  mountBoxToClose,
-  mountBoxToOpen,
-  mountSelectedBox,
-} from 'src/store/reducers/BoxPage/creators';
 import { Button } from '@mantine/core';
+import Swal from 'sweetalert2';
+import axios, { AxiosError } from 'axios';
+import {
+  fetchBoxes,
+  removeBox,
+  mountBoxToOpen,
+  mountBoxToClose,
+  mountBox,
+} from 'src/features/BoxPage';
 
 interface Props {
   box: IBoxWithDayjs;
@@ -39,6 +42,58 @@ const BoxListItem = ({ box }: Props) => {
     setUpdatedAt(box.updatedAt.fromNow());
   };
 
+  const deleteBox = async () => {
+    const url = `/boxes/${box.id}`;
+    const message = /*html */ `La caja "<strong>${box.name}</strong>" será eliminada permanentemente y esta acción no puede revertirse.`;
+
+    const result = await Swal.fire({
+      title: '<strong>¿Desea eliminar la caja?',
+      html: message,
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Si, ¡Eliminala!',
+      backdrop: true,
+      icon: 'warning',
+      showLoaderOnConfirm: true,
+      preConfirm: async () => {
+        const result = { ok: false, message: '' };
+        try {
+          const res = await axios.delete(url);
+          result.ok = true;
+          result.message = `La caja <strong>${res.data.cashbox.name}</strong> fue eliminada con éxito.`;
+          dispatch(removeBox(box.id));
+        } catch (error) {
+          if (error instanceof AxiosError) {
+            const { response } = error;
+            if (response?.status === 404) dispatch(fetchBoxes());
+            result.message = response?.data.message;
+          } else {
+            console.log(error);
+          }
+        }
+
+        return result;
+      },
+    });
+
+    if (result.isConfirmed && result.value) {
+      const { ok, message } = result.value;
+      if (ok) {
+        Swal.fire({
+          title: '<strong>¡Caja Eliminada!</strong>',
+          html: message,
+          icon: 'success',
+        });
+      } else {
+        Swal.fire({
+          title: '¡Ops, algo salio mal!',
+          text: message,
+          icon: 'error',
+        });
+      }
+    }
+  };
+
   useEffect(() => {
     setDateString();
     let intervalId: NodeJS.Timer;
@@ -48,7 +103,6 @@ const BoxListItem = ({ box }: Props) => {
     }
 
     return () => {
-      console.log('Clear interval of %s: %s', box.name, intervalId);
       clearInterval(intervalId);
     };
   }, []);
@@ -62,11 +116,6 @@ const BoxListItem = ({ box }: Props) => {
     }
 
     return () => {
-      console.log(
-        'Clear interval in second hook of %s: %s',
-        box.name,
-        intervalId
-      );
       clearInterval(intervalId);
     };
   }, [box.openBox, box.closed, box.createdAt, box.updatedAt]);
@@ -86,7 +135,7 @@ const BoxListItem = ({ box }: Props) => {
 
           {!box.openBox && (
             <button
-              onClick={() => dispatch(destroyBox(box))}
+              onClick={deleteBox}
               className="absolute top-2 right-4 rounded-full border border-gray-600 p-1 text-gray-600 transition-colors hover:border-red-500 hover:text-red-500 active:border-gray-600 active:text-gray-600"
             >
               <IconTrash size={16} />
@@ -147,7 +196,7 @@ const BoxListItem = ({ box }: Props) => {
                 size="xs"
                 leftIcon={<IconLockOpen size={14} />}
                 color="green"
-                onClick={() => dispatch(mountBoxToOpen(box))}
+                onClick={() => dispatch(mountBoxToOpen(box.id))}
               >
                 Abrir
               </Button>
@@ -158,7 +207,7 @@ const BoxListItem = ({ box }: Props) => {
                   size="xs"
                   leftIcon={<IconLock size={14} />}
                   color="orange"
-                  onClick={() => dispatch(mountBoxToClose(box))}
+                  onClick={() => dispatch(mountBoxToClose(box.id))}
                 >
                   Cerrar
                 </Button>
@@ -166,7 +215,7 @@ const BoxListItem = ({ box }: Props) => {
                 <Button
                   size="xs"
                   leftIcon={<IconFolder size={14} />}
-                  onClick={() => dispatch(mountSelectedBox(box))}
+                  onClick={() => dispatch(mountBox(box.id))}
                 >
                   Ver
                 </Button>

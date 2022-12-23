@@ -8,7 +8,7 @@ import {
   ColorSchemeProvider,
   MantineProvider,
 } from '@mantine/core';
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 
 // For route progress with NProgress
 import Router from 'next/router';
@@ -16,10 +16,10 @@ import NProgress from 'nprogress';
 
 // Store
 import { Provider } from 'react-redux';
-import { store, wrapper } from 'src/store';
+import { store } from 'src/store';
 import { useEffect } from 'react';
-import { useAppDispatch } from 'src/store/hooks';
-import { authenticate } from 'src/store/reducers/Auth/creators';
+import { useAppDispatch, useAppSelector } from 'src/store/hooks';
+import { createWrapper } from 'next-redux-wrapper';
 
 // Styles
 import '../styles/globals.css';
@@ -27,6 +27,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'nprogress/nprogress.css';
 import { emCache } from 'src/utils/emotionCache';
 import { useHotkeys, useLocalStorage } from '@mantine/hooks';
+import {
+  authSelector,
+  authSuccessIsNotify,
+  authenticate,
+} from 'src/features/Auth';
 
 // Config
 axios.defaults.baseURL = process.env.NEXT_PUBLIC_URL_API;
@@ -34,8 +39,9 @@ dayjs.locale('es-do');
 dayjs.extend(relativeTime);
 NProgress.configure({ showSpinner: false });
 
-function MyApp({ Component, pageProps }: AppProps) {
+export function MyApp({ Component, pageProps }: AppProps) {
   const dispatch = useAppDispatch();
+  const { user, authIsSuccess } = useAppSelector(authSelector);
 
   // --------------------------------------------------------------------------
   // SET THEME APP
@@ -96,6 +102,18 @@ function MyApp({ Component, pageProps }: AppProps) {
     };
   }, []);
 
+  useEffect(() => {
+    if (authIsSuccess) {
+      const message = (
+        <span>
+          ¡Bienvenido <strong className="font-bold">{user?.name}</strong>!
+        </span>
+      );
+      toast.success(message, { position: 'top-right' });
+      dispatch(authSuccessIsNotify());
+    }
+  }, [authIsSuccess]);
+
   return (
     <ColorSchemeProvider
       colorScheme={colorScheme}
@@ -131,4 +149,4 @@ function MyApp({ Component, pageProps }: AppProps) {
   );
 }
 
-export default wrapper.withRedux(MyApp);
+export default createWrapper(() => store).withRedux(MyApp);

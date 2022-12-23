@@ -6,6 +6,8 @@ import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { toast } from 'react-toastify';
+import { authSelector } from 'src/features/Auth';
+import { invoicePageSelector } from 'src/features/InvoicePage';
 import { useAppSelector } from 'src/store/hooks';
 import { ISaleHistory } from 'src/types';
 import { CHART_COLORS, currencyFormat, transparentize } from 'src/utils';
@@ -53,8 +55,8 @@ export const barOptions: ChartOptions<'bar'> = {
 
 const WeeklyInvoiceChart = () => {
   const { storeSuccess, storePaymentSuccess, refreshIsSuccess } =
-    useAppSelector(state => state.InvoicePageReducer);
-  const { isAuth } = useAppSelector(state => state.AuthReducer);
+    useAppSelector(invoicePageSelector);
+  const { isAuth } = useAppSelector(authSelector);
   const [chartData, setChartData] = useState<ChartData<'bar'>>({
     labels: [],
     datasets: [],

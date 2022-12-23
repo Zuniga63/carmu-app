@@ -1,5 +1,11 @@
-import { IAction } from 'src/types';
+import {
+  IInvoice,
+  IInvoiceBase,
+  IInvoiceBaseFull,
+  IInvoiceFull,
+} from 'src/types';
 import colorLib, { Color, RGBA } from '@kurkle/color';
+import dayjs from 'dayjs';
 
 export function normalizeText(text: string): string {
   return text
@@ -12,13 +18,8 @@ export function normalizeText(text: string): string {
 }
 
 //-----------------------------------------------------------------------------
-// UTILS FOR REDUX AND REDUX THUNK
+// GENERAL UTILS
 //-----------------------------------------------------------------------------
-export const actionBody = (type: string, payload?: unknown): IAction => ({
-  type,
-  payload,
-});
-
 /**
  * Build a option for next-cookie
  * @param duration Time in day of duration of cookie in the browser, default 1 day
@@ -30,6 +31,62 @@ export const buildCookieOption = (duration = 1) => ({
   maxAge: 60 * 60 * 24 * duration,
 });
 
+//-----------------------------------------------------------------------------
+// INVOICE UTILS
+//-----------------------------------------------------------------------------
+export const createSearch = (invoice: IInvoiceBase | IInvoiceBaseFull) => {
+  const search = `
+  ${invoice.prefixNumber} 
+  ${invoice.customer ? invoice.customer.fullName : invoice.customerName} 
+  ${invoice.customerAddress} 
+  ${invoice.customerDocument} 
+  ${invoice.customerPhone}
+  ${invoice.amount}
+  ${currencyFormat(invoice.amount)}
+  `;
+
+  return normalizeText(search);
+};
+
+export const createInvoiceDates = (
+  invoice: IInvoiceBase | IInvoiceBaseFull
+) => {
+  const { expeditionDate, expirationDate, createdAt, updatedAt } = invoice;
+  return {
+    expeditionDate: dayjs(expeditionDate),
+    expirationDate: dayjs(expirationDate),
+    createdAt: dayjs(createdAt),
+    updatedAt: dayjs(updatedAt),
+  };
+};
+
+export const buildInvoice = (invoice: IInvoiceBase): IInvoice => {
+  const search = createSearch(invoice);
+  const dates = createInvoiceDates(invoice);
+  return {
+    ...invoice,
+    ...dates,
+    search,
+  };
+};
+
+export const buildInvoiceFull = (invoice: IInvoiceBaseFull): IInvoiceFull => {
+  const search = createSearch(invoice);
+  const dates = createInvoiceDates(invoice);
+  const payments = invoice.payments.map(payment => ({
+    ...payment,
+    paymentDate: dayjs(payment.paymentDate),
+    createdAt: dayjs(payment.createdAt),
+    updatedAt: dayjs(payment.updatedAt),
+  }));
+
+  return {
+    ...invoice,
+    ...dates,
+    payments,
+    search,
+  };
+};
 //-----------------------------------------------------------------------------
 // UTIL FOR FORMAT CURRENCY
 //-----------------------------------------------------------------------------

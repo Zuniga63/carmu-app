@@ -1,5 +1,6 @@
 import { IconTrash } from '@tabler/icons';
 import React, { useEffect, useState } from 'react';
+import { invoicePageSelector } from 'src/features/InvoicePage';
 import { useAppSelector } from 'src/store/hooks';
 import { INewInvoiceItem } from 'src/types';
 import { currencyFormat } from 'src/utils';
@@ -10,7 +11,7 @@ interface Props {
 }
 
 const InvoiceFormItemListItem = ({ item, onRemove }: Props) => {
-  const { categories } = useAppSelector(state => state.InvoicePageReducer);
+  const { categories } = useAppSelector(invoicePageSelector);
   const [itemCategories, setItemCategories] = useState('');
 
   useEffect(() => {

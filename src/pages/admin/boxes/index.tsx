@@ -7,12 +7,12 @@ import Layout from 'src/components/Layout';
 import { GetServerSideProps, NextPage } from 'next';
 import { useEffect } from 'react';
 import { useAppDispatch } from 'src/store/hooks';
-import {
-  setBoxes,
-  setMainBox,
-  unmountTransactions,
-} from 'src/store/reducers/BoxPage/creators';
 import { IBox, IMainBox } from 'src/types';
+import {
+  mountBoxes,
+  mountMainBox,
+  unmountTransactions,
+} from 'src/features/BoxPage';
 
 interface Props {
   data: {
@@ -25,8 +25,8 @@ const BoxesPage: NextPage<Props> = ({ data }: Props) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(setBoxes(data.boxes));
-    dispatch(setMainBox(data.mainBox));
+    dispatch(mountBoxes(data.boxes));
+    dispatch(mountMainBox(data.mainBox));
 
     return () => {
       dispatch(unmountTransactions());
@@ -52,7 +52,7 @@ const BoxesPage: NextPage<Props> = ({ data }: Props) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async context => {
-  const { token } = context.req.cookies;
+  const { access_token: token } = context.req.cookies;
   const data = {
     boxes: [],
     mainBox: null,

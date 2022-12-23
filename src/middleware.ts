@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export async function middleware(request: NextRequest) {
-  const token = request.cookies.get('token');
+  const token = request.cookies.get('access_token');
   let isAuthenticated = false;
   const isLoginPage = request.nextUrl.pathname.startsWith('/login');
 

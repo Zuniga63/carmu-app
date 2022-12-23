@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 import { FormEvent, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAppDispatch } from 'src/store/hooks';
-import { logout } from 'src/store/reducers/Auth/creators';
+import { logout } from 'src/features/Auth';
 import { IValidationErrors } from 'src/types';
 
 const ProfilePage: NextPage = () => {
@@ -91,6 +91,7 @@ const ProfilePage: NextPage = () => {
                     setPassword(currentTarget.value)
                   }
                   disabled={loading}
+                  autoComplete="current-password"
                 />
                 <PasswordInput
                   icon={<IconLock size={16} />}
@@ -110,6 +111,7 @@ const ProfilePage: NextPage = () => {
                   }
                   disabled={loading}
                   error={errors?.password?.message}
+                  autoComplete="new-password"
                 />
                 <PasswordInput
                   icon={<IconLock size={16} />}
@@ -129,6 +131,7 @@ const ProfilePage: NextPage = () => {
                   }
                   disabled={loading}
                   error={errors?.confirmPassword?.message}
+                  autoComplete="new-password"
                 />
               </div>
             </div>

@@ -1,25 +1,21 @@
 import type { NextPage } from 'next';
 import { useAppSelector } from 'src/store/hooks';
-import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
 
 import Layout from 'src/components/Layout';
-import { toast } from 'react-toastify';
 import CashChart from 'src/components/dashboard/CashChart';
 import ChartJS from 'chart.js/auto';
 import dayjs from 'dayjs';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
 import ReportStatistics from 'src/components/dashboard/ReportStatistics';
 import CreditEvolution from 'src/components/dashboard/CreditEvolution';
+import { authSelector } from 'src/features/Auth';
 
 ChartJS.register();
 dayjs.extend(isLeapYear);
 
 const Home: NextPage = () => {
-  const { isAuth, loginIsSuccess, user, isAdmin } = useAppSelector(
-    state => state.AuthReducer
-  );
-  const router = useRouter();
+  const { user, isAdmin } = useAppSelector(authSelector);
   const firtsRenderRef = useRef(true);
 
   useEffect(() => {
@@ -27,19 +23,7 @@ const Home: NextPage = () => {
       firtsRenderRef.current = false;
       return;
     }
-    if (!isAuth) {
-      router.push('/login');
-      return;
-    }
-    if (loginIsSuccess) {
-      const message = (
-        <span>
-          ¡Bienvenido <strong className="font-bold">{user?.name}</strong>!
-        </span>
-      );
-      toast.success(message, { position: 'top-right' });
-    }
-  }, [isAuth, loginIsSuccess]);
+  }, []);
 
   return (
     <Layout title="Dashboard">
@@ -53,7 +37,7 @@ const Home: NextPage = () => {
             implementado el flujo de caja y el flujo de ventas.
           </p>
         </div>
-        {isAdmin && (
+        {isAdmin ? (
           <>
             <div className="mb-4">
               <CreditEvolution />
@@ -65,7 +49,7 @@ const Home: NextPage = () => {
               <CashChart />
             </div>
           </>
-        )}
+        ) : null}
       </div>
     </Layout>
   );

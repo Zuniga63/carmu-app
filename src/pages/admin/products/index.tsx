@@ -1,6 +1,10 @@
 import { GetServerSideProps, NextPage } from 'next';
 import Layout from 'src/components/Layout';
-import { Category, IProductWithCategories, IValidationErrors } from 'src/types';
+import {
+  ICategory,
+  IProductWithCategories,
+  IValidationErrors,
+} from 'src/types';
 import { useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
@@ -9,7 +13,7 @@ import ProductTable from 'src/components/ProductPage/ProductTable';
 import ProductForm from 'src/components/ProductPage/ProductForm';
 
 export const getServerSideProps: GetServerSideProps = async context => {
-  const { token } = context.req.cookies;
+  const { access_token: token } = context.req.cookies;
   const data = {
     products: [],
     categories: [],
@@ -45,7 +49,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 interface Props {
   data: {
     products: IProductWithCategories[];
-    categories: Category[];
+    categories: ICategory[];
   };
 }
 

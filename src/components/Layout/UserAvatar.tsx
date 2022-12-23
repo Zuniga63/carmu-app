@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Avatar, Menu } from '@mantine/core';
 import { useAppSelector, useAppDispatch } from 'src/store/hooks';
-import { logout } from 'src/store/reducers/Auth/creators';
 import { IconCategory, IconLogout } from '@tabler/icons';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { authSelector, logout } from 'src/features/Auth';
 
 export default function UserAvatar() {
-  const { user, isAdmin } = useAppSelector(({ AuthReducer }) => AuthReducer);
+  const { user, isAdmin } = useAppSelector(authSelector);
   const [initials, setInitials] = useState('');
 
   const dispatch = useAppDispatch();

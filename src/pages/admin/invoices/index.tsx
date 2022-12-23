@@ -2,10 +2,6 @@ import { NextPage } from 'next';
 import Layout from 'src/components/Layout';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 import { useEffect } from 'react';
-import {
-  fetchInvoiceData,
-  openCounterSaleForm,
-} from 'src/store/reducers/InvoicePage/creators';
 import InvoiceList from 'src/components/InvoicePage/InvoiceList';
 import InvoiceForm from 'src/components/InvoicePage/InvoiceForm';
 import InvoicePaymentForm from 'src/components/InvoicePage/InvoicePaymentForm';
@@ -16,10 +12,15 @@ import ChartJS from 'chart.js/auto';
 import { Button } from '@mantine/core';
 import { IconFileInvoice } from '@tabler/icons';
 import CounterSaleForm from 'src/components/InvoicePage/CounterSaleForm';
+import { authSelector } from 'src/features/Auth';
+import {
+  fetchInvoiceData,
+  showCounterSaleForm,
+} from 'src/features/InvoicePage';
 ChartJS.register();
 
 const InvoicePage: NextPage = () => {
-  const { isAuth, isAdmin } = useAppSelector(state => state.AuthReducer);
+  const { isAuth, isAdmin } = useAppSelector(authSelector);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -36,7 +37,7 @@ const InvoicePage: NextPage = () => {
         <div className="fixed right-4 bottom-4 hidden lg:block">
           <Button
             leftIcon={<IconFileInvoice />}
-            onClick={() => dispatch(openCounterSaleForm())}
+            onClick={() => dispatch(showCounterSaleForm())}
           >
             Ventas por mostrador
           </Button>

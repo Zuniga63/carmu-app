@@ -265,8 +265,6 @@ const CreditEvolutionChart = ({
         );
       });
 
-      console.log(dailyReports);
-
       while (currentDate.isSameOrBefore(endMonth)) {
         const startDay = currentDate.startOf('day');
         const endDay = currentDate.endOf('day');

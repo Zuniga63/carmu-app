@@ -1,9 +1,8 @@
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { FormEvent, useEffect, useState } from 'react';
-import { LoginData } from 'src/types';
+import { SigninData } from 'src/types';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import { authUser } from 'src/store/reducers/Auth/creators';
 
 import AuthenticationCard from 'src/components/AuthenticationCard';
 import {
@@ -14,14 +13,16 @@ import {
   Button,
 } from '@mantine/core';
 import {
-  IconAt,
   IconLock,
   IconEyeOff,
   IconEyeCheck,
   IconAlertCircle,
+  IconMail,
 } from '@tabler/icons';
 import brandLogo from 'public/images/logo_62601199d793d.png';
 import Image from 'next/image';
+import { authSelector, signin } from 'src/features/Auth';
+import { getCookie } from 'cookies-next';
 
 const Login: NextPage = () => {
   const [email, setEmail] = useState('');
@@ -31,13 +32,15 @@ const Login: NextPage = () => {
   //---------------------------------------------------------------------------
   // AUTH STATE
   //---------------------------------------------------------------------------
-  const { loading, error, loginIsSuccess, isAuth } = useAppSelector(
-    state => state.AuthReducer
-  );
+  const { loading, error, authIsSuccess, isAuth } =
+    useAppSelector(authSelector);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (isAuth) router.push('/');
+    const token = getCookie('access_token');
+    if (isAuth && token) {
+      router.push('/');
+    }
   }, [isAuth]);
 
   useEffect(() => {
@@ -46,13 +49,13 @@ const Login: NextPage = () => {
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data: LoginData = { email, password };
-    dispatch(authUser(data));
+    const data: SigninData = { email, password };
+    dispatch(signin(data));
   };
 
   return (
     <AuthenticationCard>
-      <div className="mt-6 w-full overflow-hidden bg-header bg-opacity-60 px-6 py-4 shadow-lg shadow-header backdrop-blur-sm sm:max-w-md sm:rounded-lg">
+      <div className="mt-6 w-full overflow-hidden bg-light bg-opacity-60 px-6 py-4 shadow-lg shadow-gray-300 backdrop-blur-sm dark:bg-header dark:bg-opacity-60 dark:shadow-header sm:max-w-md sm:rounded-lg">
         <form onSubmit={onSubmit}>
           <header className="mb-4">
             <figure className="mx-auto block w-1/2">
@@ -63,13 +66,13 @@ const Login: NextPage = () => {
             <TextInput
               value={email}
               onChange={({ target }) => setEmail(target.value)}
-              placeholder="Escribelo aquí"
+              placeholder="ejemplo@ejemplo.com"
               label="Email"
               required
               className="mb-2"
               type="email"
-              icon={<IconAt size={20} />}
-              disabled={loading || isAuth}
+              icon={<IconMail size={20} />}
+              disabled={loading}
             />
 
             <PasswordInput
@@ -86,11 +89,11 @@ const Login: NextPage = () => {
                   <IconEyeCheck size={size} />
                 )
               }
-              disabled={loading || isAuth}
+              disabled={loading}
             />
           </div>
 
-          {(error || loading || loginIsSuccess) && (
+          {(error || loading || authIsSuccess) && (
             <div className="mb-2">
               {error && (
                 <Alert
@@ -113,11 +116,7 @@ const Login: NextPage = () => {
           )}
 
           <footer className="mt-4 flex items-center justify-end">
-            <Button
-              type="submit"
-              variant="outline"
-              disabled={loading || loginIsSuccess}
-            >
+            <Button type="submit" variant="outline" disabled={loading}>
               Iniciar Sesión
             </Button>
           </footer>

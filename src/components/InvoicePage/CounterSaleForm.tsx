@@ -16,11 +16,13 @@ import {
 } from '@tabler/icons';
 import dayjs from 'dayjs';
 import React, { KeyboardEvent, useEffect, useRef, useState } from 'react';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
+import { authSelector } from 'src/features/Auth';
 import {
-  closeCounterSaleForm,
+  hideCounterSaleForm,
+  invoicePageSelector,
   storeNewInvoice,
-} from 'src/store/reducers/InvoicePage/creators';
+} from 'src/features/InvoicePage';
+import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 import {
   IInvoiceCashbox,
   IInvoiceStoreData,
@@ -40,8 +42,8 @@ const CounterSaleForm = () => {
     storeLoading: loading,
     storeError: error,
     storeSuccess: success,
-  } = useAppSelector(state => state.InvoicePageReducer);
-  const { user } = useAppSelector(state => state.AuthReducer);
+  } = useAppSelector(invoicePageSelector);
+  const { user } = useAppSelector(authSelector);
   const dispatch = useAppDispatch();
 
   // ITEMS
@@ -82,7 +84,7 @@ const CounterSaleForm = () => {
   // ------------------------------------------------------------------------------------------------------------------
   const close = () => {
     if (!loading) {
-      dispatch(closeCounterSaleForm());
+      dispatch(hideCounterSaleForm());
     }
   };
 

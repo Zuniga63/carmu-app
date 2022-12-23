@@ -17,9 +17,10 @@ import { useAppSelector } from 'src/store/hooks';
 import { Modal } from '@mantine/core';
 import dayjs from 'dayjs';
 import { currencyFormat } from 'src/utils';
+import { authSelector } from 'src/features/Auth';
 
 const CustomerPage: NextPage = () => {
-  const { isAuth } = useAppSelector(state => state.AuthReducer);
+  const { isAuth } = useAppSelector(authSelector);
 
   const [fetchLoading, setFetchLoading] = useState(true);
 
@@ -189,7 +190,7 @@ const CustomerPage: NextPage = () => {
             result.message = response?.data.message;
           } else {
             result.message =
-              '¡Intentalo nuevmanete mas tarde o recarga la pagina.';
+              '¡Intentalo nuevamente mas tarde o recarga la pagina.';
             console.log(error);
           }
         }

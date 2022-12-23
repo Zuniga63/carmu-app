@@ -2,10 +2,6 @@ import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import {
-  closeNewInvoiceForm,
-  storeNewInvoice,
-} from 'src/store/reducers/InvoicePage/creators';
 import { useMediaQuery } from '@mantine/hooks';
 import {
   IInvoiceStoreData,
@@ -31,6 +27,12 @@ import InvoiceFormCustomer from './InvoiceFormCustomer';
 import InvoiceFormDates from './InvoiceFormDates';
 import InvoiceFormItems from './InvoiceFormItems';
 import InvoiceFormConfirm from './InvoiceFormConfirm';
+import {
+  hideNewInvoiceForm,
+  invoicePageSelector,
+  storeNewInvoice,
+} from 'src/features/InvoicePage';
+import { authSelector } from 'src/features/Auth';
 
 export enum InvoiceSteps {
   Invoicing,
@@ -55,8 +57,8 @@ const InvoiceForm = () => {
     storeLoading: loading,
     storeError: error,
     storeSuccess: success,
-  } = useAppSelector(state => state.InvoicePageReducer);
-  const { user } = useAppSelector(state => state.AuthReducer);
+  } = useAppSelector(invoicePageSelector);
+  const { user } = useAppSelector(authSelector);
   const dispatch = useAppDispatch();
   const [enabled, setEnabled] = useState(false);
   const largeScreen = useMediaQuery('(min-width: 768px)');
@@ -112,7 +114,7 @@ const InvoiceForm = () => {
   // --------------------------------------------------------------------------
   const closeInvoice = () => {
     if (!loading) {
-      dispatch(closeNewInvoiceForm());
+      dispatch(hideNewInvoiceForm());
     }
   };
 
