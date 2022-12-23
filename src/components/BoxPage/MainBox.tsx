@@ -1,8 +1,8 @@
 import { Button } from '@mantine/core';
 import { IconFolder } from '@tabler/icons';
 import React from 'react';
+import { mountGlobalTransactions } from 'src/features/BoxPage';
 import { useAppDispatch } from 'src/store/hooks';
-import { mountMainBox } from 'src/store/reducers/BoxPage/creators';
 import { IMainBox } from 'src/types';
 import { currencyFormat } from 'src/utils';
 
@@ -29,7 +29,7 @@ const MainBox = ({ mainBox }: Props) => {
           <Button
             size="xs"
             leftIcon={<IconFolder size={14} />}
-            onClick={() => dispatch(mountMainBox())}
+            onClick={() => dispatch(mountGlobalTransactions())}
           >
             Ver Transacciones
           </Button>

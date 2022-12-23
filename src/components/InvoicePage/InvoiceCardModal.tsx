@@ -3,11 +3,13 @@ import { useMediaQuery } from '@mantine/hooks';
 import { IconCash, IconPrinter } from '@tabler/icons';
 import Link from 'next/link';
 import React from 'react';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 import {
-  openPaymentForm,
-  unmountSelectedInvoice,
-} from 'src/store/reducers/InvoicePage/creators';
+  invoicePageSelector,
+  showPaymentForm,
+  unmountInvoice,
+} from 'src/features/InvoicePage';
+import { useAppDispatch, useAppSelector } from 'src/store/hooks';
+import { buildInvoiceFull } from 'src/utils';
 import EmptyInvoice from './EmptyInvoice';
 import InvoiceCard from './InvoiceCard';
 import InvoiceCardModalHeader from './InvoiceCardModalHeader';
@@ -18,12 +20,12 @@ const InvoiceCardModal = () => {
     selectedInvoiceOpened: opened,
     selectedInvoiceLoading: loading,
     selectedInvoiceError: error,
-  } = useAppSelector(state => state.InvoicePageReducer);
+  } = useAppSelector(invoicePageSelector);
   const dispatch = useAppDispatch();
   const largeScreen = useMediaQuery('(min-width: 768px)');
 
   const onClose = () => {
-    if (!loading) dispatch(unmountSelectedInvoice());
+    if (!loading) dispatch(unmountInvoice());
   };
 
   return (
@@ -48,7 +50,7 @@ const InvoiceCardModal = () => {
 
         <div className="bg-gradient-to-r from-red-500 via-purple-600 to-blue-500 px-4 py-4">
           {invoice ? (
-            <InvoiceCard invoice={invoice} />
+            <InvoiceCard invoice={buildInvoiceFull(invoice)} />
           ) : (
             <EmptyInvoice loading={loading} error={error} />
           )}
@@ -65,7 +67,7 @@ const InvoiceCardModal = () => {
             leftIcon={<IconCash />}
             color="grape"
             disabled={!invoice?.balance}
-            onClick={() => dispatch(openPaymentForm())}
+            onClick={() => dispatch(showPaymentForm())}
           >
             Registrar Pago
           </Button>

@@ -9,15 +9,15 @@ import {
 import { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import {
-  hideCreateTransactionForm,
-  storeMainTransaction,
-  storeTransaction,
-} from 'src/store/reducers/BoxPage/creators';
 import { IValidationErrors } from 'src/types';
 import { currencyFormat } from 'src/utils';
 import { DatePicker, TimeInput } from '@mantine/dates';
 import dayjs from 'dayjs';
+import {
+  boxPageSelector,
+  hideTransactionForm,
+  storeTransaction,
+} from 'src/features/BoxPage';
 
 const CreateTransactionForm = () => {
   const [date, setDate] = useState<Date | undefined | null>(undefined);
@@ -31,12 +31,15 @@ const CreateTransactionForm = () => {
   const {
     boxSelected: box,
     mainBox,
+    showingMainBox,
     storeTransactionFormOpened: opened,
     storeTransactionIsSuccess: isSuccess,
     storeTransactionError: error,
     storeTransactionLoading: loading,
-  } = useAppSelector(state => state.BoxPageReducer);
+  } = useAppSelector(boxPageSelector);
   const dispatch = useAppDispatch();
+
+  const [balance, setBalance] = useState(0);
 
   const closeHandler = () => {
     if (!loading) {
@@ -44,7 +47,7 @@ const CreateTransactionForm = () => {
       setAmount(undefined);
       setIsExpense(false);
       setErrors(null);
-      dispatch(hideCreateTransactionForm());
+      dispatch(hideTransactionForm());
     }
   };
 
@@ -73,8 +76,8 @@ const CreateTransactionForm = () => {
         date: transactionDate ? transactionDate : undefined,
       };
 
-      if (box) dispatch(storeTransaction(box, data));
-      else if (mainBox) dispatch(storeMainTransaction(mainBox, data));
+      if (box || mainBox)
+        dispatch(storeTransaction({ boxId: box?.id, ...data }));
     }
   };
 
@@ -120,6 +123,12 @@ const CreateTransactionForm = () => {
     else setEnabled(false);
   }, [amount, description]);
 
+  useEffect(() => {
+    if (showingMainBox && mainBox?.balance) setBalance(mainBox.balance);
+    else if (box?.balance) setBalance(box.balance);
+    else setBalance(0);
+  }, [showingMainBox, box?.balance, mainBox?.balance]);
+
   return (
     <Modal
       opened={opened}
@@ -134,9 +143,8 @@ const CreateTransactionForm = () => {
             {' '}
             Registrar Transacción
           </h2>
-          <p className="text-xs text-gray-600">
-            {box?.name || mainBox?.name} (
-            {currencyFormat(box?.balance || mainBox?.balance)})
+          <p className="text-xs">
+            {box?.name || mainBox?.name} ({currencyFormat(balance)})
           </p>
         </header>
         <div className="mb-4 py-4">
@@ -149,7 +157,7 @@ const CreateTransactionForm = () => {
               placeholder="Selecciona una fecha"
               value={date}
               onChange={setDate}
-              minDate={box?.openBox?.toDate()}
+              minDate={box?.openBox ? dayjs(box?.openBox).toDate() : undefined}
               maxDate={dayjs().toDate()}
               className="mb-2 md:col-span-3 md:mb-0"
               icon={<IconCalendar size={16} />}

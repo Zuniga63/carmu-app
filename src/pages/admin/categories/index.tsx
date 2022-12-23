@@ -1,87 +1,55 @@
-import { GetServerSideProps, NextPage } from 'next';
+import { NextPage } from 'next';
 import Layout from 'src/components/Layout';
-import { Category } from 'src/types';
 import { useEffect } from 'react';
 import CategoryDragAndDrop from 'src/components/CategoryPage/CategoryDragAndDrop';
 import CategoryForm from 'src/components/CategoryPage/CategoryForm';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 import {
+  categoryPageSelector,
   connectToSocket,
   disconnectWebSocket,
-  setCategories,
-  showCategoryForm,
-  storeCategoriesOrder,
-} from 'src/store/reducers/CategoryPage/creators';
+  fetchCategories,
+} from 'src/features/CategoryPage';
+import { Loader } from '@mantine/core';
+import { authSelector } from 'src/features/Auth';
 
-interface Props {
-  data: {
-    categories: Category[];
-  };
-}
-
-const Categories: NextPage<Props> = ({ data }: Props) => {
-  const { categories, storeNewOrderIsSuccess: mainOrderSaved } = useAppSelector(
-    state => state.CategoryPageReducer
-  );
+const Categories: NextPage = () => {
+  const { loading } = useAppSelector(categoryPageSelector);
+  const { isAuth } = useAppSelector(authSelector);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(connectToSocket());
-    dispatch(setCategories(data.categories));
 
     return () => {
-      dispatch(disconnectWebSocket());
+      disconnectWebSocket();
     };
   }, []);
 
-  const saveNewMainCategoryOrder = (newList: Category[]) => {
-    dispatch(storeCategoriesOrder(newList, categories.slice()));
-  };
+  useEffect(() => {
+    if (isAuth) {
+      dispatch(fetchCategories());
+    }
+  }, [isAuth]);
 
   return (
     <>
       <Layout title="Categorías">
         <div className="grid pt-4 pb-8 text-light md:grid-cols-2 xl:grid-cols-3">
-          <CategoryDragAndDrop
-            title="Categorías Primarias"
-            categories={categories}
-            saveOrder={saveNewMainCategoryOrder}
-            newOrderSaved={mainOrderSaved}
-            btnAction={() => dispatch(showCategoryForm())}
-          />
+          {loading ? (
+            <div className="flex h-96 flex-col items-center justify-center gap-4">
+              <Loader />
+              <p className="animate-pulse text-sm">Recuperando categorías...</p>
+            </div>
+          ) : (
+            <CategoryDragAndDrop title="Categorías Primarias" />
+          )}
         </div>
       </Layout>
 
       <CategoryForm />
     </>
   );
-};
-
-export const getServerSideProps: GetServerSideProps = async contex => {
-  const { token } = contex.req.cookies;
-  const data = {
-    categories: [],
-  };
-
-  if (token) {
-    const baseUrl = process.env.NEXT_PUBLIC_URL_API;
-    const url = `${baseUrl}/categories`;
-    const headers = { Authorization: `Bearer ${token}` };
-
-    try {
-      const res = await fetch(url, { headers });
-      const resData = await res.json();
-      data.categories = resData.categories;
-    } catch (error) {
-      data.categories = [];
-    }
-  }
-
-  return {
-    props: {
-      data,
-    },
-  };
 };
 
 export default Categories;

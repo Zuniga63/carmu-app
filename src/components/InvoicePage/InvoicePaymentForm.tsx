@@ -5,11 +5,12 @@ import { AxiosError } from 'axios';
 import dayjs from 'dayjs';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 import {
-  closePaymentForm,
+  hidePaymentForm,
+  invoicePageSelector,
   registerPayment,
-} from 'src/store/reducers/InvoicePage/creators';
+} from 'src/features/InvoicePage';
+import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 import { IInvoicePaymentData, IValidationErrors } from 'src/types';
 import { currencyFormat } from 'src/utils';
 
@@ -21,7 +22,7 @@ const InvoicePaymentForm = () => {
     storePaymentError: error,
     storePaymentSuccess: success,
     cashboxs,
-  } = useAppSelector(state => state.InvoicePageReducer);
+  } = useAppSelector(invoicePageSelector);
 
   const dispatch = useAppDispatch();
   const defaultDescription = 'Efectivo';
@@ -44,7 +45,7 @@ const InvoicePaymentForm = () => {
 
   const closeForm = () => {
     if (!loading) {
-      dispatch(closePaymentForm());
+      dispatch(hidePaymentForm());
       resetForm();
     }
   };
@@ -61,8 +62,9 @@ const InvoicePaymentForm = () => {
   const getData = (): IInvoicePaymentData => {
     let date = dayjs(paymentDate);
     if (date.isValid() && invoice && date.isBefore(invoice?.expeditionDate))
-      date = invoice?.expeditionDate;
+      date = dayjs(invoice?.expeditionDate);
     return {
+      invoiceId: invoice?.id || '',
       cashboxId: boxId || undefined,
       paymentDate: date.toDate(),
       description: description || 'Efectivo',
@@ -75,7 +77,7 @@ const InvoicePaymentForm = () => {
     event.preventDefault();
     if (description && amount && amount > 0 && invoice && paymentDate) {
       const data = getData();
-      dispatch(registerPayment(data, invoice?.id));
+      dispatch(registerPayment(data));
     } else {
       toast.error('¡Hacen falta datos!');
     }
@@ -111,7 +113,7 @@ const InvoicePaymentForm = () => {
   useEffect(() => {
     if (success) {
       toast.success(success);
-      dispatch(closePaymentForm());
+      dispatch(hidePaymentForm());
       resetForm();
     }
   }, [success]);
@@ -169,7 +171,7 @@ const InvoicePaymentForm = () => {
             clearable
             className="mb-2"
             size="xs"
-            minDate={invoice?.expeditionDate.toDate()}
+            minDate={dayjs(invoice?.expeditionDate).toDate()}
             maxDate={dayjs().toDate()}
             error={errors?.paymentDate?.message}
           />

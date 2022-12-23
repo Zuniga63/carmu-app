@@ -1,13 +1,13 @@
 import { Button, Modal, NumberInput, Textarea } from '@mantine/core';
 import { IconLock } from '@tabler/icons';
-import { AxiosError } from 'axios';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 import {
+  boxPageSelector,
   closeBox,
   unmountBoxToClose,
-} from 'src/store/reducers/BoxPage/creators';
+} from 'src/features/BoxPage';
+import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 import { IValidationErrors } from 'src/types';
 import { currencyFormat } from 'src/utils';
 
@@ -25,7 +25,7 @@ function CloseBoxForm() {
     closeBoxIsSuccess: isSuccess,
     closeBoxError: error,
     closeBoxLoading: loading,
-  } = useAppSelector(state => state.BoxPageReducer);
+  } = useAppSelector(boxPageSelector);
   const dispatch = useAppDispatch();
 
   const closeHandler = () => {
@@ -43,8 +43,8 @@ function CloseBoxForm() {
   const submitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (box && typeof cash !== 'undefined') {
-      const data = { cash, observation };
-      dispatch(closeBox(box, data));
+      const data = { boxId: box.id, cash, observation };
+      dispatch(closeBox(data));
     }
   };
 
@@ -71,19 +71,11 @@ function CloseBoxForm() {
 
   useEffect(() => {
     if (error) {
-      if (error instanceof AxiosError) {
-        const { response } = error;
-        const data = response?.data;
-
-        if (data) {
-          if (response.status === 422 && data.validationErrors) {
-            setErrors(data.validationErrors);
-          } else if (response.status === 401) {
-            toast.error(response.data.message);
-          } else {
-            console.log(error);
-          }
-        }
+      const { data, status } = error;
+      if (status === 422 && data.validationErrors) {
+        setErrors(data.validationErrors);
+      } else if (status === 401) {
+        toast.error(data.message);
       } else {
         console.log(error);
       }

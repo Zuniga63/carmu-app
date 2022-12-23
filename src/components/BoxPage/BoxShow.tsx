@@ -1,8 +1,10 @@
 import { Button, ScrollArea } from '@mantine/core';
 import { IconWriting } from '@tabler/icons';
+import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
+import { boxPageSelector, showTransactionForm } from 'src/features/BoxPage';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import { showCreateTransactionForm } from 'src/store/reducers/BoxPage/creators';
+import { ITransaction, ITransactionResponse } from 'src/types';
 import { currencyFormat } from 'src/utils';
 import CreateTransactionForm from './CreateTransactionForm';
 import TransactionTable from './TransactionTable';
@@ -14,39 +16,70 @@ const BoxShow = () => {
     mainBox,
     showingMainBox,
     loadingTransactions: loading,
-    transactions,
-  } = useAppSelector(state => state.BoxPageReducer);
+    transactions: transactionsData,
+    mountBoxIsSuccess,
+  } = useAppSelector(boxPageSelector);
   const dispatch = useAppDispatch();
 
   const [boxName, setBoxName] = useState('');
   const [boxBalance, setBoxBalance] = useState(0);
   const [waiting, setWaiting] = useState(true);
+  const [transactions, setTransactions] = useState<ITransaction[]>([]);
 
-  const addHandler = () => dispatch(showCreateTransactionForm());
+  const addHandler = () => dispatch(showTransactionForm());
+
+  const transformTransactions = (
+    base = 0,
+    dataList: ITransactionResponse[]
+  ) => {
+    let balance = base;
+    const result: ITransaction[] = [];
+    dataList.forEach(item => {
+      balance += item.amount;
+      result.push({
+        ...item,
+        transactionDate: dayjs(item.transactionDate),
+        balance,
+        createdAt: dayjs(item.createdAt),
+        updatedAt: dayjs(item.updatedAt),
+      });
+    });
+
+    return result.reverse();
+  };
 
   useEffect(() => {
-    if (loading) {
-      setWaiting(true);
-    } else {
+    let name = '';
+    let boxBalance = 0;
+    let base = 0;
+    let transactionList: ITransaction[] = [];
+
+    if (mountBoxIsSuccess) {
       if (showingMainBox && mainBox) {
-        setBoxName(mainBox.name);
-        setBoxBalance(mainBox.balance);
-        setWaiting(false);
-      } else if (boxSelected && boxSelected.balance) {
-        setBoxName(boxSelected.name);
-        setBoxBalance(boxSelected.balance);
-        setWaiting(false);
-      } else {
-        setBoxName('');
-        setBoxBalance(0);
-        setWaiting(true);
+        name = mainBox.name;
+        boxBalance = mainBox.balance;
+      } else if (boxSelected) {
+        name = boxSelected.name;
+        boxBalance = boxSelected.balance || 0;
+        base = boxSelected.base;
       }
+
+      transactionList = transformTransactions(base, transactionsData);
     }
-  }, [showingMainBox, boxSelected, loading]);
+
+    setBoxName(name);
+    setBoxBalance(boxBalance);
+    setTransactions(transactionList);
+  }, [mountBoxIsSuccess, transactionsData.length]);
+
+  useEffect(() => {
+    if (!showingMainBox && !boxSelected) setWaiting(true);
+    else setWaiting(false);
+  }, [showingMainBox, boxSelected]);
 
   return (
     <>
-      {waiting && <WaitingBox loading={loading} />}
+      {waiting ? <WaitingBox loading={loading} /> : null}
       {!waiting && (
         <div>
           <header className="rounded-t-md bg-gray-300 px-6 py-2 dark:bg-header">

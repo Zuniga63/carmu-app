@@ -2,13 +2,13 @@ import { Button, Collapse } from '@mantine/core';
 import { IconFileInvoice, IconPrinter } from '@tabler/icons';
 import React, { MouseEventHandler, useEffect, useState } from 'react';
 import { useAppDispatch } from 'src/store/hooks';
-import { mountInvoice } from 'src/store/reducers/InvoicePage/creators';
 import { IInvoice } from 'src/types';
 import { currencyFormat } from 'src/utils';
 
 import dayjs from 'dayjs';
 import isToday from 'dayjs/plugin/isToday';
 import Link from 'next/link';
+import { mountInvoice } from 'src/features/InvoicePage';
 
 dayjs.extend(isToday);
 

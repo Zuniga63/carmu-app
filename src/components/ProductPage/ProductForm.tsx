@@ -11,11 +11,15 @@ import { useMediaQuery } from '@mantine/hooks';
 import DrawerBody from 'src/components/DrawerBody';
 import DrawerHeader from 'src/components/DrawerHeader';
 import React, { FormEvent, useEffect, useState } from 'react';
-import { Category, IProductWithCategories, IValidationErrors } from 'src/types';
+import {
+  ICategory,
+  IProductWithCategories,
+  IValidationErrors,
+} from 'src/types';
 
 interface Props {
   product?: IProductWithCategories | null;
-  categories: Category[];
+  categories: ICategory[];
   opened: boolean;
   loading: boolean;
   errors: IValidationErrors | null | undefined;

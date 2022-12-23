@@ -1,5 +1,5 @@
 import React from 'react';
-import { Category } from 'src/types';
+import { ICategory } from 'src/types';
 import { useEffect, useState } from 'react';
 import {
   DragDropContext,
@@ -7,39 +7,37 @@ import {
   Draggable,
   DropResult,
 } from '@hello-pangea/dnd';
-import { IconCirclePlus } from '@tabler/icons';
+import { IconCircleCheck, IconCircleX, IconPencilPlus } from '@tabler/icons';
 import DragAndDropCategoryItem from './DragAndDropCategoryItem';
 import Button from 'src/components/CustomButton';
+import { useAppDispatch, useAppSelector } from 'src/store/hooks';
+import {
+  categoryPageSelector,
+  showCategoryForm,
+  storeCategoryOrder,
+} from 'src/features/CategoryPage';
+import { Loader } from '@mantine/core';
 
 interface Props {
   title: string;
   description?: string;
-  categories: Category[];
-  saveOrder(newList: Category[]): void;
-  newOrderSaved?: boolean;
-  btnAction?(): void;
 }
 
-export default function CategoryDragAndDrop({
-  title,
-  description,
-  categories,
-  btnAction,
-  saveOrder,
-  newOrderSaved = false,
-}: Props) {
+export default function CategoryDragAndDrop({ title, description }: Props) {
   const [isBrowser, setIsBrowser] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
 
-  useEffect(() => {
-    setIsBrowser(typeof window !== undefined);
-  }, []);
+  const {
+    categories,
+    storeOrderLoading: loading,
+    storeOrderIsSuccess: success,
+    storeOrderError: error,
+  } = useAppSelector(categoryPageSelector);
 
-  const reorderList = (
-    list: Category[],
-    fromIndex: number,
-    toIndex: number
-  ): Category[] => {
-    const result = [...list];
+  const dispatch = useAppDispatch();
+
+  const reorderList = (fromIndex: number, toIndex: number): ICategory[] => {
+    const result = categories.slice();
     const [removed] = result.splice(fromIndex, 1);
     result.splice(toIndex, 0, removed);
     return result;
@@ -50,11 +48,33 @@ export default function CategoryDragAndDrop({
       !destination ||
       (source.index === destination.index &&
         source.droppableId === destination.droppableId)
-    )
+    ) {
       return;
-    const newList = reorderList(categories, source.index, destination.index);
-    saveOrder(newList);
+    }
+
+    const originalList = categories.slice();
+    const newList = reorderList(source.index, destination.index);
+    dispatch(storeCategoryOrder({ originalList, newList }));
   };
+
+  useEffect(() => {
+    setIsBrowser(typeof window !== undefined);
+  }, []);
+
+  useEffect(() => {
+    let id: NodeJS.Timeout | undefined;
+
+    if (success || error) {
+      setShowMessage(true);
+      id = setTimeout(() => {
+        setShowMessage(false);
+      }, 3000);
+    }
+
+    return () => {
+      clearTimeout(id);
+    };
+  }, [success, error]);
 
   return (
     <div className="mx-auto w-11/12">
@@ -96,18 +116,35 @@ export default function CategoryDragAndDrop({
         )}
       </div>
 
-      <footer className="flex min-h-[40px] items-center justify-end gap-x-2 rounded-b-md border-x border-b border-dark bg-header px-4 py-2">
-        {newOrderSaved && (
-          <span className="text-xs text-gray-500">Guardado.</span>
-        )}
-        {btnAction && (
-          <Button onClick={btnAction}>
-            <div className="flex gap-x-2">
-              <IconCirclePlus size={24} />
-              <span>Agregar</span>
-            </div>
-          </Button>
-        )}
+      <footer className="flex min-h-[40px] items-center justify-end gap-x-4 rounded-b-md border-x border-b border-dark bg-header px-4 py-2">
+        {loading ? (
+          <div className="flex gap-x-2">
+            <Loader size="xs" />
+            <span className="animate-pulse text-xs">Guardando...</span>
+          </div>
+        ) : null}
+        {success && showMessage ? (
+          <div className="flex gap-x-2 text-green-500">
+            <IconCircleCheck size={16} />
+            <span className="text-xs text-green-500 text-opacity-90">
+              Orden guardado.
+            </span>
+          </div>
+        ) : null}
+        {error && showMessage ? (
+          <div className="flex gap-x-2 text-red-500">
+            <IconCircleX size={16} />
+            <span className="text-xs text-red-500 text-opacity-90">
+              No se pudo guardar
+            </span>
+          </div>
+        ) : null}
+        <Button onClick={() => dispatch(showCategoryForm())}>
+          <div className="flex gap-x-2">
+            <IconPencilPlus size={24} />
+            <span>Agregar</span>
+          </div>
+        </Button>
       </footer>
     </div>
   );

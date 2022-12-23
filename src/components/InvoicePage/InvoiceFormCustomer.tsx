@@ -1,6 +1,7 @@
 import { Select, TextInput } from '@mantine/core';
 import { IconHome, IconPhone, IconSearch } from '@tabler/icons';
 import React, { useEffect } from 'react';
+import { invoicePageSelector } from 'src/features/InvoicePage';
 import { useAppSelector } from 'src/store/hooks';
 import { IInvoiceCustomer } from './InvoiceForm';
 import InvoiceFormGroup from './InvoiceFormGroup';
@@ -16,7 +17,7 @@ const InvoiceFormCustomer = ({
   onCustomerChange,
   className,
 }: Props) => {
-  const { customers } = useAppSelector(state => state.InvoicePageReducer);
+  const { customers } = useAppSelector(invoicePageSelector);
 
   useEffect(() => {
     const customerData = customers.find(c => c.id === customer.id);

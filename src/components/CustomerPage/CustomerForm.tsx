@@ -105,7 +105,6 @@ const CustomerForm = ({
   useEffect(() => {
     setTitle(customer ? 'Actualizar Cliente' : 'Nuevo Cliente');
     setBtnMessage(customer ? 'Actualizar' : 'Guardar');
-    console.log(customer, title);
     if (customer) {
       setFirstName(customer.firstName);
       if (customer.lastName) setLastName(customer.lastName);

@@ -2,6 +2,7 @@ import { Button, Checkbox, NumberInput, Select } from '@mantine/core';
 import { IconBox, IconCirclePlus } from '@tabler/icons';
 import dayjs from 'dayjs';
 import React, { KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { invoicePageSelector } from 'src/features/InvoicePage';
 import { useAppSelector } from 'src/store/hooks';
 import {
   IInvoiceCashbox,
@@ -24,7 +25,7 @@ const InvoiceFormPayment: React.FC<Props> = ({
   payments,
   setPayments,
 }) => {
-  const { cashboxs } = useAppSelector(state => state.InvoicePageReducer);
+  const { cashboxs } = useAppSelector(invoicePageSelector);
   const input = useRef<HTMLInputElement>(null);
 
   const [boxList, setBoxList] = useState<IInvoiceCashbox[]>([]);

@@ -8,20 +8,20 @@ import {
 } from '@mantine/core';
 import { IconFileInvoice, IconReload, IconSearch } from '@tabler/icons';
 import React, { useEffect, useRef, useState } from 'react';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 import {
   fetchInvoiceData,
-  openNewInvoiceForm,
-} from 'src/store/reducers/InvoicePage/creators';
+  invoicePageSelector,
+  showNewInvoiceForm,
+} from 'src/features/InvoicePage';
+import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 import { IInvoice } from 'src/types';
-import { normalizeText } from 'src/utils';
+import { buildInvoice, normalizeText } from 'src/utils';
 import InvoiceListItem from './InvoiceListItem';
 import InvoiceRated from './InvoiceRated';
 
 const InvoiceList = () => {
-  const { invoices, loading: loadingData } = useAppSelector(
-    state => state.InvoicePageReducer
-  );
+  const { invoices, loading: loadingData } =
+    useAppSelector(invoicePageSelector);
   const dispatch = useAppDispatch();
   const growRate = 25;
 
@@ -41,7 +41,7 @@ const InvoiceList = () => {
   const filterInvoices = () => {
     let result: IInvoice[] = [];
 
-    if (filter === 'all') result = invoices.slice();
+    if (filter === 'all') result = invoices.map(buildInvoice);
     else if (filter === 'paid') result = paidInvoices.slice();
     else if (filter === 'pending') result = pendingInvoices.slice();
     else if (filter === 'separated') result = separatedInvoices.slice();
@@ -64,7 +64,9 @@ const InvoiceList = () => {
     const separate: IInvoice[] = [];
     const pending: IInvoice[] = [];
 
-    invoices.forEach(invoice => {
+    invoices.forEach(invoiceData => {
+      const invoice = buildInvoice(invoiceData);
+
       if (invoice.cancel) cancel.push(invoice);
       else if (!invoice.balance) paid.push(invoice);
       else if (invoice.isSeparate) separate.push(invoice);
@@ -140,7 +142,7 @@ const InvoiceList = () => {
             className="flex-shrink-0"
             size="xs"
             leftIcon={<IconFileInvoice size={16} />}
-            onClick={() => dispatch(openNewInvoiceForm())}
+            onClick={() => dispatch(showNewInvoiceForm())}
           >
             Nueva
           </Button>

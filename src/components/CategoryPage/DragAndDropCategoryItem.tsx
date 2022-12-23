@@ -7,17 +7,14 @@ import {
   IconEditCircle,
   IconTrash,
 } from '@tabler/icons';
-import { Category } from 'src/types';
+import { ICategory } from 'src/types';
 import { Button, Tooltip } from '@mantine/core';
 import { useAppDispatch } from 'src/store/hooks';
-import {
-  destroyCategory,
-  showCategoryForm,
-} from 'src/store/reducers/CategoryPage/creators';
+import { showCategoryForm, destroyCategory } from 'src/features/CategoryPage';
 
 interface Props {
   provided: DraggableProvided;
-  category: Category;
+  category: ICategory;
 }
 
 export default function DragAndDropCategoryItem({ provided, category }: Props) {

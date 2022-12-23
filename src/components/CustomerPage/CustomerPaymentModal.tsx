@@ -70,6 +70,7 @@ const CustomerPaymentModal = ({
     const date = dayjs(paymentDate);
 
     return {
+      invoiceId: '',
       cashboxId: boxId || undefined,
       paymentDate: date.toDate(),
       description: description || 'Efectivo',
