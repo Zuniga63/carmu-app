@@ -10,7 +10,7 @@ import {
 import {
   IconBox,
   IconCategory,
-  IconDatabase,
+  IconDeviceFloppy,
   IconPlus,
   IconTrash,
 } from '@tabler/icons';
@@ -261,11 +261,6 @@ const CounterSaleForm = () => {
     }
   };
 
-  const resetComponent = () => {
-    setCashboxId(null);
-    setItems([]);
-  };
-
   // --------------------------------------------------------------------------
   // EFFECTS
   // --------------------------------------------------------------------------
@@ -310,8 +305,12 @@ const CounterSaleForm = () => {
   }, [error]);
 
   useEffect(() => {
+    if (cashboxs.length > 0) setCashboxId(cashboxs[0].id);
+  }, []);
+
+  useEffect(() => {
     if (success) {
-      resetComponent();
+      setItems([]);
       close();
     }
   }, [success]);
@@ -325,7 +324,7 @@ const CounterSaleForm = () => {
       size="xl"
     >
       <InvoiceFormHeader onClose={close} isSeparate={false} />
-      <div className="mx-auto mb-8 flex min-h-[70vh] w-11/12 flex-col">
+      <div className="mx-auto mb-8 flex w-11/12 flex-col">
         {/* BOX */}
         <Select
           label="Caja"
@@ -547,11 +546,11 @@ const CounterSaleForm = () => {
         <Group position="center" mt="xl">
           <Button
             onClick={checkIn}
-            rightIcon={<IconDatabase />}
+            leftIcon={<IconDeviceFloppy size={24} stroke={2.5} />}
             loading={loading}
             disabled={summary.amount <= 0}
           >
-            Guardar
+            Registrar Venta
           </Button>
         </Group>
       </div>
