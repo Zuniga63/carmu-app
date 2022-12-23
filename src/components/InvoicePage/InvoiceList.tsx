@@ -167,7 +167,7 @@ const InvoiceList = () => {
               {invoiceList.map(invoice => (
                 <InvoiceListItem key={invoice.id} invoice={invoice} />
               ))}
-              {Boolean(filteredInvoices.length && !loadingData) &&
+              {Boolean(invoiceList.length && !loadingData) &&
                 invoiceLegth <= filteredInvoices.length + 1 && (
                   <Button onClick={showMoreInvoices}>
                     Mostrar más facturas
