@@ -2,7 +2,6 @@ import { ReactNode } from 'react';
 import Head from 'next/head';
 import Header from './Header';
 import { ScrollArea } from '@mantine/core';
-import Sidebar from './Sidebar';
 
 interface Props {
   title?: string;
@@ -21,16 +20,10 @@ export default function Layout({ title, children }: Props) {
 
       <div className="relative xl:h-screen xl:overflow-hidden">
         <Header title={title} />
-        <div className="flex h-[calc(100vh-62px)]">
-          <Sidebar />
-          <div className="h-full flex-grow overflow-y-auto transition-all duration-200">
-            <ScrollArea className="h-full">
-              {/* 208 px is the width of sidebar in xl */}
-              <main className="w-screen xl:w-[calc(100vw-208px)]">
-                {children}
-              </main>
-            </ScrollArea>
-          </div>
+        <div className="h-[calc(100vh-62px)]">
+          <ScrollArea className="h-full">
+            <main>{children}</main>
+          </ScrollArea>
         </div>
       </div>
     </>
