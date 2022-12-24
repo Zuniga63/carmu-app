@@ -237,7 +237,7 @@ const AnnualGeneralChart = ({
   useEffect(() => {
     buildAnnualChartData();
     buildMonthlyChartData();
-  }, [annualReports.length]);
+  }, [annualReports]);
 
   useEffect(() => {
     if (period === ChartPeriod.monthly) {
