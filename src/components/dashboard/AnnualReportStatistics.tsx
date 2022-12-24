@@ -3,9 +3,9 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import dayjs from 'dayjs';
 
-import { Button, Select, Skeleton, Tabs } from '@mantine/core';
+import { ActionIcon, Button, Select, Skeleton, Tabs } from '@mantine/core';
 import { IAnnualReport } from 'src/types';
-import { IconChartInfographic, IconTrash } from '@tabler/icons';
+import { IconChartInfographic, IconReload, IconTrash } from '@tabler/icons';
 import { ChartPeriod, CHART_DATA_PERIODS, MONTHS } from 'src/utils';
 
 import AnnualGeneralChart from './AnnualGeneralChart';
@@ -40,9 +40,13 @@ const AnnualReportStatistics = ({ title, description, type }: Props) => {
 
   const getInitialData = async () => {
     try {
+      const otherReports: IAnnualReport[] = [];
+      if (reports.length > 1) {
+        otherReports.push(...reports.slice(1));
+      }
       setLoading(true);
       const report = await fetchReport();
-      setReports([report]);
+      setReports([report, ...otherReports]);
     } catch (error) {
       console.log(error);
     } finally {
@@ -83,57 +87,59 @@ const AnnualReportStatistics = ({ title, description, type }: Props) => {
   }, []);
 
   return (
-    <Skeleton visible={loading}>
-      <div className="min-h-[300px] bg-gray-200 bg-opacity-90 px-4 pt-6 pb-2 dark:bg-dark">
-        <header className="mb-4">
-          <h2 className="mb-1 text-center text-2xl font-bold text-dark dark:text-light">
-            {title}
-          </h2>
-          {description ? (
-            <p className="mb-2 text-center text-sm italic">{description}</p>
-          ) : null}
+    <div className="min-h-[300px] bg-gray-200 bg-opacity-90 px-4 pt-6 pb-2 dark:bg-dark">
+      <header className="mb-4">
+        <h2 className="mb-1 text-center text-2xl font-bold text-dark dark:text-light">
+          {title}
+        </h2>
+        {description ? (
+          <p className="mb-2 text-center text-sm italic">{description}</p>
+        ) : null}
 
-          {/* CONTROLS */}
-          <div className="mb-4 flex flex-wrap justify-center gap-y-2 gap-x-6">
-            {/* PERIOD */}
-            <Select
-              value={period}
-              data={CHART_DATA_PERIODS}
-              onChange={setPeriod}
-              size="xs"
-            />
-            {/* MONTH */}
-            <Select
-              value={monthSelected}
-              data={MONTHS.map((name, index) => ({
-                value: index.toString(),
-                label: name,
-              }))}
-              onChange={setMonthSelected}
-              size="xs"
-              disabled={period === ChartPeriod.annual}
-            />
-            {/* ADD YEAR */}
-            <Button
-              size="xs"
-              onClick={addAnnualReport}
-              loading={loadingReport}
-              leftIcon={<IconChartInfographic size={16} />}
-            >
-              Agregar año
-            </Button>
-            {/* REMOVE YEAR */}
-            <Button
-              size="xs"
-              onClick={removeAnnualReport}
-              color="red"
-              leftIcon={<IconTrash size={16} />}
-            >
-              Remover año
-            </Button>
-          </div>
-        </header>
-
+        {/* CONTROLS */}
+        <div className="mb-4 flex flex-wrap items-center justify-center gap-y-2 gap-x-6">
+          {/* PERIOD */}
+          <Select
+            value={period}
+            data={CHART_DATA_PERIODS}
+            onChange={setPeriod}
+            size="xs"
+          />
+          {/* MONTH */}
+          <Select
+            value={monthSelected}
+            data={MONTHS.map((name, index) => ({
+              value: index.toString(),
+              label: name,
+            }))}
+            onChange={setMonthSelected}
+            size="xs"
+            disabled={period === ChartPeriod.annual}
+          />
+          {/* ADD YEAR */}
+          <Button
+            size="xs"
+            onClick={addAnnualReport}
+            loading={loadingReport}
+            leftIcon={<IconChartInfographic size={16} />}
+          >
+            Agregar año
+          </Button>
+          {/* REMOVE YEAR */}
+          <Button
+            size="xs"
+            onClick={removeAnnualReport}
+            color="red"
+            leftIcon={<IconTrash size={16} />}
+          >
+            Remover año
+          </Button>
+          <ActionIcon color="grape" onClick={getInitialData} loading={loading}>
+            <IconReload size={18} />
+          </ActionIcon>
+        </div>
+      </header>
+      <Skeleton visible={loading}>
         <Tabs defaultValue="general" variant="pills">
           <Tabs.List>
             <Tabs.Tab value="general" icon={<IconChartInfographic size={14} />}>
@@ -186,8 +192,8 @@ const AnnualReportStatistics = ({ title, description, type }: Props) => {
             </div>
           </Tabs.Panel>
         </Tabs>
-      </div>
-    </Skeleton>
+      </Skeleton>
+    </div>
   );
 };
 

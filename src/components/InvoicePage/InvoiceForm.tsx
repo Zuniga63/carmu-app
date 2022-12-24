@@ -270,16 +270,6 @@ const InvoiceForm = () => {
                 onUpdateExpiration={setExpirationDate}
                 className="lg:col-span-3"
               />
-
-              <div className="lg:col-span-12">
-                <Switch
-                  checked={isSeparate}
-                  label="Es un apartado"
-                  onChange={({ currentTarget }) => {
-                    setIsSeparate(currentTarget.checked);
-                  }}
-                />
-              </div>
             </div>
           </Stepper.Step>
 
@@ -322,7 +312,15 @@ const InvoiceForm = () => {
           <Stepper.Completed>Validate</Stepper.Completed>
         </Stepper>
 
-        <div className="mt-8 flex justify-center gap-x-4">
+        <div className="mt-8 flex items-center justify-center gap-x-4">
+          <Switch
+            checked={isSeparate}
+            label="Es un apartado"
+            onChange={({ currentTarget }) => {
+              setIsSeparate(currentTarget.checked);
+            }}
+            className="flex"
+          />
           <Button
             variant="default"
             onClick={prevStep}

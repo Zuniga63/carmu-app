@@ -11,6 +11,7 @@ import { invoicePageSelector } from 'src/features/InvoicePage';
 import { useAppSelector } from 'src/store/hooks';
 import { ISaleHistory } from 'src/types';
 import { CHART_COLORS, currencyFormat, transparentize } from 'src/utils';
+import AnnualReportStatistics from '../dashboard/AnnualReportStatistics';
 import WeeklyHistory from './WeeklyHistory';
 
 export const barOptions: ChartOptions<'bar'> = {
@@ -226,6 +227,13 @@ const WeeklyInvoiceChart = () => {
         <Tabs.Tab value="history" icon={<IconTable size={14} />}>
           Historial
         </Tabs.Tab>
+        <Tabs.Tab
+          value="annualChart"
+          color="blue"
+          icon={<IconChartBar size={14} />}
+        >
+          Reporte Anual
+        </Tabs.Tab>
       </Tabs.List>
 
       <Tabs.Panel value="chart">
@@ -262,6 +270,13 @@ const WeeklyInvoiceChart = () => {
 
       <Tabs.Panel value="history" pt={4}>
         <WeeklyHistory history={history} />
+      </Tabs.Panel>
+
+      <Tabs.Panel value="annualChart" pt="xs">
+        <AnnualReportStatistics
+          title="Reporte de Venta Directa"
+          description="Se resumen las ventas directas por mostrador u otros medios pagadas en efectivo, tarjeta o transferencia"
+        />
       </Tabs.Panel>
     </Tabs>
   );

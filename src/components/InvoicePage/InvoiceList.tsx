@@ -108,7 +108,7 @@ const InvoiceList = () => {
   }, [invoiceLegth]);
 
   return (
-    <div className="relative rounded bg-gray-300 px-3 pt-4 pb-2 dark:bg-header">
+    <div className="relative rounded bg-gray-300 px-3 py-4 dark:bg-header">
       <div className="absolute top-4 right-2">
         <div className="flex items-center">
           <ActionIcon
@@ -162,7 +162,7 @@ const InvoiceList = () => {
             </p>
           </div>
         ) : (
-          <ScrollArea className="h-80 px-4 py-3 3xl:h-[40rem]">
+          <ScrollArea className="h-80 px-4 py-3 3xl:h-[36rem]">
             <div className="flex flex-col gap-y-4">
               {invoiceList.map(invoice => (
                 <InvoiceListItem key={invoice.id} invoice={invoice} />
