@@ -173,7 +173,7 @@ const PrintPage: NextPage<Props> = ({ invoice }) => {
 export default PrintPage;
 
 export const getServerSideProps: GetServerSideProps = async context => {
-  const { token } = context.req.cookies;
+  const { access_token:token } = context.req.cookies;
   const { id } = context.query;
   let invoice = null;
 
