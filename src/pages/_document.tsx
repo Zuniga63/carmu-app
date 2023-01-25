@@ -19,7 +19,7 @@ class MyDocument extends Document {
             />
             <link
               rel="shortcut icon"
-              href="images/logo_62601199d793d.png"
+              href="/images/logo_62601199d793d.png"
               type="image/x-icon"
             />
           </Head>
