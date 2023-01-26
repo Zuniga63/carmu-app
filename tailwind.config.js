@@ -30,6 +30,7 @@ module.exports = {
         'btn-bg': '#21262d',
       },
       screens: {
+        xxs: '180px',
         '3xl': '1920px',
       },
     },
