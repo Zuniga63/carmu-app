@@ -103,6 +103,15 @@ const WeeklyInvoiceChart = () => {
       hidden: true,
     };
 
+    const separateDataset: ChartDataset<'bar'> = {
+      label: 'Apartados',
+      data: [],
+      borderColor: CHART_COLORS.green,
+      borderWidth: 2,
+      backgroundColor: transparentize(CHART_COLORS.green, 0.6),
+      hidden: true,
+    };
+
     const loanDataset: ChartDataset<'bar'> = {
       label: 'Creditos',
       data: [],
@@ -115,9 +124,9 @@ const WeeklyInvoiceChart = () => {
     const paymentDataset: ChartDataset<'bar'> = {
       label: 'Abonos',
       data: [],
-      borderColor: CHART_COLORS.green,
+      borderColor: CHART_COLORS.orange,
       borderWidth: 2,
-      backgroundColor: transparentize(CHART_COLORS.green, 0.6),
+      backgroundColor: transparentize(CHART_COLORS.orange, 0.6),
       hidden: true,
     };
 
@@ -130,28 +139,26 @@ const WeeklyInvoiceChart = () => {
 
       let amount = 0;
       let sold = 0;
+      let separates = 0;
       let loan = 0;
-      // let separated = 0;
       let payments = 0;
-      // let creditPayments = 0;
-      // let separatePayments = 0;
 
       saleHistory.forEach(record => {
         const recordDate = dayjs(record.operationDate);
+        const { amount: recordAmount, operationType: recordType } = record;
         if (recordDate.isBefore(startDay) || recordDate.isAfter(endDay)) return;
 
-        if (
-          record.operationType === 'sale' ||
-          record.operationType === 'separate' ||
-          record.operationType === 'separate_payment'
-        ) {
-          sold += record.amount;
-          amount += record.amount;
-        } else if (record.operationType === 'credit') {
-          loan += record.amount;
-          amount += record.amount;
-        } else if (record.operationType === 'credit_payment') {
-          payments += record.amount;
+        if (recordType === 'sale' || recordType === 'separate_payment') {
+          amount += recordType === 'sale' ? recordAmount : 0;
+          sold += recordAmount;
+        } else if (recordType === 'credit') {
+          amount += recordAmount;
+          loan += recordAmount;
+        } else if (recordType === 'separate') {
+          amount += recordAmount;
+          separates += recordAmount;
+        } else if (recordType === 'credit_payment') {
+          payments += recordAmount;
         }
       });
 
@@ -159,11 +166,18 @@ const WeeklyInvoiceChart = () => {
       soldDataset.data.push(sold);
       loanDataset.data.push(loan);
       paymentDataset.data.push(payments);
+      separateDataset.data.push(separates);
 
       date = date.add(1, 'day');
     }
 
-    datasets.push(invoicedDataset, soldDataset, loanDataset, paymentDataset);
+    datasets.push(
+      invoicedDataset,
+      soldDataset,
+      separateDataset,
+      loanDataset,
+      paymentDataset
+    );
 
     return datasets;
   };
