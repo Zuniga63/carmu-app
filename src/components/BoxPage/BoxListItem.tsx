@@ -12,7 +12,7 @@ import {
 } from '@tabler/icons';
 import { currencyFormat } from 'src/utils';
 import { useAppDispatch } from 'src/store/hooks';
-import { Button } from '@mantine/core';
+import { Collapse, Divider, Tooltip } from '@mantine/core';
 import Swal from 'sweetalert2';
 import axios, { AxiosError } from 'axios';
 import {
@@ -32,6 +32,7 @@ const BoxListItem = ({ box }: Props) => {
   const [closedFronNow, setClosedFromNow] = useState('');
   const [createdAt, setCreatedAt] = useState('');
   const [updatedAt, setUpdatedAt] = useState('');
+  const [opened, setOpened] = useState(false);
 
   const dispatch = useAppDispatch();
 
@@ -119,11 +120,82 @@ const BoxListItem = ({ box }: Props) => {
       clearInterval(intervalId);
     };
   }, [box.openBox, box.closed, box.createdAt, box.updatedAt]);
+
   return (
     <li className="mb-4">
       <div className="overflow-hidden rounded-lg border shadow-sm dark:border-header dark:shadow-gray-500">
-        <header className="relative bg-gray-300 px-4 py-2 dark:bg-header">
-          <h1 className="text-center font-bold tracking-wider">{box.name}</h1>
+        <header
+          className="relative cursor-pointer bg-gray-300 px-4 py-2 dark:bg-header"
+          onClick={() => setOpened(o => !o)}
+        >
+          <div className="flex items-center gap-x-1">
+            {/* BOX NAME */}
+            <h1 className="flex-grow text-sm font-bold tracking-wider line-clamp-1">
+              {box.name}
+            </h1>
+            {/* BOX ACTIONS */}
+            <div className="flex-shrink-0">
+              <div className="flex gap-x-1">
+                {box.openBox ? (
+                  <>
+                    {/* CERRAR CAJA */}
+                    <Tooltip label="Cerrar caja" color="orange">
+                      <button
+                        onClick={e => {
+                          e.stopPropagation();
+                          dispatch(mountBoxToClose(box.id));
+                        }}
+                        className="rounded-full border border-gray-600 p-1 text-gray-600 transition-colors hover:border-orange-500 hover:text-orange-500 active:border-gray-600 active:text-gray-600"
+                      >
+                        <IconLock size={14} stroke={2} />
+                      </button>
+                    </Tooltip>
+
+                    {/* VER TRANSACCIONES CAJA */}
+                    <Tooltip label="Ver transacciones" color="blue">
+                      <button
+                        onClick={e => {
+                          e.stopPropagation();
+                          dispatch(mountBox(box.id));
+                        }}
+                        className="rounded-full border border-gray-600 p-1 text-gray-600 transition-colors hover:border-blue-500 hover:text-blue-500 active:border-gray-600 active:text-gray-600"
+                      >
+                        <IconFolder size={14} stroke={2} />
+                      </button>
+                    </Tooltip>
+                  </>
+                ) : (
+                  <>
+                    {/* OPEN BOX */}
+                    <Tooltip label="Abrir caja" color="green">
+                      <button
+                        onClick={e => {
+                          e.stopPropagation();
+                          dispatch(mountBoxToOpen(box.id));
+                        }}
+                        className="rounded-full border border-gray-600 p-1 text-gray-600 transition-colors hover:border-green-500 hover:text-green-500 active:border-gray-600 active:text-gray-600"
+                      >
+                        <IconLockOpen size={14} stroke={2} />
+                      </button>
+                    </Tooltip>
+
+                    {/* DELETE BOX */}
+                    <Tooltip label="Eliminar caja" color="red">
+                      <button
+                        onClick={e => {
+                          e.stopPropagation();
+                          deleteBox();
+                        }}
+                        className="rounded-full border border-gray-600 p-1 text-gray-600 transition-colors hover:border-red-500 hover:text-red-500 active:border-gray-600 active:text-gray-600"
+                      >
+                        <IconTrash size={14} stroke={2} />
+                      </button>
+                    </Tooltip>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
           {box.openBox && (
             <div className="flex items-center justify-center gap-x-2 text-gray-dark dark:text-gray-400">
               <IconAward size={18} />
@@ -132,96 +204,59 @@ const BoxListItem = ({ box }: Props) => {
               </p>
             </div>
           )}
-
-          {!box.openBox && (
-            <button
-              onClick={deleteBox}
-              className="absolute top-2 right-4 rounded-full border border-gray-600 p-1 text-gray-600 transition-colors hover:border-red-500 hover:text-red-500 active:border-gray-600 active:text-gray-600"
-            >
-              <IconTrash size={16} />
-            </button>
-          )}
         </header>
         {/* Body */}
-        <div className="bg-gradient-to-b from-gray-200 to-indigo-300 px-4 py-2 dark:bg-none">
-          {!!box.openBox && (
-            <>
-              <div className="flex justify-between text-xs text-gray-dark dark:text-gray-400">
-                <p>
-                  Base:{' '}
-                  <span className="font-bold">{currencyFormat(box.base)}</span>
-                </p>
-                <div className="flex items-center gap-x-2 ">
-                  <IconLockOpen size={18} />
-                  <span>{openFromNow}</span>
+        <Collapse in={opened}>
+          <div className="bg-gradient-to-b from-gray-200 to-indigo-300 px-4 py-2 dark:bg-none">
+            {!!box.openBox && (
+              <>
+                <div className="flex justify-between text-xs text-gray-dark dark:text-gray-400">
+                  <p>
+                    Base:{' '}
+                    <span className="font-bold">
+                      {currencyFormat(box.base)}
+                    </span>
+                  </p>
+                  <div className="flex items-center gap-x-2 ">
+                    <IconLockOpen size={18} />
+                    <span>{openFromNow}</span>
+                  </div>
                 </div>
-              </div>
-              <p className="text-center text-2xl font-bold tracking-wider">
-                {currencyFormat(box.balance)}
-              </p>
-              <p className="text-center text-xs font-bold">Saldo</p>
-            </>
-          )}
-          {box.closed && (
-            <div className="flex flex-col items-center gap-y-3 py-4 text-gray-dark dark:text-gray-400">
-              <IconLock size={30} stroke={2} />
-              <p className="text-xs">Cerrada {closedFronNow}</p>
-            </div>
-          )}
-          {box.neverUsed && (
-            <div className="flex flex-col items-center gap-y-3 py-4 text-gray-dark dark:text-gray-400">
-              <IconAlertTriangle size={30} stroke={2} />
-              <p className="text-xs">¡Caja nunca usada!</p>
-            </div>
-          )}
-          <div className="mt-2 flex justify-between text-xs text-gray-dark dark:text-gray-400">
-            <div className="flex items-center gap-x-2">
-              <IconDeviceFloppy size={18} />
-              <span>{createdAt}</span>
-            </div>
-            {!box.createIsSameUpdate && (
-              <div className="flex items-center gap-x-2">
-                <IconEditCircle size={18} />
-                <span>{updatedAt}</span>
+              </>
+            )}
+            {box.closed && (
+              <div className="flex flex-col items-center gap-y-3 py-4 text-gray-dark dark:text-gray-400">
+                <IconLock size={30} stroke={2} />
+                <p className="text-xs">Cerrada {closedFronNow}</p>
               </div>
             )}
+            {box.neverUsed && (
+              <div className="flex flex-col items-center gap-y-3 py-4 text-gray-dark dark:text-gray-400">
+                <IconAlertTriangle size={30} stroke={2} />
+                <p className="text-xs">¡Caja nunca usada!</p>
+              </div>
+            )}
+            <div className="mt-2 flex justify-between text-xs text-gray-dark dark:text-gray-400">
+              <div className="flex items-center gap-x-2">
+                <IconDeviceFloppy size={18} />
+                <span>{createdAt}</span>
+              </div>
+              {!box.createIsSameUpdate && (
+                <div className="flex items-center gap-x-2">
+                  <IconEditCircle size={18} />
+                  <span>{updatedAt}</span>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        </Collapse>
+        {!opened ? <Divider /> : null}
 
         {/* Footer */}
         <footer className="bg-indigo-400 px-4 py-2 dark:bg-header">
-          <div className="flex items-center justify-between">
-            {!box.openBox && (
-              <Button
-                size="xs"
-                leftIcon={<IconLockOpen size={14} />}
-                color="green"
-                onClick={() => dispatch(mountBoxToOpen(box.id))}
-              >
-                Abrir
-              </Button>
-            )}
-            {box.openBox && (
-              <>
-                <Button
-                  size="xs"
-                  leftIcon={<IconLock size={14} />}
-                  color="orange"
-                  onClick={() => dispatch(mountBoxToClose(box.id))}
-                >
-                  Cerrar
-                </Button>
-
-                <Button
-                  size="xs"
-                  leftIcon={<IconFolder size={14} />}
-                  onClick={() => dispatch(mountBox(box.id))}
-                >
-                  Ver
-                </Button>
-              </>
-            )}
-          </div>
+          <p className="text-center text-xl font-bold tracking-wider">
+            {currencyFormat(box.balance || 0)}
+          </p>
         </footer>
       </div>
     </li>
