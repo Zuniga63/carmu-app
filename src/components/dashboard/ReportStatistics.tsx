@@ -33,7 +33,7 @@ const ReportStatistics = () => {
       <Tabs.Panel value="sale" pt="xs">
         <AnnualReportStatistics
           title="Reporte de Venta Directa"
-          description="Se resumen las ventas directas por mostrador u otros medios pagadas en efectivo, tarjeta o transferencia"
+          description="Se resumen las ventas y los abonos de los apartados pagados en efectivo, tarjeta o transferencia"
         />
       </Tabs.Panel>
 
