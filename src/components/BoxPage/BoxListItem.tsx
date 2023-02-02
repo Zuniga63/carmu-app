@@ -254,9 +254,22 @@ const BoxListItem = ({ box }: Props) => {
 
         {/* Footer */}
         <footer className="bg-indigo-400 px-4 py-2 dark:bg-header">
-          <p className="text-center text-xl font-bold tracking-wider">
-            {currencyFormat(box.balance || 0)}
-          </p>
+          <Tooltip
+            label={
+              <div className="flex flex-col items-center">
+                <h4 className="text-sm">Saldo sin la base</h4>
+                <p className="text-xs font-bold tracking-widest">
+                  {currencyFormat((box.balance || 0) - box.base)}
+                </p>
+              </div>
+            }
+            withArrow
+            hidden={!box.base}
+          >
+            <p className="text-center text-xl font-bold tracking-wider">
+              {currencyFormat(box.balance || 0)}
+            </p>
+          </Tooltip>
         </footer>
       </div>
     </li>
