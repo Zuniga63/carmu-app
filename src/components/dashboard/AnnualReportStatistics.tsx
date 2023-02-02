@@ -47,6 +47,11 @@ const AnnualReportStatistics = ({ title, description, type }: Props) => {
       setLoading(true);
       const report = await fetchReport();
       setReports([report, ...otherReports]);
+
+      if (otherReports.length === 0) {
+        const lastYear = await fetchReport(dayjs().year() - 1);
+        setReports(current => [...current, lastYear]);
+      }
     } catch (error) {
       console.log(error);
     } finally {
@@ -59,6 +64,7 @@ const AnnualReportStatistics = ({ title, description, type }: Props) => {
     const year = lastReport ? lastReport.year - 1 : undefined;
     try {
       setLoadingReport(true);
+
       const report = await fetchReport(year);
       setReports(current => {
         const list = current.slice();
