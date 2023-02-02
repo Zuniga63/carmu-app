@@ -6,19 +6,23 @@ import OpenBoxForm from 'src/components/BoxPage/OpenBoxForm';
 import Layout from 'src/components/Layout';
 import { NextPage } from 'next';
 import { useEffect } from 'react';
-import { useAppDispatch } from 'src/store/hooks';
+import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 import { fetchBoxes, unmountTransactions } from 'src/features/BoxPage';
+import { authSelector } from 'src/features/Auth';
 
 const BoxesPage: NextPage = () => {
+  const { isAuth, isAdmin } = useAppSelector(authSelector);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(fetchBoxes());
+    if (isAuth && isAdmin) {
+      dispatch(fetchBoxes());
+    }
 
     return () => {
       dispatch(unmountTransactions());
     };
-  }, []);
+  }, [isAuth, isAdmin]);
   return (
     <>
       <Layout title="Cajas">
