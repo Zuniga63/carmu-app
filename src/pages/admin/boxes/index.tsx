@@ -4,29 +4,16 @@ import CloseBoxForm from 'src/components/BoxPage/CloseBoxForm';
 import CreateForm from 'src/components/BoxPage/CreateForm';
 import OpenBoxForm from 'src/components/BoxPage/OpenBoxForm';
 import Layout from 'src/components/Layout';
-import { GetServerSideProps, NextPage } from 'next';
+import { NextPage } from 'next';
 import { useEffect } from 'react';
 import { useAppDispatch } from 'src/store/hooks';
-import { IBox, IMainBox } from 'src/types';
-import {
-  mountBoxes,
-  mountMainBox,
-  unmountTransactions,
-} from 'src/features/BoxPage';
+import { fetchBoxes, unmountTransactions } from 'src/features/BoxPage';
 
-interface Props {
-  data: {
-    boxes: IBox[];
-    mainBox: IMainBox | null;
-  };
-}
-
-const BoxesPage: NextPage<Props> = ({ data }: Props) => {
+const BoxesPage: NextPage = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(mountBoxes(data.boxes));
-    dispatch(mountMainBox(data.mainBox));
+    dispatch(fetchBoxes());
 
     return () => {
       dispatch(unmountTransactions());
@@ -49,33 +36,6 @@ const BoxesPage: NextPage<Props> = ({ data }: Props) => {
       <CloseBoxForm />
     </>
   );
-};
-
-export const getServerSideProps: GetServerSideProps = async context => {
-  const { access_token: token } = context.req.cookies;
-  const data = {
-    boxes: [],
-    mainBox: null,
-  };
-
-  if (token) {
-    const baseUrl = process.env.NEXT_PUBLIC_URL_API;
-    const url = `${baseUrl}/boxes`;
-    const headers = { Authorization: `Bearer ${token}` };
-
-    try {
-      const res = await fetch(url, { headers });
-      const resData = await res.json();
-      data.boxes = resData.boxes;
-      data.mainBox = resData.mainBox;
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  return {
-    props: { data },
-  };
 };
 
 export default BoxesPage;

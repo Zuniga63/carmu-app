@@ -18,11 +18,18 @@ export const mountMainBox = createAction<IMainBox | null>(
 );
 export const fetchBoxes = createAsyncThunk(
   'boxPage/fetchBoxes',
-  async (_, { dispatch }) => {
-    const res = await axios.get<IBoxesResponse>('/boxes');
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axios.get<IBoxesResponse>('/boxes');
+      return res.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        const { data, status } = error.response;
+        return rejectWithValue({ data, status });
+      }
 
-    dispatch(mountBoxes(res.data.boxes));
-    dispatch(mountMainBox(res.data.mainBox));
+      throw error;
+    }
   }
 );
 

@@ -97,6 +97,9 @@ export type BoxPageState = {
   boxes: IBox[];
   mainBox: IMainBox | null;
   showingMainBox: boolean;
+  fetchLoading: boolean;
+  fetchIsSuccess: boolean;
+  fetchError: string | null;
   // Add box
   createFormOpened: boolean;
   storeBoxLoading: boolean;

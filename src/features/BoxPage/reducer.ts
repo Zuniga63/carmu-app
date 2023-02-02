@@ -2,14 +2,13 @@ import { createReducer } from '@reduxjs/toolkit';
 import { ErrorResponse } from '../CategoryPage/types';
 import {
   closeBox,
+  fetchBoxes,
   hideCreateForm,
   hideTransactionForm,
   mountBox,
-  mountBoxes,
   mountBoxToClose,
   mountBoxToOpen,
   mountGlobalTransactions,
-  mountMainBox,
   openBox,
   removeBox,
   removeTransaction,
@@ -27,6 +26,9 @@ const initialState: BoxPageState = {
   boxes: [],
   mainBox: null,
   showingMainBox: false,
+  fetchLoading: false,
+  fetchIsSuccess: false,
+  fetchError: null,
   // add box property
   createFormOpened: false,
   storeBoxLoading: false,
@@ -60,12 +62,23 @@ export const boxPageReducer = createReducer(initialState, builder => {
   // MOUNTH BOXES
   // --------------------------------------------------------------------------
   builder
-    .addCase(mountBoxes, (state, { payload }) => {
-      state.boxSelected = payload.find(box => box.id === state.boxSelected?.id);
-      state.boxes = payload;
+    .addCase(fetchBoxes.pending, state => {
+      state.fetchLoading = true;
+      state.fetchError = null;
+      state.fetchIsSuccess = false;
+      state.showingMainBox = false;
+      state.boxSelected = undefined;
+      state.transactions = [];
     })
-    .addCase(mountMainBox, (state, { payload }) => {
-      state.mainBox = payload;
+    .addCase(fetchBoxes.fulfilled, (state, { payload }) => {
+      state.boxes = payload.boxes;
+      state.mainBox = payload.mainBox;
+      state.fetchLoading = false;
+      state.fetchIsSuccess = true;
+    })
+    .addCase(fetchBoxes.rejected, state => {
+      state.fetchLoading = false;
+      state.fetchError = 'No se pudieron cargar las cajas';
     });
   // --------------------------------------------------------------------------
   // CREATE NEW BOXES
