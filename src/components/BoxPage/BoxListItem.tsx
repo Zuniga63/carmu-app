@@ -156,6 +156,7 @@ const BoxListItem = ({ box }: Props) => {
                       <button
                         onClick={e => {
                           e.stopPropagation();
+                          setOpened(true);
                           dispatch(mountBox(box.id));
                         }}
                         className="rounded-full border border-gray-600 p-1 text-gray-600 transition-colors hover:border-blue-500 hover:text-blue-500 active:border-gray-600 active:text-gray-600"
