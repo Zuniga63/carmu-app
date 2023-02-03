@@ -45,8 +45,18 @@ const InvoiceCardItemsRow = ({ item }: Props) => {
           ) : null}
         </div>
       </td>
+      <td className="whitespace-nowrap">
+        <div className="text-right">
+          <p className={`${item.discount && 'scale-90 text-xs line-through'}`}>
+            {currencyFormat(item.amount)}
+          </p>
+          {item.discount ? (
+            <p>{currencyFormat(item.unitValue - item.discount)}</p>
+          ) : null}
+        </div>
+      </td>
       <td className="whitespace-nowrap text-right">
-        {currencyFormat(item.amount)}
+        {item.balance ? currencyFormat(item.balance) : 'Pagado'}
       </td>
       <td></td>
     </tr>

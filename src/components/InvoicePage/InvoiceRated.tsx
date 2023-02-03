@@ -16,7 +16,7 @@ interface Props {
 
 const InvoiceRated = ({ paid, pending, separated, canceled }: Props) => {
   return (
-    <div className="mb-4 flex flex-wrap justify-evenly gap-2 px-2">
+    <div className="flex flex-wrap justify-evenly gap-2 px-2">
       <Tooltip label="Pagadas" withArrow color="green">
         <div className="flex items-center gap-x-2 text-sm text-green-600 hover:cursor-help dark:text-green-400">
           <IconCircleCheck size={20} stroke={2} />{' '}

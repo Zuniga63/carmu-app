@@ -1,6 +1,7 @@
 import {
   ActionIcon,
   Button,
+  Collapse,
   Loader,
   ScrollArea,
   SegmentedControl,
@@ -8,6 +9,8 @@ import {
   Tooltip,
 } from '@mantine/core';
 import {
+  IconAdjustmentsHorizontal,
+  IconAdjustmentsOff,
   IconBuildingStore,
   IconFileInvoice,
   IconReload,
@@ -38,6 +41,7 @@ const InvoiceList = () => {
   const [canceledInvoices, setCancelInvoices] = useState<IInvoice[]>([]);
 
   const [filter, setFilter] = useState<string | undefined>('all');
+  const [filterOPened, setFilterOpened] = useState(false);
   const [search, setSearch] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
   const [filteredInvoices, setFilteredInvoices] = useState<IInvoice[]>([]);
@@ -114,30 +118,12 @@ const InvoiceList = () => {
   }, [invoiceLegth]);
 
   return (
-    <div className="rounded bg-gray-300 px-3 py-4 dark:bg-header">
-      <header className="mb-2 px-2">
-        <h2 className="mb-2 text-center text-xl font-bold tracking-widest text-dark dark:text-light">
-          Facturas
-        </h2>
-
-        {/* FILTERS */}
-        {/* SEARCH AND ACTIONS */}
-        <div className="mb-2 flex items-center gap-x-2">
-          {/* SEARCH */}
-          <div className="flex-grow">
-            <TextInput
-              size="xs"
-              icon={
-                loading ? (
-                  <Loader size={14} variant="dots" />
-                ) : (
-                  <IconSearch size={14} stroke={1.5} />
-                )
-              }
-              placeholder="Buscar Factura"
-              onChange={({ target }) => updateSearch(target.value)}
-            />
-          </div>
+    <div>
+      <header className="rounded-t-md bg-dark px-4 py-2 dark:bg-header">
+        <div className="flex items-center justify-between">
+          <h2 className="mb-2 text-center text-xl font-bold tracking-widest text-light">
+            Facturas
+          </h2>
 
           {/* ACTIONS */}
           <div className="flex flex-shrink-0 gap-x-1">
@@ -168,53 +154,98 @@ const InvoiceList = () => {
                 <IconFileInvoice size={18} />
               </ActionIcon>
             </Tooltip>
+
+            <Tooltip label="Filtros">
+              <ActionIcon
+                color="yellow"
+                onClick={() => setFilterOpened(o => !o)}
+              >
+                {filterOPened ? (
+                  <IconAdjustmentsOff size={18} />
+                ) : (
+                  <IconAdjustmentsHorizontal size={18} />
+                )}
+              </ActionIcon>
+            </Tooltip>
           </div>
         </div>
-        <SegmentedControl
-          size="xs"
-          value={filter}
-          onChange={setFilter}
-          data={[
-            { label: 'Todas', value: 'all' },
-            { label: 'Pagadas', value: 'paid' },
-            { label: 'Creditos', value: 'pending' },
-            { label: 'Apartados', value: 'separated' },
-            { label: 'Canceladas', value: 'canceled' },
-          ]}
-        />
       </header>
 
-      <div className="mb-2 rounded-md bg-white bg-opacity-50 dark:bg-slate-800">
-        {loadingData ? (
-          <div className="flex h-80 flex-col items-center justify-center gap-y-4">
-            <Loader />
-            <p className="animate-pulse text-center text-xs tracking-widest text-dark dark:text-light">
-              Se están recuperando las facturas, esto puede tardar un poco...
-            </p>
-          </div>
-        ) : (
-          <ScrollArea className="h-80 px-4 py-3 3xl:h-[36rem]">
-            <div className="flex flex-col gap-y-4">
-              {invoiceList.map(invoice => (
-                <InvoiceListItem key={invoice.id} invoice={invoice} />
-              ))}
-              {Boolean(invoiceList.length && !loadingData) &&
-                invoiceLegth <= filteredInvoices.length + 1 && (
-                  <Button onClick={showMoreInvoices}>
-                    Mostrar más facturas
-                  </Button>
-                )}
+      <div className="border-x-8 border-header bg-header">
+        <div className="rounded bg-gray-300 bg-gradient-to-br from-blue-500 via-purple-500 to-emerald-500 p-2 dark:bg-gradient-to-b dark:from-red-500 dark:via-orange-500 dark:to-yellow-500">
+          {/* FILTERS */}
+          <Collapse in={filterOPened}>
+            <div className="mb-4 rounded bg-white bg-opacity-20 px-2 py-3 backdrop-blur-sm dark:bg-dark dark:bg-opacity-40">
+              {/* SEARCH AND ACTIONS */}
+              <div className="mb-2 flex items-center gap-x-2">
+                {/* SEARCH */}
+                <div className="flex-grow">
+                  <TextInput
+                    size="xs"
+                    icon={
+                      loading ? (
+                        <Loader size={14} variant="dots" />
+                      ) : (
+                        <IconSearch size={14} stroke={1.5} />
+                      )
+                    }
+                    placeholder="Buscar Factura"
+                    onChange={({ target }) => updateSearch(target.value)}
+                  />
+                </div>
+              </div>
+              <SegmentedControl
+                size="xs"
+                value={filter}
+                onChange={setFilter}
+                data={[
+                  { label: 'Todas', value: 'all' },
+                  { label: 'Pagadas', value: 'paid' },
+                  { label: 'Creditos', value: 'pending' },
+                  { label: 'Apartados', value: 'separated' },
+                  { label: 'Canceladas', value: 'canceled' },
+                ]}
+              />
             </div>
-          </ScrollArea>
-        )}
+          </Collapse>
+          {/* INVOICES */}
+          <div className="mb-2 rounded bg-white bg-opacity-20 backdrop-blur dark:bg-dark dark:bg-opacity-40">
+            {loadingData ? (
+              <div className="flex h-80 flex-col items-center justify-center gap-y-4">
+                <Loader />
+                <p className="animate-pulse text-center text-xs tracking-widest text-dark dark:text-light">
+                  Se están recuperando las facturas, esto puede tardar un
+                  poco...
+                </p>
+              </div>
+            ) : (
+              <ScrollArea className="h-80 px-4 py-3 3xl:h-[36rem]">
+                <div className="flex flex-col gap-y-4">
+                  {invoiceList.map(invoice => (
+                    <InvoiceListItem key={invoice.id} invoice={invoice} />
+                  ))}
+                  {Boolean(invoiceList.length && !loadingData) &&
+                    invoiceLegth <= filteredInvoices.length + 1 && (
+                      <Button onClick={showMoreInvoices}>
+                        Mostrar más facturas
+                      </Button>
+                    )}
+                </div>
+              </ScrollArea>
+            )}
+          </div>
+        </div>
       </div>
 
-      <InvoiceRated
-        paid={paidInvoices.length}
-        pending={pendingInvoices.length}
-        separated={separatedInvoices.length}
-        canceled={canceledInvoices.length}
-      />
+      {/* FOOTER */}
+      <footer className="rounded-b-md bg-dark px-4 py-2 dark:bg-header">
+        <InvoiceRated
+          paid={paidInvoices.length}
+          pending={pendingInvoices.length}
+          separated={separatedInvoices.length}
+          canceled={canceledInvoices.length}
+        />
+      </footer>
     </div>
   );
 };
