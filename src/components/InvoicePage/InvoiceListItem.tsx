@@ -28,6 +28,8 @@ const InvoiceListItem = ({ invoice }: Props) => {
     cashChange: 0,
   });
 
+  const isToday = invoice.expeditionDate.isToday();
+
   useEffect(() => {
     const newSummary = { ...summary };
     newSummary.subtotal = invoice.subtotal || 0;
@@ -52,10 +54,14 @@ const InvoiceListItem = ({ invoice }: Props) => {
   return (
     <div
       className={`overflow-hidden rounded-lg border text-light ${
-        invoice.expeditionDate.isToday()
-          ? 'border-emerald-700 bg-emerald-900'
-          : 'border-header bg-header'
-      } shadow shadow-header transition-colors hover:border-dark hover:bg-dark hover:shadow-neutral-900`}
+        isToday
+          ? invoice.balance
+            ? invoice.isSeparate
+              ? 'border-blue-700 bg-blue-900 shadow-blue-800 hover:bg-blue-600 hover:shadow-blue-500'
+              : 'border-red-700 bg-red-900 shadow-red-800 hover:bg-red-600 hover:shadow-red-500'
+            : 'border-emerald-700 bg-emerald-900 shadow-emerald-800 hover:bg-emerald-600 hover:shadow-emerald-700'
+          : 'border-header bg-header shadow-header hover:border-dark hover:bg-dark hover:shadow-neutral-900'
+      } shadow  transition-colors  `}
     >
       <header
         className="px-4 py-2 hover:cursor-pointer"
@@ -80,9 +86,25 @@ const InvoiceListItem = ({ invoice }: Props) => {
             </span>
           </h2>
         </div>
-        <p className="text-center text-xs italic text-gray-400">
-          {invoice.customer ? invoice.customer.fullName : invoice.customerName}
-        </p>
+        <div className="flex justify-between">
+          <p
+            className={` text-xs italic ${
+              isToday ? 'tetx-gray-200' : 'text-gray-400'
+            }`}
+          >
+            {invoice.customer
+              ? invoice.customer.fullName
+              : invoice.customerName}
+          </p>
+
+          <p
+            className={` text-xs italic ${
+              isToday ? 'tetx-gray-200' : 'text-gray-400'
+            }`}
+          >
+            {currencyFormat(invoice.amount)}
+          </p>
+        </div>
       </header>
       <Collapse in={opened}>
         <div className="bg-white bg-opacity-10 p-2 transition-colors hover:bg-opacity-50 hover:text-dark ">

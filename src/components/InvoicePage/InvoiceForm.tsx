@@ -51,6 +51,15 @@ export interface IInvoiceCustomer {
   address: string;
 }
 
+const defaulCustomer: IInvoiceCustomer = {
+  id: null,
+  name: '',
+  document: '',
+  documentType: 'CC',
+  address: '',
+  phone: '',
+};
+
 const InvoiceForm = () => {
   const {
     formOpened: opened,
@@ -87,12 +96,8 @@ const InvoiceForm = () => {
   });
 
   // INVOICING
-  const [expeditionDate, setExpeditionDate] = useState<Date | null>(
-    dayjs().toDate()
-  );
-  const [expirationDate, setExpirationDate] = useState<Date | null>(
-    dayjs().add(1, 'month').toDate()
-  );
+  const [expeditionDate, setExpeditionDate] = useState<Date | null>(null);
+  const [expirationDate, setExpirationDate] = useState<Date | null>(null);
   const [isSeparate, setIsSeparate] = useState(false);
 
   // ITEMS
@@ -212,19 +217,22 @@ const InvoiceForm = () => {
 
   // To determine wheter or not to save the invoice
   useEffect(() => {
-    setEnabled(
-      (summary.amount > 0 && !summary.balance) ||
-        Boolean(
-          (customer.id && customer.name) ||
-            (customer.name && customer.document && customer.documentType)
-        )
-    );
+    let isOk = summary.amount > 0;
+
+    if (summary.balance) {
+      isOk = Boolean(
+        (customer.id && customer.name) ||
+          (customer.name && customer.document && customer.documentType)
+      );
+    }
+    setEnabled(isOk);
   }, [
     customer.name,
     customer.document,
     customer.documentType,
     summary.amount,
     summary.balance,
+    summary.amount,
   ]);
 
   useEffect(() => {
@@ -239,6 +247,12 @@ const InvoiceForm = () => {
     }
   }, [success]);
 
+  useEffect(() => {
+    if (!customer.id) {
+      setCustomer(defaulCustomer);
+    }
+  }, [customer.id]);
+
   return (
     <Modal
       opened={opened}
@@ -250,6 +264,20 @@ const InvoiceForm = () => {
       <InvoiceFormHeader onClose={closeInvoice} isSeparate={isSeparate} />
       <div className="px-6 py-2 lg:py-6">
         <Stepper active={step} onStepClick={setStep} size="xs">
+          {/* PRODUCTS */}
+          <Stepper.Step
+            label="Productos"
+            icon={<IconBox size={18} />}
+            disabled={loading}
+          >
+            <InvoiceFormItems
+              items={items}
+              setItems={setItems}
+              summary={summary}
+            />
+          </Stepper.Step>
+
+          {/* INVOICING */}
           <Stepper.Step
             label="Facturación"
             icon={<IconFileInvoice size={18} />}
@@ -273,18 +301,7 @@ const InvoiceForm = () => {
             </div>
           </Stepper.Step>
 
-          <Stepper.Step
-            label="Productos"
-            icon={<IconBox size={18} />}
-            disabled={loading}
-          >
-            <InvoiceFormItems
-              items={items}
-              setItems={setItems}
-              summary={summary}
-            />
-          </Stepper.Step>
-
+          {/* PAYMENTS */}
           <Stepper.Step
             label="Forma de pago"
             icon={<IconFileDollar size={18} />}
@@ -297,6 +314,8 @@ const InvoiceForm = () => {
               setPayments={setCashPayments}
             />
           </Stepper.Step>
+
+          {/* CONFIRM */}
           <Stepper.Step
             label="Confirmar"
             icon={<IconCircleCheck size={18} />}
@@ -307,6 +326,7 @@ const InvoiceForm = () => {
               items={items}
               payments={cashPayments}
               summary={summary}
+              expeditionDate={expeditionDate}
             />
           </Stepper.Step>
           <Stepper.Completed>Validate</Stepper.Completed>

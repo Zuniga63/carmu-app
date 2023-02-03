@@ -5,6 +5,7 @@ import {
   NumberInput,
   Select,
   Table,
+  Tabs,
   TextInput,
 } from '@mantine/core';
 import {
@@ -13,6 +14,7 @@ import {
   IconDeviceFloppy,
   IconPlus,
   IconTrash,
+  IconUsers,
 } from '@tabler/icons';
 import dayjs from 'dayjs';
 import React, { KeyboardEvent, useEffect, useRef, useState } from 'react';
@@ -30,8 +32,19 @@ import {
   INewInvoiceItem,
 } from 'src/types';
 import { currencyFormat } from 'src/utils';
+import { IInvoiceCustomer } from './InvoiceForm';
+import InvoiceFormCustomer from './InvoiceFormCustomer';
 import InvoiceFormHeader from './InvoiceFormHeader';
 import ProductSelect from './ProductSelect';
+
+const defaulCustomer: IInvoiceCustomer = {
+  id: null,
+  name: '',
+  document: '',
+  documentType: 'CC',
+  address: '',
+  phone: '',
+};
 
 const CounterSaleForm = () => {
   const {
@@ -68,6 +81,9 @@ const CounterSaleForm = () => {
   // Cashbox
   const [cashboxId, setCashboxId] = useState<string | null>(null);
   const [box, setBox] = useState<IInvoiceCashbox | null>(null);
+
+  // CUSTOMER
+  const [customer, setCustomer] = useState(defaulCustomer);
 
   // SUMMARY
   const [summary, setSummary] = useState<IInvoiceSummary>({
@@ -239,6 +255,12 @@ const CounterSaleForm = () => {
       sellerId: user?.id,
       isSeparate: false,
       sellerName: user?.name,
+      customerId: customer.id || undefined,
+      customerName: customer.name || undefined,
+      customerAddress: customer.address.trim() || undefined,
+      customerDocument: customer.document || undefined,
+      customerDocumentType: customer.documentType || undefined,
+      customerPhone: customer.phone || undefined,
       expeditionDate: dayjs().toDate(),
       expirationDate: dayjs().add(1, 'month').toDate(),
       cash: summary.amount,
@@ -311,6 +333,7 @@ const CounterSaleForm = () => {
   useEffect(() => {
     if (success) {
       setItems([]);
+      setCustomer(defaulCustomer);
       close();
     }
   }, [success]);
@@ -325,139 +348,159 @@ const CounterSaleForm = () => {
     >
       <InvoiceFormHeader onClose={close} isSeparate={false} />
       <div className="mx-auto mb-8 flex w-11/12 flex-col">
-        {/* BOX */}
-        <Select
-          label="Caja"
-          placeholder="Selecciona una caja"
-          value={cashboxId}
-          onChange={setCashboxId}
-          icon={<IconBox size={14} />}
-          data={cashboxs
-            .filter(item => Boolean(item.openBox))
-            .map(box => ({
-              value: box.id,
-              label: box.name,
-            }))}
-          searchable
-          clearable
-          className="mb-8"
-        />
-
-        <div className="mb-8 rounded-md bg-gray-200 p-4 shadow-md dark:bg-header dark:shadow-neutral-900">
-          {/* PRODUCT */}
-          <ProductSelect
-            products={products}
-            productId={productId}
-            selectRef={searchRef}
-            onSelect={setProductId}
-            onEnterPress={itemKeyPress}
-            className="mb-4"
-          />
-
-          {/* ITEM INFO */}
-          <div className="mb-4 grid grid-cols-12 gap-2">
-            {/* QUANTITY */}
-            <NumberInput
-              label="Cant."
-              placeholder="1.0"
-              size="xs"
-              min={1}
-              step={1}
-              value={itemQuantity}
-              type="number"
-              onChange={val => setItemQuantity(val)}
-              onKeyDown={itemKeyPress}
-              ref={categoryRef}
-              className="col-span-4 lg:col-span-1"
-            />
-
-            {/* category */}
-            <Select
-              placeholder="Selecciona categoría"
-              label="Categoría"
-              className="col-span-8 lg:col-span-2"
-              value={categoryId}
-              onChange={setCategoryId}
-              icon={<IconCategory size={14} />}
-              data={categories.map(category => ({
-                value: category.id,
-                label: category.name,
+        <div className="mb-8 rounded-lg border border-gray-400 p-4 shadow-lg dark:shadow dark:shadow-light">
+          {/* BOX */}
+          <Select
+            label="Caja"
+            placeholder="Selecciona una caja"
+            value={cashboxId}
+            onChange={setCashboxId}
+            icon={<IconBox size={18} />}
+            data={cashboxs
+              .filter(item => Boolean(item.openBox))
+              .map(box => ({
+                value: box.id,
+                label: box.name,
               }))}
-              searchable
-              clearable
-              size="xs"
-            />
-
-            {/* ITEM DESCRIPTION */}
-            <TextInput
-              label="Descripción"
-              className="col-span-12 lg:col-span-5"
-              value={itemDescription}
-              placeholder="Nombre del producto o servicio"
-              size="xs"
-              onChange={({ target }) => setItemDescription(target.value)}
-            />
-
-            {/* UNIT VALUE */}
-            <NumberInput
-              label="Precio"
-              placeholder="1.0"
-              className="col-span-6 lg:col-span-2"
-              hideControls
-              size="xs"
-              value={itemUnitValue}
-              min={50}
-              step={100}
-              onFocus={({ target }) => target.select()}
-              onChange={value => setItemUnitValue(value)}
-              parser={value => value?.replace(/\$\s?|(,*)/g, '')}
-              formatter={formater}
-              onKeyDown={itemKeyPress}
-            />
-            {/* DISCOUNT */}
-            <NumberInput
-              label="Desc. Unt"
-              placeholder="1.0"
-              className="col-span-6 lg:col-span-2"
-              hideControls
-              size="xs"
-              value={itemDiscount}
-              min={50}
-              max={itemUnitValue}
-              step={100}
-              onFocus={({ target }) => target.select()}
-              onChange={value => setItemDiscount(value)}
-              parser={value => value?.replace(/\$\s?|(,*)/g, '')}
-              formatter={formater}
-              onKeyDown={itemKeyPress}
-            />
-          </div>
-
-          <div className="flex flex-col items-center justify-end gap-4 lg:flex-row">
-            {itemAmount ? (
-              <span className="text-xs">
-                Importe: {currencyFormat(itemAmount)}
-              </span>
-            ) : null}
-
-            <Button
-              leftIcon={<IconPlus size={15} stroke={4} />}
-              size="xs"
-              disabled={!enabled}
-              onClick={() => addNewItem()}
-            >
-              Agregar Item
-            </Button>
-            <Button
-              leftIcon={<IconTrash size={15} stroke={2} />}
-              size="xs"
-              color="red"
-              onClick={() => resetItem()}
-            >
-              Descartar Item
-            </Button>
-          </div>
+            searchable
+            clearable
+          />
         </div>
+
+        <Tabs defaultValue="items" className="mb-8">
+          <Tabs.List>
+            <Tabs.Tab value="items">Items</Tabs.Tab>
+            <Tabs.Tab value="customer" icon={<IconUsers size={14} />}>
+              Cliente
+            </Tabs.Tab>
+          </Tabs.List>
+
+          <Tabs.Panel value="items" pt="xs">
+            <div className="rounded-md bg-gray-200 p-4 shadow-lg dark:bg-header dark:shadow dark:shadow-light ">
+              {/* PRODUCT */}
+              <ProductSelect
+                products={products}
+                productId={productId}
+                selectRef={searchRef}
+                onSelect={setProductId}
+                onEnterPress={itemKeyPress}
+                className="mb-4"
+              />
+
+              {/* ITEM INFO */}
+              <div className="mb-4 grid grid-cols-12 gap-2">
+                {/* QUANTITY */}
+                <NumberInput
+                  label="Cant."
+                  placeholder="1.0"
+                  size="xs"
+                  min={1}
+                  step={1}
+                  value={itemQuantity}
+                  type="number"
+                  onChange={val => setItemQuantity(val)}
+                  onKeyDown={itemKeyPress}
+                  ref={categoryRef}
+                  className="col-span-4 lg:col-span-1"
+                />
+
+                {/* category */}
+                <Select
+                  placeholder="Selecciona categoría"
+                  label="Categoría"
+                  className="col-span-8 lg:col-span-2"
+                  value={categoryId}
+                  onChange={setCategoryId}
+                  icon={<IconCategory size={14} />}
+                  data={categories.map(category => ({
+                    value: category.id,
+                    label: category.name,
+                  }))}
+                  searchable
+                  clearable
+                  size="xs"
+                />
+
+                {/* ITEM DESCRIPTION */}
+                <TextInput
+                  label="Descripción"
+                  className="col-span-12 lg:col-span-5"
+                  value={itemDescription}
+                  placeholder="Nombre del producto o servicio"
+                  size="xs"
+                  onChange={({ target }) => setItemDescription(target.value)}
+                />
+
+                {/* UNIT VALUE */}
+                <NumberInput
+                  label="Precio"
+                  placeholder="1.0"
+                  className="col-span-6 lg:col-span-2"
+                  hideControls
+                  size="xs"
+                  value={itemUnitValue}
+                  min={50}
+                  step={100}
+                  onFocus={({ target }) => target.select()}
+                  onChange={value => setItemUnitValue(value)}
+                  parser={value => value?.replace(/\$\s?|(,*)/g, '')}
+                  formatter={formater}
+                  onKeyDown={itemKeyPress}
+                />
+                {/* DISCOUNT */}
+                <NumberInput
+                  label="Desc. Unt"
+                  placeholder="1.0"
+                  className="col-span-6 lg:col-span-2"
+                  hideControls
+                  size="xs"
+                  value={itemDiscount}
+                  min={50}
+                  max={itemUnitValue}
+                  step={100}
+                  onFocus={({ target }) => target.select()}
+                  onChange={value => setItemDiscount(value)}
+                  parser={value => value?.replace(/\$\s?|(,*)/g, '')}
+                  formatter={formater}
+                  onKeyDown={itemKeyPress}
+                />
+              </div>
+
+              <div className="flex flex-col items-center justify-end gap-4 lg:flex-row">
+                {itemAmount ? (
+                  <span className="text-xs">
+                    Importe: {currencyFormat(itemAmount)}
+                  </span>
+                ) : null}
+
+                <Button
+                  leftIcon={<IconPlus size={15} stroke={4} />}
+                  size="xs"
+                  disabled={!enabled}
+                  onClick={() => addNewItem()}
+                >
+                  Agregar Item
+                </Button>
+                <Button
+                  leftIcon={<IconTrash size={15} stroke={2} />}
+                  size="xs"
+                  color="red"
+                  onClick={() => resetItem()}
+                >
+                  Descartar Item
+                </Button>
+              </div>
+            </div>
+          </Tabs.Panel>
+
+          <Tabs.Panel value="customer" pt="xl">
+            <InvoiceFormCustomer
+              className="lg:col-span-9"
+              customer={customer}
+              onCustomerChange={setCustomer}
+            />
+          </Tabs.Panel>
+        </Tabs>
 
         {/* ITEMS */}
         <div className="min-h-[150px]">
