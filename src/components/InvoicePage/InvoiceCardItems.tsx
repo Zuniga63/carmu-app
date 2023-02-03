@@ -23,6 +23,9 @@ const InvoiceCardItems = ({ items }: Props) => {
             <div className="text-center">Importe</div>
           </th>
           <th scope="col">
+            <div className="text-center">Saldo</div>
+          </th>
+          <th scope="col">
             <span className="sr-only">Actions</span>
           </th>
         </tr>
