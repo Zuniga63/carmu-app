@@ -5,12 +5,20 @@ import {
   ScrollArea,
   SegmentedControl,
   TextInput,
+  Tooltip,
 } from '@mantine/core';
-import { IconReload, IconSearch } from '@tabler/icons';
+import {
+  IconBuildingStore,
+  IconFileInvoice,
+  IconReload,
+  IconSearch,
+} from '@tabler/icons';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   fetchInvoiceData,
   invoicePageSelector,
+  showCounterSaleForm,
+  showNewInvoiceForm,
 } from 'src/features/InvoicePage';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 import { IInvoice } from 'src/types';
@@ -106,37 +114,62 @@ const InvoiceList = () => {
   }, [invoiceLegth]);
 
   return (
-    <div className="relative rounded bg-gray-300 px-3 py-4 dark:bg-header">
-      <div className="absolute top-4 right-2">
-        <div className="flex items-center">
-          <ActionIcon
-            loading={loadingData}
-            color="blue"
-            onClick={() => dispatch(fetchInvoiceData())}
-          >
-            <IconReload size={18} />
-          </ActionIcon>
-        </div>
-      </div>
+    <div className="rounded bg-gray-300 px-3 py-4 dark:bg-header">
       <header className="mb-2 px-2">
         <h2 className="mb-2 text-center text-xl font-bold tracking-widest text-dark dark:text-light">
           Facturas
         </h2>
 
         {/* FILTERS */}
-        <TextInput
-          size="xs"
-          icon={
-            loading ? (
-              <Loader size={14} variant="dots" />
-            ) : (
-              <IconSearch size={14} stroke={1.5} />
-            )
-          }
-          placeholder="Buscar Factura"
-          className="mb-2"
-          onChange={({ target }) => updateSearch(target.value)}
-        />
+        {/* SEARCH AND ACTIONS */}
+        <div className="mb-2 flex items-center gap-x-2">
+          {/* SEARCH */}
+          <div className="flex-grow">
+            <TextInput
+              size="xs"
+              icon={
+                loading ? (
+                  <Loader size={14} variant="dots" />
+                ) : (
+                  <IconSearch size={14} stroke={1.5} />
+                )
+              }
+              placeholder="Buscar Factura"
+              onChange={({ target }) => updateSearch(target.value)}
+            />
+          </div>
+
+          {/* ACTIONS */}
+          <div className="flex flex-shrink-0 gap-x-1">
+            <Tooltip label="Actualizar Facturas">
+              <ActionIcon
+                loading={loadingData}
+                color="blue"
+                onClick={() => dispatch(fetchInvoiceData())}
+              >
+                <IconReload size={18} />
+              </ActionIcon>
+            </Tooltip>
+
+            <Tooltip label="Facturación Rápida">
+              <ActionIcon
+                color="green"
+                onClick={() => dispatch(showCounterSaleForm())}
+              >
+                <IconBuildingStore stroke={2} size={18} />
+              </ActionIcon>
+            </Tooltip>
+
+            <Tooltip label="Facturación Normal">
+              <ActionIcon
+                color="grape"
+                onClick={() => dispatch(showNewInvoiceForm())}
+              >
+                <IconFileInvoice size={18} />
+              </ActionIcon>
+            </Tooltip>
+          </div>
+        </div>
         <SegmentedControl
           size="xs"
           value={filter}

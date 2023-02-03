@@ -32,15 +32,6 @@ const InvoiceFormCustomer = ({
           : current.phone,
         address: customerData.address || current.address,
       }));
-    } else {
-      onCustomerChange(current => ({
-        ...current,
-        name: '',
-        document: '',
-        documentType: 'CC',
-        phone: '',
-        address: '',
-      }));
     }
   }, [customer.id]);
 
