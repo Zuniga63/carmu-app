@@ -12,10 +12,10 @@ interface Props {
 
 const InvoiceToPrint = ({ invoice }: Props) => {
   return (
-    <div className="mx-auto min-h-screen max-w-sm bg-white text-dark sm:w-11/12 sm:max-w-none sm:pt-10">
-      <header className="mb-2 border-b-4 border-double border-dark pb-2 sm:flex sm:items-center sm:justify-between">
+    <div className="mx-auto min-h-screen max-w-sm bg-white text-dark lg:w-11/12 lg:max-w-none lg:pt-10">
+      <header className="mb-2 border-b-4 border-double border-dark pb-2 lg:flex lg:items-center lg:justify-between">
         {/* Brand Logo */}
-        <figure className="mx-auto mb-2 flex w-10/12 items-center border sm:mx-0 sm:mb-0 sm:w-40">
+        <figure className="mx-auto mb-2 flex w-10/12 items-center lg:mx-0 lg:mb-0 lg:w-40">
           <Image src={brandLogo} alt="Carmú Logo" />
         </figure>
 
@@ -42,7 +42,7 @@ const InvoiceToPrint = ({ invoice }: Props) => {
         </div>
 
         {/* Invoice Number */}
-        <div className="hidden sm:block">
+        <div className="hidden lg:block">
           <h2 className="text-center text-base uppercase xxs:text-xl">
             {invoice.isSeparate ? 'Apartado' : 'Factura de venta'}
           </h2>
@@ -58,7 +58,7 @@ const InvoiceToPrint = ({ invoice }: Props) => {
       {/* INVOICE INFO */}
       <div className="mb-2 border-b-4 border-double border-dark pb-2">
         {/* INVOICE NUMBER */}
-        <div className="mb-2 justify-center gap-2 xxs:flex sm:hidden">
+        <div className="mb-2 justify-center gap-2 xxs:flex lg:hidden">
           <h2 className="text-center text-base uppercase xxs:text-xl">
             {invoice.isSeparate ? 'Apartado' : 'Factura de venta'}
           </h2>
