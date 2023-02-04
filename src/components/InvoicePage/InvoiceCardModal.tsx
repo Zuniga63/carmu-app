@@ -1,7 +1,7 @@
-import { Button, Modal } from '@mantine/core';
+import { ActionIcon, Button, Modal } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconCash, IconPrinter } from '@tabler/icons';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import ReactToPrint from 'react-to-print';
 import {
   invoicePageSelector,
@@ -13,7 +13,7 @@ import { buildInvoiceFull } from 'src/utils';
 import EmptyInvoice from './EmptyInvoice';
 import InvoiceCard from './InvoiceCard';
 import InvoiceCardModalHeader from './InvoiceCardModalHeader';
-import InvoiceToPrint from './InvoiceToPrint';
+import InvoiceToPrint, { InvoiceSize } from './InvoiceToPrint';
 
 const InvoiceCardModal = () => {
   const {
@@ -25,6 +25,7 @@ const InvoiceCardModal = () => {
   const dispatch = useAppDispatch();
   const largeScreen = useMediaQuery('(min-width: 768px)');
   const invoiceRef = useRef<HTMLDivElement>(null);
+  const [invoiceSize, setInvoiceSize] = useState<InvoiceSize>('sm');
 
   const onClose = () => {
     if (!loading) dispatch(unmountInvoice());
@@ -59,20 +60,38 @@ const InvoiceCardModal = () => {
             )}
           </div>
 
-          <footer className="flex justify-between rounded-b-lg bg-gray-300 p-4 dark:bg-header">
-            <ReactToPrint
-              trigger={() => (
-                <Button
-                  size="xs"
-                  leftIcon={<IconPrinter size={16} />}
-                  color="green"
-                  disabled={!invoice}
-                >
-                  Imprimir
-                </Button>
-              )}
-              content={() => invoiceRef.current}
-            />
+          <footer className="flex items-center justify-between rounded-b-lg bg-gray-300 p-4 dark:bg-header">
+            <div className="flex items-center gap-x-2">
+              <ReactToPrint
+                trigger={() => (
+                  <ActionIcon size="lg" color="green" disabled={!invoice}>
+                    <IconPrinter size={24} stroke={2} />
+                  </ActionIcon>
+                )}
+                content={() => invoiceRef.current}
+                onBeforeGetContent={() => setInvoiceSize('lg')}
+              />
+
+              <ReactToPrint
+                trigger={() => (
+                  <ActionIcon size="md" color="green" disabled={!invoice}>
+                    <IconPrinter size={20} stroke={2} />
+                  </ActionIcon>
+                )}
+                content={() => invoiceRef.current}
+                onBeforeGetContent={() => setInvoiceSize('md')}
+              />
+
+              <ReactToPrint
+                trigger={() => (
+                  <ActionIcon size="sm" color="green" disabled={!invoice}>
+                    <IconPrinter size={16} />
+                  </ActionIcon>
+                )}
+                content={() => invoiceRef.current}
+                onBeforeGetContent={() => setInvoiceSize('sm')}
+              />
+            </div>
 
             <Button
               leftIcon={<IconCash />}
@@ -88,7 +107,9 @@ const InvoiceCardModal = () => {
 
       <div className="hidden">
         <div ref={invoiceRef}>
-          {invoice ? <InvoiceToPrint invoice={invoice} /> : null}
+          {invoice ? (
+            <InvoiceToPrint invoice={invoice} size={invoiceSize} />
+          ) : null}
         </div>
       </div>
     </>
