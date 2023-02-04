@@ -60,10 +60,10 @@ const InvoiceToPrint = ({ invoice, size = 'lg' }: Props) => {
         </div>
 
         {/* Invoice Number */}
-        {size === 'md' ? (
+        {size === 'lg' ? (
           <div className="hidden lg:block">
             <h2 className="text-center text-base uppercase xxs:text-xl">
-              {invoice.isSeparate ? 'Apartado' : 'Factura de venta'}
+              {invoice.isSeparate ? 'Apartado' : 'Factura'}
             </h2>
 
             <p className="text-center text-base xxs:text-xl">
@@ -78,25 +78,29 @@ const InvoiceToPrint = ({ invoice, size = 'lg' }: Props) => {
       {/* INVOICE INFO */}
       <div className="mb-2 border-b-4 border-double border-dark pb-2">
         {/* INVOICE NUMBER */}
-        <div
-          className={`mb-2 text-center ${
-            size === 'sm' ? 'text-base' : 'flex justify-center gap-2 text-xl'
-          }`}
-        >
-          <h2 className="uppercase">
-            {invoice.isSeparate ? 'Apartado' : 'Factura de venta'}
-          </h2>
-          <p>
-            N°{' '}
-            <span
-              className={
-                size === 'sm' ? 'font-bold text-dark' : 'font-bold text-red-500'
-              }
-            >
-              {invoice.prefixNumber}
-            </span>
-          </p>
-        </div>
+        {size !== 'lg' ? (
+          <div
+            className={`mb-2 text-center ${
+              size === 'sm' ? 'text-base' : 'flex justify-center gap-2 text-xl'
+            }`}
+          >
+            <h2 className="uppercase">
+              {invoice.isSeparate ? 'Apartado' : 'Factura de venta'}
+            </h2>
+            <p>
+              N°{' '}
+              <span
+                className={
+                  size === 'sm'
+                    ? 'font-bold text-dark'
+                    : 'font-bold text-red-500'
+                }
+              >
+                {invoice.prefixNumber}
+              </span>
+            </p>
+          </div>
+        ) : null}
 
         {/* Expedition */}
         <div
