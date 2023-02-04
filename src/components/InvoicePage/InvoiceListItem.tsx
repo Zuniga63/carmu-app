@@ -1,5 +1,5 @@
 import { Button, Collapse } from '@mantine/core';
-import { IconFileInvoice, IconPrinter } from '@tabler/icons';
+import { IconFileInvoice } from '@tabler/icons';
 import React, { MouseEventHandler, useEffect, useState } from 'react';
 import { useAppDispatch } from 'src/store/hooks';
 import { IInvoice } from 'src/types';
@@ -7,7 +7,6 @@ import { currencyFormat } from 'src/utils';
 
 import dayjs from 'dayjs';
 import isToday from 'dayjs/plugin/isToday';
-import Link from 'next/link';
 import { mountInvoice } from 'src/features/InvoicePage';
 
 dayjs.extend(isToday);
@@ -144,18 +143,7 @@ const InvoiceListItem = ({ invoice }: Props) => {
             </div>
           </div>
         </div>
-        <footer className="flex justify-between px-4 py-3">
-          <Button
-            size="xs"
-            leftIcon={<IconPrinter size={16} />}
-            color="green"
-            disabled={!invoice}
-          >
-            <Link href={`/admin/invoices/print/${invoice?.id}`} target="_blank">
-              Imprimir
-            </Link>
-          </Button>
-
+        <footer className="flex justify-end px-4 py-3">
           <Button
             size="xs"
             leftIcon={<IconFileInvoice size={16} />}
