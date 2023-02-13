@@ -155,18 +155,12 @@ export interface IInvoiceFull extends IInvoice {
 
 export interface IInvoicePageData {
   invoices: IInvoiceBase[];
-  customers: ICustomer[];
-  categories: IInvoiceCategory[];
   products: IInvoiceProduct[];
-  cashboxs: IInvoiceCashbox[];
 }
 
 export type InvoicePageState = {
   invoices: IInvoiceBase[];
-  customers: ICustomer[];
-  categories: IInvoiceCategory[];
   products: IInvoiceProduct[];
-  cashboxs: IInvoiceCashbox[];
   loading: boolean;
   refreshIsSuccess: boolean;
   // Show invoice

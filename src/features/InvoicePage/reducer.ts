@@ -18,10 +18,7 @@ import { InvoicePageState } from './types';
 
 const initialState: InvoicePageState = {
   invoices: [],
-  customers: [],
-  categories: [],
   products: [],
-  cashboxs: [],
   loading: true,
   refreshIsSuccess: false,
   // Show invoice
@@ -55,10 +52,7 @@ export const invoicePageReducer = createReducer(initialState, builder => {
       state.refreshIsSuccess = true;
       state.loading = false;
       state.invoices = payload.invoices;
-      state.customers = payload.customers;
-      state.categories = payload.categories;
       state.products = payload.products;
-      state.cashboxs = payload.cashboxs;
     })
     .addCase(fetchInvoiceData.rejected, state => {
       state.loading = false;

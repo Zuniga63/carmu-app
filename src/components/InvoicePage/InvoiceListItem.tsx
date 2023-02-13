@@ -60,7 +60,7 @@ const InvoiceListItem = ({ invoice }: Props) => {
               : 'border-red-700 bg-red-900 shadow-red-800 hover:bg-red-600 hover:shadow-red-500'
             : 'border-emerald-700 bg-emerald-900 shadow-emerald-800 hover:bg-emerald-600 hover:shadow-emerald-700'
           : 'border-header bg-header shadow-header hover:border-dark hover:bg-dark hover:shadow-neutral-900'
-      } shadow  transition-colors  `}
+      } shadow  transition-colors ${invoice.cancel ? 'opacity-50' : ''} `}
     >
       <header
         className="px-4 py-2 hover:cursor-pointer"

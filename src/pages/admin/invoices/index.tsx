@@ -12,6 +12,9 @@ import ChartJS from 'chart.js/auto';
 import CounterSaleForm from 'src/components/InvoicePage/CounterSaleForm';
 import { authSelector } from 'src/features/Auth';
 import { fetchInvoiceData } from 'src/features/InvoicePage';
+import { fetchCustomers } from 'src/features/CustomerPage';
+import { fetchBoxes } from 'src/features/BoxPage';
+import { fetchCategories } from 'src/features/CategoryPage';
 ChartJS.register();
 
 const InvoicePage: NextPage = () => {
@@ -19,7 +22,12 @@ const InvoicePage: NextPage = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (isAuth && isAdmin) dispatch(fetchInvoiceData());
+    if (isAuth && isAdmin) {
+      dispatch(fetchInvoiceData());
+      dispatch(fetchCustomers());
+      dispatch(fetchBoxes());
+      dispatch(fetchCategories());
+    }
   }, [isAuth, isAdmin]);
 
   return (
