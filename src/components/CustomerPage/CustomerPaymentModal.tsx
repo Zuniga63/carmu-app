@@ -1,38 +1,34 @@
 import { Button, Checkbox, Modal, NumberInput, Select } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { IconBox, IconCalendar, IconCash } from '@tabler/icons';
-import { AxiosError } from 'axios';
 import dayjs from 'dayjs';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { boxPageSelector } from 'src/features/BoxPage';
 import {
-  ICustomer,
-  IInvoiceCashbox,
-  IInvoicePaymentData,
-  IValidationErrors,
-} from 'src/types';
+  customerPageSelector,
+  fetchCustomers,
+  storeCustomerPayment,
+  unmountCustomerToPayment,
+} from 'src/features/CustomerPage';
+import { useAppDispatch, useAppSelector } from 'src/store/hooks';
+import { IInvoicePaymentData, IValidationErrors } from 'src/types';
 import { currencyFormat } from 'src/utils';
 
-interface Props {
-  opened: boolean;
-  customer: ICustomer | null;
-  loading: boolean;
-  error: unknown;
-  cashboxs: IInvoiceCashbox[];
-  onClose(): void;
-  registerPayment(formData: unknown): Promise<void>;
-}
-
-const CustomerPaymentModal = ({
-  opened,
-  customer,
-  error,
-  loading,
-  onClose,
-  cashboxs = [],
-  registerPayment,
-}: Props) => {
+const CustomerPaymentModal = () => {
   const defaultDescription = 'Efectivo';
+
+  const {
+    customerToPayment: customer,
+    paymentFormOpened: opened,
+    paymentFormLoading: loading,
+    paymnerFormError: error,
+    paymentFormIsSuccess: isSuccess,
+  } = useAppSelector(customerPageSelector);
+
+  const { boxes } = useAppSelector(boxPageSelector);
+
+  const dispatch = useAppDispatch();
 
   const [boxId, setBoxId] = useState<string | null>(null);
   const [paymentDate, setPaymentDate] = useState<Date | null>(dayjs().toDate());
@@ -52,7 +48,7 @@ const CustomerPaymentModal = ({
 
   const closeForm = () => {
     if (!loading) {
-      onClose();
+      dispatch(unmountCustomerToPayment());
       resetForm();
     }
   };
@@ -83,7 +79,7 @@ const CustomerPaymentModal = ({
     event.preventDefault();
     if (description && amount && amount > 0 && customer && paymentDate) {
       const data = getData();
-      registerPayment(data);
+      dispatch(storeCustomerPayment(data));
     } else {
       toast.error('¡Hacen falta datos!');
     }
@@ -95,27 +91,30 @@ const CustomerPaymentModal = ({
 
   useEffect(() => {
     if (error) {
-      if (error instanceof AxiosError) {
-        const { response } = error;
-        const data = response?.data;
-
-        if (data) {
-          if (response.status === 422 && data.validationErrors) {
-            setErrors(data.validationErrors);
-          } else if (response.status === 401) {
-            toast.error(response.data.message);
-          } else {
-            console.log(error);
-          }
-        }
+      const { data, status } = error;
+      if (status === 422 && data.validationErrors) {
+        setErrors(data.validationErrors);
+      } else if (status === 401) {
+        toast.error(data.message);
       } else {
         console.log(error);
-        if (error instanceof Error) toast.error(error.message);
       }
     } else {
       setErrors(null);
     }
   }, [error]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(
+        `El pago por valor de ${currencyFormat(amount)} al cliente ${
+          customer?.fullName
+        } fue registrado con éxito.`
+      );
+      closeForm();
+      dispatch(fetchCustomers());
+    }
+  }, [isSuccess]);
 
   return (
     <Modal
@@ -145,10 +144,12 @@ const CustomerPaymentModal = ({
               value={boxId}
               onChange={setBoxId}
               icon={<IconBox size={14} />}
-              data={cashboxs.map(box => ({
-                value: box.id,
-                label: box.name,
-              }))}
+              data={boxes
+                .filter(b => Boolean(b.openBox))
+                .map(box => ({
+                  value: box.id,
+                  label: box.name,
+                }))}
               searchable
               clearable
               size="xs"
@@ -193,7 +194,6 @@ const CustomerPaymentModal = ({
             hideControls
             size="xs"
             value={amount}
-            precision={2}
             parser={value => value?.replace(/\$\s?|(,*)/g, '')}
             onChange={val => setAmount(val)}
             formatter={formater}

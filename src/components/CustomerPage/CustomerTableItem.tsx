@@ -1,4 +1,4 @@
-import { Loader, Tooltip } from '@mantine/core';
+import { ActionIcon, Tooltip } from '@mantine/core';
 import {
   IconAlertCircle,
   IconCash,
@@ -6,7 +6,7 @@ import {
   IconCircleX,
   IconDeviceMobile,
   IconEdit,
-  IconListCheck,
+  IconFolder,
   IconMail,
   IconMapPin,
   IconSkull,
@@ -14,29 +14,34 @@ import {
 } from '@tabler/icons';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
+import {
+  customerPageSelector,
+  deleteCustomer,
+  fetchCustomer,
+  mountCustomerToFetch,
+  mountCustomerToPayment,
+  mountCustomerToUpdate,
+} from 'src/features/CustomerPage';
+import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 import { ICustomer } from 'src/types';
 import { currencyFormat } from 'src/utils';
 
 interface Props {
   customer: ICustomer;
-  mount(customer: ICustomer): void;
-  mountToPayment(customer: ICustomer): void;
-  onDelete(customer: ICustomer): Promise<void>;
-  paymentLoading: boolean;
-  onGetPayments(customer: ICustomer): Promise<void>;
 }
 
-const CustomerTableItem = ({
-  customer,
-  mount,
-  onDelete,
-  mountToPayment,
-  paymentLoading,
-  onGetPayments,
-}: Props) => {
+const CustomerTableItem = ({ customer }: Props) => {
+  const { fetchCustomerId } = useAppSelector(customerPageSelector);
   const [customerState, setCustomerState] = useState(
     <IconCircleCheck size={40} className="text-green-500" />
   );
+
+  const dispatch = useAppDispatch();
+
+  const onFetchCustomer = () => {
+    dispatch(mountCustomerToFetch(customer.id));
+    dispatch(fetchCustomer(customer.id));
+  };
 
   useEffect(() => {
     const size = 40;
@@ -68,6 +73,7 @@ const CustomerTableItem = ({
 
     setCustomerState(<Icon size={size} className={className} />);
   }, [customer.balance]);
+
   return (
     <tr className="text-dark dark:text-gray-300">
       {/* CUSTOMER */}
@@ -145,46 +151,54 @@ const CustomerTableItem = ({
         {customer.balance ? currencyFormat(customer.balance) : ''}
       </td>
       <td className="py-2 pl-3 pr-6 text-sm">
-        <div className="flex justify-end gap-x-2">
+        <div className="flex items-center justify-end gap-x-2">
           {customer.balance ? (
-            <>
-              <Tooltip label="Hacer abono" withArrow>
-                <button
-                  className="rounded-full border-2 border-green-600 border-opacity-50 p-2 text-green-600 text-opacity-50 transition-colors hover:border-opacity-80 hover:text-opacity-80 active:border-opacity-100 active:text-opacity-100"
-                  onClick={() => mountToPayment(customer)}
-                >
-                  <IconCash size={16} stroke={2} />
-                </button>
-              </Tooltip>
-
-              <Tooltip label="Ver Abonos" withArrow>
-                <button
-                  className="rounded-full border-2 border-purple-600 border-opacity-50 p-2 text-purple-600 text-opacity-50 transition-colors hover:border-opacity-80 hover:text-opacity-80 active:border-opacity-100 active:text-opacity-100"
-                  onClick={() => onGetPayments(customer)}
-                >
-                  {paymentLoading ? (
-                    <Loader size={16} />
-                  ) : (
-                    <IconListCheck size={16} stroke={2} />
-                  )}
-                </button>
-              </Tooltip>
-            </>
+            <Tooltip label="Hacer abono" withArrow>
+              <ActionIcon
+                size="lg"
+                color="green"
+                onClick={() => dispatch(mountCustomerToPayment(customer.id))}
+                radius="xl"
+              >
+                <IconCash size={18} stroke={2} />
+              </ActionIcon>
+            </Tooltip>
           ) : null}
 
-          <button
-            className="rounded-full border-2 border-blue-600 border-opacity-50 p-2 text-blue-600 text-opacity-50 transition-colors hover:border-opacity-80 hover:text-opacity-80 active:border-opacity-100 active:text-opacity-100"
-            onClick={() => mount(customer)}
-          >
-            <IconEdit size={16} stroke={3} />
-          </button>
+          <Tooltip label="Ver información" withArrow>
+            <ActionIcon
+              size="lg"
+              color="grape"
+              onClick={onFetchCustomer}
+              radius="xl"
+              loading={fetchCustomerId === customer.id}
+            >
+              <IconFolder size={18} stroke={2} />
+            </ActionIcon>
+          </Tooltip>
+          <Tooltip label="Actualizar Cliente" withArrow>
+            <ActionIcon
+              size="lg"
+              color="blue"
+              onClick={() => dispatch(mountCustomerToUpdate(customer.id))}
+              radius="xl"
+            >
+              <IconEdit size={18} stroke={2} />
+            </ActionIcon>
+          </Tooltip>
 
-          <button
-            className="rounded-full border-2 border-red-600 border-opacity-50 p-2 text-red-600 text-opacity-50 transition-colors hover:border-opacity-80 hover:text-opacity-80 active:border-opacity-100 active:text-opacity-100"
-            onClick={() => onDelete(customer)}
-          >
-            <IconTrash size={16} stroke={3} />
-          </button>
+          {!Boolean(customer.balance) ? (
+            <Tooltip label="Eliminar Cliente" withArrow>
+              <ActionIcon
+                size="lg"
+                color="red"
+                onClick={() => dispatch(deleteCustomer(customer.id))}
+                radius="xl"
+              >
+                <IconTrash size={16} stroke={2} />
+              </ActionIcon>
+            </Tooltip>
+          ) : null}
         </div>
       </td>
     </tr>
