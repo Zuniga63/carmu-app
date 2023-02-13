@@ -2,7 +2,7 @@ import { Button, Checkbox, NumberInput, Select } from '@mantine/core';
 import { IconBox, IconCirclePlus } from '@tabler/icons';
 import dayjs from 'dayjs';
 import React, { KeyboardEvent, useEffect, useRef, useState } from 'react';
-import { invoicePageSelector } from 'src/features/InvoicePage';
+import { boxPageSelector } from 'src/features/BoxPage';
 import { useAppSelector } from 'src/store/hooks';
 import {
   IInvoiceCashbox,
@@ -25,7 +25,7 @@ const InvoiceFormPayment: React.FC<Props> = ({
   payments,
   setPayments,
 }) => {
-  const { cashboxs } = useAppSelector(invoicePageSelector);
+  const { boxes } = useAppSelector(boxPageSelector);
   const input = useRef<HTMLInputElement>(null);
 
   const [boxList, setBoxList] = useState<IInvoiceCashbox[]>([]);
@@ -106,12 +106,12 @@ const InvoiceFormPayment: React.FC<Props> = ({
     let date = dayjs();
     if (invoiceDate && dayjs(invoiceDate).isValid()) date = dayjs(invoiceDate);
     setBoxList(
-      cashboxs.filter(box =>
+      boxes.filter(box =>
         Boolean(box.openBox && dayjs(box.openBox).isBefore(date))
       )
     );
     setBoxId(null);
-  }, [cashboxs.length, invoiceDate]);
+  }, [boxes.length, invoiceDate]);
 
   useEffect(() => {
     if (summary.balance && summary.balance > 0) {

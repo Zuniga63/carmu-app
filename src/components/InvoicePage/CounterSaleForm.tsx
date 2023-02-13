@@ -19,6 +19,8 @@ import {
 import dayjs from 'dayjs';
 import React, { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { authSelector } from 'src/features/Auth';
+import { boxPageSelector } from 'src/features/BoxPage';
+import { categoryPageSelector } from 'src/features/CategoryPage';
 import {
   hideCounterSaleForm,
   invoicePageSelector,
@@ -49,14 +51,14 @@ const defaulCustomer: IInvoiceCustomer = {
 const CounterSaleForm = () => {
   const {
     counterSaleFormOpened: opened,
-    cashboxs,
-    categories,
     products,
     storeLoading: loading,
     storeError: error,
     storeSuccess: success,
   } = useAppSelector(invoicePageSelector);
   const { user } = useAppSelector(authSelector);
+  const { boxes } = useAppSelector(boxPageSelector);
+  const { categories } = useAppSelector(categoryPageSelector);
   const dispatch = useAppDispatch();
 
   // ITEMS
@@ -318,7 +320,7 @@ const CounterSaleForm = () => {
   useEffect(updateSummary, [items]);
 
   useEffect(() => {
-    const boxSelected = cashboxs.find(item => item.id === cashboxId);
+    const boxSelected = boxes.find(item => item.id === cashboxId);
     setBox(boxSelected || null);
   }, [cashboxId]);
 
@@ -327,7 +329,7 @@ const CounterSaleForm = () => {
   }, [error]);
 
   useEffect(() => {
-    if (cashboxs.length > 0) setCashboxId(cashboxs[0].id);
+    if (boxes.length > 0) setCashboxId(boxes[0].id);
   }, []);
 
   useEffect(() => {
@@ -356,7 +358,7 @@ const CounterSaleForm = () => {
             value={cashboxId}
             onChange={setCashboxId}
             icon={<IconBox size={18} />}
-            data={cashboxs
+            data={boxes
               .filter(item => Boolean(item.openBox))
               .map(box => ({
                 value: box.id,

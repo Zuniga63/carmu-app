@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { invoicePageSelector } from 'src/features/InvoicePage';
+import { categoryPageSelector } from 'src/features/CategoryPage';
 import { useAppSelector } from 'src/store/hooks';
 import { IInvoiceItemBase } from 'src/types';
 import { currencyFormat } from 'src/utils';
@@ -9,7 +9,7 @@ interface Props {
 }
 
 const InvoiceCardItemsRow = ({ item }: Props) => {
-  const { categories } = useAppSelector(invoicePageSelector);
+  const { categories } = useAppSelector(categoryPageSelector);
   const [itemCategories, setItemCategories] = useState('');
 
   useEffect(() => {

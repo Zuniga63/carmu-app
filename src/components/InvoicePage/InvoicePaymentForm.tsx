@@ -5,6 +5,7 @@ import { AxiosError } from 'axios';
 import dayjs from 'dayjs';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { boxPageSelector } from 'src/features/BoxPage';
 import {
   hidePaymentForm,
   invoicePageSelector,
@@ -21,8 +22,9 @@ const InvoicePaymentForm = () => {
     storePaymentLoading: loading,
     storePaymentError: error,
     storePaymentSuccess: success,
-    cashboxs,
   } = useAppSelector(invoicePageSelector);
+
+  const { boxes } = useAppSelector(boxPageSelector);
 
   const dispatch = useAppDispatch();
   const defaultDescription = 'Efectivo';
@@ -148,7 +150,7 @@ const InvoicePaymentForm = () => {
               value={boxId}
               onChange={setBoxId}
               icon={<IconBox size={14} />}
-              data={cashboxs.map(box => ({
+              data={boxes.map(box => ({
                 value: box.id,
                 label: box.name,
               }))}

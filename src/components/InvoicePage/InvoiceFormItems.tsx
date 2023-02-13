@@ -8,6 +8,7 @@ import { IInvoiceSummary, INewInvoiceItem } from 'src/types';
 import { currencyFormat } from 'src/utils';
 import InvoiceFormItemList from './InvoiceFormItemList';
 import { invoicePageSelector } from 'src/features/InvoicePage';
+import { categoryPageSelector } from 'src/features/CategoryPage';
 
 interface Props {
   items: INewInvoiceItem[];
@@ -19,7 +20,8 @@ const InvoiceFormItems: React.FC<Props> = ({ items, summary, setItems }) => {
   // --------------------------------------------------------------------------
   // STATE
   // --------------------------------------------------------------------------
-  const { products, categories } = useAppSelector(invoicePageSelector);
+  const { products } = useAppSelector(invoicePageSelector);
+  const { categories } = useAppSelector(categoryPageSelector);
   const [productId, setProductId] = useState<string | null>(null);
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const [itemDescription, setItemDescription] = useState('');
