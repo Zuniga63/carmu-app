@@ -10,27 +10,29 @@ import { IconAt, IconMapPin, IconPhone, IconUser } from '@tabler/icons';
 import DrawerBody from 'src/components/DrawerBody';
 import DrawerHeader from 'src/components/DrawerHeader';
 import React, { FormEvent, useEffect, useState } from 'react';
-import { ICustomer, ICustomerStore, IValidationErrors } from 'src/types';
+import { IValidationErrors } from 'src/types';
+import { useAppDispatch, useAppSelector } from 'src/store/hooks';
+import {
+  customerPageSelector,
+  hideCustomerForm,
+  storeCustomer,
+  updateCustomer,
+} from 'src/features/CustomerPage';
+import { toast } from 'react-toastify';
+import { ICustomerStore } from 'src/features/CustomerPage/types';
 
-interface Props {
-  customer?: ICustomer | null;
-  opened: boolean;
-  loading: boolean;
-  errors: IValidationErrors | null | undefined;
-  close(): void;
-  store(formData: unknown): Promise<void>;
-  update(formData: unknown): Promise<void>;
-}
+const CustomerForm = () => {
+  const dispatch = useAppDispatch();
+  const {
+    customerToUpdate: customer,
+    customerFormOpened: opened,
+    customerFormIsSuccess: isSuccess,
+    customerFormError: error,
+    customerFormIsLoading: loading,
+  } = useAppSelector(customerPageSelector);
+  const [errors, setErrors] = useState<IValidationErrors | null>(null);
+  const [successShow, setSuccessShow] = useState(true);
 
-const CustomerForm = ({
-  opened,
-  close,
-  customer,
-  loading,
-  errors,
-  store,
-  update,
-}: Props) => {
   const [title, setTitle] = useState('');
   const [btnMessage, setBtnMessage] = useState('Guardar');
 
@@ -64,7 +66,7 @@ const CustomerForm = ({
 
   const onCloseHandler = () => {
     if (!loading) {
-      close();
+      dispatch(hideCustomerForm());
       resetFields();
     }
   };
@@ -84,6 +86,7 @@ const CustomerForm = ({
     if (email) data.email = email;
     if (address) data.address = address;
     if (phone) data.contacts.push({ phone, description: 'Telefono' });
+    if (customer) data.id = customer.id;
 
     return data;
   };
@@ -91,16 +94,36 @@ const CustomerForm = ({
   const onSubmitHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = getFormData();
-    if (!customer) store(formData);
-    else update(formData);
+    if (!customer) dispatch(storeCustomer(formData));
+    else dispatch(updateCustomer(formData));
   };
 
-  //---------------------------------------------------------------------------
-  // EFFECTS
-  //---------------------------------------------------------------------------
-  // useEffect(() => {
-  //   if (opened) resetFields();
-  // }, [opened]);
+  useEffect(() => {
+    if (isSuccess && !successShow) {
+      const message = customer ? '¡Cliente actualizado!' : '¡Cliente guardado!';
+      toast.success(message);
+      setSuccessShow(true);
+      dispatch(hideCustomerForm());
+      resetFields();
+    } else {
+      setSuccessShow(false);
+    }
+  }, [isSuccess]);
+
+  useEffect(() => {
+    if (error) {
+      const { data, status } = error;
+      if (status === 422 && data.validationErrors) {
+        setErrors(data.validationErrors);
+      } else if (status === 401) {
+        toast.error(data.message);
+      } else {
+        console.log(error);
+      }
+    } else {
+      setErrors(null);
+    }
+  }, [error]);
 
   useEffect(() => {
     setTitle(customer ? 'Actualizar Cliente' : 'Nuevo Cliente');
@@ -249,24 +272,22 @@ const CustomerForm = ({
               />
 
               {/* PHONE */}
-              {!customer && (
-                <TextInput
-                  label={
-                    <span className="font-sans text-gray-dark dark:text-light">
-                      Telefono
-                    </span>
-                  }
-                  className="mb-2"
-                  placeholder="555-5555"
-                  id="customerPhone"
-                  value={phone}
-                  onChange={({ target }) => setPhone(target.value)}
-                  type="tel"
-                  icon={<IconPhone size={20} />}
-                  disabled={loading}
-                  error={errors?.['contact.1.phone']?.message}
-                />
-              )}
+              <TextInput
+                label={
+                  <span className="font-sans text-gray-dark dark:text-light">
+                    Telefono
+                  </span>
+                }
+                className="mb-2"
+                placeholder="555-5555"
+                id="customerPhone"
+                value={phone}
+                onChange={({ target }) => setPhone(target.value)}
+                type="tel"
+                icon={<IconPhone size={20} />}
+                disabled={loading}
+                error={errors?.['contact.1.phone']?.message}
+              />
 
               {/* ADDRESS */}
               <TextInput
