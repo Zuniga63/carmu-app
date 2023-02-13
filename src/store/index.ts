@@ -3,6 +3,7 @@ import { authReducer } from 'src/features/Auth';
 import { boxPageReducer } from 'src/features/BoxPage';
 import { categoryPageReducer } from 'src/features/CategoryPage';
 import { invoicePageReducer } from 'src/features/InvoicePage';
+import { customerPageReducer } from 'src/features/CustomerPage';
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     categoryPage: categoryPageReducer,
     boxPage: boxPageReducer,
     invoicePage: invoicePageReducer,
+    customerPage: customerPageReducer,
   },
 });
 

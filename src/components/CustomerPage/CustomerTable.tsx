@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
+  ActionIcon,
   Button,
   Loader,
   ScrollArea,
@@ -20,30 +21,18 @@ import {
 } from '@tabler/icons';
 import { normalizeText } from 'src/utils';
 import dayjs from 'dayjs';
+import { useAppDispatch, useAppSelector } from 'src/store/hooks';
+import {
+  customerPageSelector,
+  fetchCustomers,
+  showCustomerForm,
+} from 'src/features/CustomerPage';
 
-interface Props {
-  customers: ICustomer[];
-  fetchLoading: boolean;
-  openForm(): void;
-  mountCustomer(customer: ICustomer): void;
-  mountCustomerToPayment(customer: ICustomer): void;
-  deleteCustomer(customer: ICustomer): Promise<void>;
-  refresh(): Promise<void>;
-  paymentLoading: boolean;
-  onGetPayments(customer: ICustomer): Promise<void>;
-}
+const CustomerTable = () => {
+  const { customers, fetchLoading, firstFetchLoading } =
+    useAppSelector(customerPageSelector);
+  const dispatch = useAppDispatch();
 
-const CustomerTable = ({
-  customers,
-  fetchLoading,
-  openForm,
-  mountCustomer,
-  deleteCustomer,
-  mountCustomerToPayment,
-  refresh,
-  paymentLoading,
-  onGetPayments,
-}: Props) => {
   const [search, setSearch] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
   const [onlyCustomerWithDebt, setOnlyCustomerWithDebt] = useState(false);
@@ -158,7 +147,7 @@ const CustomerTable = ({
             target.select();
           }}
         />
-        <div className="flex gap-x-2">
+        <div className="flex gap-x-2 pt-2">
           {/* Customer With Debt */}
           <Switch
             label="Clientes con saldo"
@@ -189,18 +178,19 @@ const CustomerTable = ({
           />
         </div>
 
-        {/* REFRESH BUTTON */}
-        <button
-          className="absolute top-4 right-4 rounded-full border border-cyan-500 p-1 text-blue-500 transition-colors hover:border-cyan-300 hover:text-blue-400 active:border-cyan-700 active:text-blue-700"
-          onClick={refresh}
-        >
-          <IconRefresh size={18} />
-        </button>
+        <div className="absolute top-4 right-4">
+          <ActionIcon
+            loading={fetchLoading}
+            onClick={() => dispatch(fetchCustomers())}
+          >
+            <IconRefresh size={18} />
+          </ActionIcon>
+        </div>
       </header>
-      {!fetchLoading ? (
-        <ScrollArea className="relative h-[28rem] overflow-y-auto border border-y-0 border-x-gray-300 dark:border-x-header">
+      {!firstFetchLoading ? (
+        <ScrollArea className="relative h-80 overflow-y-auto border border-y-0 border-x-gray-300 dark:border-x-header 3xl:h-[28rem]">
           <table className="min-w-full table-auto">
-            <thead className="sticky top-0 bg-gray-300 dark:bg-dark">
+            <thead className="sticky top-0 z-fixed bg-gray-300 dark:bg-dark">
               <tr className="text-gray-dark dark:text-gray-300">
                 <th
                   scope="col"
@@ -233,15 +223,7 @@ const CustomerTable = ({
             </thead>
             <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
               {customerList.map(customer => (
-                <CustomerTableItem
-                  customer={customer}
-                  key={customer.id}
-                  mount={mountCustomer}
-                  mountToPayment={mountCustomerToPayment}
-                  onDelete={deleteCustomer}
-                  paymentLoading={paymentLoading}
-                  onGetPayments={onGetPayments}
-                />
+                <CustomerTableItem customer={customer} key={customer.id} />
               ))}
             </tbody>
           </table>
@@ -316,7 +298,7 @@ const CustomerTable = ({
         </div>
         <Button
           leftIcon={<IconWriting />}
-          onClick={() => openForm()}
+          onClick={() => dispatch(showCustomerForm())}
           disabled={fetchLoading}
         >
           Agregar Cliente

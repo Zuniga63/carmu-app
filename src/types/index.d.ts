@@ -1,3 +1,4 @@
+import { AxiosResponse } from 'axios';
 //-----------------------------------------------------------------------------
 // GENERAL TYPES
 //-----------------------------------------------------------------------------
@@ -25,6 +26,8 @@ export interface IValidationErrorResponse {
   message: string;
   validationErrors: IValidationErrors;
 }
+
+export type ErrorResponse = Pick<AxiosResponse, 'data' | 'status'>;
 
 export * from 'src/features/Auth/types';
 export * from 'src/features/CategoryPage/types';
