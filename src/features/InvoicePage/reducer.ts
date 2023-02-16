@@ -1,13 +1,19 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { ErrorResponse } from '../CategoryPage/types';
 import {
+  cancelInvoice,
+  cancelInvoicePayment,
   fetchInvoiceData,
+  hideCancelInvoiceForm,
+  hideCancelPaymentForm,
   hideCounterSaleForm,
   hideNewInvoiceForm,
   hidePaymentForm,
   mountInvoice,
   registerPayment,
   resetSuccess,
+  showCancelInvoiceForm,
+  showCancelPaymentForm,
   showCounterSaleForm,
   showNewInvoiceForm,
   showPaymentForm,
@@ -37,6 +43,17 @@ const initialState: InvoicePageState = {
   storePaymentLoading: false,
   storePaymentSuccess: undefined,
   storePaymentError: null,
+  // CANCEL PAYEMNT
+  paymentToCancel: undefined,
+  cancelPaymentFormOpened: false,
+  cancelPaymentIsSuccess: false,
+  cancelPaymentLoading: false,
+  cancelPaymentError: undefined,
+  // CANCEL INVOICE
+  cancelInvoiceFormOpened: false,
+  cancelInvoiceLoading: false,
+  cancelInvoiceIsSuccess: false,
+  cancelInvoiceError: undefined,
 };
 
 export const invoicePageReducer = createReducer(initialState, builder => {
@@ -144,6 +161,78 @@ export const invoicePageReducer = createReducer(initialState, builder => {
     .addCase(registerPayment.rejected, (state, { payload }) => {
       state.storePaymentLoading = false;
       state.storeError = payload as ErrorResponse | null;
+    });
+  // --------------------------------------------------------------------------
+  // CANCEL INVOICE PAYMENT
+  // --------------------------------------------------------------------------
+  builder
+    .addCase(showCancelPaymentForm, (state, { payload }) => {
+      const { selectedInvoice } = state;
+      if (selectedInvoice) {
+        const payment = selectedInvoice.payments.find(p => p.id === payload);
+        if (payment) {
+          state.paymentToCancel = payment;
+          state.cancelPaymentFormOpened = true;
+        }
+      }
+    })
+    .addCase(hideCancelPaymentForm, state => {
+      state.paymentToCancel = undefined;
+      state.cancelPaymentFormOpened = false;
+      state.cancelPaymentLoading = false;
+      state.cancelPaymentIsSuccess = false;
+      state.cancelPaymentError = undefined;
+    });
+
+  builder
+    .addCase(cancelInvoicePayment.pending, state => {
+      state.cancelPaymentLoading = true;
+      state.cancelPaymentIsSuccess = false;
+      state.cancelPaymentError = undefined;
+    })
+    .addCase(cancelInvoicePayment.fulfilled, (state, { payload }) => {
+      state.selectedInvoice = payload;
+      state.cancelPaymentLoading = false;
+      state.cancelPaymentIsSuccess = true;
+    })
+    .addCase(cancelInvoicePayment.rejected, (state, { payload }) => {
+      state.cancelPaymentLoading = false;
+      if (typeof payload === 'string') {
+        state.cancelPaymentError = payload;
+      }
+    });
+  // --------------------------------------------------------------------------
+  // CANCEL INVOICE PAYMENT
+  // --------------------------------------------------------------------------
+  builder
+    .addCase(showCancelInvoiceForm, state => {
+      if (state.selectedInvoice) {
+        state.cancelInvoiceFormOpened = true;
+      }
+    })
+    .addCase(hideCancelInvoiceForm, state => {
+      state.cancelInvoiceFormOpened = false;
+      state.cancelInvoiceLoading = false;
+      state.cancelInvoiceIsSuccess = false;
+      state.cancelInvoiceError = undefined;
+    });
+
+  builder
+    .addCase(cancelInvoice.pending, state => {
+      state.cancelInvoiceLoading = true;
+      state.cancelInvoiceIsSuccess = false;
+      state.cancelInvoiceError = undefined;
+    })
+    .addCase(cancelInvoice.fulfilled, (state, { payload }) => {
+      state.cancelInvoiceLoading = false;
+      state.cancelInvoiceIsSuccess = true;
+      state.selectedInvoice = payload;
+    })
+    .addCase(cancelInvoice.rejected, (state, { payload }) => {
+      state.cancelInvoiceLoading = false;
+      if (typeof payload === 'string') {
+        state.cancelInvoiceError = payload;
+      }
     });
   // --------------------------------------------------------------------------
   // UTILS

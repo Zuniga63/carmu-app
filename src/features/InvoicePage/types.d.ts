@@ -179,4 +179,15 @@ export type InvoicePageState = {
   storePaymentLoading: boolean;
   storePaymentSuccess?: string;
   storePaymentError: ErrorResponse | null;
+  // CANCEL PAYMENT
+  paymentToCancel?: IInvoicePaymentBase;
+  cancelPaymentFormOpened: boolean;
+  cancelPaymentLoading: boolean;
+  cancelPaymentIsSuccess: boolean;
+  cancelPaymentError?: string;
+  // CANCEL INVOICE
+  cancelInvoiceFormOpened: boolean;
+  cancelInvoiceLoading: boolean;
+  cancelInvoiceIsSuccess: boolean;
+  cancelInvoiceError?: string;
 };

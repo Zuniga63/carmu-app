@@ -36,12 +36,12 @@ export const buildCookieOption = (duration = 1) => ({
 //-----------------------------------------------------------------------------
 export const createSearch = (invoice: IInvoiceBase | IInvoiceBaseFull) => {
   const search = `
-  ${invoice.prefixNumber} 
+  #${invoice.prefixNumber}#
   ${invoice.customer ? invoice.customer.fullName : invoice.customerName} 
   ${invoice.customerAddress} 
   ${invoice.customerDocument} 
   ${invoice.customerPhone}
-  ${invoice.amount}
+  $${invoice.amount}$
   ${currencyFormat(invoice.amount)}
   `;
 

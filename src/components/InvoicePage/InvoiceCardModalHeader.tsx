@@ -5,12 +5,14 @@ interface Props {
   title: React.ReactNode;
   invoiceType?: string;
   invoiceNumber?: string;
+  cancel?: boolean;
   onClose(): void;
 }
 
 const InvoiceCardModalHeader = ({
   title,
   invoiceNumber,
+  cancel,
   onClose,
   invoiceType = 'Factura',
 }: Props) => {
@@ -26,6 +28,9 @@ const InvoiceCardModalHeader = ({
           <span className="ml-2 inline-block font-bold text-red-500">
             {invoiceNumber}
           </span>
+          {cancel ? (
+            <span className="ml-1 inline-block italic"> - Cancelada</span>
+          ) : null}
         </p>
       ) : null}
 

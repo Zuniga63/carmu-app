@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import {
   invoicePageSelector,
+  showCancelInvoiceForm,
   showPaymentForm,
   unmountInvoice,
 } from 'src/features/InvoicePage';
@@ -71,6 +72,7 @@ const InvoiceCardModal = () => {
             }
             invoiceNumber={invoice?.prefixNumber}
             invoiceType={invoice?.isSeparate ? 'Apartado' : 'Factura'}
+            cancel={invoice?.cancel}
             onClose={onClose}
           />
 
@@ -121,14 +123,26 @@ const InvoiceCardModal = () => {
               </ActionIcon>
             </div>
 
-            <Button
-              leftIcon={<IconCash />}
-              color="grape"
-              disabled={!invoice?.balance}
-              onClick={() => dispatch(showPaymentForm())}
-            >
-              Registrar Pago
-            </Button>
+            {!invoice?.cancel ? (
+              <div className="flex gap-x-4">
+                <Button
+                  leftIcon={<IconCash />}
+                  color="red"
+                  onDoubleClick={() => dispatch(showCancelInvoiceForm())}
+                >
+                  Anular Factura
+                </Button>
+
+                <Button
+                  leftIcon={<IconCash />}
+                  color="grape"
+                  disabled={!invoice?.balance}
+                  onClick={() => dispatch(showPaymentForm())}
+                >
+                  Registrar Pago
+                </Button>
+              </div>
+            ) : null}
           </footer>
         </div>
       </Modal>

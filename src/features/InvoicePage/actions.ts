@@ -1,5 +1,7 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { ICancelInvoiceData } from 'src/components/InvoicePage/CancelInvoiceForm';
+import { ICancelPaymentData } from 'src/components/InvoicePage/CancelInvoicePaymentForm';
 import {
   IInvoiceBase,
   IInvoiceBaseFull,
@@ -111,6 +113,73 @@ export const registerPayment = createAsyncThunk(
       if (axios.isAxiosError(error) && error.response) {
         const { data, status } = error.response;
         return rejectWithValue({ data, status });
+      }
+
+      throw error;
+    }
+  }
+);
+
+// ----------------------------------------------------------------------------
+// CANCEL INVOICE PAYMENT
+// ----------------------------------------------------------------------------
+export const showCancelPaymentForm = createAction<string>(
+  'invoicePage/showCancelPaymentForm'
+);
+
+export const hideCancelPaymentForm = createAction(
+  'invoicePage/hideCancelPaymentForm'
+);
+
+export const cancelInvoicePayment = createAsyncThunk(
+  'invoicePage/cancelInvoicePayment',
+  async (formData: ICancelPaymentData, { rejectWithValue, dispatch }) => {
+    const { invoiceId, paymentId, ...rest } = formData;
+    const url = `/invoices/${invoiceId}/payments/${paymentId}/cancel-payment`;
+
+    try {
+      const res = await axios.put<IInvoiceBaseFull>(url, rest);
+      dispatch(fetchInvoiceData());
+      return res.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        const { data, status } = error.response;
+        if (status === 400 || status === 404) {
+          return rejectWithValue((data as { message: string }).message);
+        }
+      }
+
+      throw error;
+    }
+  }
+);
+
+// ----------------------------------------------------------------------------
+// CANCEL INVOICE
+// ----------------------------------------------------------------------------
+export const showCancelInvoiceForm = createAction(
+  'invoicePage/showCancelInvoiceForm'
+);
+export const hideCancelInvoiceForm = createAction(
+  'invoicePage/hideCancelInvoiceForm'
+);
+
+export const cancelInvoice = createAsyncThunk(
+  'invoicePage/cancelInvoice',
+  async (data: ICancelInvoiceData, { rejectWithValue, dispatch }) => {
+    try {
+      const { invoiceId, ...rest } = data;
+      const url = `/invoices/${invoiceId}/cancel`;
+
+      const res = await axios.put<IInvoiceBaseFull>(url, rest);
+      dispatch(fetchInvoiceData());
+      return res.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        const { data, status } = error.response;
+        if (status === 400 || status === 404) {
+          return rejectWithValue((data as { message: string }).message);
+        }
       }
 
       throw error;
