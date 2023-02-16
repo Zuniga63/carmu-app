@@ -217,7 +217,7 @@ const WeeklyInvoiceChart = () => {
       isAuth &&
       (storeSuccess || storePaymentSuccess || refreshIsSuccess || initialData)
     ) {
-      if (waiting) source.cancel('El estado cambió');
+      if (waiting) source?.cancel('El estado cambió');
       source = CancelToken.source();
       fetchData();
     }
