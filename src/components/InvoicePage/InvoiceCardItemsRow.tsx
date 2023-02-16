@@ -25,7 +25,7 @@ const InvoiceCardItemsRow = ({ item }: Props) => {
   }, []);
 
   return (
-    <tr>
+    <tr className={item.cancel ? 'line-through' : ''}>
       <td className="text-center">{item.quantity}</td>
       <td>
         <p>{item.description}</p>

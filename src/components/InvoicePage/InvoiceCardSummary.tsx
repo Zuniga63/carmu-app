@@ -8,11 +8,13 @@ interface Props {
 
 const InvoiceCardSummary = ({ invoice }: Props) => {
   const [payments, setPayments] = useState(0);
+
   useEffect(() => {
     setPayments(
       invoice.payments.reduce(
         (amount, payment) =>
-          (amount += !payment.initialPayment ? payment.amount : 0),
+          (amount +=
+            !payment.initialPayment && !payment.cancel ? payment.amount : 0),
         0
       )
     );

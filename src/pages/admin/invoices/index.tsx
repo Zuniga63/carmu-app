@@ -15,6 +15,8 @@ import { fetchInvoiceData } from 'src/features/InvoicePage';
 import { fetchCustomers } from 'src/features/CustomerPage';
 import { fetchBoxes } from 'src/features/BoxPage';
 import { fetchCategories } from 'src/features/CategoryPage';
+import CancelInvoicePaymentForm from 'src/components/InvoicePage/CancelInvoicePaymentForm';
+import CancelInvoiceForm from 'src/components/InvoicePage/CancelInvoiceForm';
 ChartJS.register();
 
 const InvoicePage: NextPage = () => {
@@ -42,6 +44,8 @@ const InvoicePage: NextPage = () => {
       <InvoiceCardModal />
       <InvoicePaymentForm />
       <CounterSaleForm />
+      <CancelInvoicePaymentForm />
+      <CancelInvoiceForm />
     </Layout>
   );
 };
