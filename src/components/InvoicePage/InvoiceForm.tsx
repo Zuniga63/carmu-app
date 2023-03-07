@@ -95,6 +95,8 @@ const InvoiceForm = () => {
     phone: '',
   });
 
+  const [registerWithOtherData, setRegisterWithOtherData] = useState(false);
+
   // INVOICING
   const [expeditionDate, setExpeditionDate] = useState<Date | null>(null);
   const [expirationDate, setExpirationDate] = useState<Date | null>(null);
@@ -144,6 +146,7 @@ const InvoiceForm = () => {
         amount: payment.amount,
         register: payment.register,
       })),
+      registerWithOtherCustomerData: registerWithOtherData,
     };
   };
 
@@ -196,6 +199,7 @@ const InvoiceForm = () => {
     setItems([]);
     setCashPayments([]);
     setStep(InvoiceSteps.Invoicing);
+    setRegisterWithOtherData(false);
   };
 
   // --------------------------------------------------------------------------
@@ -289,6 +293,8 @@ const InvoiceForm = () => {
                 className="lg:col-span-9"
                 customer={customer}
                 onCustomerChange={setCustomer}
+                registerWithOtherData={registerWithOtherData}
+                setRegisterWithOtherData={setRegisterWithOtherData}
               />
 
               <InvoiceFormDates

@@ -86,6 +86,7 @@ const CounterSaleForm = () => {
 
   // CUSTOMER
   const [customer, setCustomer] = useState(defaulCustomer);
+  const [registerWithOtherData, setRegisterWithOtherData] = useState(false);
 
   // SUMMARY
   const [summary, setSummary] = useState<IInvoiceSummary>({
@@ -275,6 +276,7 @@ const CounterSaleForm = () => {
           register: true,
         },
       ],
+      registerWithOtherCustomerData: registerWithOtherData,
     };
   };
 
@@ -336,6 +338,7 @@ const CounterSaleForm = () => {
     if (success) {
       setItems([]);
       setCustomer(defaulCustomer);
+      setRegisterWithOtherData(false);
       close();
     }
   }, [success]);
@@ -500,6 +503,8 @@ const CounterSaleForm = () => {
               className="lg:col-span-9"
               customer={customer}
               onCustomerChange={setCustomer}
+              registerWithOtherData={registerWithOtherData}
+              setRegisterWithOtherData={setRegisterWithOtherData}
             />
           </Tabs.Panel>
         </Tabs>
