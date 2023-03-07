@@ -115,6 +115,7 @@ export interface IInvoiceStoreData {
     amount: number;
     register: boolean;
   }[];
+  registerWithOtherCustomerData: boolean;
 }
 
 export interface IInvoicePaymentBase {

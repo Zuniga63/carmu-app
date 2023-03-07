@@ -1,20 +1,46 @@
-import { Select, TextInput } from '@mantine/core';
+import { Checkbox, Select, TextInput } from '@mantine/core';
 import { IconHome, IconPhone, IconSearch } from '@tabler/icons';
-import React, { useEffect } from 'react';
+import React, { forwardRef, useEffect } from 'react';
 import { customerPageSelector } from 'src/features/CustomerPage';
 import { useAppSelector } from 'src/store/hooks';
+import { currencyFormat, normalizeText } from 'src/utils';
 import { IInvoiceCustomer } from './InvoiceForm';
 import InvoiceFormGroup from './InvoiceFormGroup';
 
 interface Props {
   customer: IInvoiceCustomer;
   onCustomerChange: React.Dispatch<React.SetStateAction<IInvoiceCustomer>>;
+  registerWithOtherData: boolean;
+  setRegisterWithOtherData: React.Dispatch<React.SetStateAction<boolean>>;
   className?: string;
 }
+
+interface ICustomerSelectProps {
+  label: string;
+  search: string;
+  balance?: number;
+}
+
+const SelectItemCustomer = forwardRef<HTMLDivElement, ICustomerSelectProps>(
+  ({ label, search, balance, ...others }: ICustomerSelectProps, ref) => (
+    <div ref={ref} {...others}>
+      <h2 className="font-bold">{label}</h2>
+      {balance ? (
+        <p className="text-xs italic">
+          Saldo: <span className="font-bold">{currencyFormat(balance)}</span>
+        </p>
+      ) : null}
+    </div>
+  )
+);
+
+SelectItemCustomer.displayName = 'SelectItemCustomer';
 
 const InvoiceFormCustomer = ({
   customer,
   onCustomerChange,
+  registerWithOtherData,
+  setRegisterWithOtherData,
   className,
 }: Props) => {
   const { customers } = useAppSelector(customerPageSelector);
@@ -42,10 +68,16 @@ const InvoiceFormCustomer = ({
         <Select
           className="lg:col-span-2"
           value={customer.id}
+          itemComponent={SelectItemCustomer}
           data={customers.map(customer => ({
             value: customer.id,
-            label: customer.fullName,
+            label: `${customer.fullName}`.trim(),
+            balance: customer.balance,
+            search: normalizeText(
+              `${customer.fullName} ${customer.documentNumber || ''}`.trim()
+            ),
           }))}
+          filter={(value, item) => item.search.includes(normalizeText(value))}
           onChange={value =>
             onCustomerChange(current => ({ ...current, id: value }))
           }
@@ -108,6 +140,7 @@ const InvoiceFormCustomer = ({
             onCustomerChange(current => ({ ...current, address: target.value }))
           }
         />
+        {/* PHONE */}
         <TextInput
           placeholder="Telefono de contacto"
           size="xs"
@@ -118,6 +151,16 @@ const InvoiceFormCustomer = ({
           }
           type="tel"
         />
+
+        <div className="lg:col-span-2">
+          <Checkbox
+            label="Registrar con estos datos"
+            checked={registerWithOtherData}
+            onChange={({ currentTarget }) => {
+              setRegisterWithOtherData(currentTarget.checked);
+            }}
+          />
+        </div>
       </div>
     </InvoiceFormGroup>
   );
