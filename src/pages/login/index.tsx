@@ -58,8 +58,13 @@ const Login: NextPage = () => {
       <div className="mt-6 w-full overflow-hidden bg-light bg-opacity-60 px-6 py-4 shadow-lg shadow-gray-300 backdrop-blur-sm dark:bg-header dark:bg-opacity-60 dark:shadow-header sm:max-w-md sm:rounded-lg">
         <form onSubmit={onSubmit}>
           <header className="mb-4">
-            <figure className="mx-auto block w-1/2">
-              <Image src={brandLogo} alt="Carmú Logo" />
+            <figure className="relative mx-auto block h-20 w-1/2">
+              <Image
+                src={process.env.NEXT_PUBLIC_BRAND_LOGO_URL || brandLogo}
+                alt={process.env.NEXT_PUBLIC_APP_NAME || 'Carmú Logo'}
+                fill
+                className="object-contain"
+              />
             </figure>
           </header>
           <div className="mb-2">
