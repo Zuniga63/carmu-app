@@ -33,6 +33,7 @@ const BoxListItem = ({ box }: Props) => {
   const [createdAt, setCreatedAt] = useState('');
   const [updatedAt, setUpdatedAt] = useState('');
   const [opened, setOpened] = useState(false);
+  const [mouseIsOver, setMouseIsOver] = useState(false);
 
   const dispatch = useAppDispatch();
 
@@ -123,16 +124,34 @@ const BoxListItem = ({ box }: Props) => {
 
   return (
     <li className="mb-4">
-      <div className="overflow-hidden rounded-lg border shadow-sm dark:border-header dark:shadow-gray-500">
+      <div
+        className={
+          box.openBox
+            ? 'overflow-hidden rounded-lg border shadow-sm dark:border-header dark:shadow-gray-500'
+            : 'overflow-hidden rounded-lg border opacity-40 shadow-sm dark:border-header dark:shadow-gray-500'
+        }
+        onMouseOver={() => setMouseIsOver(true)}
+        onMouseLeave={() => setMouseIsOver(false)}
+      >
         <header
           className="relative cursor-pointer bg-gray-300 px-4 py-2 dark:bg-header"
           onClick={() => setOpened(o => !o)}
         >
           <div className="flex items-center gap-x-1">
             {/* BOX NAME */}
-            <h1 className="flex-grow text-sm font-bold tracking-wider line-clamp-1">
-              {box.name}
-            </h1>
+            <div className="flex-grow">
+              <div className="flex items-center gap-x-1">
+                {opened ? (
+                  <IconLock
+                    className="flex-shrink-0 text-amber-400"
+                    size={16}
+                  />
+                ) : null}
+                <h1 className=" flex-grow text-sm font-bold tracking-wider line-clamp-1">
+                  {box.name}
+                </h1>
+              </div>
+            </div>
             {/* BOX ACTIONS */}
             <div className="flex-shrink-0">
               <div className="flex gap-x-1">
@@ -207,7 +226,7 @@ const BoxListItem = ({ box }: Props) => {
           )}
         </header>
         {/* Body */}
-        <Collapse in={opened}>
+        <Collapse in={opened || mouseIsOver}>
           <div className="bg-gradient-to-b from-gray-200 to-indigo-300 px-4 py-2 dark:bg-none">
             {!!box.openBox && (
               <>
@@ -251,27 +270,29 @@ const BoxListItem = ({ box }: Props) => {
             </div>
           </div>
         </Collapse>
-        {!opened ? <Divider /> : null}
+        {!opened && box.openBox ? <Divider /> : null}
 
         {/* Footer */}
-        <footer className="bg-indigo-400 px-4 py-2 dark:bg-header">
-          <Tooltip
-            label={
-              <div className="flex flex-col items-center">
-                <h4 className="text-sm">Saldo sin la base</h4>
-                <p className="text-xs font-bold tracking-widest">
-                  {currencyFormat((box.balance || 0) - box.base)}
-                </p>
-              </div>
-            }
-            withArrow
-            hidden={!box.base}
-          >
-            <p className="text-center text-xl font-bold tracking-wider">
-              {currencyFormat(box.balance || 0)}
-            </p>
-          </Tooltip>
-        </footer>
+        {box.openBox ? (
+          <footer className="bg-indigo-400 px-4 py-2 dark:bg-header">
+            <Tooltip
+              label={
+                <div className="flex flex-col items-center">
+                  <h4 className="text-sm">Saldo sin la base</h4>
+                  <p className="text-xs font-bold tracking-widest">
+                    {currencyFormat((box.balance || 0) - box.base)}
+                  </p>
+                </div>
+              }
+              withArrow
+              hidden={!box.base}
+            >
+              <p className="text-center text-xl font-bold tracking-wider">
+                {currencyFormat(box.balance || 0)}
+              </p>
+            </Tooltip>
+          </footer>
+        ) : null}
       </div>
     </li>
   );
