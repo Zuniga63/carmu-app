@@ -82,6 +82,8 @@ const BoxShow = () => {
     setBoxName(name);
     setBoxBalance(boxBalance);
     setTransactions(transactionList);
+    setRangeDate([null, null]);
+
     if (showingMainBox && mainBox) {
       const fromDate = dayjs().startOf('month');
 
@@ -120,8 +122,9 @@ const BoxShow = () => {
 
   return (
     <>
-      {waiting ? <WaitingBox loading={loading} /> : null}
-      {!waiting && (
+      {waiting ? (
+        <WaitingBox loading={loading} />
+      ) : (
         <div>
           <header className="rounded-t-md bg-gray-300 px-6 py-2 dark:bg-header">
             <h2 className="text-center text-xl font-bold tracking-wider">
