@@ -78,7 +78,9 @@ const TransactionTableItem = ({ transaction }: Props) => {
   };
 
   return (
-    <tr className="text-dark dark:text-gray-300">
+    <tr
+      className={`text-dark ${otherBox ? 'opacity-20' : ''} dark:text-gray-300`}
+    >
       <td>
         <div className="whitespace-nowrap text-center">
           <p className="text-sm">
