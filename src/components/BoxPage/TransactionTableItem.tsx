@@ -1,3 +1,4 @@
+import { ActionIcon } from '@mantine/core';
 import { IconTrash } from '@tabler/icons';
 import axios, { AxiosError } from 'axios';
 import React from 'react';
@@ -104,12 +105,11 @@ const TransactionTableItem = ({ transaction }: Props) => {
         {currencyFormat(transaction.balance)}
       </td>
       <td>
-        <button
-          className="rounded-full border-2 border-red-600 border-opacity-50 p-2 text-red-600 text-opacity-50 transition-colors hover:border-opacity-80 hover:text-opacity-80 active:border-opacity-100 active:text-opacity-100"
-          onClick={deleteTransaction}
-        >
-          <IconTrash size={16} stroke={3} />
-        </button>
+        <div className="flex justify-center">
+          <ActionIcon color="red" size="lg" onClick={deleteTransaction}>
+            <IconTrash size={16} stroke={2} />
+          </ActionIcon>
+        </div>
       </td>
     </tr>
   );
