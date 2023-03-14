@@ -70,7 +70,7 @@ const BoxShow = () => {
     setBoxName(name);
     setBoxBalance(boxBalance);
     setTransactions(transactionList);
-  }, [mountBoxIsSuccess, transactionsData.length]);
+  }, [mountBoxIsSuccess, transactionsData]);
 
   useEffect(() => {
     if (!showingMainBox && !boxSelected) setWaiting(true);
@@ -86,14 +86,20 @@ const BoxShow = () => {
             <h2 className="text-center text-xl font-bold tracking-wider">
               {boxName}
             </h2>
-            <p className="text-center font-bold">
-              {currencyFormat(boxBalance)}
-            </p>
           </header>
-          <ScrollArea className="relative h-[26rem] overflow-y-auto border border-y-0 border-x-gray-400 dark:border-x-header 3xl:h-[40rem]">
+          <ScrollArea className="relative h-[25rem] overflow-y-auto border border-y-0 border-x-gray-400 dark:border-x-header 3xl:h-[40rem]">
             <TransactionTable transactions={transactions} />
           </ScrollArea>
-          <footer className="flex justify-end rounded-b-md bg-gray-300 px-6 py-2 dark:bg-header">
+          <footer className="flex items-center justify-between rounded-b-md bg-gray-300 px-6 py-2 dark:bg-header">
+            <div className="flex gap-x-2">
+              <span>Saldo:</span>
+              <span className="text-center font-bold">
+                {currencyFormat(boxBalance)}
+              </span>
+            </div>
+
+            <div>Registros: {transactions.length}</div>
+
             <Button leftIcon={<IconWriting />} onClick={addHandler}>
               Agregar Transacción
             </Button>

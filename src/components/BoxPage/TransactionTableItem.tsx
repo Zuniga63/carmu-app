@@ -78,15 +78,15 @@ const TransactionTableItem = ({ transaction }: Props) => {
 
   return (
     <tr className="text-dark dark:text-gray-300">
-      <td className="whitespace-nowrap px-3 py-2">
-        <div className="text-center">
+      <td>
+        <div className="whitespace-nowrap text-center">
           <p className="text-sm">
             {transaction.transactionDate.format('DD/MM/YY hh:mm a')}
           </p>
           <p className="text-xs">{transaction.transactionDate.fromNow()}</p>
         </div>
       </td>
-      <td className="px-3 py-2 text-sm">
+      <td>
         <div>
           <p>{transaction.description}</p>
           {otherBox && (
@@ -99,15 +99,11 @@ const TransactionTableItem = ({ transaction }: Props) => {
           )}
         </div>
       </td>
-      <td className="px-3 py-2 text-right text-sm">
-        {currencyFormat(transaction.amount)}
-      </td>
-      <td
-        className={`px-3 py-2 text-right text-sm ${otherBox && 'line-through'}`}
-      >
+      <td className="text-right">{currencyFormat(transaction.amount)}</td>
+      <td className={`text-right ${otherBox && 'line-through'}`}>
         {currencyFormat(transaction.balance)}
       </td>
-      <td className="py-2 pl-3 pr-5 text-sm">
+      <td>
         <button
           className="rounded-full border-2 border-red-600 border-opacity-50 p-2 text-red-600 text-opacity-50 transition-colors hover:border-opacity-80 hover:text-opacity-80 active:border-opacity-100 active:text-opacity-100"
           onClick={deleteTransaction}
