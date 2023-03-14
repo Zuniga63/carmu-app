@@ -125,7 +125,7 @@ const BoxShow = () => {
       {waiting ? (
         <WaitingBox loading={loading} />
       ) : (
-        <div>
+        <div className="w-full">
           <header className="rounded-t-md bg-gray-300 px-6 py-2 dark:bg-header">
             <h2 className="text-center text-xl font-bold tracking-wider">
               {boxName}
@@ -144,17 +144,22 @@ const BoxShow = () => {
             <TransactionTable transactions={filteredTransactions} />
           </ScrollArea>
           <footer className="flex items-center justify-between rounded-b-md bg-gray-300 px-6 py-2 dark:bg-header">
-            <div className="flex gap-x-2">
-              <span>Saldo:</span>
-              <span className="text-center font-bold">
+            <div className="flex flex-col items-center gap-y-1 lg:flex-row lg:gap-x-2">
+              <span className="text-xs lg:text-base">Saldo:</span>
+              <span className="text-center text-xs font-bold lg:text-base">
                 {currencyFormat(boxBalance)}
               </span>
             </div>
 
-            <div>Registros: {filteredTransactions.length}</div>
+            <div className="hidden lg:block">
+              Registros: {filteredTransactions.length}
+            </div>
 
             <Button leftIcon={<IconWriting />} onClick={addHandler}>
-              Agregar Transacción
+              <span className="hidden lg:inline-block">
+                Agregar Transacción
+              </span>
+              <span className="lg:hidden">Agregar</span>
             </Button>
           </footer>
         </div>
