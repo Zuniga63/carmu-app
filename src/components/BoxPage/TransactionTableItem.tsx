@@ -83,15 +83,23 @@ const TransactionTableItem = ({ transaction }: Props) => {
     >
       <td>
         <div className="whitespace-nowrap text-center">
-          <p className="text-sm">
+          <p className="hidden text-sm lg:block">
             {transaction.transactionDate.format('DD/MM/YY hh:mm a')}
           </p>
-          <p className="text-xs">{transaction.transactionDate.fromNow()}</p>
+          <p className="text-xs lg:hidden">
+            {transaction.transactionDate.format('DD/MM/YY')}
+          </p>
+          <p className="hidden text-xs lg:block">
+            {transaction.transactionDate.fromNow()}
+          </p>
+          <p className="text-xs lg:hidden">
+            {transaction.transactionDate.format('hh:mm a')}
+          </p>
         </div>
       </td>
       <td>
         <div>
-          <p>{transaction.description}</p>
+          <p className="text-xs lg:text-base">{transaction.description}</p>
           {otherBox && (
             <p className="text-xs">
               pertenece a :{' '}
@@ -103,7 +111,11 @@ const TransactionTableItem = ({ transaction }: Props) => {
         </div>
       </td>
       <td className="text-right">{currencyFormat(transaction.amount)}</td>
-      <td className={`text-right ${otherBox && 'line-through'}`}>
+      <td
+        className={`hidden text-right lg:table-cell ${
+          otherBox && 'line-through'
+        }`}
+      >
         {currencyFormat(transaction.balance)}
       </td>
       <td>
