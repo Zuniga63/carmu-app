@@ -1,3 +1,4 @@
+import { Table } from '@mantine/core';
 import React from 'react';
 import { ITransaction } from 'src/types';
 import TransactionTableItem from './TransactionTableItem';
@@ -7,44 +8,34 @@ interface Props {
 }
 const TransactionTable = ({ transactions }: Props) => {
   return (
-    <table className='class="relative mb-2" min-w-full table-auto'>
+    <Table className="relative" verticalSpacing="sm" striped highlightOnHover>
       <thead className="sticky top-0 bg-gray-200 dark:bg-dark">
         <tr className="text-dark dark:text-gray-300">
-          <th
-            scope="col"
-            className="px-4 py-3 text-center uppercase tracking-wide"
-          >
-            Fecha
+          <th scope="col">
+            <div className="text-center uppercase tracking-wide">Fecha</div>
           </th>
-          <th
-            scope="col"
-            className="px-4 py-3 text-left uppercase tracking-wide"
-          >
-            Descripción
+          <th scope="col">
+            <div className="text-center uppercase tracking-wide">
+              Descripción
+            </div>
           </th>
-          <th
-            scope="col"
-            className="px-4 py-3 text-center uppercase tracking-wide"
-          >
+          <th scope="col" className="text-center uppercase tracking-wide">
             Importe
           </th>
-          <th
-            scope="col"
-            className="px-4 py-3 text-center uppercase tracking-wide"
-          >
-            Saldo
+          <th scope="col">
+            <div className="text-center uppercase tracking-wide">Saldo</div>
           </th>
-          <th scope="col" className="relative px-6 py-3">
+          <th scope="col" className="relative">
             <span className="sr-only">Actions</span>
           </th>
         </tr>
       </thead>
-      <tbody className="divide-y divide-gray-200">
+      <tbody>
         {transactions.map(item => (
           <TransactionTableItem key={item.id} transaction={item} />
         ))}
       </tbody>
-    </table>
+    </Table>
   );
 };
 
