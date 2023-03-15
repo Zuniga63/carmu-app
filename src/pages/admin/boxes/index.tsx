@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 import { fetchBoxes, unmountTransactions } from 'src/features/BoxPage';
 import { authSelector } from 'src/features/Auth';
+import CreateTransactionForm from 'src/components/BoxPage/CreateTransactionForm';
 
 const BoxesPage: NextPage = () => {
   const { isAuth, isAdmin } = useAppSelector(authSelector);
@@ -38,6 +39,7 @@ const BoxesPage: NextPage = () => {
       <CreateForm />
       <OpenBoxForm />
       <CloseBoxForm />
+      <CreateTransactionForm />
     </>
   );
 };

@@ -1,6 +1,6 @@
-import { Button, ScrollArea } from '@mantine/core';
+import { ActionIcon, Button, ScrollArea, Tooltip } from '@mantine/core';
 import { DateRangePicker, DateRangePickerValue } from '@mantine/dates';
-import { IconWriting } from '@tabler/icons';
+import { IconFileDescription, IconWriting } from '@tabler/icons';
 import dayjs from 'dayjs';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
@@ -9,7 +9,7 @@ import { boxPageSelector, showTransactionForm } from 'src/features/BoxPage';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 import { ITransaction, ITransactionResponse } from 'src/types';
 import { currencyFormat } from 'src/utils';
-import CreateTransactionForm from './CreateTransactionForm';
+import TransactionReport from './TransactionReport';
 import TransactionTable from './TransactionTable';
 import WaitingBox from './WaitingBox';
 
@@ -38,6 +38,7 @@ const BoxShow = () => {
     null,
     null,
   ]);
+  const [reportOpened, setReportOpened] = useState(false);
 
   const addHandler = () => dispatch(showTransactionForm());
 
@@ -155,17 +156,30 @@ const BoxShow = () => {
               Registros: {filteredTransactions.length}
             </div>
 
-            <Button leftIcon={<IconWriting />} onClick={addHandler}>
-              <span className="hidden lg:inline-block">
-                Agregar Transacción
-              </span>
-              <span className="lg:hidden">Agregar</span>
-            </Button>
+            <div className="flex items-center gap-x-4">
+              <Tooltip label="Ver informe">
+                <ActionIcon color="blue" onClick={() => setReportOpened(true)}>
+                  <IconFileDescription size={18} />
+                </ActionIcon>
+              </Tooltip>
+
+              <Button leftIcon={<IconWriting />} onClick={addHandler}>
+                <span className="hidden lg:inline-block">
+                  Agregar Transacción
+                </span>
+                <span className="lg:hidden">Agregar</span>
+              </Button>
+            </div>
           </footer>
         </div>
       )}
 
-      <CreateTransactionForm />
+      <TransactionReport
+        dates={rangeDate}
+        transactions={filteredTransactions}
+        opened={reportOpened}
+        setOpened={setReportOpened}
+      />
     </>
   );
 };
