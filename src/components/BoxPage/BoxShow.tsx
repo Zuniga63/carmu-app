@@ -138,6 +138,7 @@ const BoxShow = () => {
                 value={rangeDate}
                 onChange={setRangeDate}
                 maxDate={dayjs().toDate()}
+                inputFormat="DD-MM-YYYY"
               />
             ) : null}
           </header>
