@@ -1,8 +1,9 @@
-import { Checkbox, Select, TextInput } from '@mantine/core';
+import { Checkbox, Select, SelectItem, TextInput } from '@mantine/core';
 import { IconHome, IconPhone, IconSearch } from '@tabler/icons';
 import React, { forwardRef, useEffect } from 'react';
 import { customerPageSelector } from 'src/features/CustomerPage';
 import { useAppSelector } from 'src/store/hooks';
+import { ICustomer } from 'src/types';
 import { currencyFormat, normalizeText } from 'src/utils';
 import { IInvoiceCustomer } from './InvoiceForm';
 import InvoiceFormGroup from './InvoiceFormGroup';
@@ -15,16 +16,20 @@ interface Props {
   className?: string;
 }
 
-interface ICustomerSelectProps {
+interface ICustomerSelectProps extends SelectItem {
   label: string;
   search: string;
   balance?: number;
+  alias?: string;
 }
 
 const SelectItemCustomer = forwardRef<HTMLDivElement, ICustomerSelectProps>(
-  ({ label, search, balance, ...others }: ICustomerSelectProps, ref) => (
+  ({ label, search, balance, alias, ...others }: ICustomerSelectProps, ref) => (
     <div ref={ref} {...others}>
-      <h2 className="font-bold">{label}</h2>
+      <h2>
+        <span className="font-bold uppercase">{label}</span>{' '}
+        {alias ? <span className="capitalize italic">({alias})</span> : null}{' '}
+      </h2>
       {balance ? (
         <p className="text-xs italic">
           Saldo: <span className="font-bold">{currencyFormat(balance)}</span>
@@ -44,6 +49,22 @@ const InvoiceFormCustomer = ({
   className,
 }: Props) => {
   const { customers } = useAppSelector(customerPageSelector);
+
+  const buildSelectCustomerData = (
+    customer: ICustomer
+  ): ICustomerSelectProps => {
+    let search = `${customer.fullName}`;
+    if (customer.documentNumber) search += ` ${customer.documentNumber}`;
+    if (customer.alias) search += ` ${customer.alias}`;
+
+    return {
+      value: customer.id,
+      label: customer.fullName,
+      balance: customer.balance,
+      alias: customer.alias,
+      search: normalizeText(search),
+    };
+  };
 
   useEffect(() => {
     const customerData = customers.find(c => c.id === customer.id);
@@ -69,14 +90,7 @@ const InvoiceFormCustomer = ({
           className="lg:col-span-2"
           value={customer.id}
           itemComponent={SelectItemCustomer}
-          data={customers.map(customer => ({
-            value: customer.id,
-            label: `${customer.fullName}`.trim(),
-            balance: customer.balance,
-            search: normalizeText(
-              `${customer.fullName} ${customer.documentNumber || ''}`.trim()
-            ),
-          }))}
+          data={customers.map(buildSelectCustomerData)}
           filter={(value, item) => item.search.includes(normalizeText(value))}
           onChange={value =>
             onCustomerChange(current => ({ ...current, id: value }))

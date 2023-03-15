@@ -63,7 +63,7 @@ const InvoiceFormConfirm: React.FC<Props> = ({
             Fecha:{' '}
             <span className="font-bold">
               {dayjs(expeditionDate || undefined).format(
-                'ddd DD [de] MMM [a las] hh:mm a '
+                'ddd DD-MM-YYYY hh:mm a '
               )}
             </span>
           </p>
