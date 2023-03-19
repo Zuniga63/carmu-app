@@ -2,20 +2,21 @@ import { createReducer } from '@reduxjs/toolkit';
 import { ConfigState } from './types';
 import { ErrorResponse } from 'src/types';
 import {
-  COMMERCIAL_PREMISE_KEY,
-  editCommercialPremise,
-  fetchCommercialPremises,
+  PREMISE_STORE_KEY,
+  editPremiseStore,
+  fetchPremiseStores,
   hidePremiseForm,
   selectCommercialPremise,
   showPremiseForm,
-  storeCommercialPremise,
-  updateCommercialPremise,
+  storePremiseStore,
+  unselectPremiseStore,
+  updatePremiseStore,
 } from './actions';
 
 const initialState: ConfigState = {
-  commercialPremises: [],
-  fetchCommercialPremisesLoading: false,
-  commercialPremiseSelected: undefined,
+  premiseStores: [],
+  fetchPremiseStoresLoading: false,
+  premiseStoreSelected: undefined,
   // UPDATE AND STORE PREMISE
   commercialPremiseToUpdate: null,
   premiseFormOpened: false,
@@ -29,23 +30,28 @@ export const configStateReducer = createReducer(initialState, builder => {
   // FETCH DATA
   // --------------------------------------------------------------------------
   builder
-    .addCase(fetchCommercialPremises.pending, state => {
-      state.fetchCommercialPremisesLoading = true;
+    .addCase(fetchPremiseStores.pending, state => {
+      state.fetchPremiseStoresLoading = true;
     })
-    .addCase(fetchCommercialPremises.fulfilled, (state, { payload }) => {
+    .addCase(fetchPremiseStores.fulfilled, (state, { payload }) => {
       const { premises, commercialPremise } = payload;
-      state.commercialPremises = premises;
-      state.commercialPremiseSelected = commercialPremise;
-      state.fetchCommercialPremisesLoading = false;
+      state.premiseStores = premises;
+      state.premiseStoreSelected = commercialPremise;
+      state.fetchPremiseStoresLoading = false;
     });
 
-  builder.addCase(selectCommercialPremise, (state, { payload }) => {
-    const premise = state.commercialPremises.find(item => item.id === payload);
-    if (premise) {
-      state.commercialPremiseSelected = premise;
-      localStorage.setItem(COMMERCIAL_PREMISE_KEY, premise.id);
-    }
-  });
+  builder
+    .addCase(selectCommercialPremise, (state, { payload }) => {
+      const premise = state.premiseStores.find(item => item.id === payload);
+      if (premise) {
+        state.premiseStoreSelected = premise;
+        localStorage.setItem(PREMISE_STORE_KEY, premise.id);
+      }
+    })
+    .addCase(unselectPremiseStore, state => {
+      state.premiseStoreSelected = undefined;
+      localStorage.removeItem(PREMISE_STORE_KEY);
+    });
 
   // --------------------------------------------------------------------------
   // STORE NEW COMMERCIAL PREMISE
@@ -63,17 +69,17 @@ export const configStateReducer = createReducer(initialState, builder => {
     });
 
   builder
-    .addCase(storeCommercialPremise.pending, state => {
+    .addCase(storePremiseStore.pending, state => {
       state.premiseFormLoading = true;
       state.premiseFormIsSuccess = false;
       state.premiseFormError = null;
     })
-    .addCase(storeCommercialPremise.fulfilled, (state, { payload }) => {
+    .addCase(storePremiseStore.fulfilled, (state, { payload }) => {
       state.premiseFormLoading = false;
       state.premiseFormIsSuccess = true;
-      state.commercialPremises.push(payload);
+      state.premiseStores.push(payload);
     })
-    .addCase(storeCommercialPremise.rejected, (state, { payload }) => {
+    .addCase(storePremiseStore.rejected, (state, { payload }) => {
       state.premiseFormLoading = false;
       state.premiseFormError = payload as ErrorResponse;
     });
@@ -81,10 +87,8 @@ export const configStateReducer = createReducer(initialState, builder => {
   // --------------------------------------------------------------------------
   // UPDATE COMMERCIAL PREMISE
   // --------------------------------------------------------------------------
-  builder.addCase(editCommercialPremise, (state, { payload }) => {
-    const commercial = state.commercialPremises.find(
-      item => item.id === payload
-    );
+  builder.addCase(editPremiseStore, (state, { payload }) => {
+    const commercial = state.premiseStores.find(item => item.id === payload);
 
     if (commercial) {
       state.commercialPremiseToUpdate = commercial;
@@ -93,26 +97,26 @@ export const configStateReducer = createReducer(initialState, builder => {
   });
 
   builder
-    .addCase(updateCommercialPremise.pending, state => {
+    .addCase(updatePremiseStore.pending, state => {
       state.premiseFormLoading = true;
       state.premiseFormIsSuccess = false;
       state.premiseFormError = null;
     })
-    .addCase(updateCommercialPremise.fulfilled, (state, { payload }) => {
-      const { commercialPremises: oldList } = state;
+    .addCase(updatePremiseStore.fulfilled, (state, { payload }) => {
+      const { premiseStores: oldList } = state;
       const index = oldList.findIndex(item => item.id === payload.id);
 
       if (index >= 0) {
         const newList = oldList.slice();
         newList.splice(index, 1, payload);
-        state.commercialPremises = newList;
+        state.premiseStores = newList;
         // TODO: Code for update local storage and selected bussiness
       }
 
       state.premiseFormLoading = false;
       state.premiseFormIsSuccess = true;
     })
-    .addCase(updateCommercialPremise.rejected, (state, { payload }) => {
+    .addCase(updatePremiseStore.rejected, (state, { payload }) => {
       state.premiseFormLoading = false;
       state.premiseFormError = payload as ErrorResponse;
     });

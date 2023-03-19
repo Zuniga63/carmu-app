@@ -33,6 +33,7 @@ import {
   storeNewInvoice,
 } from 'src/features/InvoicePage';
 import { authSelector } from 'src/features/Auth';
+import { configSelector } from 'src/features/Config';
 
 export enum InvoiceSteps {
   Invoicing,
@@ -68,6 +69,7 @@ const InvoiceForm = () => {
     storeSuccess: success,
   } = useAppSelector(invoicePageSelector);
   const { user } = useAppSelector(authSelector);
+  const { premiseStoreSelected } = useAppSelector(configSelector);
   const dispatch = useAppDispatch();
   const [enabled, setEnabled] = useState(false);
   const largeScreen = useMediaQuery('(min-width: 768px)');
@@ -129,6 +131,9 @@ const InvoiceForm = () => {
     return {
       sellerId: user?.id,
       customerId: customer.id || undefined,
+      premiseStoreId: premiseStoreSelected
+        ? premiseStoreSelected.id
+        : undefined,
       isSeparate,
       customerName: customer.name || undefined,
       customerAddress: customer.address.trim() || undefined,

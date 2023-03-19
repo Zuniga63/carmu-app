@@ -98,6 +98,7 @@ export interface IInvoicePaymentData {
 export interface IInvoiceStoreData {
   sellerId?: string;
   customerId?: string;
+  premiseStoreId?: string;
   isSeparate: boolean;
   customerName?: string;
   customerAddress?: string;

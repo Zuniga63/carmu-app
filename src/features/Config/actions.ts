@@ -1,25 +1,25 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import {
-  ICommercialPremise,
-  IStoreCommercialPremise,
-  IUpdateCommercialPremise,
+  IPremiseStore,
+  IStorePremiseStore,
+  IUpdatePremiseStore,
 } from './types';
 
-export const COMMERCIAL_PREMISE_KEY = 'commercialPremise';
+export const PREMISE_STORE_KEY = 'premiseStoreId';
 
-export const fetchCommercialPremises = createAsyncThunk(
-  'config/fetchCommercialPremises',
+export const fetchPremiseStores = createAsyncThunk(
+  'config/fetchPremiseStores',
   async (_, { rejectWithValue }) => {
     try {
-      const res = await axios.get<ICommercialPremise[]>('/stores');
-      let commercialPremise: ICommercialPremise | undefined;
+      const res = await axios.get<IPremiseStore[]>('/stores');
+      let commercialPremise: IPremiseStore | undefined;
 
-      const storeId = localStorage.getItem(COMMERCIAL_PREMISE_KEY);
+      const storeId = localStorage.getItem(PREMISE_STORE_KEY);
       if (storeId) {
         commercialPremise = res.data.find(item => item.id === storeId);
         if (!commercialPremise) {
-          localStorage.removeItem(COMMERCIAL_PREMISE_KEY);
+          localStorage.removeItem(PREMISE_STORE_KEY);
         }
       }
       return { premises: res.data, commercialPremise };
@@ -38,16 +38,18 @@ export const selectCommercialPremise = createAction<string>(
   'config/selectCommercialPremise'
 );
 
+export const unselectPremiseStore = createAction('config/unselectPremiseStore');
+
 // ----------------------------------------------------------------------------
 // STORE NEW COMMERCIAL PREMISE
 // ----------------------------------------------------------------------------
 export const showPremiseForm = createAction('config/showPremiseForm');
 export const hidePremiseForm = createAction('config/hidePremiseForm');
-export const storeCommercialPremise = createAsyncThunk(
-  'config/storeCommercialPremise',
-  async (data: IStoreCommercialPremise, { rejectWithValue }) => {
+export const storePremiseStore = createAsyncThunk(
+  'config/storePremiseStore',
+  async (data: IStorePremiseStore, { rejectWithValue }) => {
     try {
-      const res = await axios.post<ICommercialPremise>('/stores', data);
+      const res = await axios.post<IPremiseStore>('/stores', data);
       return res.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -60,16 +62,14 @@ export const storeCommercialPremise = createAsyncThunk(
   }
 );
 
-export const editCommercialPremise = createAction<string>(
-  'config/editCommercialPremise'
-);
-export const updateCommercialPremise = createAsyncThunk(
-  'config/updateCommercialPremise',
-  async (data: IUpdateCommercialPremise, { rejectWithValue }) => {
+export const editPremiseStore = createAction<string>('config/editPremiseStore');
+export const updatePremiseStore = createAsyncThunk(
+  'config/updatePremiseStore',
+  async (data: IUpdatePremiseStore, { rejectWithValue }) => {
     try {
       const { storeId, ...body } = data;
       const url = `/stores/${storeId}`;
-      const res = await axios.patch<ICommercialPremise>(url, body);
+      const res = await axios.patch<IPremiseStore>(url, body);
       return res.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {

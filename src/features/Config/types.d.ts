@@ -1,6 +1,6 @@
 import { ErrorResponse, IBox } from 'src/types';
 
-export interface ICommercialPremise {
+export interface IPremiseStore {
   id: string;
   name: string;
   phone?: string;
@@ -9,23 +9,23 @@ export interface ICommercialPremise {
   invoices: string[];
 }
 
-export interface IStoreCommercialPremise {
+export interface IStorePremiseStore {
   name: string;
   address?: string;
   phone?: string;
   defaultBox?: string;
 }
 
-export interface IUpdateCommercialPremise extends IStoreCommercialPremise {
+export interface IUpdatePremiseStore extends IStorePremiseStore {
   storeId: string;
 }
 
 export type ConfigState = {
-  commercialPremises: ICommercialPremise[];
-  fetchCommercialPremisesLoading: boolean;
-  commercialPremiseSelected?: ICommercialPremise | undefined;
+  premiseStores: IPremiseStore[];
+  fetchPremiseStoresLoading: boolean;
+  premiseStoreSelected?: IPremiseStore | undefined;
   // STORE AND UPDATE
-  commercialPremiseToUpdate: ICommercialPremise | null;
+  commercialPremiseToUpdate: IPremiseStore | null;
   premiseFormOpened: boolean;
   premiseFormLoading: boolean;
   premiseFormIsSuccess: boolean;

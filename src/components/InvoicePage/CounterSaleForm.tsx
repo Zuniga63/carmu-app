@@ -60,7 +60,7 @@ const CounterSaleForm = () => {
   const { user } = useAppSelector(authSelector);
   const { boxes } = useAppSelector(boxPageSelector);
   const { categories } = useAppSelector(categoryPageSelector);
-  const { commercialPremiseSelected: store } = useAppSelector(configSelector);
+  const { premiseStoreSelected: store } = useAppSelector(configSelector);
   const dispatch = useAppDispatch();
 
   // ITEMS
@@ -271,6 +271,7 @@ const CounterSaleForm = () => {
   const getData = (): IInvoiceStoreData => {
     return {
       sellerId: user?.id,
+      premiseStoreId: store ? store.id : undefined,
       isSeparate: false,
       sellerName: user?.name,
       customerId: customer.id || undefined,

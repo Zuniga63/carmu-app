@@ -27,7 +27,7 @@ const InvoiceFormPayment: React.FC<Props> = ({
   setPayments,
 }) => {
   const { boxes } = useAppSelector(boxPageSelector);
-  const { commercialPremiseSelected: commercialPremise } =
+  const { premiseStoreSelected: commercialPremise } =
     useAppSelector(configSelector);
   const input = useRef<HTMLInputElement>(null);
 

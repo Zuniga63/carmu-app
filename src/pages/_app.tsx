@@ -32,7 +32,7 @@ import {
   authSuccessIsNotify,
   authenticate,
 } from 'src/features/Auth';
-import { fetchCommercialPremises } from 'src/features/Config';
+import { fetchPremiseStores } from 'src/features/Config';
 
 // Config
 axios.defaults.baseURL = process.env.NEXT_PUBLIC_URL_API;
@@ -116,7 +116,7 @@ export function MyApp({ Component, pageProps }: AppProps) {
   }, [authIsSuccess]);
 
   useEffect(() => {
-    dispatch(fetchCommercialPremises());
+    dispatch(fetchPremiseStores());
   }, [isAuth]);
 
   return (

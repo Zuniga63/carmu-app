@@ -6,8 +6,8 @@ import { boxPageSelector } from 'src/features/BoxPage';
 import {
   configSelector,
   hidePremiseForm,
-  storeCommercialPremise,
-  updateCommercialPremise,
+  storePremiseStore,
+  updatePremiseStore,
 } from 'src/features/Config';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 import { IValidationErrors } from 'src/types';
@@ -45,7 +45,7 @@ const PremiseFormModal = () => {
     if (name) {
       if (commercialToUpdate) {
         dispatch(
-          updateCommercialPremise({
+          updatePremiseStore({
             storeId: commercialToUpdate.id,
             name,
             address: address || undefined,
@@ -55,7 +55,7 @@ const PremiseFormModal = () => {
         );
       } else {
         dispatch(
-          storeCommercialPremise({
+          storePremiseStore({
             name,
             address: address || undefined,
             phone: phone || undefined,

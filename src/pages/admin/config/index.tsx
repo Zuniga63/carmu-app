@@ -1,11 +1,11 @@
 import Layout from 'src/components/Layout';
 import { NextPage } from 'next';
-import StoreConfig from 'src/components/ConfigPage/StoreConfig';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 import { authSelector } from 'src/features/Auth';
 import { fetchBoxes } from 'src/features/BoxPage';
 import { useEffect } from 'react';
-import { fetchCommercialPremises } from 'src/features/Config';
+import { fetchPremiseStores } from 'src/features/Config';
+import PremiseStoreConfigComponent from 'src/components/ConfigPage/premise-stores/PremiseStoreConfigComponent';
 
 const ConfigPage: NextPage = () => {
   const { isAuth, isAdmin } = useAppSelector(authSelector);
@@ -14,13 +14,13 @@ const ConfigPage: NextPage = () => {
   useEffect(() => {
     if (isAuth && isAdmin) {
       dispatch(fetchBoxes());
-      dispatch(fetchCommercialPremises());
+      dispatch(fetchPremiseStores());
     }
   }, [isAuth, isAdmin]);
 
   return (
     <Layout title="Configuraciones">
-      <StoreConfig />
+      <PremiseStoreConfigComponent />
     </Layout>
   );
 };
