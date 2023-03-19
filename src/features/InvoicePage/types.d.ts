@@ -3,6 +3,7 @@ import { ErrorResponse, ICustomer } from 'src/types';
 import { IProduct } from 'src/types';
 import { IBox } from 'src/types';
 import { Dayjs } from 'dayjs';
+import { IPremiseStore } from '../Config/types';
 
 export type IInvoiceSeller = Pick<IUser, 'name' | 'id'>;
 
@@ -24,6 +25,7 @@ export interface IInvoiceBase {
   id: string;
   seller?: IInvoiceSeller;
   customer?: IInvoiceCustomer;
+  premiseStore?: IPremiseStore;
   isSeparate: boolean;
   prefixNumber: string;
   customerName: string;
