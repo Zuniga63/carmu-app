@@ -3,6 +3,7 @@ import { IconBox, IconCirclePlus } from '@tabler/icons';
 import dayjs from 'dayjs';
 import React, { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { boxPageSelector } from 'src/features/BoxPage';
+import { configSelector } from 'src/features/Config';
 import { useAppSelector } from 'src/store/hooks';
 import {
   IInvoiceCashbox,
@@ -26,6 +27,8 @@ const InvoiceFormPayment: React.FC<Props> = ({
   setPayments,
 }) => {
   const { boxes } = useAppSelector(boxPageSelector);
+  const { commercialPremiseSelected: commercialPremise } =
+    useAppSelector(configSelector);
   const input = useRef<HTMLInputElement>(null);
 
   const [boxList, setBoxList] = useState<IInvoiceCashbox[]>([]);
@@ -118,6 +121,18 @@ const InvoiceFormPayment: React.FC<Props> = ({
       setAmount(summary.balance);
     }
   }, [summary.balance]);
+
+  useEffect(() => {
+    if (commercialPremise) {
+      const { defaultBox } = commercialPremise;
+      const id =
+        defaultBox && defaultBox.openBox && dayjs().isAfter(defaultBox.openBox)
+          ? defaultBox.id
+          : null;
+
+      setBoxId(id);
+    }
+  }, [commercialPremise]);
 
   return (
     <div className="grid grid-cols-3 items-start gap-x-4 pt-4">
