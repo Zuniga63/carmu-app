@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Avatar, Menu } from '@mantine/core';
 import { useAppSelector, useAppDispatch } from 'src/store/hooks';
-import { IconCategory, IconLogout } from '@tabler/icons';
+import {
+  IconCategory,
+  IconLogout,
+  IconSettings,
+  IconUser,
+} from '@tabler/icons';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { authSelector, logout } from 'src/features/Auth';
@@ -55,8 +60,19 @@ export default function UserAvatar() {
           </p>
         </div>
         <Menu.Divider />
-        <Menu.Item>
-          <Link href="/admin/profile">Perfil de usuario</Link>
+        <Menu.Item
+          component={Link}
+          icon={<IconUser size={16} />}
+          href="/admin/profile"
+        >
+          Perfil de usuario
+        </Menu.Item>
+        <Menu.Item
+          icon={<IconSettings size={16} />}
+          component={Link}
+          href="/admin/config"
+        >
+          Configuraciones
         </Menu.Item>
         <Menu.Item icon={<IconCategory size={18} />}>
           <Link href="/admin/categories">Administrar Categorías</Link>

@@ -166,21 +166,20 @@ const CreditEvolutionChart = ({
       'Saldo',
       [balance],
       CHART_COLORS.burgundy,
-      0.9
+      0.9,
+      true
     );
     const paymentDataset = createDataset(
       'Abonos',
       [paymentsSum],
       CHART_COLORS.forestGreen,
-      0.9,
-      true
+      0.9
     );
     const creditDataset = createDataset(
       'Creditos',
       [creditsSum],
       CHART_COLORS.red,
-      0.9,
-      true
+      0.9
     );
 
     const today = dayjs();
@@ -207,7 +206,7 @@ const CreditEvolutionChart = ({
       date = date.add(1, 'month');
     }
 
-    datasets.push(balanceDataset, creditDataset, paymentDataset);
+    datasets.push(creditDataset, paymentDataset, balanceDataset);
 
     return datasets;
   };
@@ -220,22 +219,16 @@ const CreditEvolutionChart = ({
       'Saldo',
       [],
       CHART_COLORS.burgundy,
-      0.9
+      0.9,
+      true
     );
     const paymentDataset = createDataset(
       'Abonos',
       [0],
       CHART_COLORS.forestGreen,
-      0.9,
-      true
+      0.9
     );
-    const creditDataset = createDataset(
-      'Creditos',
-      [0],
-      CHART_COLORS.red,
-      0.9,
-      true
-    );
+    const creditDataset = createDataset('Creditos', [0], CHART_COLORS.red, 0.9);
 
     if (!isNaN(month) && month >= 0 && month < 12) {
       const today = dayjs();
@@ -290,7 +283,7 @@ const CreditEvolutionChart = ({
         currentDate = currentDate.add(1, 'day');
       }
 
-      datasets.push(balanceDataset, creditDataset, paymentDataset);
+      datasets.push(creditDataset, paymentDataset, balanceDataset);
     }
 
     return datasets;

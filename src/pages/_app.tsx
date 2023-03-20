@@ -32,6 +32,7 @@ import {
   authSuccessIsNotify,
   authenticate,
 } from 'src/features/Auth';
+import { fetchPremiseStores } from 'src/features/Config';
 
 // Config
 axios.defaults.baseURL = process.env.NEXT_PUBLIC_URL_API;
@@ -41,7 +42,7 @@ NProgress.configure({ showSpinner: false });
 
 export function MyApp({ Component, pageProps }: AppProps) {
   const dispatch = useAppDispatch();
-  const { user, authIsSuccess } = useAppSelector(authSelector);
+  const { user, authIsSuccess, isAuth } = useAppSelector(authSelector);
 
   // --------------------------------------------------------------------------
   // SET THEME APP
@@ -113,6 +114,10 @@ export function MyApp({ Component, pageProps }: AppProps) {
       dispatch(authSuccessIsNotify());
     }
   }, [authIsSuccess]);
+
+  useEffect(() => {
+    dispatch(fetchPremiseStores());
+  }, [isAuth]);
 
   return (
     <ColorSchemeProvider

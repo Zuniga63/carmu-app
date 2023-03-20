@@ -21,6 +21,7 @@ import React, { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { authSelector } from 'src/features/Auth';
 import { boxPageSelector } from 'src/features/BoxPage';
 import { categoryPageSelector } from 'src/features/CategoryPage';
+import { configSelector } from 'src/features/Config';
 import {
   hideCounterSaleForm,
   invoicePageSelector,
@@ -59,6 +60,7 @@ const CounterSaleForm = () => {
   const { user } = useAppSelector(authSelector);
   const { boxes } = useAppSelector(boxPageSelector);
   const { categories } = useAppSelector(categoryPageSelector);
+  const { premiseStoreSelected: store } = useAppSelector(configSelector);
   const dispatch = useAppDispatch();
 
   // ITEMS
@@ -101,9 +103,22 @@ const CounterSaleForm = () => {
   // ------------------------------------------------------------------------------------------------------------------
   // METHOD
   // ------------------------------------------------------------------------------------------------------------------
+  const resetBox = () => {
+    if (store) {
+      const { defaultBox } = store;
+      const id =
+        defaultBox && defaultBox.openBox && dayjs().isAfter(defaultBox.openBox)
+          ? defaultBox.id
+          : null;
+
+      setCashboxId(id);
+    }
+  };
+
   const close = () => {
     if (!loading) {
       dispatch(hideCounterSaleForm());
+      resetBox();
     }
   };
 
@@ -256,6 +271,7 @@ const CounterSaleForm = () => {
   const getData = (): IInvoiceStoreData => {
     return {
       sellerId: user?.id,
+      premiseStoreId: store ? store.id : undefined,
       isSeparate: false,
       sellerName: user?.name,
       customerId: customer.id || undefined,
@@ -330,9 +346,7 @@ const CounterSaleForm = () => {
     if (error) console.log(error);
   }, [error]);
 
-  useEffect(() => {
-    if (boxes.length > 0) setCashboxId(boxes[0].id);
-  }, []);
+  useEffect(resetBox, [store]);
 
   useEffect(() => {
     if (success) {
