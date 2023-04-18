@@ -7,6 +7,8 @@ export interface IPremiseStore {
   address?: string;
   defaultBox?: IBox;
   invoices: string[];
+  monthlySales: number;
+  weeklySales: number;
 }
 
 export interface IStorePremiseStore {
