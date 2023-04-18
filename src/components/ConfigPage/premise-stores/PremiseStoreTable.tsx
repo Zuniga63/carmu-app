@@ -15,6 +15,18 @@ const PremiseStoreTable = () => {
             <p className="text-center">Facturas</p>
           </th>
           <th>
+            <div className="flex flex-col">
+              <p className="text-center">Venta</p>
+              <p className="text-center">Semanal</p>
+            </div>
+          </th>
+          <th>
+            <div className="flex flex-col">
+              <p className="text-center">Venta</p>
+              <p className="text-center">Mensual</p>
+            </div>
+          </th>
+          <th>
             <p className="text-center">Caja</p>
           </th>
           <th></th>

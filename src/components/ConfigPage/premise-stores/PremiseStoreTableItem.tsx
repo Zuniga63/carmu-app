@@ -18,6 +18,7 @@ import {
   selectCommercialPremise,
   unselectPremiseStore,
 } from 'src/features/Config';
+import { currencyFormat } from 'src/utils';
 
 interface Props {
   premiseStore: IPremiseStore;
@@ -61,20 +62,28 @@ const PremiseStoreTableItem: React.FC<Props> = ({ premiseStore }) => {
             {premiseStore.address ? (
               <div className="flex items-center gap-x-2">
                 <IconMap2 size={18} />{' '}
-                <p className="text-center text-sm">{premiseStore.address}</p>
+                <p className="text-sm">{premiseStore.address}</p>
               </div>
             ) : null}
             {premiseStore.phone ? (
               <div className="flex items-center gap-x-2">
                 <IconPhone size={18} />{' '}
-                <p className="text-center text-sm">{premiseStore.phone}</p>
+                <p className="text-sm">{premiseStore.phone}</p>
               </div>
             ) : null}
           </div>
         </div>
       </td>
-      <td className="text-center">{premiseStore.invoices.length}</td>
-      <td>
+      <td className="whitespace-nowrap text-center">
+        {premiseStore.invoices.length}
+      </td>
+      <td className="whitespace-nowrap text-center">
+        {currencyFormat(premiseStore.weeklySales)}
+      </td>
+      <td className="whitespace-nowrap text-center">
+        {currencyFormat(premiseStore.monthlySales)}
+      </td>
+      <td className="whitespace-nowrap">
         <div className="flex justify-center">
           {premiseStore.defaultBox ? (
             <div className="flex gap-x-2">
