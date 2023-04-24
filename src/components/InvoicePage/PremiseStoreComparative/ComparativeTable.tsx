@@ -59,7 +59,7 @@ function ComparativeTable() {
       }
     }
 
-    setDailyStatistics(result);
+    setDailyStatistics(result.reverse());
     setLoading(false);
   }
 
