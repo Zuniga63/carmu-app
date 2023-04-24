@@ -1,5 +1,5 @@
 import { Tabs } from '@mantine/core';
-import { IconChartBar, IconTable } from '@tabler/icons';
+import { IconBuildingStore, IconChartBar, IconTable } from '@tabler/icons';
 import axios, { CancelTokenSource } from 'axios';
 import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
 import dayjs from 'dayjs';
@@ -13,6 +13,8 @@ import { ISaleHistory } from 'src/types';
 import { CHART_COLORS, currencyFormat, transparentize } from 'src/utils';
 import AnnualReportStatistics from '../dashboard/AnnualReportStatistics';
 import WeeklyHistory from './WeeklyHistory';
+import { configSelector } from 'src/features/Config';
+import ComparativeTable from './PremiseStoreComparative/ComparativeTable';
 
 export const barOptions: ChartOptions<'bar'> = {
   responsive: true,
@@ -58,6 +60,7 @@ const WeeklyInvoiceChart = () => {
   const { storeSuccess, storePaymentSuccess, refreshIsSuccess } =
     useAppSelector(invoicePageSelector);
   const { isAuth } = useAppSelector(authSelector);
+  const { premiseStores } = useAppSelector(configSelector);
   const [chartData, setChartData] = useState<ChartData<'bar'>>({
     labels: [],
     datasets: [],
@@ -248,6 +251,15 @@ const WeeklyInvoiceChart = () => {
         >
           Reporte Anual
         </Tabs.Tab>
+        {premiseStores.length > 0 && (
+          <Tabs.Tab
+            value="saleByStore"
+            color="blue"
+            icon={<IconBuildingStore size={14} />}
+          >
+            Por Negocio
+          </Tabs.Tab>
+        )}
       </Tabs.List>
 
       <Tabs.Panel value="chart">
@@ -292,6 +304,11 @@ const WeeklyInvoiceChart = () => {
           description="Se resumen las ventas directas por mostrador u otros medios pagadas en efectivo, tarjeta o transferencia"
         />
       </Tabs.Panel>
+      {premiseStores.length > 0 && (
+        <Tabs.Panel value="saleByStore" pt="xs">
+          <ComparativeTable />
+        </Tabs.Panel>
+      )}
     </Tabs>
   );
 };
