@@ -82,10 +82,98 @@ export default class SaleStatistic {
     this.invoiced.averageGrowthRate = averageGrowthRate;
   }
 
+  protected updateCashStatistics(lastDaily?: SaleStatistic) {
+    const dayOfMonth = this.date.date();
+
+    const amount = this.invoices.reduce(
+      (sum, invoice) =>
+        sum +
+        (invoice.cash && invoice.cash > invoice.amount
+          ? invoice.amount
+          : invoice.cash || 0),
+      0
+    );
+
+    const accumulated = amount + (lastDaily?.cash.accumulated || 0);
+    const average = accumulated / dayOfMonth;
+    let growthRate = 0;
+    let averageGrowthRate = 0;
+
+    if (lastDaily) {
+      const { cash } = lastDaily;
+      growthRate =
+        cash.average > 0 ? (amount - cash.average) / cash.average : 0;
+      averageGrowthRate = (average - cash.average) / cash.average;
+    }
+
+    this.cash.amount = amount;
+    this.cash.accumulated = accumulated;
+    this.cash.average = average;
+    this.cash.growthRate = growthRate;
+    this.cash.averageGrowthRate = averageGrowthRate;
+  }
+
+  protected updateCreditStatistics(lastDaily?: SaleStatistic) {
+    const dayOfMonth = this.date.date();
+
+    const amount = this.invoices.reduce(
+      (sum, invoice) =>
+        sum + (!invoice.isSeparate && invoice.credit ? invoice.credit : 0),
+      0
+    );
+    const accumulated = amount + (lastDaily?.credit.accumulated || 0);
+    const average = accumulated / dayOfMonth;
+    let growthRate = 0;
+    let averageGrowthRate = 0;
+
+    if (lastDaily) {
+      const { cash } = lastDaily;
+      growthRate =
+        cash.average > 0 ? (amount - cash.average) / cash.average : 0;
+      averageGrowthRate = (average - cash.average) / cash.average;
+    }
+
+    this.credit.amount = amount;
+    this.credit.accumulated = accumulated;
+    this.credit.average = average;
+    this.credit.growthRate = growthRate;
+    this.credit.averageGrowthRate = averageGrowthRate;
+  }
+
+  protected updateSeparatedStatistics(lastDaily?: SaleStatistic) {
+    const dayOfMonth = this.date.date();
+
+    const amount = this.invoices.reduce(
+      (sum, invoice) =>
+        sum + (invoice.isSeparate && invoice.credit ? invoice.credit : 0),
+      0
+    );
+    const accumulated = amount + (lastDaily?.separate.accumulated || 0);
+    const average = accumulated / dayOfMonth;
+    let growthRate = 0;
+    let averageGrowthRate = 0;
+
+    if (lastDaily) {
+      const { cash } = lastDaily;
+      growthRate =
+        cash.average > 0 ? (amount - cash.average) / cash.average : 0;
+      averageGrowthRate = (average - cash.average) / cash.average;
+    }
+
+    this.separate.amount = amount;
+    this.separate.accumulated = accumulated;
+    this.separate.average = average;
+    this.separate.growthRate = growthRate;
+    this.separate.averageGrowthRate = averageGrowthRate;
+  }
+
   addInvoices(invoices: IInvoiceBase[], lastDaily?: SaleStatistic) {
     this.invoices = invoices;
 
     this.updateInvoiceStatistics(lastDaily);
     this.updateInvoicedStatistics(lastDaily);
+    this.updateCashStatistics(lastDaily);
+    this.updateCreditStatistics(lastDaily);
+    this.updateSeparatedStatistics(lastDaily);
   }
 }

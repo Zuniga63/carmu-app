@@ -1,21 +1,21 @@
-import React from 'react';
 import Statistic from './Statistic';
 import { currencyFormat } from 'src/utils';
 
 type Props = {
   statistic: Statistic;
 };
-function ComparativeTableInvoiced({ statistic }: Props) {
+
+function ComparativeTableCash({ statistic }: Props) {
   const isSame = statistic.amount === statistic.average;
 
   return (
-    <div className="relative mb-1 rounded border border-indigo-500 px-2 pt-4 pb-2">
-      <h2 className="absolute top-0 left-4 -translate-y-1/2 rounded-full border border-indigo-500 bg-indigo-400 px-2 text-center text-xs font-bold tracking-wider text-white">
-        Facturado
+    <div className="relative mb-1 rounded border border-emerald-500 px-2 pt-4 pb-2">
+      <h2 className="absolute top-0 left-4 -translate-y-1/2 rounded-full border border-emerald-500 bg-emerald-400 px-2 text-center text-xs font-bold tracking-wider text-white">
+        Efectivo
       </h2>
       <div className="flex flex-col gap-y-2 ">
         {Boolean(statistic.amount) && (
-          <div className="flex flex-grow items-center justify-center gap-x-1 rounded-md bg-indigo-500 bg-opacity-10">
+          <div className="flex flex-grow items-center justify-center gap-x-1 rounded-md bg-emerald-500 bg-opacity-10">
             <span className="text-sm tracking-widest">
               Neto: {currencyFormat(statistic.amount)}
             </span>
@@ -33,7 +33,7 @@ function ComparativeTableInvoiced({ statistic }: Props) {
           </div>
         )}
         {!isSame && (
-          <div className="flex flex-grow items-center justify-center gap-x-1 rounded-md bg-indigo-500 bg-opacity-10">
+          <div className="flex flex-grow items-center justify-center gap-x-1 rounded-md bg-emerald-500 bg-opacity-10">
             <span className="text-sm tracking-widest">
               Promedio: {currencyFormat(statistic.getAverage(2))}
             </span>
@@ -55,4 +55,4 @@ function ComparativeTableInvoiced({ statistic }: Props) {
   );
 }
 
-export default ComparativeTableInvoiced;
+export default ComparativeTableCash;
