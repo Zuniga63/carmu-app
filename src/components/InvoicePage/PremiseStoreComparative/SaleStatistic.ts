@@ -127,10 +127,10 @@ export default class SaleStatistic {
     let averageGrowthRate = 0;
 
     if (lastDaily) {
-      const { cash } = lastDaily;
+      const { credit } = lastDaily;
       growthRate =
-        cash.average > 0 ? (amount - cash.average) / cash.average : 0;
-      averageGrowthRate = (average - cash.average) / cash.average;
+        credit.average > 0 ? (amount - credit.average) / credit.average : 0;
+      averageGrowthRate = (average - credit.average) / credit.average;
     }
 
     this.credit.amount = amount;
@@ -154,10 +154,12 @@ export default class SaleStatistic {
     let averageGrowthRate = 0;
 
     if (lastDaily) {
-      const { cash } = lastDaily;
+      const { separate } = lastDaily;
       growthRate =
-        cash.average > 0 ? (amount - cash.average) / cash.average : 0;
-      averageGrowthRate = (average - cash.average) / cash.average;
+        separate.average > 0
+          ? (amount - separate.average) / separate.average
+          : 0;
+      averageGrowthRate = (average - separate.average) / separate.average;
     }
 
     this.separate.amount = amount;
