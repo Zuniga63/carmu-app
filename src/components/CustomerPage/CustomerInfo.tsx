@@ -53,7 +53,7 @@ const CustomerInfo = () => {
       opened={opened}
       onClose={() => dispatch(unmountCustomer())}
       title={<CustomerInfoTitle />}
-      size="xl"
+      size="70%"
     >
       <Tabs defaultValue="invoices">
         <Tabs.List>
