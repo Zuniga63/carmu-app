@@ -14,7 +14,7 @@ import { CHART_COLORS, currencyFormat, transparentize } from 'src/utils';
 import AnnualReportStatistics from '../dashboard/AnnualReportStatistics';
 import WeeklyHistory from './WeeklyHistory';
 import { configSelector } from 'src/features/Config';
-import ComparativeTable from './PremiseStoreComparative/ComparativeTable';
+import AverageChart from './PremiseStoreComparative/AverageChart';
 
 export const barOptions: ChartOptions<'bar'> = {
   responsive: true,
@@ -306,7 +306,9 @@ const WeeklyInvoiceChart = () => {
       </Tabs.Panel>
       {premiseStores.length > 0 && (
         <Tabs.Panel value="saleByStore" pt="xs">
-          <ComparativeTable />
+          <div className="flex flex-col gap-y-4">
+            <AverageChart />
+          </div>
         </Tabs.Panel>
       )}
     </Tabs>
