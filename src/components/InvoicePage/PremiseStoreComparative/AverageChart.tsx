@@ -12,6 +12,7 @@ import MonthlyReport from './MonthlyReport';
 import DailyReport, { ReportInvoice } from './DailyReport';
 import { configSelector } from 'src/features/Config';
 import { IconChartArcs3 } from '@tabler/icons';
+import ProtectWrapper from 'src/components/ProtectWrapper';
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
@@ -267,7 +268,7 @@ export default function AverageChart() {
         </p>
       </header>
 
-      <div>
+      <ProtectWrapper>
         {/* CONTROLS */}
         <div className="mb-4 flex flex-wrap items-center justify-center gap-y-2 gap-x-6">
           <Select
@@ -365,7 +366,7 @@ export default function AverageChart() {
             ))}
           </tbody>
         </Table>
-      </div>
+      </ProtectWrapper>
     </div>
   );
 }
