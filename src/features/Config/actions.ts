@@ -81,3 +81,5 @@ export const updatePremiseStore = createAsyncThunk(
     }
   }
 );
+
+export const unlockContent = createAction<string>('config/unlockContent');

@@ -7,6 +7,7 @@ import axios from 'axios';
 import { ICreditEvolutionReport } from 'src/types';
 import CreditEvolutionChart from './CreditEvolutionChart';
 import CreditEvolutionChartAux from './CreditEvolutionChartAux';
+import ProtectWrapper from '../ProtectWrapper';
 
 const CreditEvolution = () => {
   const [loading, setLoading] = useState(false);
@@ -48,6 +49,9 @@ const CreditEvolution = () => {
           </p>
 
           {/* CONTROLS */}
+        </header>
+
+        <ProtectWrapper>
           <div className="mb-4 flex justify-center gap-x-6">
             {/* PERIOD */}
             <Select
@@ -68,26 +72,26 @@ const CreditEvolution = () => {
               disabled={period === ChartPeriod.annual}
             />
           </div>
-        </header>
 
-        {report ? (
-          <div className="grid grid-cols-12 gap-4 gap-y-6">
-            <div className="col-span-12 lg:col-span-8 3xl:col-span-9">
-              <CreditEvolutionChart
-                creditReport={report}
-                period={period}
-                monthSelected={monthSelected}
-              />
+          {report ? (
+            <div className="grid grid-cols-12 gap-4 gap-y-6">
+              <div className="col-span-12 lg:col-span-8 3xl:col-span-9">
+                <CreditEvolutionChart
+                  creditReport={report}
+                  period={period}
+                  monthSelected={monthSelected}
+                />
+              </div>
+              <div className="col-span-12 self-center lg:col-span-4 3xl:col-span-3">
+                <CreditEvolutionChartAux
+                  creditReport={report}
+                  period={period}
+                  monthSelected={monthSelected}
+                />
+              </div>
             </div>
-            <div className="col-span-12 self-center lg:col-span-4 3xl:col-span-3">
-              <CreditEvolutionChartAux
-                creditReport={report}
-                period={period}
-                monthSelected={monthSelected}
-              />
-            </div>
-          </div>
-        ) : null}
+          ) : null}
+        </ProtectWrapper>
       </div>
     </Skeleton>
   );

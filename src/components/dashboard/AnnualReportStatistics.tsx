@@ -12,6 +12,7 @@ import AnnualGeneralChart from './AnnualGeneralChart';
 import AnnualGeneralAux from './AnnualGeneralAux';
 import AnnualCategoryChart from './AnnualCategoryChart';
 import CategoryChartComponent from './CategoryChartComponent';
+import ProtectWrapper from '../ProtectWrapper';
 
 interface Props {
   title: string;
@@ -101,7 +102,9 @@ const AnnualReportStatistics = ({ title, description, type }: Props) => {
         {description ? (
           <p className="mb-2 text-center text-sm italic">{description}</p>
         ) : null}
+      </header>
 
+      <ProtectWrapper>
         {/* CONTROLS */}
         <div className="mb-4 flex flex-wrap items-center justify-center gap-y-2 gap-x-6">
           {/* PERIOD */}
@@ -144,61 +147,65 @@ const AnnualReportStatistics = ({ title, description, type }: Props) => {
             <IconReload size={18} />
           </ActionIcon>
         </div>
-      </header>
-      <Skeleton visible={loading}>
-        <Tabs defaultValue="general" variant="pills">
-          <Tabs.List>
-            <Tabs.Tab value="general" icon={<IconChartInfographic size={14} />}>
-              General
-            </Tabs.Tab>
-            <Tabs.Tab
-              value="categories"
-              icon={<IconChartInfographic size={14} />}
-            >
-              Por categorías
-            </Tabs.Tab>
-          </Tabs.List>
 
-          <Tabs.Panel value="general" pt="sm">
-            <div className="grid grid-cols-12 gap-4 gap-y-6">
-              {/* MAIN CHART */}
-              <div className="col-span-12 lg:col-span-8 3xl:col-span-9">
-                <AnnualGeneralChart
-                  annualReports={reports}
-                  period={period}
-                  monthSelected={monthSelected}
-                />
-              </div>
-              {/* ANNUAL SALES AUX */}
-              <div className="col-span-12 self-center lg:col-span-4 3xl:col-span-3">
-                <AnnualGeneralAux
-                  title="Comparativa Anual"
-                  description="Compara las ventas totales de los años seleccionados"
-                  annualReports={reports}
-                  period={period}
-                />
-              </div>
-            </div>
-          </Tabs.Panel>
+        <Skeleton visible={loading}>
+          <Tabs defaultValue="general" variant="pills">
+            <Tabs.List>
+              <Tabs.Tab
+                value="general"
+                icon={<IconChartInfographic size={14} />}
+              >
+                General
+              </Tabs.Tab>
+              <Tabs.Tab
+                value="categories"
+                icon={<IconChartInfographic size={14} />}
+              >
+                Por categorías
+              </Tabs.Tab>
+            </Tabs.List>
 
-          <Tabs.Panel value="categories" pt="sm">
-            <div className="grid grid-cols-12 gap-4 gap-y-6">
-              {/* CATEGORY CHART */}
-              <div className="col-span-12 lg:col-span-8 3xl:col-span-9">
-                <CategoryChartComponent
-                  annualReports={reports}
-                  period={period}
-                  monthSelected={monthSelected}
-                />
+            <Tabs.Panel value="general" pt="sm">
+              <div className="grid grid-cols-12 gap-4 gap-y-6">
+                {/* MAIN CHART */}
+                <div className="col-span-12 lg:col-span-8 3xl:col-span-9">
+                  <AnnualGeneralChart
+                    annualReports={reports}
+                    period={period}
+                    monthSelected={monthSelected}
+                  />
+                </div>
+                {/* ANNUAL SALES AUX */}
+                <div className="col-span-12 self-center lg:col-span-4 3xl:col-span-3">
+                  <AnnualGeneralAux
+                    title="Comparativa Anual"
+                    description="Compara las ventas totales de los años seleccionados"
+                    annualReports={reports}
+                    period={period}
+                  />
+                </div>
               </div>
+            </Tabs.Panel>
 
-              <div className="col-span-12 self-center lg:col-span-4 3xl:col-span-3">
-                <AnnualCategoryChart annualReports={reports} />
+            <Tabs.Panel value="categories" pt="sm">
+              <div className="grid grid-cols-12 gap-4 gap-y-6">
+                {/* CATEGORY CHART */}
+                <div className="col-span-12 lg:col-span-8 3xl:col-span-9">
+                  <CategoryChartComponent
+                    annualReports={reports}
+                    period={period}
+                    monthSelected={monthSelected}
+                  />
+                </div>
+
+                <div className="col-span-12 self-center lg:col-span-4 3xl:col-span-3">
+                  <AnnualCategoryChart annualReports={reports} />
+                </div>
               </div>
-            </div>
-          </Tabs.Panel>
-        </Tabs>
-      </Skeleton>
+            </Tabs.Panel>
+          </Tabs>
+        </Skeleton>
+      </ProtectWrapper>
     </div>
   );
 };
