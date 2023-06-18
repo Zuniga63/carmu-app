@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { AUTHENTICATE_PATH } from './services/auth-service';
 
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get('access_token');
@@ -7,9 +8,10 @@ export async function middleware(request: NextRequest) {
   const isLoginPage = request.nextUrl.pathname.startsWith('/login');
 
   if (token) {
-    const baseUrl = process.env.NEXT_PUBLIC_URL_API;
-    const url = `${baseUrl}/auth/local/is-authenticated`;
+    const apiUrl = process.env.NEXT_PUBLIC_URL_API;
+    const url = `${apiUrl}${AUTHENTICATE_PATH}`;
     const headers = { Authorization: `Bearer ${token.value}` };
+
     try {
       const res = await fetch(url, { headers });
       const data = await res.json();

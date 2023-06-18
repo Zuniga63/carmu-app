@@ -1,17 +1,15 @@
 import { createAsyncThunk, createAction } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { getCookie } from 'cookies-next';
-import { SigninData, AuthResponse } from './types';
-
-const baseUrl = '/auth/local';
+import { LoginData } from './types';
+import { authenticateUser, validateToken } from 'src/services/auth-service';
+import { getTokenFromCookies } from 'src/logic/auth-logic';
 
 export const signin = createAsyncThunk(
   'auth/signin',
-  async (data: SigninData, { rejectWithValue }) => {
-    const url = `${baseUrl}/signin`;
+  async (data: LoginData, { rejectWithValue }) => {
     try {
-      const res = await axios.post<AuthResponse>(url, data);
-      return res.data;
+      const res = await authenticateUser(data);
+      return res;
     } catch (error) {
       if (!axios.isAxiosError(error) || !error.response) throw error;
       return rejectWithValue(error.response.data);
@@ -20,13 +18,9 @@ export const signin = createAsyncThunk(
 );
 
 export const authenticate = createAsyncThunk('auth/authenticate', async () => {
-  const url = `${baseUrl}/is-authenticated`;
-  const token = getCookie('access_token');
-
-  axios.defaults.headers.common.Authorization = `Bearer ${token}`;
-  const res = await axios.get<AuthResponse>(url);
-
-  return res.data;
+  const token = getTokenFromCookies();
+  const result = await validateToken(token);
+  return result;
 });
 
 export const logout = createAction('auth/logout');
