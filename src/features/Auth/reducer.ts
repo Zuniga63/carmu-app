@@ -1,9 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { setCookie } from 'cookies-next';
-import { buildCookieOption } from 'src/utils';
 import { authenticate, authSuccessIsNotify, logout, signin } from './actions';
 import { AuthState, AuthErrorResponse } from './types';
-import axios from 'axios';
+import { clearAuthData, saveAuthData } from 'src/logic/auth-logic';
 
 const initialState: AuthState = {
   isAuth: false,
@@ -12,16 +10,6 @@ const initialState: AuthState = {
   isAdmin: false,
   loading: false,
   authIsSuccess: false,
-};
-
-export const saveAuthData = (token: string) => {
-  setCookie('access_token', token, buildCookieOption(30));
-  axios.defaults.headers.common.Authorization = `Bearer ${token}`;
-};
-
-export const clearAuthData = () => {
-  setCookie('access_token', '', buildCookieOption(0));
-  axios.defaults.headers.common.Authorization = '';
 };
 
 export const authReducer = createReducer(initialState, builder => {
