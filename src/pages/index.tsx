@@ -1,29 +1,15 @@
 import type { NextPage } from 'next';
 import { useAppSelector } from 'src/store/hooks';
-import { useEffect, useRef } from 'react';
 
 import Layout from 'src/components/Layout';
 import CashChart from 'src/components/dashboard/CashChart';
-import ChartJS from 'chart.js/auto';
-import dayjs from 'dayjs';
-import isLeapYear from 'dayjs/plugin/isLeapYear';
+
 import ReportStatistics from 'src/components/dashboard/ReportStatistics';
 import CreditEvolution from 'src/components/dashboard/CreditEvolution';
 import { authSelector } from 'src/features/Auth';
 
-ChartJS.register();
-dayjs.extend(isLeapYear);
-
 const Home: NextPage = () => {
   const { user, isAdmin } = useAppSelector(authSelector);
-  const firtsRenderRef = useRef(true);
-
-  useEffect(() => {
-    if (firtsRenderRef.current) {
-      firtsRenderRef.current = false;
-      return;
-    }
-  }, []);
 
   return (
     <Layout title="Dashboard">
