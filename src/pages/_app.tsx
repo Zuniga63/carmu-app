@@ -8,11 +8,13 @@ import { store } from 'src/store';
 import { useInitialAuth } from 'src/hooks/useInitialAuth';
 import { rootConfig } from 'src/config/root-config';
 import ThemeProvider from 'src/context/CustomThemeProvider';
+import { emCache } from 'src/utils/emotionCache';
 
 rootConfig();
 
 export function MyApp({ Component, pageProps }: AppProps) {
   useInitialAuth();
+  emCache();
 
   return (
     <ThemeProvider>

@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { emCache } from 'src/utils/emotionCache';
 import NProgress from 'nprogress';
 
 import dayjs from 'dayjs';
@@ -10,7 +9,6 @@ import isLeapYear from 'dayjs/plugin/isLeapYear';
 import ChartJS from 'chart.js/auto';
 
 export function rootConfig() {
-  emCache();
   axios.defaults.baseURL = process.env.NEXT_PUBLIC_URL_API;
   NProgress.configure({ showSpinner: false });
 
