@@ -8,7 +8,6 @@ import InvoicePaymentForm from 'src/components/InvoicePage/InvoicePaymentForm';
 import InvoiceCardModal from 'src/components/InvoicePage/InvoiceCardModal';
 import WeeklyInvoiceChart from 'src/components/InvoicePage/WeeklyInvoiceChart';
 
-import ChartJS from 'chart.js/auto';
 import CounterSaleForm from 'src/components/InvoicePage/CounterSaleForm';
 import { authSelector } from 'src/features/Auth';
 import { fetchInvoiceData } from 'src/features/InvoicePage';
@@ -17,7 +16,6 @@ import { fetchBoxes } from 'src/features/BoxPage';
 import { fetchCategories } from 'src/features/CategoryPage';
 import CancelInvoicePaymentForm from 'src/components/InvoicePage/CancelInvoicePaymentForm';
 import CancelInvoiceForm from 'src/components/InvoicePage/CancelInvoiceForm';
-ChartJS.register();
 
 const InvoicePage: NextPage = () => {
   const { isAuth, isAdmin } = useAppSelector(authSelector);
