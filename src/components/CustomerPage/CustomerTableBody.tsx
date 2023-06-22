@@ -27,7 +27,7 @@ export default function CustomerTableBody({ customers }: Props) {
   if (firstFetchLoading) return <Loading />;
 
   return (
-    <ScrollArea className="relative h-96 overflow-y-auto border border-y-0 border-x-gray-300 dark:border-x-header 2xl:h-[30rem]">
+    <ScrollArea className="relative h-[60vh] overflow-y-auto border border-y-0 border-x-gray-300 dark:border-x-header 2xl:h-[70vh]">
       <table className="min-w-full table-auto">
         <thead className="sticky top-0 z-fixed overflow-hidden rounded-t-md bg-gray-300 dark:bg-header">
           <tr className="rounded-t-xl text-gray-dark dark:text-gray-300">
