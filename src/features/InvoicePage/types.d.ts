@@ -21,6 +21,23 @@ export type IInvoiceProduct = Omit<
 
 export type IInvoiceCashbox = Pick<IBox, 'id' | 'name' | 'openBox'>;
 
+export interface IInvoiceItemBase {
+  id: string;
+  categories: string[];
+  product?: string;
+  productSize?: string;
+  productColor?: string;
+  tags: string[];
+  description: string;
+  quantity: number;
+  unitValue: number;
+  discount?: number;
+  amount: number;
+  balance?: number;
+  cancel: boolean;
+  cancelMessage?: string;
+}
+
 export interface IInvoiceBase {
   id: string;
   seller?: IInvoiceSeller;
@@ -45,25 +62,9 @@ export interface IInvoiceBase {
   balance?: number;
   cancel?: boolean;
   cancelMessage?: string;
+  items: IInvoiceItemBase[];
   createdAt: strig;
   updatedAt: string;
-}
-
-export interface IInvoiceItemBase {
-  id: string;
-  categories: string[];
-  product?: string;
-  productSize?: string;
-  productColor?: string;
-  tags: string[];
-  description: string;
-  quantity: number;
-  unitValue: number;
-  discount?: number;
-  amount: number;
-  balance?: number;
-  cancel: boolean;
-  cancelMessage?: string;
 }
 
 export type INewInvoiceItem = Omit<
