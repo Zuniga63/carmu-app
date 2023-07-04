@@ -9,20 +9,62 @@ import {
   IInvoicePaymentData,
   IInvoiceStoreData,
 } from './types';
+import dayjs from 'dayjs';
 
 /**
  * This is the time for reset the all success property
  */
 const RESET_TIMEOUT = 3000;
 
-export const fetchInvoiceData = createAsyncThunk(
-  'invoicePage/fetchInvoiceData',
+export const refreshInvoices = createAsyncThunk(
+  'invoicePage/refreshInvoices',
   async (_, { dispatch }) => {
-    const res = await axios.get<IInvoicePageData>('/invoices');
+    const res = await axios.get<IInvoicePageData>('/invoices', {
+      params: {
+        refresh: true,
+        withPayments: true,
+        withItems: true,
+      },
+    });
+
     setTimeout(() => {
       dispatch(resetSuccess());
     }, RESET_TIMEOUT);
-    return res.data;
+
+    return res.data.invoices;
+  }
+);
+
+export const fetchInvoiceData = createAsyncThunk(
+  'invoicePage/fetchInvoiceData',
+  async (_, { dispatch }) => {
+    const date1 = dayjs().subtract(1, 'week').endOf('day').toDate();
+    const date2 = dayjs(date1).add(1, 'day').startOf('day').toDate();
+
+    const res1 = await axios.get<IInvoicePageData>('/invoices', {
+      params: {
+        to: date1,
+        withProducts: true,
+      },
+    });
+
+    const { invoices, products } = res1.data;
+
+    const res2 = await axios.get<IInvoicePageData>('/invoices', {
+      params: {
+        from: date2,
+        withPayments: true,
+        withItems: true,
+      },
+    });
+
+    invoices.push(...res2.data.invoices);
+
+    // dispatch(refreshInvoices());
+    setTimeout(() => {
+      dispatch(resetSuccess());
+    }, RESET_TIMEOUT);
+    return { invoices, products };
   }
 );
 

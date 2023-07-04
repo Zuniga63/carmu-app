@@ -15,8 +15,8 @@ import {
   IconSearch,
 } from '@tabler/icons';
 import {
-  fetchInvoiceData,
   invoicePageSelector,
+  refreshInvoices,
   showCounterSaleForm,
   showNewInvoiceForm,
 } from 'src/features/InvoicePage';
@@ -66,7 +66,7 @@ export default function InvoiceListHeader({
             <ActionIcon
               loading={loading}
               color="blue"
-              onClick={() => dispatch(fetchInvoiceData())}
+              onClick={() => dispatch(refreshInvoices())}
             >
               <IconReload size={18} />
             </ActionIcon>

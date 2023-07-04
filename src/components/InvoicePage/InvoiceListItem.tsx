@@ -125,27 +125,29 @@ const InvoiceListItem = ({ invoice }: Props) => {
             </Tabs.Tab>
           </Tabs.List>
           <Tabs.Panel value="items" pt="xs">
-            <ul className="list-inside list-disc p-2">
-              {invoice.items.map(item => (
-                <li key={item.id} className="text-xs">
-                  <div className="inline-block">
-                    <div className="flex gap-x-2">
-                      <span>{item.description}</span>
-                      <span>( {item.quantity} und )</span>
-                      {Boolean(item.balance) && (
-                        <>
-                          <span className="italic">
-                            {currencyFormat(item.balance)}
-                          </span>
-                          <span>/</span>
-                        </>
-                      )}
-                      <span>{currencyFormat(item.amount)}</span>
+            {invoice.items && (
+              <ul className="list-inside list-disc p-2">
+                {invoice.items.map(item => (
+                  <li key={item.id} className="text-xs">
+                    <div className="inline-block">
+                      <div className="flex gap-x-2">
+                        <span>{item.description}</span>
+                        <span>( {item.quantity} und )</span>
+                        {Boolean(item.balance) && (
+                          <>
+                            <span className="italic">
+                              {currencyFormat(item.balance)}
+                            </span>
+                            <span>/</span>
+                          </>
+                        )}
+                        <span>{currencyFormat(item.amount)}</span>
+                      </div>
                     </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
+                  </li>
+                ))}
+              </ul>
+            )}
           </Tabs.Panel>
           <Tabs.Panel value="resume" pt="xs">
             <div className="bg-white bg-opacity-10 p-2 transition-colors hover:bg-opacity-50 hover:text-dark ">
