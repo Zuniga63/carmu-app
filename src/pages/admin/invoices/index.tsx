@@ -10,7 +10,11 @@ import WeeklyInvoiceChart from 'src/components/InvoicePage/WeeklyInvoiceChart';
 
 import CounterSaleForm from 'src/components/InvoicePage/CounterSaleForm';
 import { authSelector } from 'src/features/Auth';
-import { fetchInvoiceData } from 'src/features/InvoicePage';
+import {
+  fetchInvoiceData,
+  invoicePageSelector,
+  refreshInvoices,
+} from 'src/features/InvoicePage';
 import { fetchCustomers } from 'src/features/CustomerPage';
 import { fetchBoxes } from 'src/features/BoxPage';
 import { fetchCategories } from 'src/features/CategoryPage';
@@ -19,14 +23,19 @@ import CancelInvoiceForm from 'src/components/InvoicePage/CancelInvoiceForm';
 
 const InvoicePage: NextPage = () => {
   const { isAuth, isAdmin } = useAppSelector(authSelector);
+  const { firstLoading } = useAppSelector(invoicePageSelector);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (isAuth && isAdmin) {
-      dispatch(fetchInvoiceData());
-      dispatch(fetchCustomers());
-      dispatch(fetchBoxes());
-      dispatch(fetchCategories());
+      if (firstLoading) {
+        dispatch(fetchInvoiceData());
+        dispatch(fetchCustomers());
+        dispatch(fetchBoxes());
+        dispatch(fetchCategories());
+      } else {
+        dispatch(refreshInvoices());
+      }
     }
   }, [isAuth, isAdmin]);
 

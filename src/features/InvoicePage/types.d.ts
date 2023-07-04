@@ -38,6 +38,18 @@ export interface IInvoiceItemBase {
   cancelMessage?: string;
 }
 
+export interface IInvoicePaymentBase {
+  id: string;
+  paymentDate: string;
+  description?: string;
+  amount: number;
+  initialPayment: boolean;
+  cancel: boolean;
+  cancelMessage?: string;
+  createdAt: strig;
+  updatedAt: string;
+}
+
 export interface IInvoiceBase {
   id: string;
   seller?: IInvoiceSeller;
@@ -62,7 +74,8 @@ export interface IInvoiceBase {
   balance?: number;
   cancel?: boolean;
   cancelMessage?: string;
-  items: IInvoiceItemBase[];
+  items?: IInvoiceItemBase[];
+  payments?: IInvoicePaymentBase[];
   createdAt: strig;
   updatedAt: string;
 }
@@ -122,18 +135,6 @@ export interface IInvoiceStoreData {
   registerWithOtherCustomerData: boolean;
 }
 
-export interface IInvoicePaymentBase {
-  id: string;
-  paymentDate: string;
-  description?: string;
-  amount: number;
-  initialPayment: boolean;
-  cancel: boolean;
-  cancelMessage?: string;
-  createdAt: strig;
-  updatedAt: string;
-}
-
 export interface IInvoiceBaseFull extends IInvoiceBase {
   items: IInvoiceItemBase[];
   payments: IInvoicePaymentBase[];
@@ -167,6 +168,7 @@ export type InvoicePageState = {
   invoices: IInvoiceBase[];
   products: IInvoiceProduct[];
   loading: boolean;
+  firstLoading: boolean;
   refreshIsSuccess: boolean;
   // Show invoice
   selectedInvoice: IInvoiceBaseFull | null;

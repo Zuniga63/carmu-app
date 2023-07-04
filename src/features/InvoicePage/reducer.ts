@@ -10,6 +10,7 @@ import {
   hideNewInvoiceForm,
   hidePaymentForm,
   mountInvoice,
+  refreshInvoices,
   registerPayment,
   resetSuccess,
   showCancelInvoiceForm,
@@ -25,6 +26,7 @@ import { InvoicePageState } from './types';
 const initialState: InvoicePageState = {
   invoices: [],
   products: [],
+  firstLoading: true,
   loading: true,
   refreshIsSuccess: false,
   // Show invoice
@@ -68,11 +70,31 @@ export const invoicePageReducer = createReducer(initialState, builder => {
     .addCase(fetchInvoiceData.fulfilled, (state, { payload }) => {
       state.refreshIsSuccess = true;
       state.loading = false;
+      state.firstLoading = false;
       state.invoices = payload.invoices;
       state.products = payload.products;
     })
     .addCase(fetchInvoiceData.rejected, state => {
       state.loading = false;
+    });
+
+  builder
+    .addCase(refreshInvoices.pending, state => {
+      state.loading = true;
+      state.refreshIsSuccess = false;
+    })
+    .addCase(refreshInvoices.fulfilled, (state, { payload }) => {
+      state.refreshIsSuccess = true;
+      state.loading = false;
+
+      const newInvoices = [...state.invoices];
+      payload.forEach(payloadItem => {
+        const index = newInvoices.findIndex(({ id }) => id === payloadItem.id);
+        if (index >= 0) newInvoices.splice(index, 1, payloadItem);
+        else newInvoices.push(payloadItem);
+      });
+
+      state.invoices = newInvoices;
     });
   // --------------------------------------------------------------------------
   // NEW INVOICE
