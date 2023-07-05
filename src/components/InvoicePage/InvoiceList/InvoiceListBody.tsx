@@ -1,14 +1,21 @@
-import { ReactNode } from 'react';
 import { invoicePageSelector } from 'src/features/InvoicePage';
 import { useAppSelector } from 'src/store/hooks';
 import InvoiceListLoader from './InvoiceListLoader';
-import { ScrollArea } from '@mantine/core';
+import { Button, ScrollArea } from '@mantine/core';
+import { IInvoice } from 'src/types';
+import InvoiceCard from './InvoiceCard';
 
 type Props = {
-  children?: ReactNode;
+  invoices: IInvoice[];
+  showMoreButtonInvoice: boolean;
+  onShowMore: () => void;
 };
 
-export default function InvoiceListBody({ children }: Props) {
+export default function InvoiceListBody({
+  invoices,
+  showMoreButtonInvoice,
+  onShowMore,
+}: Props) {
   const { firstLoading } = useAppSelector(invoicePageSelector);
 
   return (
@@ -18,7 +25,15 @@ export default function InvoiceListBody({ children }: Props) {
           <InvoiceListLoader />
         ) : (
           <ScrollArea className="h-full rounded bg-white bg-opacity-20 p-4 backdrop-blur dark:bg-dark dark:bg-opacity-40">
-            <div className="flex flex-col gap-y-4">{children}</div>
+            <div className="flex flex-col gap-y-4">
+              {invoices.map(invoice => (
+                <InvoiceCard key={invoice.id} invoice={invoice} />
+              ))}
+
+              {showMoreButtonInvoice && (
+                <Button onClick={onShowMore}>Mostrar más facturas</Button>
+              )}
+            </div>
           </ScrollArea>
         )}
       </div>
