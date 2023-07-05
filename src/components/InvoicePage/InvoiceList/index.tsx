@@ -1,11 +1,9 @@
-import { Button } from '@mantine/core';
-import InvoiceListItem from './InvoiceListItem';
 import InvoiceRated from './InvoiceRated';
 import InvoiceListHeader from './InvoiceListHeader';
 import InvoiceListBody from './InvoiceListBody';
 import { useInvoiceList } from 'src/hooks/useInvoiceList';
 
-const InvoiceList = () => {
+export default function InvoiceList() {
   const {
     invoices,
     searchLoading,
@@ -30,15 +28,11 @@ const InvoiceList = () => {
         updateFilter={setFilter}
       />
 
-      <InvoiceListBody>
-        {invoices.map(invoice => (
-          <InvoiceListItem key={invoice.id} invoice={invoice} />
-        ))}
-
-        {showMoreButtonInvoice && (
-          <Button onClick={showMoreInvoices}>Mostrar más facturas</Button>
-        )}
-      </InvoiceListBody>
+      <InvoiceListBody
+        invoices={invoices}
+        showMoreButtonInvoice={showMoreButtonInvoice}
+        onShowMore={showMoreInvoices}
+      />
 
       {/* FOOTER */}
       <footer className="rounded-b-md bg-dark px-4 py-2 dark:bg-header">
@@ -51,6 +45,4 @@ const InvoiceList = () => {
       </footer>
     </div>
   );
-};
-
-export default InvoiceList;
+}
