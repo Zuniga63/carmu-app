@@ -1,7 +1,7 @@
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useMediaQuery } from '@mantine/hooks';
 import { Drawer, Textarea, TextInput } from '@mantine/core';
-import { IconDatabase } from '@tabler/icons';
+import { IconDatabase } from '@tabler/icons-react';
 import { IValidationErrors } from 'src/types';
 import CustomButton from 'src/components/CustomButton';
 import { AxiosResponse } from 'axios';

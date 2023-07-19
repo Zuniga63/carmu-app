@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { IconDashboard, IconBox, IconUsers, IconBuildingStore, IconFileInvoice } from '@tabler/icons';
+import { IconDashboard, IconBox, IconUsers, IconBuildingStore, IconFileInvoice } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 

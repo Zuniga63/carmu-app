@@ -1,5 +1,5 @@
 import { Pagination, Tooltip } from '@mantine/core';
-import { IconAlertCircle, IconCircleCheck, IconCircleX, IconSkull } from '@tabler/icons';
+import { IconAlertCircle, IconCircleCheck, IconCircleX, IconSkull } from '@tabler/icons-react';
 
 type Props = {
   page?: number;

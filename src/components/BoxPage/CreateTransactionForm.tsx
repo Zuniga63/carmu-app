@@ -1,6 +1,6 @@
 import React, { FormEvent, useEffect, useState } from 'react';
 import { Button, Checkbox, Modal, NumberInput, Textarea } from '@mantine/core';
-import { IconCalendar, IconClock, IconDeviceFloppy, IconX } from '@tabler/icons';
+import { IconCalendar, IconClock, IconDeviceFloppy, IconX } from '@tabler/icons-react';
 import { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';

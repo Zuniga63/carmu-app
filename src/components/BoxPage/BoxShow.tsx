@@ -1,6 +1,6 @@
 import { ActionIcon, Button, ScrollArea, Tooltip } from '@mantine/core';
 import { DateRangePicker, DateRangePickerValue } from '@mantine/dates';
-import { IconFileDescription, IconWriting } from '@tabler/icons';
+import { IconFileDescription, IconWriting } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';

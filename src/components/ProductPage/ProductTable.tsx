@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Loader, ScrollArea, TextInput } from '@mantine/core';
-import { IconSearch, IconWriting } from '@tabler/icons';
+import { IconSearch, IconWriting } from '@tabler/icons-react';
 import { IProductWithCategories } from 'src/types';
 import ProductTableItem from './ProductTableItem';
 import { normalizeText } from 'src/utils';

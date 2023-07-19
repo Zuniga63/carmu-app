@@ -1,6 +1,6 @@
 import { Button, Drawer, SegmentedControl, Tabs, TextInput } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { IconAt, IconMapPin, IconPhone, IconUser } from '@tabler/icons';
+import { IconAt, IconMapPin, IconPhone, IconUser } from '@tabler/icons-react';
 import DrawerBody from 'src/components/DrawerBody';
 import DrawerHeader from 'src/components/DrawerHeader';
 import React, { FormEvent, useEffect, useState } from 'react';

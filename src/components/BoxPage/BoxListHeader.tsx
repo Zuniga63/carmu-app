@@ -1,5 +1,5 @@
 import { ActionIcon, Tooltip } from '@mantine/core';
-import { IconCirclePlus, IconRefresh } from '@tabler/icons';
+import { IconCirclePlus, IconRefresh } from '@tabler/icons-react';
 import React from 'react';
 import { boxPageSelector, fetchBoxes, showCreateForm } from 'src/features/BoxPage';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';

@@ -1,5 +1,5 @@
 import { ActionIcon, Tooltip } from '@mantine/core';
-import { IconBox, IconLock, IconLockOpen, IconWorld } from '@tabler/icons';
+import { IconBox, IconLock, IconLockOpen, IconWorld } from '@tabler/icons-react';
 import React, { useEffect, useState } from 'react';
 import { boxPageSelector, mountGlobalTransactions } from 'src/features/BoxPage';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';

@@ -11,7 +11,7 @@ import { Line } from 'react-chartjs-2';
 import MonthlyReport from './MonthlyReport';
 import DailyReport, { ReportInvoice } from './DailyReport';
 import { configSelector } from 'src/features/Config';
-import { IconChartArcs3 } from '@tabler/icons';
+import { IconChartArcs3 } from '@tabler/icons-react';
 import ProtectWrapper from 'src/components/ProtectWrapper';
 
 dayjs.extend(isSameOrAfter);

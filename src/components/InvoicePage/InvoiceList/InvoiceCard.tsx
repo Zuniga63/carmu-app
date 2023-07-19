@@ -1,5 +1,5 @@
 import { Button, Collapse } from '@mantine/core';
-import { IconFileInvoice } from '@tabler/icons';
+import { IconFileInvoice } from '@tabler/icons-react';
 import { MouseEventHandler, useState } from 'react';
 import { useAppDispatch } from 'src/store/hooks';
 import { IInvoice } from 'src/types';

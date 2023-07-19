@@ -1,5 +1,5 @@
 import { Tabs } from '@mantine/core';
-import { IconChartInfographic } from '@tabler/icons';
+import { IconChartInfographic } from '@tabler/icons-react';
 import React from 'react';
 import AnnualReportStatistics from './AnnualReportStatistics';
 

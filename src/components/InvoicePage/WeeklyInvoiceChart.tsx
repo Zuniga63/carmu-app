@@ -1,5 +1,5 @@
 import { Tabs } from '@mantine/core';
-import { IconBuildingStore, IconChartBar, IconTable } from '@tabler/icons';
+import { IconBuildingStore, IconChartBar, IconTable } from '@tabler/icons-react';
 import axios, { CancelTokenSource } from 'axios';
 import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
 import dayjs from 'dayjs';

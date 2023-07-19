@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 
 import { ActionIcon, Button, Select, Skeleton, Tabs } from '@mantine/core';
 import { IAnnualReport } from 'src/types';
-import { IconChartInfographic, IconReload, IconTrash } from '@tabler/icons';
+import { IconChartInfographic, IconReload, IconTrash } from '@tabler/icons-react';
 import { ChartPeriod, CHART_DATA_PERIODS, MONTHS } from 'src/utils';
 
 import AnnualGeneralChart from './AnnualGeneralChart';

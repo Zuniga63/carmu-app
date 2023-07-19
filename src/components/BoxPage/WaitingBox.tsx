@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconBox } from '@tabler/icons';
+import { IconBox } from '@tabler/icons-react';
 import LoadinTransacctions from './LoadinTransacctions';
 
 interface Props {

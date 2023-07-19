@@ -21,7 +21,7 @@
     "@mantine/next": "5.10.5",
     "@redux-devtools/extension": "3.2.5",
     "@reduxjs/toolkit": "1.9.5",
-    "@tabler/icons": "1.119.0",
+    "@tabler/icons-react": "2.26.0",
     "axios": "1.4.0",
     "chart.js": "3.9.1",
     "cookies-next": "2.1.2",
@@ -45,7 +45,6 @@
   },
   "devDependencies": {
     "@babel/core": ">=7.22.9",
-    "@tailwindcss/line-clamp": "0.4.4",
     "@types/node": "20.4.2",
     "@types/nprogress": "0.2.0",
     "@types/react": "18.2.15",

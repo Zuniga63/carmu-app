@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Avatar, Menu } from '@mantine/core';
 import { useAppSelector, useAppDispatch } from 'src/store/hooks';
-import { IconCategory, IconLogout, IconSettings, IconUser } from '@tabler/icons';
+import { IconCategory, IconLogout, IconSettings, IconUser } from '@tabler/icons-react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { authSelector, logout } from 'src/features/Auth';

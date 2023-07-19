@@ -1,6 +1,6 @@
 import { ActionIcon, Button, Modal } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { IconCash, IconPrinter } from '@tabler/icons';
+import { IconCash, IconPrinter } from '@tabler/icons-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import { invoicePageSelector, showCancelInvoiceForm, showPaymentForm, unmountInvoice } from 'src/features/InvoicePage';

@@ -1,4 +1,4 @@
-import { IconBrandWhatsapp, IconMapPin } from '@tabler/icons';
+import { IconBrandWhatsapp, IconMapPin } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import { GetServerSideProps, NextPage } from 'next';
 import Image from 'next/image';

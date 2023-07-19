@@ -14,7 +14,7 @@ import {
   IconDatabase,
   IconFileDollar,
   IconFileInvoice,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 
 import InvoiceFormHeader from './InvoiceFormHeader';
 import InvoiceFormPayment from './InvoiceFormPayment';

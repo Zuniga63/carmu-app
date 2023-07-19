@@ -1,4 +1,4 @@
-import { IconTrash } from '@tabler/icons';
+import { IconTrash } from '@tabler/icons-react';
 import React, { useEffect, useState } from 'react';
 import { categoryPageSelector } from 'src/features/CategoryPage';
 import { useAppSelector } from 'src/store/hooks';

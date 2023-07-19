@@ -2,7 +2,7 @@ import { FormEvent } from 'react';
 import LoginHeader from './LoginHeader';
 import LoginFooter from './LoginFooter';
 import { PasswordInput, TextInput } from '@mantine/core';
-import { IconEyeCheck, IconEyeOff, IconLock, IconMail } from '@tabler/icons';
+import { IconEyeCheck, IconEyeOff, IconLock, IconMail } from '@tabler/icons-react';
 import { useLogin } from 'src/hooks/useLogin';
 
 export default function LoginForm() {

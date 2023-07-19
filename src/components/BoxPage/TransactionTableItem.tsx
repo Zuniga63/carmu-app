@@ -1,5 +1,5 @@
 import { ActionIcon } from '@mantine/core';
-import { IconTrash } from '@tabler/icons';
+import { IconTrash } from '@tabler/icons-react';
 import axios, { AxiosError } from 'axios';
 import React from 'react';
 import { boxPageSelector, removeTransaction } from 'src/features/BoxPage';

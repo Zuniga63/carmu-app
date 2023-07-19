@@ -1,6 +1,6 @@
 import { Button, Checkbox, Modal, NumberInput, Select } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
-import { IconBox, IconCalendar, IconCash } from '@tabler/icons';
+import { IconBox, IconCalendar, IconCash } from '@tabler/icons-react';
 import { AxiosError } from 'axios';
 import dayjs from 'dayjs';
 import React, { FormEvent, useEffect, useState } from 'react';

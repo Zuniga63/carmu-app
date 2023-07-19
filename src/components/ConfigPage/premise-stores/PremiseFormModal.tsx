@@ -1,5 +1,5 @@
 import { Button, Modal, Select, TextInput } from '@mantine/core';
-import { IconBox } from '@tabler/icons';
+import { IconBox } from '@tabler/icons-react';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { boxPageSelector } from 'src/features/BoxPage';

@@ -1,5 +1,5 @@
 import { Button } from '@mantine/core';
-import { IconLogin } from '@tabler/icons';
+import { IconLogin } from '@tabler/icons-react';
 import { authSelector } from 'src/features/Auth';
 import { useAppSelector } from 'src/store/hooks';
 

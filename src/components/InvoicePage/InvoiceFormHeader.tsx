@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { IconX } from '@tabler/icons';
+import { IconX } from '@tabler/icons-react';
 import BrandLogo from '../Layout/BrandLogo';
 import { useAppSelector } from 'src/store/hooks';
 import { configSelector } from 'src/features/Config';

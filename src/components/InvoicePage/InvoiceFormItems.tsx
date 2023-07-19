@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, KeyboardEvent } from 'react';
 import { Button, NumberInput, Select, TextInput } from '@mantine/core';
 import { useAppSelector } from 'src/store/hooks';
-import { IconCategory, IconPlus, IconTrash } from '@tabler/icons';
+import { IconCategory, IconPlus, IconTrash } from '@tabler/icons-react';
 import ProductSelect from './ProductSelect';
 import InvoiceFormGroup from './InvoiceFormGroup';
 import { IInvoiceSummary, INewInvoiceItem } from 'src/types';

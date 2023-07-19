@@ -1,6 +1,6 @@
 import { ActionIcon, Modal, Table } from '@mantine/core';
 import { DateRangePickerValue } from '@mantine/dates';
-import { IconPrinter } from '@tabler/icons';
+import { IconPrinter } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import React, { useEffect, useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';

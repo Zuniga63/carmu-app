@@ -1,5 +1,5 @@
 import { Button, Checkbox, Modal, Select, Textarea } from '@mantine/core';
-import { IconBox } from '@tabler/icons';
+import { IconBox } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';

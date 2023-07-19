@@ -1,6 +1,6 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { Button, Modal, NumberInput } from '@mantine/core';
-import { IconLockOpen } from '@tabler/icons';
+import { IconLockOpen } from '@tabler/icons-react';
 import { toast } from 'react-toastify';
 import { boxPageSelector, unmountBoxToOpen, openBox } from 'src/features/BoxPage';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';

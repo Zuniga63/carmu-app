@@ -1,5 +1,5 @@
 import { Tooltip } from '@mantine/core';
-import { IconCircleCheck, IconAlertCircle, IconClock, IconX } from '@tabler/icons';
+import { IconCircleCheck, IconAlertCircle, IconClock, IconX } from '@tabler/icons-react';
 import React from 'react';
 
 interface Props {

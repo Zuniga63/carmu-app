@@ -3,7 +3,7 @@ import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
 import { CHART_COLORS, currencyFormat } from 'src/utils';
 import { IAnnualReport, ICategoryReport } from 'src/types';
 import { Button, Select } from '@mantine/core';
-import { IconChartDonut, IconX } from '@tabler/icons';
+import { IconChartDonut, IconX } from '@tabler/icons-react';
 import { Chart } from 'react-chartjs-2';
 
 interface Props {

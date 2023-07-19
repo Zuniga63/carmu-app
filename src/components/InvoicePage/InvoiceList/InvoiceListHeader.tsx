@@ -6,7 +6,7 @@ import {
   IconFileInvoice,
   IconReload,
   IconSearch,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import {
   invoicePageSelector,
   refreshInvoices,

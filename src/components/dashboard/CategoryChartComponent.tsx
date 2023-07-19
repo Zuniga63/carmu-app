@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tabs } from '@mantine/core';
-import { IconChartInfographic } from '@tabler/icons';
+import { IconChartInfographic } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import { IAnnualReport } from 'src/types';
 import CategoryChart from './CategoryChart';

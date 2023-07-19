@@ -9,7 +9,7 @@ import {
   IconLock,
   IconLockOpen,
   IconTrash,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import { currencyFormat } from 'src/utils';
 import { useAppDispatch } from 'src/store/hooks';
 import { Collapse, Divider, Tooltip } from '@mantine/core';

@@ -1,5 +1,5 @@
 import { ActionIcon, Tooltip } from '@mantine/core';
-import { IconX } from '@tabler/icons';
+import { IconX } from '@tabler/icons-react';
 import React from 'react';
 import { showCancelPaymentForm } from 'src/features/InvoicePage';
 import { useAppDispatch } from 'src/store/hooks';

@@ -1,5 +1,5 @@
 import { Button, Checkbox, NumberInput, Select } from '@mantine/core';
-import { IconBox, IconCirclePlus } from '@tabler/icons';
+import { IconBox, IconCirclePlus } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import React, { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { boxPageSelector } from 'src/features/BoxPage';

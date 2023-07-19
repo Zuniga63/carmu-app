@@ -9,7 +9,7 @@ import {
   IconMap2,
   IconPhone,
   IconTrash,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import { IPremiseStore } from 'src/features/Config/types';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 import { configSelector, editPremiseStore, selectCommercialPremise, unselectPremiseStore } from 'src/features/Config';

@@ -1,5 +1,5 @@
 import { Button, Group, Modal, NumberInput, Select, Table, Tabs, TextInput } from '@mantine/core';
-import { IconBox, IconCategory, IconDeviceFloppy, IconPlus, IconTrash, IconUsers } from '@tabler/icons';
+import { IconBox, IconCategory, IconDeviceFloppy, IconPlus, IconTrash, IconUsers } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import React, { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { authSelector } from 'src/features/Auth';

@@ -11,7 +11,7 @@ import {
   IconMapPin,
   IconSkull,
   IconTrash,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import {

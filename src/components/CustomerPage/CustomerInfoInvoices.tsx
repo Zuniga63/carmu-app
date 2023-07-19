@@ -1,7 +1,7 @@
 import React from 'react';
 import { IInvoiceBaseFull } from 'src/types';
 import CustomerInfoInvoiceCard from './CustomerInfoInvoiceCard';
-import { IconTools } from '@tabler/icons';
+import { IconTools } from '@tabler/icons-react';
 
 interface Props {
   invoices: IInvoiceBaseFull[];

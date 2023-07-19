@@ -1,5 +1,5 @@
 import { Button, Modal, NumberInput, Textarea } from '@mantine/core';
-import { IconLock } from '@tabler/icons';
+import { IconLock } from '@tabler/icons-react';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { boxPageSelector, closeBox, unmountBoxToClose } from 'src/features/BoxPage';

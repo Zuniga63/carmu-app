@@ -1,5 +1,5 @@
 import { Checkbox, Select, SelectItem, TextInput } from '@mantine/core';
-import { IconHome, IconPhone, IconSearch } from '@tabler/icons';
+import { IconHome, IconPhone, IconSearch } from '@tabler/icons-react';
 import React, { forwardRef, useEffect } from 'react';
 import { customerPageSelector } from 'src/features/CustomerPage';
 import { useAppSelector } from 'src/store/hooks';

@@ -1,5 +1,5 @@
 import { Button, PasswordInput } from '@mantine/core';
-import { IconEyeCheck, IconEyeOff, IconLock } from '@tabler/icons';
+import { IconEyeCheck, IconEyeOff, IconLock } from '@tabler/icons-react';
 import axios, { AxiosError } from 'axios';
 import Layout from 'src/components/Layout';
 import { NextPage } from 'next';

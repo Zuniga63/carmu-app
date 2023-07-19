@@ -1,4 +1,4 @@
-import { IconEdit, IconTrash } from '@tabler/icons';
+import { IconEdit, IconTrash } from '@tabler/icons-react';
 import React from 'react';
 import { IProductWithCategories } from 'src/types';
 import { currencyFormat } from 'src/utils';
