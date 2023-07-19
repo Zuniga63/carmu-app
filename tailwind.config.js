@@ -5,6 +5,11 @@ module.exports = {
   darkMode: 'class',
   content: ['./src/pages/**/*.{js,ts,jsx,tsx}', './src/components/**/*.{js,ts,jsx,tsx}'],
   theme: {
+    screens: {
+      xxs: '180px',
+      ...defaultTheme.screens,
+      '3xl': '1920px',
+    },
     extend: {
       fontFamily: {
         sans: ['Roboto', 'sans-serif', ...defaultTheme.fontFamily.sans],
@@ -23,10 +28,6 @@ module.exports = {
         light: '#f8f9fa',
         header: '#161b22',
         'btn-bg': '#21262d',
-      },
-      screens: {
-        xxs: '180px',
-        '3xl': '1920px',
       },
     },
   },
