@@ -11,14 +11,7 @@ type Props = {
   balance: IInvoiceBase['balance'];
 };
 
-export default function InvoiceSumary({
-  subtotal,
-  discount,
-  amount,
-  cash,
-  cashChange,
-  balance,
-}: Props) {
+export default function InvoiceSumary({ subtotal, discount, amount, cash, cashChange, balance }: Props) {
   const summary = useMemo(() => {
     const newSummary = {
       subtotal: subtotal || 0,
@@ -44,9 +37,7 @@ export default function InvoiceSumary({
       <div className="flex-grow text-right">
         <p className="text-xs">Subtotal:</p>
         <p className="text-xs">Descuento:</p>
-        <p className="border-t border-transparent text-base font-bold">
-          Total:
-        </p>
+        <p className="border-t border-transparent text-base font-bold">Total:</p>
         <p className="text-xs">Pago inicial:</p>
         <p className="text-xs">Abonos:</p>
         <p className="border-t border-transparent italic">Saldo:</p>
@@ -57,15 +48,11 @@ export default function InvoiceSumary({
       <div className="text-right tracking-widest">
         <p className="text-xs">{currencyFormat(summary.subtotal)}</p>
         <p className="text-xs"> - {currencyFormat(summary.discount)}</p>
-        <p className="border-t text-base font-bold">
-          {currencyFormat(summary.amount)}
-        </p>
+        <p className="border-t text-base font-bold">{currencyFormat(summary.amount)}</p>
         <p className="text-xs"> - {currencyFormat(summary.cash)}</p>
         <p className="text-xs"> - {currencyFormat(summary.payments)}</p>
         <p className="border-t italic">{currencyFormat(summary.balance)}</p>
-        {summary.cashChange > 0 ? (
-          <p className="text-xs italic">{currencyFormat(summary.cashChange)}</p>
-        ) : null}
+        {summary.cashChange > 0 ? <p className="text-xs italic">{currencyFormat(summary.cashChange)}</p> : null}
       </div>
     </div>
   );

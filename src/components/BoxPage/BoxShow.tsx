@@ -31,21 +31,13 @@ const BoxShow = () => {
   const [boxBalance, setBoxBalance] = useState(0);
   const [waiting, setWaiting] = useState(true);
   const [transactions, setTransactions] = useState<ITransaction[]>([]);
-  const [filteredTransactions, setFilteredTransactions] = useState<
-    ITransaction[]
-  >([]);
-  const [rangeDate, setRangeDate] = useState<DateRangePickerValue>([
-    null,
-    null,
-  ]);
+  const [filteredTransactions, setFilteredTransactions] = useState<ITransaction[]>([]);
+  const [rangeDate, setRangeDate] = useState<DateRangePickerValue>([null, null]);
   const [reportOpened, setReportOpened] = useState(false);
 
   const addHandler = () => dispatch(showTransactionForm());
 
-  const transformTransactions = (
-    base = 0,
-    dataList: ITransactionResponse[]
-  ) => {
+  const transformTransactions = (base = 0, dataList: ITransactionResponse[]) => {
     let balance = base;
     const result: ITransaction[] = [];
     dataList.forEach(item => {
@@ -88,9 +80,7 @@ const BoxShow = () => {
     if (showingMainBox && mainBox) {
       const fromDate = dayjs().startOf('month');
 
-      setFilteredTransactions(
-        transactionList.filter(t => t.transactionDate.isSameOrAfter(fromDate))
-      );
+      setFilteredTransactions(transactionList.filter(t => t.transactionDate.isSameOrAfter(fromDate)));
     } else {
       setFilteredTransactions(transactionList);
     }
@@ -105,17 +95,11 @@ const BoxShow = () => {
     if (showingMainBox && rangeDate[0] && rangeDate[1]) {
       setFilteredTransactions(
         transactions.filter(
-          t =>
-            t.transactionDate.isSameOrAfter(rangeDate[0]) &&
-            t.transactionDate.isSameOrBefore(rangeDate[1])
-        )
+          t => t.transactionDate.isSameOrAfter(rangeDate[0]) && t.transactionDate.isSameOrBefore(rangeDate[1]),
+        ),
       );
     } else if (showingMainBox && mainBox) {
-      setFilteredTransactions(
-        transactions.filter(t =>
-          t.transactionDate.isSameOrAfter(dayjs().startOf('month'))
-        )
-      );
+      setFilteredTransactions(transactions.filter(t => t.transactionDate.isSameOrAfter(dayjs().startOf('month'))));
     } else {
       setFilteredTransactions(transactions);
     }
@@ -128,9 +112,7 @@ const BoxShow = () => {
       ) : (
         <div className="w-full">
           <header className="rounded-t-md bg-gray-300 px-6 py-2 dark:bg-header">
-            <h2 className="text-center text-xl font-bold tracking-wider">
-              {boxName}
-            </h2>
+            <h2 className="text-center text-xl font-bold tracking-wider">{boxName}</h2>
             {showingMainBox ? (
               <DateRangePicker
                 placeholder="Selecciona una fecha"
@@ -148,14 +130,10 @@ const BoxShow = () => {
           <footer className="flex items-center justify-between rounded-b-md bg-gray-300 px-6 py-2 dark:bg-header">
             <div className="flex flex-col items-center gap-y-1 lg:flex-row lg:gap-x-2">
               <span className="text-xs lg:text-base">Saldo:</span>
-              <span className="text-center text-xs font-bold lg:text-base">
-                {currencyFormat(boxBalance)}
-              </span>
+              <span className="text-center text-xs font-bold lg:text-base">{currencyFormat(boxBalance)}</span>
             </div>
 
-            <div className="hidden lg:block">
-              Registros: {filteredTransactions.length}
-            </div>
+            <div className="hidden lg:block">Registros: {filteredTransactions.length}</div>
 
             <div className="flex items-center gap-x-4">
               <Tooltip label="Ver informe">
@@ -165,9 +143,7 @@ const BoxShow = () => {
               </Tooltip>
 
               <Button leftIcon={<IconWriting />} onClick={addHandler}>
-                <span className="hidden lg:inline-block">
-                  Agregar Transacción
-                </span>
+                <span className="hidden lg:inline-block">Agregar Transacción</span>
                 <span className="lg:hidden">Agregar</span>
               </Button>
             </div>

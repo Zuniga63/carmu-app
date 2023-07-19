@@ -1,9 +1,4 @@
-import {
-  IInvoice,
-  IInvoiceBase,
-  IInvoiceBaseFull,
-  IInvoiceFull,
-} from 'src/types';
+import { IInvoice, IInvoiceBase, IInvoiceBaseFull, IInvoiceFull } from 'src/types';
 import colorLib, { Color, RGBA } from '@kurkle/color';
 import dayjs from 'dayjs';
 
@@ -34,9 +29,7 @@ export const createSearch = (invoice: IInvoiceBase | IInvoiceBaseFull) => {
   return normalizeText(search);
 };
 
-export const createInvoiceDates = (
-  invoice: IInvoiceBase | IInvoiceBaseFull
-) => {
+export const createInvoiceDates = (invoice: IInvoiceBase | IInvoiceBaseFull) => {
   const { expeditionDate, expirationDate, createdAt, updatedAt } = invoice;
   return {
     expeditionDate: dayjs(expeditionDate),
@@ -76,10 +69,7 @@ export const buildInvoiceFull = (invoice: IInvoiceBaseFull): IInvoiceFull => {
 //-----------------------------------------------------------------------------
 // UTIL FOR FORMAT CURRENCY
 //-----------------------------------------------------------------------------
-export function currencyFormat(
-  value: string | number | undefined,
-  fractionDigits = 0
-): string {
+export function currencyFormat(value: string | number | undefined, fractionDigits = 0): string {
   const parseValue = parseFloat(String(value));
 
   if (!isNaN(parseValue)) {
@@ -164,10 +154,7 @@ export const CHART_COLORS = {
   indigo: '#2B4162',
 };
 
-export function transparentize(
-  value: string | number[] | Color | RGBA,
-  opacity?: number
-) {
+export function transparentize(value: string | number[] | Color | RGBA, opacity?: number) {
   const alpha = opacity === undefined ? 0.5 : 1 - opacity;
   return colorLib(value).alpha(alpha).rgbString();
 }

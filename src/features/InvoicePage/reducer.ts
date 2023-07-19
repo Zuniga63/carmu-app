@@ -172,9 +172,7 @@ export const invoicePageReducer = createReducer(initialState, builder => {
       state.storePaymentError = null;
     })
     .addCase(registerPayment.fulfilled, (state, { payload }) => {
-      const invoice = state.invoices.find(
-        item => item.id === payload.invoice.id
-      );
+      const invoice = state.invoices.find(item => item.id === payload.invoice.id);
 
       if (invoice) invoice.balance = payload.invoice.balance;
       state.selectedInvoice = payload.invoice;

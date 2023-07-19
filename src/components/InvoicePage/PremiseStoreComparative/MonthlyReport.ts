@@ -27,17 +27,10 @@ export default class MonthlyReport {
 
   public annualDailyAverageGrowth?: number;
 
-  constructor(
-    date: Dayjs,
-    invoices: ReportInvoice[],
-    lastReport?: MonthlyReport,
-    lastMonth = false
-  ) {
+  constructor(date: Dayjs, invoices: ReportInvoice[], lastReport?: MonthlyReport, lastMonth = false) {
     const today = dayjs();
     const days = lastMonth ? today.date() : date.daysInMonth();
-    const dayOfYear = lastMonth
-      ? today.dayOfYear()
-      : date.endOf('month').dayOfYear();
+    const dayOfYear = lastMonth ? today.dayOfYear() : date.endOf('month').dayOfYear();
 
     this.name = date.format('MMMM');
     this.amount = invoices.reduce((sum, { amount }) => sum + amount, 0);
@@ -58,21 +51,14 @@ export default class MonthlyReport {
       this.annualDailyAverage = this.annualAmount / dayOfYear;
 
       if (lastAnnualDailyAverage > 0 && lastAnnualDailyAverage > 0) {
-        this.dailyAverageGrowth =
-          (this.dailyAverage - lastDailyAverage) / lastDailyAverage;
+        this.dailyAverageGrowth = (this.dailyAverage - lastDailyAverage) / lastDailyAverage;
 
-        this.annualDailyAverageGrowth =
-          (this.annualDailyAverage - lastAnnualDailyAverage) /
-          lastAnnualDailyAverage;
+        this.annualDailyAverageGrowth = (this.annualDailyAverage - lastAnnualDailyAverage) / lastAnnualDailyAverage;
       }
     }
   }
 
-  protected createDailyReports(
-    date: Dayjs,
-    invoices: ReportInvoice[],
-    lastReport?: MonthlyReport
-  ) {
+  protected createDailyReports(date: Dayjs, invoices: ReportInvoice[], lastReport?: MonthlyReport) {
     const reports: DailyReport[] = [];
     const endMonthDate = date.endOf('month');
     let dailyDate = date.clone();
@@ -83,14 +69,10 @@ export default class MonthlyReport {
       const endDay = dailyDate.endOf('day');
 
       const dailyInvoices = invoices.filter(({ date: invoiceDate }) =>
-        dayjs(invoiceDate).isBetween(startDay, endDay, 'milliseconds', '[]')
+        dayjs(invoiceDate).isBetween(startDay, endDay, 'milliseconds', '[]'),
       );
 
-      const dailyReport = new DailyReport(
-        dailyDate,
-        dailyInvoices,
-        lastDailyReport
-      );
+      const dailyReport = new DailyReport(dailyDate, dailyInvoices, lastDailyReport);
 
       reports.push(dailyReport);
       lastDailyReport = dailyReport;
@@ -127,9 +109,6 @@ export default class MonthlyReport {
   }
 
   public getAnnualDailyAverageGrowth(decimals = 1) {
-    return this.calculatePercentage(
-      this.annualDailyAverageGrowth || 0,
-      decimals
-    );
+    return this.calculatePercentage(this.annualDailyAverageGrowth || 0, decimals);
   }
 }

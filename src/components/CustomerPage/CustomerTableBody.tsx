@@ -9,9 +9,7 @@ function Loading() {
     <div className="flex h-96 animate-pulse items-center justify-center">
       <div className="flex flex-col items-center">
         <Loader size={40} color="red" />
-        <span className="tracking-widest">
-          Cargando la información de los clientes...
-        </span>
+        <span className="tracking-widest">Cargando la información de los clientes...</span>
       </div>
     </div>
   );
@@ -31,28 +29,16 @@ export default function CustomerTableBody({ customers }: Props) {
       <table className="min-w-full table-auto">
         <thead className="sticky top-0 z-fixed overflow-hidden rounded-t-md bg-gray-300 dark:bg-header">
           <tr className="rounded-t-xl text-gray-dark dark:text-gray-300">
-            <th
-              scope="col"
-              className="px-4 py-3 text-center uppercase tracking-wide"
-            >
+            <th scope="col" className="px-4 py-3 text-center uppercase tracking-wide">
               Cliente
             </th>
-            <th
-              scope="col"
-              className="hidden px-4 py-3 text-center uppercase tracking-wide lg:table-cell"
-            >
+            <th scope="col" className="hidden px-4 py-3 text-center uppercase tracking-wide lg:table-cell">
               Contacto
             </th>
-            <th
-              scope="col"
-              className="hidden px-4 py-3 text-center uppercase tracking-wide lg:table-cell"
-            >
+            <th scope="col" className="hidden px-4 py-3 text-center uppercase tracking-wide lg:table-cell">
               Historial
             </th>
-            <th
-              scope="col"
-              className="px-4 py-3 text-center uppercase tracking-wide"
-            >
+            <th scope="col" className="px-4 py-3 text-center uppercase tracking-wide">
               Saldo
             </th>
             <th scope="col" className="relative px-6 py-3">

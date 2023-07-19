@@ -1,11 +1,7 @@
 import { Button, Modal, Textarea } from '@mantine/core';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import {
-  cancelInvoice,
-  hideCancelInvoiceForm,
-  invoicePageSelector,
-} from 'src/features/InvoicePage';
+import { cancelInvoice, hideCancelInvoiceForm, invoicePageSelector } from 'src/features/InvoicePage';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 
 export interface ICancelInvoiceData {
@@ -59,11 +55,7 @@ const CancelInvoiceForm = () => {
   };
 
   useEffect(() => {
-    setTitle(
-      invoice
-        ? `Anulación de Factura N° ${invoice.prefixNumber}: ${invoice.customerName}`
-        : ''
-    );
+    setTitle(invoice ? `Anulación de Factura N° ${invoice.prefixNumber}: ${invoice.customerName}` : '');
   }, [invoice]);
 
   useEffect(() => {

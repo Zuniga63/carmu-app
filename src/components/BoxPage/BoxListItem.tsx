@@ -15,13 +15,7 @@ import { useAppDispatch } from 'src/store/hooks';
 import { Collapse, Divider, Tooltip } from '@mantine/core';
 import Swal from 'sweetalert2';
 import axios, { AxiosError } from 'axios';
-import {
-  fetchBoxes,
-  removeBox,
-  mountBoxToOpen,
-  mountBoxToClose,
-  mountBox,
-} from 'src/features/BoxPage';
+import { fetchBoxes, removeBox, mountBoxToOpen, mountBoxToClose, mountBox } from 'src/features/BoxPage';
 
 interface Props {
   box: IBoxWithDayjs;
@@ -141,15 +135,8 @@ const BoxListItem = ({ box }: Props) => {
             {/* BOX NAME */}
             <div className="flex-grow">
               <div className="flex items-center gap-x-1">
-                {opened ? (
-                  <IconLock
-                    className="flex-shrink-0 text-amber-400"
-                    size={16}
-                  />
-                ) : null}
-                <h1 className=" flex-grow text-sm font-bold tracking-wider line-clamp-1">
-                  {box.name}
-                </h1>
+                {opened ? <IconLock className="flex-shrink-0 text-amber-400" size={16} /> : null}
+                <h1 className=" line-clamp-1 flex-grow text-sm font-bold tracking-wider">{box.name}</h1>
               </div>
             </div>
             {/* BOX ACTIONS */}
@@ -219,9 +206,7 @@ const BoxListItem = ({ box }: Props) => {
           {box.openBox && (
             <div className="flex items-center justify-center gap-x-2 text-gray-dark dark:text-gray-400">
               <IconAward size={18} />
-              <p className="text-xs">
-                {box.cashier ? box.cashier.name : box.cashierName}
-              </p>
+              <p className="text-xs">{box.cashier ? box.cashier.name : box.cashierName}</p>
             </div>
           )}
         </header>
@@ -232,10 +217,7 @@ const BoxListItem = ({ box }: Props) => {
               <>
                 <div className="flex justify-between text-xs text-gray-dark dark:text-gray-400">
                   <p>
-                    Base:{' '}
-                    <span className="font-bold">
-                      {currencyFormat(box.base)}
-                    </span>
+                    Base: <span className="font-bold">{currencyFormat(box.base)}</span>
                   </p>
                   <div className="flex items-center gap-x-2 ">
                     <IconLockOpen size={18} />
@@ -279,17 +261,13 @@ const BoxListItem = ({ box }: Props) => {
               label={
                 <div className="flex flex-col items-center">
                   <h4 className="text-sm">Saldo sin la base</h4>
-                  <p className="text-xs font-bold tracking-widest">
-                    {currencyFormat((box.balance || 0) - box.base)}
-                  </p>
+                  <p className="text-xs font-bold tracking-widest">{currencyFormat((box.balance || 0) - box.base)}</p>
                 </div>
               }
               withArrow
               hidden={!box.base}
             >
-              <p className="text-center text-xl font-bold tracking-wider">
-                {currencyFormat(box.balance || 0)}
-              </p>
+              <p className="text-center text-xl font-bold tracking-wider">{currencyFormat(box.balance || 0)}</p>
             </Tooltip>
           </footer>
         ) : null}

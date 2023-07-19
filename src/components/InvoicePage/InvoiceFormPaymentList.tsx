@@ -10,11 +10,7 @@ interface Props {
   summary: IInvoiceSummary;
 }
 
-const InvoiceFormPaymentList = ({
-  payments,
-  removePayment,
-  summary,
-}: Props) => {
+const InvoiceFormPaymentList = ({ payments, removePayment, summary }: Props) => {
   return (
     <>
       <div className="mb-4 min-h-[10rem] rounded border border-gray-200 dark:border-gray-600">
@@ -38,12 +34,7 @@ const InvoiceFormPaymentList = ({
           </thead>
           <tbody className="divide-y divide-gray-200">
             {payments.map((item, index) => (
-              <InvoiceFormPaymentListItem
-                index={index}
-                key={item.id}
-                payment={item}
-                onRemove={removePayment}
-              />
+              <InvoiceFormPaymentListItem index={index} key={item.id} payment={item} onRemove={removePayment} />
             ))}
           </tbody>
         </Table>

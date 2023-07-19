@@ -40,11 +40,7 @@ export default function InvoiceCard({ invoice }: Props) {
         <InvoiceCardBody invoice={invoice} />
 
         <footer className="flex justify-end px-4 py-3">
-          <Button
-            size="xs"
-            leftIcon={<IconFileInvoice size={16} />}
-            onClick={showInvoice}
-          >
+          <Button size="xs" leftIcon={<IconFileInvoice size={16} />} onClick={showInvoice}>
             Ver detalles
           </Button>
         </footer>

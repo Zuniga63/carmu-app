@@ -9,30 +9,20 @@ interface Props {
   onRemove(paymentId: number): void;
 }
 
-const InvoiceFormPaymentListItem: React.FC<Props> = ({
-  payment,
-  onRemove,
-  index,
-}) => {
+const InvoiceFormPaymentListItem: React.FC<Props> = ({ payment, onRemove, index }) => {
   return (
     <tr>
       <td className="whitespace-nowrap">
         <span className="block text-center">{index + 1}</span>
       </td>
       <td className="whitespace-nowrap">
-        <span className="block font-bold">
-          {payment.box?.name || 'Caja Global'}
-        </span>
-        <span className="block text-xs">
-          Registrar transacción: {payment.register ? 'Si' : 'No'}
-        </span>
+        <span className="block font-bold">{payment.box?.name || 'Caja Global'}</span>
+        <span className="block text-xs">Registrar transacción: {payment.register ? 'Si' : 'No'}</span>
       </td>
       <td>
         <span className="block font-bold">{payment.description}</span>
       </td>
-      <td className="whitespace-nowrap px-2 py-1 text-right">
-        {currencyFormat(payment.amount)}
-      </td>
+      <td className="whitespace-nowrap px-2 py-1 text-right">{currencyFormat(payment.amount)}</td>
       <td className="px-3">
         <div className="flex items-center justify-center">
           <button

@@ -13,19 +13,13 @@ const ReportStatistics = () => {
         <Tabs.Tab value="credit" icon={<IconChartInfographic size={14} />}>
           Creditos
         </Tabs.Tab>
-        <Tabs.Tab
-          value="credit_payment"
-          icon={<IconChartInfographic size={14} />}
-        >
+        <Tabs.Tab value="credit_payment" icon={<IconChartInfographic size={14} />}>
           Abono de créditos
         </Tabs.Tab>
         <Tabs.Tab value="separate" icon={<IconChartInfographic size={14} />}>
           Apartados
         </Tabs.Tab>
-        <Tabs.Tab
-          value="separate_payment"
-          icon={<IconChartInfographic size={14} />}
-        >
+        <Tabs.Tab value="separate_payment" icon={<IconChartInfographic size={14} />}>
           Abono de apartados
         </Tabs.Tab>
       </Tabs.List>
@@ -45,10 +39,7 @@ const ReportStatistics = () => {
         />
       </Tabs.Panel>
       <Tabs.Panel value="credit_payment" pt="xs">
-        <AnnualReportStatistics
-          title="Abonos a Creditos"
-          type="credit_payment"
-        />
+        <AnnualReportStatistics title="Abonos a Creditos" type="credit_payment" />
       </Tabs.Panel>
 
       <Tabs.Panel value="separate" pt="xs">

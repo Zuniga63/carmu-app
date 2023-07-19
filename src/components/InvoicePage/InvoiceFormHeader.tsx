@@ -14,17 +14,14 @@ const InvoiceFormHeader = ({ isSeparate, onClose }: Props) => {
   const [title, setTitle] = useState(process.env.NEXT_PUBLIC_APP_NAME);
 
   useEffect(() => {
-    setTitle(current =>
-      premiseStoreSelected ? premiseStoreSelected.name : current
-    );
+    setTitle(current => (premiseStoreSelected ? premiseStoreSelected.name : current));
   }, [premiseStoreSelected]);
 
   return (
     <header className="mb-4 flex items-center justify-between px-6 py-4">
       <BrandLogo />
       <h2 className="hidden text-xl tracking-wider lg:block">
-        {isSeparate ? 'Apartado' : 'Facturación'}{' '}
-        <span className="font-bold italic">{title}</span>
+        {isSeparate ? 'Apartado' : 'Facturación'} <span className="font-bold italic">{title}</span>
       </h2>
       <button
         className="text-dark text-opacity-80 transition-opacity hover:text-opacity-100 dark:text-light"

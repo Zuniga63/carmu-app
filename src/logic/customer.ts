@@ -14,10 +14,7 @@ export const getCustomerBySearch = (customers: ICustomer[], search: string) => {
   });
 };
 
-export const sortCustomersByBalance = (
-  customers: ICustomer[],
-  reverse = false
-) => {
+export const sortCustomersByBalance = (customers: ICustomer[], reverse = false) => {
   return [...customers].sort((currentCustomer, lastCustomer) => {
     let result = 0;
 
@@ -32,20 +29,13 @@ export const sortCustomersByBalance = (
   });
 };
 
-export const sortCustomersByLastPayment = (
-  customers: ICustomer[],
-  reverse = false
-) => {
+export const sortCustomersByLastPayment = (customers: ICustomer[], reverse = false) => {
   return [...customers].sort((currentCustomer, lastCustomer) => {
     let result = 0;
 
-    const currentCustomerDiff = dayjs().diff(
-      currentCustomer.lastPayment || currentCustomer.firstPendingInvoice
-    );
+    const currentCustomerDiff = dayjs().diff(currentCustomer.lastPayment || currentCustomer.firstPendingInvoice);
 
-    const lastCustomerDiff = dayjs().diff(
-      lastCustomer.lastPayment || lastCustomer.firstPendingInvoice
-    );
+    const lastCustomerDiff = dayjs().diff(lastCustomer.lastPayment || lastCustomer.firstPendingInvoice);
 
     if (currentCustomerDiff < lastCustomerDiff) result = -1;
     else if (currentCustomerDiff > lastCustomerDiff) result = 1;

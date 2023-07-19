@@ -1,11 +1,7 @@
 import { ActionIcon, Tooltip } from '@mantine/core';
 import { IconCirclePlus, IconRefresh } from '@tabler/icons';
 import React from 'react';
-import {
-  boxPageSelector,
-  fetchBoxes,
-  showCreateForm,
-} from 'src/features/BoxPage';
+import { boxPageSelector, fetchBoxes, showCreateForm } from 'src/features/BoxPage';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 
 const BoxListHeader = () => {
@@ -18,19 +14,12 @@ const BoxListHeader = () => {
         <h2 className="text-xl font-bold tracking-wider">Cajas</h2>
         <div className="flex gap-x-2">
           <Tooltip label="Actualizar" withArrow>
-            <ActionIcon
-              onClick={() => dispatch(fetchBoxes())}
-              loading={fetchLoading}
-              color="blue"
-            >
+            <ActionIcon onClick={() => dispatch(fetchBoxes())} loading={fetchLoading} color="blue">
               <IconRefresh size={18} />
             </ActionIcon>
           </Tooltip>
           <Tooltip label="Agregar Caja" withArrow>
-            <ActionIcon
-              onClick={() => dispatch(showCreateForm())}
-              color="green"
-            >
+            <ActionIcon onClick={() => dispatch(showCreateForm())} color="green">
               <IconCirclePlus size={18} />
             </ActionIcon>
           </Tooltip>

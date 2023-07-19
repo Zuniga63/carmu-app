@@ -3,12 +3,7 @@ import { useMediaQuery } from '@mantine/hooks';
 import { IconCash, IconPrinter } from '@tabler/icons';
 import React, { useEffect, useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
-import {
-  invoicePageSelector,
-  showCancelInvoiceForm,
-  showPaymentForm,
-  unmountInvoice,
-} from 'src/features/InvoicePage';
+import { invoicePageSelector, showCancelInvoiceForm, showPaymentForm, unmountInvoice } from 'src/features/InvoicePage';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 import { buildInvoiceFull } from 'src/utils';
 import EmptyInvoice from './EmptyInvoice';
@@ -56,13 +51,7 @@ const InvoiceCardModal = () => {
 
   return (
     <>
-      <Modal
-        size={largeScreen ? '70%' : '100%'}
-        opened={opened}
-        onClose={onClose}
-        padding={0}
-        withCloseButton={false}
-      >
+      <Modal size={largeScreen ? '70%' : '100%'} opened={opened} onClose={onClose} padding={0} withCloseButton={false}>
         <div>
           <InvoiceCardModalHeader
             title={
@@ -125,11 +114,7 @@ const InvoiceCardModal = () => {
 
             {!invoice?.cancel ? (
               <div className="flex gap-x-4">
-                <Button
-                  leftIcon={<IconCash />}
-                  color="red"
-                  onDoubleClick={() => dispatch(showCancelInvoiceForm())}
-                >
+                <Button leftIcon={<IconCash />} color="red" onDoubleClick={() => dispatch(showCancelInvoiceForm())}>
                   Anular Factura
                 </Button>
 
@@ -148,11 +133,7 @@ const InvoiceCardModal = () => {
       </Modal>
 
       <div className="hidden">
-        <div ref={invoiceRef}>
-          {invoice ? (
-            <InvoiceToPrint invoice={invoice} size={invoiceSize} />
-          ) : null}
-        </div>
+        <div ref={invoiceRef}>{invoice ? <InvoiceToPrint invoice={invoice} size={invoiceSize} /> : null}</div>
       </div>
     </>
   );

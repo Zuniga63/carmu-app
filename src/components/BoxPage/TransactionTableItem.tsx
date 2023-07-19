@@ -4,11 +4,7 @@ import axios, { AxiosError } from 'axios';
 import React from 'react';
 import { boxPageSelector, removeTransaction } from 'src/features/BoxPage';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import {
-  IMainTransaction,
-  ITransaction,
-  ITransactionResponse,
-} from 'src/types';
+import { IMainTransaction, ITransaction, ITransactionResponse } from 'src/types';
 import { currencyFormat } from 'src/utils';
 import Swal from 'sweetalert2';
 
@@ -22,9 +18,7 @@ const TransactionTableItem = ({ transaction }: Props) => {
 
   const deleteTransaction = async () => {
     const { id, cashbox, description, amount } = transaction;
-    const url = cashbox
-      ? `/boxes/${cashbox}/transactions/${id}`
-      : `/main-box/transactions/${id}`;
+    const url = cashbox ? `/boxes/${cashbox}/transactions/${id}` : `/main-box/transactions/${id}`;
 
     const message = /*html */ `
       La transacción "<strong>${description}</strong>"
@@ -47,7 +41,7 @@ const TransactionTableItem = ({ transaction }: Props) => {
           await axios.delete<{ transaction: ITransactionResponse }>(url);
           result.ok = true;
           result.message = `¡La transacción por valor de <strong>${currencyFormat(
-            amount
+            amount,
           )}</strong> fue eliminada con éxito!`;
 
           dispatch(removeTransaction(transaction.id));
@@ -68,9 +62,7 @@ const TransactionTableItem = ({ transaction }: Props) => {
 
     if (result.isConfirmed && result.value) {
       const { ok, message } = result.value;
-      const title = ok
-        ? '<strong>¡Transacción Eliminada!</strong>'
-        : '¡Ops, algo salio mal!';
+      const title = ok ? '<strong>¡Transacción Eliminada!</strong>' : '¡Ops, algo salio mal!';
       const icon = ok ? 'success' : 'error';
 
       Swal.fire({ title, html: message, icon });
@@ -78,23 +70,13 @@ const TransactionTableItem = ({ transaction }: Props) => {
   };
 
   return (
-    <tr
-      className={`text-dark ${otherBox ? 'opacity-20' : ''} dark:text-gray-300`}
-    >
+    <tr className={`text-dark ${otherBox ? 'opacity-20' : ''} dark:text-gray-300`}>
       <td>
         <div className="whitespace-nowrap text-center">
-          <p className="hidden text-sm lg:block">
-            {transaction.transactionDate.format('DD/MM/YY hh:mm a')}
-          </p>
-          <p className="text-xs lg:hidden">
-            {transaction.transactionDate.format('DD/MM/YY')}
-          </p>
-          <p className="hidden text-xs lg:block">
-            {transaction.transactionDate.fromNow()}
-          </p>
-          <p className="text-xs lg:hidden">
-            {transaction.transactionDate.format('hh:mm a')}
-          </p>
+          <p className="hidden text-sm lg:block">{transaction.transactionDate.format('DD/MM/YY hh:mm a')}</p>
+          <p className="text-xs lg:hidden">{transaction.transactionDate.format('DD/MM/YY')}</p>
+          <p className="hidden text-xs lg:block">{transaction.transactionDate.fromNow()}</p>
+          <p className="text-xs lg:hidden">{transaction.transactionDate.format('hh:mm a')}</p>
         </div>
       </td>
       <td>
@@ -102,20 +84,13 @@ const TransactionTableItem = ({ transaction }: Props) => {
           <p className="text-xs lg:text-base">{transaction.description}</p>
           {otherBox && (
             <p className="text-xs">
-              pertenece a :{' '}
-              <span className="font-bold">
-                {(transaction as IMainTransaction).cashbox?.name}
-              </span>
+              pertenece a : <span className="font-bold">{(transaction as IMainTransaction).cashbox?.name}</span>
             </p>
           )}
         </div>
       </td>
       <td className="text-right">{currencyFormat(transaction.amount)}</td>
-      <td
-        className={`hidden text-right lg:table-cell ${
-          otherBox && 'line-through'
-        }`}
-      >
+      <td className={`hidden text-right lg:table-cell ${otherBox && 'line-through'}`}>
         {currencyFormat(transaction.balance)}
       </td>
       <td>

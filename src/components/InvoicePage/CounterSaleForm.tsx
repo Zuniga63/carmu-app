@@ -1,39 +1,14 @@
-import {
-  Button,
-  Group,
-  Modal,
-  NumberInput,
-  Select,
-  Table,
-  Tabs,
-  TextInput,
-} from '@mantine/core';
-import {
-  IconBox,
-  IconCategory,
-  IconDeviceFloppy,
-  IconPlus,
-  IconTrash,
-  IconUsers,
-} from '@tabler/icons';
+import { Button, Group, Modal, NumberInput, Select, Table, Tabs, TextInput } from '@mantine/core';
+import { IconBox, IconCategory, IconDeviceFloppy, IconPlus, IconTrash, IconUsers } from '@tabler/icons';
 import dayjs from 'dayjs';
 import React, { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { authSelector } from 'src/features/Auth';
 import { boxPageSelector } from 'src/features/BoxPage';
 import { categoryPageSelector } from 'src/features/CategoryPage';
 import { configSelector } from 'src/features/Config';
-import {
-  hideCounterSaleForm,
-  invoicePageSelector,
-  storeNewInvoice,
-} from 'src/features/InvoicePage';
+import { hideCounterSaleForm, invoicePageSelector, storeNewInvoice } from 'src/features/InvoicePage';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import {
-  IInvoiceCashbox,
-  IInvoiceStoreData,
-  IInvoiceSummary,
-  INewInvoiceItem,
-} from 'src/types';
+import { IInvoiceCashbox, IInvoiceStoreData, IInvoiceSummary, INewInvoiceItem } from 'src/types';
 import { currencyFormat } from 'src/utils';
 import { IInvoiceCustomer } from './InvoiceForm';
 import InvoiceFormCustomer from './InvoiceFormCustomer';
@@ -71,12 +46,8 @@ const CounterSaleForm = () => {
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const [itemDescription, setItemDescription] = useState('');
   const [itemQuantity, setItemQuantity] = useState<number | undefined>(1);
-  const [itemUnitValue, setItemUnitValue] = useState<number | undefined>(
-    undefined
-  );
-  const [itemDiscount, setItemDiscount] = useState<number | undefined>(
-    undefined
-  );
+  const [itemUnitValue, setItemUnitValue] = useState<number | undefined>(undefined);
+  const [itemDiscount, setItemDiscount] = useState<number | undefined>(undefined);
   const [itemAmount, setItemAmount] = useState<number | undefined>(undefined);
   const [enabled, setEnabled] = useState(false);
 
@@ -106,10 +77,7 @@ const CounterSaleForm = () => {
   const resetBox = () => {
     if (store) {
       const { defaultBox } = store;
-      const id =
-        defaultBox && defaultBox.openBox && dayjs().isAfter(defaultBox.openBox)
-          ? defaultBox.id
-          : null;
+      const id = defaultBox && defaultBox.openBox && dayjs().isAfter(defaultBox.openBox) ? defaultBox.id : null;
 
       setCashboxId(id);
     }
@@ -229,16 +197,8 @@ const CounterSaleForm = () => {
     resetItem(from === 'other' ? 'category' : 'search');
   };
 
-  const itemKeyPress = (
-    event: KeyboardEvent<HTMLInputElement>,
-    maintainFocus?: boolean
-  ) => {
-    if (
-      event.key === 'Enter' &&
-      itemDescription &&
-      itemQuantity &&
-      itemUnitValue
-    ) {
+  const itemKeyPress = (event: KeyboardEvent<HTMLInputElement>, maintainFocus?: boolean) => {
+    if (event.key === 'Enter' && itemDescription && itemQuantity && itemUnitValue) {
       if (!maintainFocus) event.currentTarget.blur();
       addNewItem(event.currentTarget.type === 'search' ? 'search' : 'other');
     }
@@ -325,8 +285,7 @@ const CounterSaleForm = () => {
   useEffect(() => {
     if (itemQuantity && itemUnitValue) {
       let amount = itemQuantity * itemUnitValue;
-      if (itemDiscount && itemDiscount < itemUnitValue)
-        amount -= itemQuantity * itemDiscount;
+      if (itemDiscount && itemDiscount < itemUnitValue) amount -= itemQuantity * itemDiscount;
       setItemAmount(amount);
     } else {
       setItemAmount(undefined);
@@ -358,13 +317,7 @@ const CounterSaleForm = () => {
   }, [success]);
 
   return (
-    <Modal
-      opened={opened}
-      onClose={close}
-      padding={0}
-      withCloseButton={false}
-      size="xl"
-    >
+    <Modal opened={opened} onClose={close} padding={0} withCloseButton={false} size="xl">
       <InvoiceFormHeader onClose={close} isSeparate={false} />
       <div className="mx-auto mb-8 flex w-11/12 flex-col">
         <div className="mb-8 rounded-lg border border-gray-400 p-4 shadow-lg dark:shadow dark:shadow-light">
@@ -486,11 +439,7 @@ const CounterSaleForm = () => {
               </div>
 
               <div className="flex flex-col items-center justify-end gap-4 lg:flex-row">
-                {itemAmount ? (
-                  <span className="text-xs">
-                    Importe: {currencyFormat(itemAmount)}
-                  </span>
-                ) : null}
+                {itemAmount ? <span className="text-xs">Importe: {currencyFormat(itemAmount)}</span> : null}
 
                 <Button
                   leftIcon={<IconPlus size={15} stroke={4} />}
@@ -500,12 +449,7 @@ const CounterSaleForm = () => {
                 >
                   Agregar Item
                 </Button>
-                <Button
-                  leftIcon={<IconTrash size={15} stroke={2} />}
-                  size="xs"
-                  color="red"
-                  onClick={() => resetItem()}
-                >
+                <Button leftIcon={<IconTrash size={15} stroke={2} />} size="xs" color="red" onClick={() => resetItem()}>
                   Descartar Item
                 </Button>
               </div>
@@ -529,9 +473,7 @@ const CounterSaleForm = () => {
             <thead>
               <tr className="whitespace-nowrap">
                 <th scope="col">
-                  <span className="block text-center uppercase tracking-wide">
-                    Cant.
-                  </span>
+                  <span className="block text-center uppercase tracking-wide">Cant.</span>
                 </th>
                 <th scope="col" className="uppercase tracking-wide">
                   Descripción
@@ -550,9 +492,7 @@ const CounterSaleForm = () => {
             <tbody>
               {items.map(item => (
                 <tr key={item.id}>
-                  <td className="whitespace-nowrap px-2 py-1 text-center text-sm">
-                    {item.quantity}
-                  </td>
+                  <td className="whitespace-nowrap px-2 py-1 text-center text-sm">{item.quantity}</td>
                   <td>
                     <span className="block">{item.description}</span>
                     <span className="block text-xs text-dark text-opacity-80 dark:text-light dark:text-opacity-80">
@@ -561,26 +501,13 @@ const CounterSaleForm = () => {
                   </td>
                   <td>
                     <div className="flex flex-col text-right text-sm">
-                      <span
-                        className={`${
-                          Boolean(item.discount) &&
-                          'scale-90 text-xs line-through opacity-70'
-                        }`}
-                      >
+                      <span className={`${Boolean(item.discount) && 'scale-90 text-xs line-through opacity-70'}`}>
                         {currencyFormat(item.unitValue)}
                       </span>
-                      {Boolean(item.discount) && (
-                        <span>
-                          {currencyFormat(
-                            item.unitValue - (item.discount || 0)
-                          )}
-                        </span>
-                      )}
+                      {Boolean(item.discount) && <span>{currencyFormat(item.unitValue - (item.discount || 0))}</span>}
                     </div>
                   </td>
-                  <td className="whitespace-nowrap px-2 py-1 text-right">
-                    {currencyFormat(item.amount)}
-                  </td>
+                  <td className="whitespace-nowrap px-2 py-1 text-right">{currencyFormat(item.amount)}</td>
                   <td>
                     <div className="flex w-full items-center justify-center">
                       <button
@@ -598,10 +525,7 @@ const CounterSaleForm = () => {
           {summary.amount > 0 ? (
             <div className="mt-4 flex justify-end">
               <p className="text-lg">
-                Total:{' '}
-                <span className="font-bold">
-                  {currencyFormat(summary.amount)}
-                </span>
+                Total: <span className="font-bold">{currencyFormat(summary.amount)}</span>
               </p>
             </div>
           ) : null}

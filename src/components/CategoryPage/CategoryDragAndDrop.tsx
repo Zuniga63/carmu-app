@@ -1,21 +1,12 @@
 import React from 'react';
 import { ICategory } from 'src/types';
 import { useEffect, useState } from 'react';
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  DropResult,
-} from '@hello-pangea/dnd';
+import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { IconCircleCheck, IconCircleX, IconPencilPlus } from '@tabler/icons';
 import DragAndDropCategoryItem from './DragAndDropCategoryItem';
 import Button from 'src/components/CustomButton';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import {
-  categoryPageSelector,
-  showCategoryForm,
-  storeCategoryOrder,
-} from 'src/features/CategoryPage';
+import { categoryPageSelector, showCategoryForm, storeCategoryOrder } from 'src/features/CategoryPage';
 import { Loader } from '@mantine/core';
 
 interface Props {
@@ -44,11 +35,7 @@ export default function CategoryDragAndDrop({ title, description }: Props) {
   };
 
   const dragEndHanler = ({ source, destination }: DropResult) => {
-    if (
-      !destination ||
-      (source.index === destination.index &&
-        source.droppableId === destination.droppableId)
-    ) {
+    if (!destination || (source.index === destination.index && source.droppableId === destination.droppableId)) {
       return;
     }
 
@@ -89,22 +76,10 @@ export default function CategoryDragAndDrop({ title, description }: Props) {
             <div className="scrollbar max-h-80 overflow-y-auto">
               <Droppable droppableId="mainCategories">
                 {droppableProvided => (
-                  <ul
-                    {...droppableProvided.droppableProps}
-                    ref={droppableProvided.innerRef}
-                  >
+                  <ul {...droppableProvided.droppableProps} ref={droppableProvided.innerRef}>
                     {categories.map((item, index) => (
-                      <Draggable
-                        key={item.id}
-                        draggableId={item.id}
-                        index={index}
-                      >
-                        {draggableProvided => (
-                          <DragAndDropCategoryItem
-                            provided={draggableProvided}
-                            category={item}
-                          />
-                        )}
+                      <Draggable key={item.id} draggableId={item.id} index={index}>
+                        {draggableProvided => <DragAndDropCategoryItem provided={draggableProvided} category={item} />}
                       </Draggable>
                     ))}
                     {droppableProvided.placeholder}
@@ -126,17 +101,13 @@ export default function CategoryDragAndDrop({ title, description }: Props) {
         {success && showMessage ? (
           <div className="flex gap-x-2 text-green-500">
             <IconCircleCheck size={16} />
-            <span className="text-xs text-green-500 text-opacity-90">
-              Orden guardado.
-            </span>
+            <span className="text-xs text-green-500 text-opacity-90">Orden guardado.</span>
           </div>
         ) : null}
         {error && showMessage ? (
           <div className="flex gap-x-2 text-red-500">
             <IconCircleX size={16} />
-            <span className="text-xs text-red-500 text-opacity-90">
-              No se pudo guardar
-            </span>
+            <span className="text-xs text-red-500 text-opacity-90">No se pudo guardar</span>
           </div>
         ) : null}
         <Button onClick={() => dispatch(showCategoryForm())}>

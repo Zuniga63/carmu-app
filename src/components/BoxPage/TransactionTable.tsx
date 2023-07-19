@@ -8,29 +8,16 @@ interface Props {
 }
 const TransactionTable = ({ transactions }: Props) => {
   return (
-    <Table
-      className="relative"
-      verticalSpacing="sm"
-      striped
-      highlightOnHover
-      width="100%"
-    >
+    <Table className="relative" verticalSpacing="sm" striped highlightOnHover width="100%">
       <thead className="sticky top-0 z-fixed bg-gray-200 dark:bg-dark">
         <tr className="text-dark dark:text-gray-300">
           <th scope="col">
-            <div className="text-center text-xs uppercase tracking-wide lg:text-base">
-              Fecha
-            </div>
+            <div className="text-center text-xs uppercase tracking-wide lg:text-base">Fecha</div>
           </th>
           <th scope="col">
-            <div className="text-center text-xs uppercase tracking-wide lg:text-base">
-              Descripción
-            </div>
+            <div className="text-center text-xs uppercase tracking-wide lg:text-base">Descripción</div>
           </th>
-          <th
-            scope="col"
-            className="text-center text-xs uppercase tracking-wide lg:text-base"
-          >
+          <th scope="col" className="text-center text-xs uppercase tracking-wide lg:text-base">
             Importe
           </th>
           <th scope="col" className="hidden lg:table-cell">

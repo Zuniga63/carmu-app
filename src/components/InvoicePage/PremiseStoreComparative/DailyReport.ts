@@ -32,11 +32,7 @@ export default class DailyReport {
 
   public annualDailyAverageGrowth?: number;
 
-  constructor(
-    date: Dayjs,
-    invoices: ReportInvoice[],
-    lastReport?: DailyReport
-  ) {
+  constructor(date: Dayjs, invoices: ReportInvoice[], lastReport?: DailyReport) {
     this.date = date;
     this.invoices = invoices;
     this.dayOfMonth = date.date();
@@ -54,15 +50,13 @@ export default class DailyReport {
         this.monthlyAmount += monthlyAmount;
         this.monthlyDailyAverage = this.monthlyAmount / this.dayOfMonth;
         this.monthlyDailyAverageGrowth =
-          (this.monthlyDailyAverage - lastReport.monthlyDailyAverage) /
-          lastReport.monthlyDailyAverage;
+          (this.monthlyDailyAverage - lastReport.monthlyDailyAverage) / lastReport.monthlyDailyAverage;
       }
 
       this.annualAmount += annualAmount;
       this.annualDailyAverage = this.annualAmount / this.dayOfYear;
       this.annualDailyAverageGrowth =
-        (this.annualDailyAverage - lastReport.annualDailyAverage) /
-        lastReport.annualDailyAverage;
+        (this.annualDailyAverage - lastReport.annualDailyAverage) / lastReport.annualDailyAverage;
     }
   }
 
@@ -80,10 +74,7 @@ export default class DailyReport {
   }
 
   public getMonthlyAverageGrowth(decimals = 1) {
-    return this.calculatePercentage(
-      this.monthlyDailyAverageGrowth || 0,
-      decimals
-    );
+    return this.calculatePercentage(this.monthlyDailyAverageGrowth || 0, decimals);
   }
 
   public getAnnualDailyAverage(decimals = 0) {
@@ -91,9 +82,6 @@ export default class DailyReport {
   }
 
   public getAnnualDailyAverageGrowth(decimals = 1) {
-    return this.calculatePercentage(
-      this.monthlyDailyAverageGrowth || 0,
-      decimals
-    );
+    return this.calculatePercentage(this.monthlyDailyAverageGrowth || 0, decimals);
   }
 }

@@ -44,11 +44,7 @@ const initialDoughnutData: ChartData<'doughnut'> = {
   datasets: [],
 };
 
-const CreditEvolutionChartAux = ({
-  creditReport,
-  period,
-  monthSelected,
-}: Props) => {
+const CreditEvolutionChartAux = ({ creditReport, period, monthSelected }: Props) => {
   const [chartData, setChartData] = useState(initialDoughnutData);
 
   const getAnnualDatasets = (): ChartDataset<'doughnut'>[] => {
@@ -107,12 +103,9 @@ const CreditEvolutionChartAux = ({
   return (
     <div>
       <header className="rounded-t-md bg-gray-300 px-4 py-2 dark:bg-header">
-        <h2 className="mb-1 text-center text-sm font-bold tracking-wider">
-          Credito vs Abonos
-        </h2>
+        <h2 className="mb-1 text-center text-sm font-bold tracking-wider">Credito vs Abonos</h2>
         <p className="text-center text-xs italic dark:text-neutral-400">
-          Muestra una comparativa entre los creditos otorgados y los abonos
-          recibidos
+          Muestra una comparativa entre los creditos otorgados y los abonos recibidos
         </p>
       </header>
       <div className="relative h-72 border-x-4 border-b-4 border-neutral-300 px-2 dark:border-header">

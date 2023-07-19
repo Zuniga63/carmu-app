@@ -1,10 +1,7 @@
 import { Modal, Tabs } from '@mantine/core';
 import { IconCashBanknote, IconFileInvoice } from '@tabler/icons';
 import React, { useEffect, useState } from 'react';
-import {
-  customerPageSelector,
-  unmountCustomer,
-} from 'src/features/CustomerPage';
+import { customerPageSelector, unmountCustomer } from 'src/features/CustomerPage';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 import { IInvoicePaymentBase } from 'src/types';
 import CustomerInfoInvoices from './CustomerInfoInvoices';
@@ -26,9 +23,7 @@ const CustomerInfo = () => {
         invoice.payments.forEach(payment => {
           if (!payment.cancel) {
             if (paymentList.some(p => p.paymentDate === payment.paymentDate)) {
-              const oldPayment = paymentList.find(
-                p => p.paymentDate === payment.paymentDate
-              );
+              const oldPayment = paymentList.find(p => p.paymentDate === payment.paymentDate);
               if (oldPayment) {
                 oldPayment.amount += payment.amount;
               }
@@ -40,21 +35,14 @@ const CustomerInfo = () => {
         });
       });
 
-      paymentList.sort((p1, p2) =>
-        p1.paymentDate.localeCompare(p2.paymentDate)
-      );
+      paymentList.sort((p1, p2) => p1.paymentDate.localeCompare(p2.paymentDate));
     }
 
     setPayments(paymentList);
   }, [customer]);
 
   return customer ? (
-    <Modal
-      opened={opened}
-      onClose={() => dispatch(unmountCustomer())}
-      title={<CustomerInfoTitle />}
-      size="70%"
-    >
+    <Modal opened={opened} onClose={() => dispatch(unmountCustomer())} title={<CustomerInfoTitle />} size="70%">
       <Tabs defaultValue="invoices">
         <Tabs.List>
           <Tabs.Tab value="invoices" icon={<IconFileInvoice size={14} />}>

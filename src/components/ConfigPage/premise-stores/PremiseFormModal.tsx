@@ -3,12 +3,7 @@ import { IconBox } from '@tabler/icons';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { boxPageSelector } from 'src/features/BoxPage';
-import {
-  configSelector,
-  hidePremiseForm,
-  storePremiseStore,
-  updatePremiseStore,
-} from 'src/features/Config';
+import { configSelector, hidePremiseForm, storePremiseStore, updatePremiseStore } from 'src/features/Config';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 import { IValidationErrors } from 'src/types';
 
@@ -51,7 +46,7 @@ const PremiseFormModal = () => {
             address: address || undefined,
             phone: phone || undefined,
             defaultBox: defaultBox || undefined,
-          })
+          }),
         );
       } else {
         dispatch(
@@ -60,7 +55,7 @@ const PremiseFormModal = () => {
             address: address || undefined,
             phone: phone || undefined,
             defaultBox: defaultBox || undefined,
-          })
+          }),
         );
       }
     }

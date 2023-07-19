@@ -30,7 +30,7 @@ export default function Header({ title }: Props) {
       current.map(item => {
         item.active = item.path === router.asPath;
         return item;
-      })
+      }),
     );
   }, [router.asPath]);
 
@@ -45,9 +45,7 @@ export default function Header({ title }: Props) {
             <BurgerToggle opened={drawerOpened} onClick={toggle} />
             <BrandLogo />
           </div>
-          <h2 className="text-base font-bold tracking-wider sm:text-xl md:text-2xl lg:hidden">
-            {title}
-          </h2>
+          <h2 className="text-base font-bold tracking-wider sm:text-xl md:text-2xl lg:hidden">{title}</h2>
           <nav className="hidden flex-grow px-8 lg:block">
             <ul className="flex gap-x-2">
               {links.map(link => (
@@ -64,11 +62,7 @@ export default function Header({ title }: Props) {
                     passHref
                     className="flex items-center gap-x-2 px-6 py-4 text-2xl transition-colors duration-200 hover:text-purple-600 dark:hover:text-amber-500 xl:py-3 xl:text-base"
                   >
-                    <link.Icon
-                      size={24}
-                      stroke={1.5}
-                      className="flex-shrink-0"
-                    />
+                    <link.Icon size={24} stroke={1.5} className="flex-shrink-0" />
                     <span className="font-bold tracking-wide">{link.name}</span>
                   </Link>
                 </li>

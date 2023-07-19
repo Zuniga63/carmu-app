@@ -10,14 +10,8 @@ const BoxListFooter = () => {
   const [closeBoxes, setCloseBoxes] = useState(0);
   const [balance, setBalance] = useState(0);
   const [balanceWithoutBase, setBalanceWithoutBase] = useState(0);
-  const {
-    boxes,
-    mainBox,
-    fetchIsSuccess,
-    storeBoxIsSuccess,
-    closeBoxIsSuccess,
-    storeTransactionIsSuccess,
-  } = useAppSelector(boxPageSelector);
+  const { boxes, mainBox, fetchIsSuccess, storeBoxIsSuccess, closeBoxIsSuccess, storeTransactionIsSuccess } =
+    useAppSelector(boxPageSelector);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -41,12 +35,7 @@ const BoxListFooter = () => {
       setBalance(currentBalance);
       setBalanceWithoutBase(currentBalanceWithoutBase);
     }
-  }, [
-    fetchIsSuccess,
-    storeBoxIsSuccess,
-    closeBoxIsSuccess,
-    storeTransactionIsSuccess,
-  ]);
+  }, [fetchIsSuccess, storeBoxIsSuccess, closeBoxIsSuccess, storeTransactionIsSuccess]);
 
   return (
     <footer className="min-h-[40px] rounded-b-md border-x border-b border-gray-400 bg-gray-300 px-4 py-2 dark:border-dark dark:bg-header">
@@ -57,9 +46,7 @@ const BoxListFooter = () => {
           <Tooltip label="Cajas">
             <div className="flex gap-x-2 text-gray-dark dark:text-light">
               <IconBox size={16} />
-              <span className="text-xs font-bold">
-                {openBoxes + closeBoxes}
-              </span>
+              <span className="text-xs font-bold">{openBoxes + closeBoxes}</span>
             </div>
           </Tooltip>
           {/* BOXES DETAILS */}
@@ -86,19 +73,13 @@ const BoxListFooter = () => {
             label={
               <div className="flex flex-col items-center">
                 <span className="text-sm">{mainBox.name}</span>
-                <span className="text-xs font-bold tracking-widest">
-                  {currencyFormat(mainBox.balance)}
-                </span>
+                <span className="text-xs font-bold tracking-widest">{currencyFormat(mainBox.balance)}</span>
               </div>
             }
             withArrow
             color="grape"
           >
-            <ActionIcon
-              size={40}
-              color="grape"
-              onClick={() => dispatch(mountGlobalTransactions())}
-            >
+            <ActionIcon size={40} color="grape" onClick={() => dispatch(mountGlobalTransactions())}>
               <IconWorld />
             </ActionIcon>
           </Tooltip>
@@ -106,15 +87,11 @@ const BoxListFooter = () => {
 
         <div className="flex flex-col items-end justify-center">
           <Tooltip label="Saldo">
-            <p className="text-xs font-bold tracking-widest">
-              {currencyFormat(balance)}
-            </p>
+            <p className="text-xs font-bold tracking-widest">{currencyFormat(balance)}</p>
           </Tooltip>
           {balance !== balanceWithoutBase ? (
             <Tooltip label="Saldo sin la base">
-              <p className="text-xs font-bold tracking-widest">
-                {currencyFormat(balanceWithoutBase)}
-              </p>
+              <p className="text-xs font-bold tracking-widest">{currencyFormat(balanceWithoutBase)}</p>
             </Tooltip>
           ) : null}
         </div>

@@ -33,9 +33,7 @@ const CustomerPaymentModal = () => {
   const [boxId, setBoxId] = useState<string | null>(null);
   const [paymentDate, setPaymentDate] = useState<Date | null>(dayjs().toDate());
   const [register, setRegister] = useState(true);
-  const [description, setDescription] = useState<string | null>(
-    defaultDescription
-  );
+  const [description, setDescription] = useState<string | null>(defaultDescription);
   const [amount, setAmount] = useState<number | undefined>(undefined);
   const [errors, setErrors] = useState<IValidationErrors | null>(null);
 
@@ -107,9 +105,7 @@ const CustomerPaymentModal = () => {
   useEffect(() => {
     if (isSuccess) {
       toast.success(
-        `El pago por valor de ${currencyFormat(amount)} al cliente ${
-          customer?.fullName
-        } fue registrado con éxito.`
+        `El pago por valor de ${currencyFormat(amount)} al cliente ${customer?.fullName} fue registrado con éxito.`,
       );
       closeForm();
       dispatch(fetchCustomers());
@@ -126,14 +122,10 @@ const CustomerPaymentModal = () => {
       <form onSubmit={onSubmitHandler}>
         <header className="mb-4 flex flex-col items-center">
           <h3>
-            Cliente{' '}
-            <span className="font-bold text-red-500">{customer?.fullName}</span>
+            Cliente <span className="font-bold text-red-500">{customer?.fullName}</span>
           </h3>
           <p className="text-xs text-gray-500">
-            Saldo:{' '}
-            <span className="ml-1 inline-block font-bold text-light">
-              {currencyFormat(customer?.balance)}
-            </span>
+            Saldo: <span className="ml-1 inline-block font-bold text-light">{currencyFormat(customer?.balance)}</span>
           </p>
         </header>
         <div className="mb-4">
@@ -203,25 +195,15 @@ const CustomerPaymentModal = () => {
           {!boxId && (
             <Checkbox
               className="mt-2"
-              label={
-                <span className="font-sans text-light">
-                  Registrar Transacción
-                </span>
-              }
+              label={<span className="font-sans text-light">Registrar Transacción</span>}
               size="xs"
               checked={register}
-              onChange={({ currentTarget }) =>
-                setRegister(currentTarget.checked)
-              }
+              onChange={({ currentTarget }) => setRegister(currentTarget.checked)}
             />
           )}
         </div>
         <footer className="flex justify-end">
-          <Button
-            leftIcon={<IconCash size={16} />}
-            type="submit"
-            loading={loading}
-          >
+          <Button leftIcon={<IconCash size={16} />} type="submit" loading={loading}>
             Registrar
           </Button>
         </footer>

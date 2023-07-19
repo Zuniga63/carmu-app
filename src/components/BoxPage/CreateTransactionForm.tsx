@@ -1,11 +1,6 @@
 import React, { FormEvent, useEffect, useState } from 'react';
 import { Button, Checkbox, Modal, NumberInput, Textarea } from '@mantine/core';
-import {
-  IconCalendar,
-  IconClock,
-  IconDeviceFloppy,
-  IconX,
-} from '@tabler/icons';
+import { IconCalendar, IconClock, IconDeviceFloppy, IconX } from '@tabler/icons';
 import { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
@@ -13,11 +8,7 @@ import { IValidationErrors } from 'src/types';
 import { currencyFormat } from 'src/utils';
 import { DatePicker, TimeInput } from '@mantine/dates';
 import dayjs from 'dayjs';
-import {
-  boxPageSelector,
-  hideTransactionForm,
-  storeTransaction,
-} from 'src/features/BoxPage';
+import { boxPageSelector, hideTransactionForm, storeTransaction } from 'src/features/BoxPage';
 
 const CreateTransactionForm = () => {
   const [date, setDate] = useState<Date | undefined | null>(undefined);
@@ -58,11 +49,7 @@ const CreateTransactionForm = () => {
       if (date) {
         transactionDate = dayjs(date);
         if (time) {
-          transactionDate = transactionDate
-            .hour(time.getHours())
-            .minute(time.getMinutes())
-            .second(0)
-            .millisecond(0);
+          transactionDate = transactionDate.hour(time.getHours()).minute(time.getMinutes()).second(0).millisecond(0);
         }
       } else {
         transactionDate = dayjs(time);
@@ -76,8 +63,7 @@ const CreateTransactionForm = () => {
         date: transactionDate ? transactionDate : undefined,
       };
 
-      if (box || mainBox)
-        dispatch(storeTransaction({ boxId: box?.id, ...data }));
+      if (box || mainBox) dispatch(storeTransaction({ boxId: box?.id, ...data }));
     }
   };
 
@@ -130,19 +116,10 @@ const CreateTransactionForm = () => {
   }, [showingMainBox, box?.balance, mainBox?.balance]);
 
   return (
-    <Modal
-      opened={opened}
-      onClose={closeHandler}
-      size="sm"
-      padding={0}
-      withCloseButton={false}
-    >
+    <Modal opened={opened} onClose={closeHandler} size="sm" padding={0} withCloseButton={false}>
       <form onSubmit={submitHandler} className="px-4 py-6">
         <header className="mb-4 border-b-2 pb-2 text-center">
-          <h2 className="text-center text-xl font-bold">
-            {' '}
-            Registrar Transacción
-          </h2>
+          <h2 className="text-center text-xl font-bold"> Registrar Transacción</h2>
           <p className="text-xs">
             {box?.name || mainBox?.name} ({currencyFormat(balance)})
           </p>
@@ -207,9 +184,7 @@ const CreateTransactionForm = () => {
           <Checkbox
             label="Es un egreso."
             checked={isExpense}
-            onChange={({ currentTarget }) =>
-              setIsExpense(currentTarget.checked)
-            }
+            onChange={({ currentTarget }) => setIsExpense(currentTarget.checked)}
           />
         </div>
         <footer className="flex items-center justify-between">

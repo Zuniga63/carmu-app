@@ -73,16 +73,10 @@ const ProfilePage: NextPage = () => {
                 required
                 className="col-span-6 md:col-span-4"
                 visibilityToggleIcon={({ reveal, size }) =>
-                  reveal ? (
-                    <IconEyeOff size={size} />
-                  ) : (
-                    <IconEyeCheck size={size} />
-                  )
+                  reveal ? <IconEyeOff size={size} /> : <IconEyeCheck size={size} />
                 }
                 value={password}
-                onChange={({ currentTarget }) =>
-                  setPassword(currentTarget.value)
-                }
+                onChange={({ currentTarget }) => setPassword(currentTarget.value)}
                 disabled={loading}
                 autoComplete="current-password"
               />
@@ -92,16 +86,10 @@ const ProfilePage: NextPage = () => {
                 required
                 className="col-span-6 md:col-span-4"
                 visibilityToggleIcon={({ reveal, size }) =>
-                  reveal ? (
-                    <IconEyeOff size={size} />
-                  ) : (
-                    <IconEyeCheck size={size} />
-                  )
+                  reveal ? <IconEyeOff size={size} /> : <IconEyeCheck size={size} />
                 }
                 value={newPassword}
-                onChange={({ currentTarget }) =>
-                  setNewPassword(currentTarget.value)
-                }
+                onChange={({ currentTarget }) => setNewPassword(currentTarget.value)}
                 disabled={loading}
                 error={errors?.password?.message}
                 autoComplete="new-password"
@@ -112,16 +100,10 @@ const ProfilePage: NextPage = () => {
                 required
                 className="col-span-6 md:col-span-4"
                 visibilityToggleIcon={({ reveal, size }) =>
-                  reveal ? (
-                    <IconEyeOff size={size} />
-                  ) : (
-                    <IconEyeCheck size={size} />
-                  )
+                  reveal ? <IconEyeOff size={size} /> : <IconEyeCheck size={size} />
                 }
                 value={confirmPassword}
-                onChange={({ currentTarget }) =>
-                  setConfirmPassword(currentTarget.value)
-                }
+                onChange={({ currentTarget }) => setConfirmPassword(currentTarget.value)}
                 disabled={loading}
                 error={errors?.confirmPassword?.message}
                 autoComplete="new-password"

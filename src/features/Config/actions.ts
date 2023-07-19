@@ -1,42 +1,33 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import {
-  IPremiseStore,
-  IStorePremiseStore,
-  IUpdatePremiseStore,
-} from './types';
+import { IPremiseStore, IStorePremiseStore, IUpdatePremiseStore } from './types';
 
 export const PREMISE_STORE_KEY = 'premiseStoreId';
 
-export const fetchPremiseStores = createAsyncThunk(
-  'config/fetchPremiseStores',
-  async (_, { rejectWithValue }) => {
-    try {
-      const res = await axios.get<IPremiseStore[]>('/stores');
-      let commercialPremise: IPremiseStore | undefined;
+export const fetchPremiseStores = createAsyncThunk('config/fetchPremiseStores', async (_, { rejectWithValue }) => {
+  try {
+    const res = await axios.get<IPremiseStore[]>('/stores');
+    let commercialPremise: IPremiseStore | undefined;
 
-      const storeId = localStorage.getItem(PREMISE_STORE_KEY);
-      if (storeId) {
-        commercialPremise = res.data.find(item => item.id === storeId);
-        if (!commercialPremise) {
-          localStorage.removeItem(PREMISE_STORE_KEY);
-        }
+    const storeId = localStorage.getItem(PREMISE_STORE_KEY);
+    if (storeId) {
+      commercialPremise = res.data.find(item => item.id === storeId);
+      if (!commercialPremise) {
+        localStorage.removeItem(PREMISE_STORE_KEY);
       }
-      return { premises: res.data, commercialPremise };
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        const { data, status } = error.response;
-        return rejectWithValue({ data, status });
-      }
-
-      throw error;
     }
-  }
-);
+    return { premises: res.data, commercialPremise };
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      const { data, status } = error.response;
+      return rejectWithValue({ data, status });
+    }
 
-export const selectCommercialPremise = createAction<string>(
-  'config/selectCommercialPremise'
-);
+    throw error;
+  }
+});
+
+export const selectCommercialPremise = createAction<string>('config/selectCommercialPremise');
 
 export const unselectPremiseStore = createAction('config/unselectPremiseStore');
 
@@ -59,7 +50,7 @@ export const storePremiseStore = createAsyncThunk(
 
       throw error;
     }
-  }
+  },
 );
 
 export const editPremiseStore = createAction<string>('config/editPremiseStore');
@@ -79,7 +70,7 @@ export const updatePremiseStore = createAsyncThunk(
 
       throw error;
     }
-  }
+  },
 );
 
 export const unlockContent = createAction<string>('config/unlockContent');

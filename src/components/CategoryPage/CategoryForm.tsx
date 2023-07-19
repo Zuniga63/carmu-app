@@ -88,9 +88,7 @@ export default function CategoryForm() {
   useEffect(() => {
     if (storeIsSuccess || updateIsSuccess) {
       if (updateIsSuccess) {
-        toast.success(
-          `La categoría "${categoryToUpdate?.name}" fue actualizada`
-        );
+        toast.success(`La categoría "${categoryToUpdate?.name}" fue actualizada`);
         dispatch(setUpdateIsSuccess(false));
       } else {
         toast.success('¡Categoría guardada con éxito!');
@@ -128,10 +126,7 @@ export default function CategoryForm() {
       position="left"
     >
       <>
-        <DrawerHeader
-          title={!isUpdate ? 'Nueva Categoría' : String(categoryToUpdate?.name)}
-          onClose={close}
-        />
+        <DrawerHeader title={!isUpdate ? 'Nueva Categoría' : String(categoryToUpdate?.name)} onClose={close} />
         <DrawerBody>
           <form onSubmit={submitHandler}>
             <div className="mx-auto mb-4 w-11/12">
@@ -147,9 +142,7 @@ export default function CategoryForm() {
               />
 
               <Textarea
-                label={
-                  <span className="font-sans text-light">Descripción</span>
-                }
+                label={<span className="font-sans text-light">Descripción</span>}
                 placeholder="Escribe una descripción aqui."
                 value={description}
                 onChange={({ target }) => setDescription(target.value)}
@@ -166,9 +159,7 @@ export default function CategoryForm() {
               <CustomButton disabled={loading} type="submit">
                 <div className="flex items-center gap-x-2">
                   <IconDatabase size={16} />{' '}
-                  <span className="text-base">
-                    {isUpdate ? <span>Actualizar</span> : <span>Guardar</span>}
-                  </span>
+                  <span className="text-base">{isUpdate ? <span>Actualizar</span> : <span>Guardar</span>}</span>
                 </div>
               </CustomButton>
             </footer>

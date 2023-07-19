@@ -2,11 +2,7 @@ import { Button, Modal, TextInput } from '@mantine/core';
 import { IconDeviceFloppy } from '@tabler/icons';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import {
-  boxPageSelector,
-  hideCreateForm,
-  storeBox,
-} from 'src/features/BoxPage';
+import { boxPageSelector, hideCreateForm, storeBox } from 'src/features/BoxPage';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 import { IValidationErrors } from 'src/types';
 
@@ -87,12 +83,7 @@ const CreateForm = () => {
           />
         </div>
         <footer className="flex items-center justify-end">
-          <Button
-            leftIcon={<IconDeviceFloppy />}
-            loading={loading}
-            type="submit"
-            disabled={!enabled}
-          >
+          <Button leftIcon={<IconDeviceFloppy />} loading={loading} type="submit" disabled={!enabled}>
             Guardar
           </Button>
         </footer>

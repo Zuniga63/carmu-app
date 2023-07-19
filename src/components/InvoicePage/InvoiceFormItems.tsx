@@ -26,12 +26,8 @@ const InvoiceFormItems: React.FC<Props> = ({ items, summary, setItems }) => {
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const [itemDescription, setItemDescription] = useState('');
   const [itemQuantity, setItemQuantity] = useState<number | undefined>(1);
-  const [itemUnitValue, setItemUnitValue] = useState<number | undefined>(
-    undefined
-  );
-  const [itemDiscount, setItemDiscount] = useState<number | undefined>(
-    undefined
-  );
+  const [itemUnitValue, setItemUnitValue] = useState<number | undefined>(undefined);
+  const [itemDiscount, setItemDiscount] = useState<number | undefined>(undefined);
   const [itemAmount, setItemAmount] = useState<number | undefined>(undefined);
   const [enabled, setEnabled] = useState(false);
 
@@ -83,9 +79,7 @@ const InvoiceFormItems: React.FC<Props> = ({ items, summary, setItems }) => {
     return newItem;
   };
 
-  const findIfItemExist = (
-    newItem: INewInvoiceItem
-  ): INewInvoiceItem | undefined => {
+  const findIfItemExist = (newItem: INewInvoiceItem): INewInvoiceItem | undefined => {
     return items.find(item => {
       let isEqual = true;
       if (item.categories.length !== newItem.categories.length) isEqual = false;
@@ -143,16 +137,8 @@ const InvoiceFormItems: React.FC<Props> = ({ items, summary, setItems }) => {
     setItems(list);
   };
 
-  const handleKeyPress = (
-    event: KeyboardEvent<HTMLInputElement>,
-    maintainFocus?: boolean
-  ) => {
-    if (
-      event.key === 'Enter' &&
-      itemDescription &&
-      itemQuantity &&
-      itemUnitValue
-    ) {
+  const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>, maintainFocus?: boolean) => {
+    if (event.key === 'Enter' && itemDescription && itemQuantity && itemUnitValue) {
       if (!maintainFocus) event.currentTarget.blur();
       add(event.currentTarget.type === 'search' ? 'search' : 'other');
     }
@@ -176,8 +162,7 @@ const InvoiceFormItems: React.FC<Props> = ({ items, summary, setItems }) => {
   useEffect(() => {
     if (itemQuantity && itemUnitValue) {
       let amount = itemQuantity * itemUnitValue;
-      if (itemDiscount && itemDiscount < itemUnitValue)
-        amount -= itemQuantity * itemDiscount;
+      if (itemDiscount && itemDiscount < itemUnitValue) amount -= itemQuantity * itemDiscount;
       setItemAmount(amount);
     } else {
       setItemAmount(undefined);
@@ -286,26 +271,12 @@ const InvoiceFormItems: React.FC<Props> = ({ items, summary, setItems }) => {
           </div>
 
           <div className="flex flex-col items-center justify-end gap-x-2 lg:flex-row">
-            {itemAmount ? (
-              <span className="text-xs">
-                Importe: {currencyFormat(itemAmount)}
-              </span>
-            ) : null}
+            {itemAmount ? <span className="text-xs">Importe: {currencyFormat(itemAmount)}</span> : null}
             <div className="flex flex-col items-center justify-end gap-4 lg:flex-row">
-              <Button
-                leftIcon={<IconPlus size={15} stroke={4} />}
-                size="xs"
-                disabled={!enabled}
-                onClick={() => add()}
-              >
+              <Button leftIcon={<IconPlus size={15} stroke={4} />} size="xs" disabled={!enabled} onClick={() => add()}>
                 Agregar Item
               </Button>
-              <Button
-                leftIcon={<IconTrash size={15} stroke={2} />}
-                size="xs"
-                color="red"
-                onClick={() => resetItem()}
-              >
+              <Button leftIcon={<IconTrash size={15} stroke={2} />} size="xs" color="red" onClick={() => resetItem()}>
                 Descartar Item
               </Button>
             </div>
@@ -313,11 +284,7 @@ const InvoiceFormItems: React.FC<Props> = ({ items, summary, setItems }) => {
         </>
       </InvoiceFormGroup>
 
-      <InvoiceFormItemList
-        items={items}
-        removeItem={removeItem}
-        summary={summary}
-      />
+      <InvoiceFormItemList items={items} removeItem={removeItem} summary={summary} />
     </>
   );
 };

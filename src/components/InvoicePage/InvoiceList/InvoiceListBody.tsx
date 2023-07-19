@@ -11,11 +11,7 @@ type Props = {
   onShowMore: () => void;
 };
 
-export default function InvoiceListBody({
-  invoices,
-  showMoreButtonInvoice,
-  onShowMore,
-}: Props) {
+export default function InvoiceListBody({ invoices, showMoreButtonInvoice, onShowMore }: Props) {
   const { firstLoading } = useAppSelector(invoicePageSelector);
 
   return (
@@ -30,9 +26,7 @@ export default function InvoiceListBody({
                 <InvoiceCard key={invoice.id} invoice={invoice} />
               ))}
 
-              {showMoreButtonInvoice && (
-                <Button onClick={onShowMore}>Mostrar más facturas</Button>
-              )}
+              {showMoreButtonInvoice && <Button onClick={onShowMore}>Mostrar más facturas</Button>}
             </div>
           </ScrollArea>
         )}

@@ -2,13 +2,7 @@ import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { ICancelInvoiceData } from 'src/components/InvoicePage/CancelInvoiceForm';
 import { ICancelPaymentData } from 'src/components/InvoicePage/CancelInvoicePaymentForm';
-import {
-  IInvoiceBase,
-  IInvoiceBaseFull,
-  IInvoicePageData,
-  IInvoicePaymentData,
-  IInvoiceStoreData,
-} from './types';
+import { IInvoiceBase, IInvoiceBaseFull, IInvoicePageData, IInvoicePaymentData, IInvoiceStoreData } from './types';
 import dayjs from 'dayjs';
 
 /**
@@ -16,79 +10,66 @@ import dayjs from 'dayjs';
  */
 const RESET_TIMEOUT = 3000;
 
-export const refreshInvoices = createAsyncThunk(
-  'invoicePage/refreshInvoices',
-  async (_, { dispatch }) => {
-    const res = await axios.get<IInvoicePageData>('/invoices', {
-      params: {
-        refresh: true,
-        withPayments: true,
-        withItems: true,
-      },
-    });
+export const refreshInvoices = createAsyncThunk('invoicePage/refreshInvoices', async (_, { dispatch }) => {
+  const res = await axios.get<IInvoicePageData>('/invoices', {
+    params: {
+      refresh: true,
+      withPayments: true,
+      withItems: true,
+    },
+  });
 
-    setTimeout(() => {
-      dispatch(resetSuccess());
-    }, RESET_TIMEOUT);
+  setTimeout(() => {
+    dispatch(resetSuccess());
+  }, RESET_TIMEOUT);
 
-    return res.data.invoices;
-  }
-);
+  return res.data.invoices;
+});
 
-export const fetchInvoiceData = createAsyncThunk(
-  'invoicePage/fetchInvoiceData',
-  async (_, { dispatch }) => {
-    const date1 = dayjs().subtract(1, 'week').endOf('day').toDate();
-    const date2 = dayjs(date1).add(1, 'day').startOf('day').toDate();
+export const fetchInvoiceData = createAsyncThunk('invoicePage/fetchInvoiceData', async (_, { dispatch }) => {
+  const date1 = dayjs().subtract(1, 'week').endOf('day').toDate();
+  const date2 = dayjs(date1).add(1, 'day').startOf('day').toDate();
 
-    const res1 = await axios.get<IInvoicePageData>('/invoices', {
-      params: {
-        to: date1,
-        withProducts: true,
-      },
-    });
+  const res1 = await axios.get<IInvoicePageData>('/invoices', {
+    params: {
+      to: date1,
+      withProducts: true,
+    },
+  });
 
-    const { invoices, products } = res1.data;
+  const { invoices, products } = res1.data;
 
-    const res2 = await axios.get<IInvoicePageData>('/invoices', {
-      params: {
-        from: date2,
-        withPayments: true,
-        withItems: true,
-      },
-    });
+  const res2 = await axios.get<IInvoicePageData>('/invoices', {
+    params: {
+      from: date2,
+      withPayments: true,
+      withItems: true,
+    },
+  });
 
-    invoices.push(...res2.data.invoices);
+  invoices.push(...res2.data.invoices);
 
-    // dispatch(refreshInvoices());
-    setTimeout(() => {
-      dispatch(resetSuccess());
-    }, RESET_TIMEOUT);
-    return { invoices, products };
-  }
-);
+  // dispatch(refreshInvoices());
+  setTimeout(() => {
+    dispatch(resetSuccess());
+  }, RESET_TIMEOUT);
+  return { invoices, products };
+});
 
 export const resetSuccess = createAction('invoicePage/resetSuccess');
 
 // ----------------------------------------------------------------------------
 // NEW INVOICE
 // ----------------------------------------------------------------------------
-export const showNewInvoiceForm = createAction(
-  'invoicePage/showNewInvoiceForm'
-);
+export const showNewInvoiceForm = createAction('invoicePage/showNewInvoiceForm');
 
-export const hideNewInvoiceForm = createAction(
-  'invoicePage/hideNewInvoiceForm'
-);
+export const hideNewInvoiceForm = createAction('invoicePage/hideNewInvoiceForm');
 
 export const storeNewInvoice = createAsyncThunk(
   'invoicePage/storeNewInvoice',
   async (invoiceData: IInvoiceStoreData, { rejectWithValue, dispatch }) => {
     try {
-      const res = await axios.post<{ invoice: IInvoiceBase }>(
-        '/invoices',
-        invoiceData
-      );
+      const res = await axios.post<{ invoice: IInvoiceBase }>('/invoices', invoiceData);
 
       setTimeout(() => {
         dispatch(resetSuccess());
@@ -102,15 +83,11 @@ export const storeNewInvoice = createAsyncThunk(
 
       throw error;
     }
-  }
+  },
 );
 
-export const showCounterSaleForm = createAction(
-  'invoicePage/showCounterSaleForm'
-);
-export const hideCounterSaleForm = createAction(
-  'invoicePage/hideCounterSaleForm'
-);
+export const showCounterSaleForm = createAction('invoicePage/showCounterSaleForm');
+export const hideCounterSaleForm = createAction('invoicePage/hideCounterSaleForm');
 
 // ----------------------------------------------------------------------------
 // MOUNT INVOICE
@@ -119,15 +96,13 @@ export const mountInvoice = createAsyncThunk(
   'invoicePage/mountInvoice',
   async (invoiceId: string, { rejectWithValue }) => {
     try {
-      const res = await axios.get<{ invoice: IInvoiceBaseFull }>(
-        `/invoices/${invoiceId}`
-      );
+      const res = await axios.get<{ invoice: IInvoiceBaseFull }>(`/invoices/${invoiceId}`);
 
       return res.data.invoice;
     } catch (error) {
       return rejectWithValue('No se pudo recuperar la factura.');
     }
-  }
+  },
 );
 export const unmountInvoice = createAction('invoicePage/unmountInvoice');
 
@@ -159,19 +134,15 @@ export const registerPayment = createAsyncThunk(
 
       throw error;
     }
-  }
+  },
 );
 
 // ----------------------------------------------------------------------------
 // CANCEL INVOICE PAYMENT
 // ----------------------------------------------------------------------------
-export const showCancelPaymentForm = createAction<string>(
-  'invoicePage/showCancelPaymentForm'
-);
+export const showCancelPaymentForm = createAction<string>('invoicePage/showCancelPaymentForm');
 
-export const hideCancelPaymentForm = createAction(
-  'invoicePage/hideCancelPaymentForm'
-);
+export const hideCancelPaymentForm = createAction('invoicePage/hideCancelPaymentForm');
 
 export const cancelInvoicePayment = createAsyncThunk(
   'invoicePage/cancelInvoicePayment',
@@ -193,18 +164,14 @@ export const cancelInvoicePayment = createAsyncThunk(
 
       throw error;
     }
-  }
+  },
 );
 
 // ----------------------------------------------------------------------------
 // CANCEL INVOICE
 // ----------------------------------------------------------------------------
-export const showCancelInvoiceForm = createAction(
-  'invoicePage/showCancelInvoiceForm'
-);
-export const hideCancelInvoiceForm = createAction(
-  'invoicePage/hideCancelInvoiceForm'
-);
+export const showCancelInvoiceForm = createAction('invoicePage/showCancelInvoiceForm');
+export const hideCancelInvoiceForm = createAction('invoicePage/hideCancelInvoiceForm');
 
 export const cancelInvoice = createAsyncThunk(
   'invoicePage/cancelInvoice',
@@ -226,5 +193,5 @@ export const cancelInvoice = createAsyncThunk(
 
       throw error;
     }
-  }
+  },
 );

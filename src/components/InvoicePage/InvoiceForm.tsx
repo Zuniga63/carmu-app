@@ -3,12 +3,7 @@ import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 import { useMediaQuery } from '@mantine/hooks';
-import {
-  IInvoiceStoreData,
-  IInvoiceSummary,
-  INewInvoiceItem,
-  INewInvoicePayment,
-} from 'src/types';
+import { IInvoiceStoreData, IInvoiceSummary, INewInvoiceItem, INewInvoicePayment } from 'src/types';
 
 import { Button, Modal, Stepper, Switch } from '@mantine/core';
 import {
@@ -27,11 +22,7 @@ import InvoiceFormCustomer from './InvoiceFormCustomer';
 import InvoiceFormDates from './InvoiceFormDates';
 import InvoiceFormItems from './InvoiceFormItems';
 import InvoiceFormConfirm from './InvoiceFormConfirm';
-import {
-  hideNewInvoiceForm,
-  invoicePageSelector,
-  storeNewInvoice,
-} from 'src/features/InvoicePage';
+import { hideNewInvoiceForm, invoicePageSelector, storeNewInvoice } from 'src/features/InvoicePage';
 import { authSelector } from 'src/features/Auth';
 import { configSelector } from 'src/features/Config';
 
@@ -78,14 +69,8 @@ const InvoiceForm = () => {
   // INVOICE STEP
   // ------------------------------------------------------------------------------------------------------------------
   const [step, setStep] = useState(InvoiceSteps.Invoicing);
-  const nextStep = () =>
-    setStep(current =>
-      current < InvoiceSteps.Confirm ? current + 1 : current
-    );
-  const prevStep = () =>
-    setStep(current =>
-      current > InvoiceSteps.Invoicing ? current - 1 : current
-    );
+  const nextStep = () => setStep(current => (current < InvoiceSteps.Confirm ? current + 1 : current));
+  const prevStep = () => setStep(current => (current > InvoiceSteps.Invoicing ? current - 1 : current));
 
   // CUSTOMER
   const [customer, setCustomer] = useState<IInvoiceCustomer>({
@@ -131,9 +116,7 @@ const InvoiceForm = () => {
     return {
       sellerId: user?.id,
       customerId: customer.id || undefined,
-      premiseStoreId: premiseStoreSelected
-        ? premiseStoreSelected.id
-        : undefined,
+      premiseStoreId: premiseStoreSelected ? premiseStoreSelected.id : undefined,
       isSeparate,
       customerName: customer.name || undefined,
       customerAddress: customer.address.trim() || undefined,
@@ -170,10 +153,7 @@ const InvoiceForm = () => {
 
     amount += subtotal - discount;
     balance = amount;
-    cash = cashPayments.reduce(
-      (prevValue, currentPayment) => prevValue + currentPayment.amount,
-      0
-    );
+    cash = cashPayments.reduce((prevValue, currentPayment) => prevValue + currentPayment.amount, 0);
 
     if (cash < balance) balance -= cash;
     else {
@@ -229,20 +209,10 @@ const InvoiceForm = () => {
     let isOk = summary.amount > 0;
 
     if (summary.balance) {
-      isOk = Boolean(
-        (customer.id && customer.name) ||
-          (customer.name && customer.document && customer.documentType)
-      );
+      isOk = Boolean((customer.id && customer.name) || (customer.name && customer.document && customer.documentType));
     }
     setEnabled(isOk);
-  }, [
-    customer.name,
-    customer.document,
-    customer.documentType,
-    summary.amount,
-    summary.balance,
-    summary.amount,
-  ]);
+  }, [customer.name, customer.document, customer.documentType, summary.amount, summary.balance, summary.amount]);
 
   useEffect(() => {
     if (error) console.log(error);
@@ -274,24 +244,12 @@ const InvoiceForm = () => {
       <div className="px-6 py-2 lg:py-6">
         <Stepper active={step} onStepClick={setStep} size="xs">
           {/* PRODUCTS */}
-          <Stepper.Step
-            label="Productos"
-            icon={<IconBox size={18} />}
-            disabled={loading}
-          >
-            <InvoiceFormItems
-              items={items}
-              setItems={setItems}
-              summary={summary}
-            />
+          <Stepper.Step label="Productos" icon={<IconBox size={18} />} disabled={loading}>
+            <InvoiceFormItems items={items} setItems={setItems} summary={summary} />
           </Stepper.Step>
 
           {/* INVOICING */}
-          <Stepper.Step
-            label="Facturación"
-            icon={<IconFileInvoice size={18} />}
-            disabled={loading}
-          >
+          <Stepper.Step label="Facturación" icon={<IconFileInvoice size={18} />} disabled={loading}>
             <div className="grid gap-4 lg:grid-cols-12 lg:gap-y-2">
               {/* CUSTOMER */}
               <InvoiceFormCustomer
@@ -313,11 +271,7 @@ const InvoiceForm = () => {
           </Stepper.Step>
 
           {/* PAYMENTS */}
-          <Stepper.Step
-            label="Forma de pago"
-            icon={<IconFileDollar size={18} />}
-            disabled={loading}
-          >
+          <Stepper.Step label="Forma de pago" icon={<IconFileDollar size={18} />} disabled={loading}>
             <InvoiceFormPayment
               summary={summary}
               invoiceDate={expeditionDate}
@@ -327,11 +281,7 @@ const InvoiceForm = () => {
           </Stepper.Step>
 
           {/* CONFIRM */}
-          <Stepper.Step
-            label="Confirmar"
-            icon={<IconCircleCheck size={18} />}
-            loading={loading}
-          >
+          <Stepper.Step label="Confirmar" icon={<IconCircleCheck size={18} />} loading={loading}>
             <InvoiceFormConfirm
               customer={customer}
               items={items}
@@ -352,36 +302,18 @@ const InvoiceForm = () => {
             }}
             className="flex"
           />
-          <Button
-            variant="default"
-            onClick={prevStep}
-            leftIcon={<IconArrowBack />}
-            disabled={loading}
-          >
+          <Button variant="default" onClick={prevStep} leftIcon={<IconArrowBack />} disabled={loading}>
             Atras
           </Button>
           {step !== InvoiceSteps.Confirm ? (
-            <Button
-              onClick={nextStep}
-              rightIcon={<IconArrowNarrowRight />}
-              disabled={loading}
-            >
+            <Button onClick={nextStep} rightIcon={<IconArrowNarrowRight />} disabled={loading}>
               Siguiente
             </Button>
           ) : (
-            <Button
-              onClick={checkIn}
-              rightIcon={<IconDatabase />}
-              loading={loading}
-              disabled={!enabled}
-            >
+            <Button onClick={checkIn} rightIcon={<IconDatabase />} loading={loading} disabled={!enabled}>
               {isSeparate ? <span>Registrar Apartado</span> : null}
-              {!isSeparate && summary.balance ? (
-                <span>Registrar Crédito</span>
-              ) : null}
-              {!isSeparate && !summary.balance ? (
-                <span>Registrar Venta</span>
-              ) : null}
+              {!isSeparate && summary.balance ? <span>Registrar Crédito</span> : null}
+              {!isSeparate && !summary.balance ? <span>Registrar Venta</span> : null}
             </Button>
           )}
         </div>

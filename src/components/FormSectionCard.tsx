@@ -8,11 +8,7 @@ interface Props {
 }
 
 const CardBody: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
-  return (
-    <div className="bg-header px-4 py-5 shadow shadow-header sm:rounded-tl-md sm:rounded-tr-md">
-      {children}
-    </div>
-  );
+  return <div className="bg-header px-4 py-5 shadow shadow-header sm:rounded-tl-md sm:rounded-tr-md">{children}</div>;
 };
 
 const CardFooter: React.FC<{ children?: React.ReactNode }> = ({ children }) => {

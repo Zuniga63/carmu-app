@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  IconDashboard,
-  IconBox,
-  IconUsers,
-  IconBuildingStore,
-  IconFileInvoice,
-} from '@tabler/icons';
+import { IconDashboard, IconBox, IconUsers, IconBuildingStore, IconFileInvoice } from '@tabler/icons';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -61,7 +55,7 @@ export default function NavLinks({ close }: Props) {
       current.map(item => {
         item.active = item.path === router.asPath;
         return item;
-      })
+      }),
     );
   }, [router.asPath]);
 

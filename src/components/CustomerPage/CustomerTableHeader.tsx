@@ -1,10 +1,6 @@
 import { ActionIcon, Loader, Switch, TextInput, Tooltip } from '@mantine/core';
 import { IconRefresh, IconSearch, IconUserPlus } from '@tabler/icons';
-import {
-  customerPageSelector,
-  fetchCustomers,
-  showCustomerForm,
-} from 'src/features/CustomerPage';
+import { customerPageSelector, fetchCustomers, showCustomerForm } from 'src/features/CustomerPage';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 import { CustomerFilters } from 'src/types';
 
@@ -14,11 +10,7 @@ type Props = {
   searchWaiting: boolean;
 };
 
-export default function CustomerTableHeader({
-  filters,
-  searchWaiting,
-  updateFilters,
-}: Props) {
+export default function CustomerTableHeader({ filters, searchWaiting, updateFilters }: Props) {
   const { fetchLoading } = useAppSelector(customerPageSelector);
   const dispatch = useAppDispatch();
 
@@ -32,17 +24,11 @@ export default function CustomerTableHeader({
 
   return (
     <div className="flex justify-center">
-      <header className="mb-2 rounded-full bg-gray-300 px-6 pt-2 pb-4 dark:bg-header">
+      <header className="mb-2 rounded-full bg-gray-300 px-6 pb-4 pt-2 dark:bg-header">
         <div className="flex items-center justify-center gap-x-4">
           <TextInput
             size="xs"
-            icon={
-              searchWaiting ? (
-                <Loader size={14} variant="dots" />
-              ) : (
-                <IconSearch size={14} stroke={1.5} />
-              )
-            }
+            icon={searchWaiting ? <Loader size={14} variant="dots" /> : <IconSearch size={14} stroke={1.5} />}
             placeholder="Buscar Cliente"
             className="w-1/2"
             value={filters.search}
@@ -59,11 +45,7 @@ export default function CustomerTableHeader({
           </Tooltip>
 
           <Tooltip label="Nuevo Cliente">
-            <ActionIcon
-              onClick={() => dispatch(showCustomerForm())}
-              variant="filled"
-              color="blue"
-            >
+            <ActionIcon onClick={() => dispatch(showCustomerForm())} variant="filled" color="blue">
               <IconUserPlus size={18} stroke={1.5} />
             </ActionIcon>
           </Tooltip>
