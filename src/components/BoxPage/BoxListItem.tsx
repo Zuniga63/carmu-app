@@ -92,7 +92,7 @@ const BoxListItem = ({ box }: Props) => {
 
   useEffect(() => {
     setDateString();
-    let intervalId: NodeJS.Timer;
+    let intervalId: NodeJS.Timeout;
 
     if (box.dateRefreshRate) {
       intervalId = setInterval(setDateString, box.dateRefreshRate);
@@ -104,7 +104,7 @@ const BoxListItem = ({ box }: Props) => {
   }, []);
 
   useEffect(() => {
-    let intervalId: NodeJS.Timer | undefined = undefined;
+    let intervalId: NodeJS.Timeout | undefined = undefined;
 
     setDateString();
     if (box.dateRefreshRate) {
