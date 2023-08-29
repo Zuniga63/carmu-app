@@ -8,7 +8,7 @@ import { categoryPageSelector } from 'src/features/CategoryPage';
 import { configSelector } from 'src/features/Config';
 import { hideCounterSaleForm, invoicePageSelector, storeNewInvoice } from 'src/features/InvoicePage';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import { IInvoiceCashbox, IInvoiceStoreData, IInvoiceSummary, INewInvoiceItem } from 'src/types';
+import { IInvoiceStoreData, IInvoiceSummary, INewInvoiceItem } from 'src/types';
 import { currencyFormat } from 'src/utils';
 import { IInvoiceCustomer } from './InvoiceForm';
 import InvoiceFormCustomer from './InvoiceFormCustomer';
@@ -55,7 +55,7 @@ const CounterSaleForm = () => {
 
   // Cashbox
   const [cashboxId, setCashboxId] = useState<string | null>(null);
-  const [box, setBox] = useState<IInvoiceCashbox | null>(null);
+  // const [box, setBox] = useState<IInvoiceCashbox | null>(null);
 
   // CUSTOMER
   const [customer, setCustomer] = useState(defaulCustomer);
@@ -80,6 +80,8 @@ const CounterSaleForm = () => {
       const id = defaultBox && defaultBox.openBox && dayjs().isAfter(defaultBox.openBox) ? defaultBox.id : null;
 
       setCashboxId(id);
+    } else {
+      setCashboxId(null);
     }
   };
 
@@ -246,7 +248,7 @@ const CounterSaleForm = () => {
       items: items.map(item => ({ ...item, id: undefined, amount: undefined })),
       cashPayments: [
         {
-          cashboxId: box?.id,
+          cashboxId: cashboxId || undefined,
           description: 'Pago en efectivo',
           amount: summary.amount,
           register: true,
@@ -296,10 +298,10 @@ const CounterSaleForm = () => {
 
   useEffect(updateSummary, [items]);
 
-  useEffect(() => {
-    const boxSelected = boxes.find(item => item.id === cashboxId);
-    setBox(boxSelected || null);
-  }, [cashboxId]);
+  // useEffect(() => {
+  //   // const boxSelected = boxes.find(item => item.id === cashboxId);
+  //   // setBox(boxSelected || null);
+  // }, [cashboxId]);
 
   useEffect(() => {
     if (error) console.log(error);
