@@ -1,5 +1,5 @@
 import { Button, Collapse } from '@mantine/core';
-import { IconFileInvoice } from '@tabler/icons';
+import { IconFileInvoice } from '@tabler/icons-react';
 import { MouseEventHandler, useState } from 'react';
 import { useAppDispatch } from 'src/store/hooks';
 import { IInvoice } from 'src/types';
@@ -40,11 +40,7 @@ export default function InvoiceCard({ invoice }: Props) {
         <InvoiceCardBody invoice={invoice} />
 
         <footer className="flex justify-end px-4 py-3">
-          <Button
-            size="xs"
-            leftIcon={<IconFileInvoice size={16} />}
-            onClick={showInvoice}
-          >
+          <Button size="xs" leftIcon={<IconFileInvoice size={16} />} onClick={showInvoice}>
             Ver detalles
           </Button>
         </footer>

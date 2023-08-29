@@ -5,8 +5,7 @@ import { IInvoice } from 'src/types';
 import { buildInvoice, normalizeText } from 'src/utils';
 
 export function useInvoiceList() {
-  const { invoices, loading: loadingData } =
-    useAppSelector(invoicePageSelector);
+  const { invoices, loading: loadingData } = useAppSelector(invoicePageSelector);
   const growRate = 25;
 
   const [paidInvoices, setPaidInvoices] = useState<IInvoice[]>([]);
@@ -96,8 +95,7 @@ export function useInvoiceList() {
   }, [invoiceLegth]);
 
   const showMoreButtonInvoice =
-    Boolean(invoiceList.length && !loadingData) &&
-    invoiceLegth <= filteredInvoices.length + 1;
+    Boolean(invoiceList.length && !loadingData) && invoiceLegth <= filteredInvoices.length + 1;
 
   return {
     invoices: invoiceList,

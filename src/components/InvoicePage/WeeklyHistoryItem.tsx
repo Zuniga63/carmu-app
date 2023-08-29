@@ -12,9 +12,7 @@ interface Props {
   item: ISaleHistory;
 }
 const WeeklyHistoryItem = ({ item }: Props) => {
-  const [date, setDate] = useState(
-    dayjs(item.operationDate).format('ddd DD MMM hh:mm a')
-  );
+  const [date, setDate] = useState(dayjs(item.operationDate).format('ddd DD MMM hh:mm a'));
   const isSale = item.operationType === 'sale';
   const isCredit = item.operationType === 'credit';
   const isSeparate = item.operationType === 'separate';
@@ -31,9 +29,9 @@ const WeeklyHistoryItem = ({ item }: Props) => {
   }, []);
   return (
     <tr
-      className={`${isSale && 'bg-emerald-600'} ${isCredit && 'bg-red-600'} ${
-        isSeparate && 'bg-blue-600'
-      } ${isCreditPayment && 'bg-orange-600'} ${
+      className={`${isSale && 'bg-emerald-600'} ${isCredit && 'bg-red-600'} ${isSeparate && 'bg-blue-600'} ${
+        isCreditPayment && 'bg-orange-600'
+      } ${
         isSeparatePayment && 'bg-cyan-600'
       } group bg-opacity-10 transition-colors hover:bg-opacity-40 group-hover:bg-opacity-40 dark:bg-opacity-5`}
     >
@@ -46,17 +44,11 @@ const WeeklyHistoryItem = ({ item }: Props) => {
           {isSale ? <p className="text-green-500">Venta</p> : null}
           {isCredit ? <p className="text-red-500">Credito</p> : null}
           {isSeparate ? <p className="text-blue-500">Apartado</p> : null}
-          {isCreditPayment ? (
-            <p className="text-orange-500">Abono de credito</p>
-          ) : null}
-          {isSeparatePayment ? (
-            <p className="text-cyan-500">Abono de apartado</p>
-          ) : null}
+          {isCreditPayment ? <p className="text-orange-500">Abono de credito</p> : null}
+          {isSeparatePayment ? <p className="text-cyan-500">Abono de apartado</p> : null}
         </div>
       </td>
-      <td className="text-right group-hover:font-bold">
-        {currencyFormat(item.amount)}
-      </td>
+      <td className="text-right group-hover:font-bold">{currencyFormat(item.amount)}</td>
       <td></td>
     </tr>
   );

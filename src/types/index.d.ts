@@ -122,12 +122,7 @@ export interface IProductWithCategories extends IProduct {
 export interface ISaleHistory {
   id: string;
   operationDate: string;
-  operationType:
-    | 'sale'
-    | 'credit'
-    | 'separate'
-    | 'credit_payment'
-    | 'separate_payment';
+  operationType: 'sale' | 'credit' | 'separate' | 'credit_payment' | 'separate_payment';
   description?: string;
   amount: number;
 }

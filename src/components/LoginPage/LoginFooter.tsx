@@ -1,5 +1,5 @@
 import { Button } from '@mantine/core';
-import { IconLogin } from '@tabler/icons';
+import { IconLogin } from '@tabler/icons-react';
 import { authSelector } from 'src/features/Auth';
 import { useAppSelector } from 'src/store/hooks';
 
@@ -12,12 +12,7 @@ export default function LoginFooter({ disabledButton = false }: Props) {
 
   return (
     <footer className="mt-4 flex items-center justify-end">
-      <Button
-        type="submit"
-        loading={loading}
-        leftIcon={<IconLogin size={20} />}
-        disabled={disabledButton}
-      >
+      <Button type="submit" loading={loading} leftIcon={<IconLogin size={20} />} disabled={disabledButton}>
         {loading ? <span>Iniciando Sesión</span> : <span>Iniciar Sesión</span>}
       </Button>
     </footer>

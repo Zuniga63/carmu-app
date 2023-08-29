@@ -8,13 +8,7 @@ import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
 import { ICreditEvolutionReport } from 'src/types';
-import {
-  ChartPeriod,
-  CHART_COLORS,
-  currencyFormat,
-  MONTHS,
-  transparentize,
-} from 'src/utils';
+import { ChartPeriod, CHART_COLORS, currencyFormat, MONTHS, transparentize } from 'src/utils';
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
@@ -49,8 +43,7 @@ export const lineOptions: ChartOptions<'line'> = {
           let label = dataset.label || '';
 
           if (label) label += ': ';
-          if (context.parsed.y !== null)
-            label += currencyFormat(context.parsed.y);
+          if (context.parsed.y !== null) label += currencyFormat(context.parsed.y);
 
           return label;
         },
@@ -66,39 +59,22 @@ export const lineOptions: ChartOptions<'line'> = {
               const diff = Number(parsed.y) - lastBalance;
               const percentage = Math.round((diff / Number(lastBalance)) * 100);
 
-              if (
-                !isNaN(percentage) &&
-                isFinite(percentage) &&
-                percentage !== 0
-              ) {
+              if (!isNaN(percentage) && isFinite(percentage) && percentage !== 0) {
                 afterLabel += 'Parcial: ';
                 afterLabel += percentage > 0 ? '+' : '-';
-                afterLabel += `${Math.abs(percentage)}% (${currencyFormat(
-                  diff
-                )})`;
+                afterLabel += `${Math.abs(percentage)}% (${currencyFormat(diff)})`;
               }
             }
 
-            if (
-              dataIndex > 1 &&
-              initialBalance &&
-              typeof initialBalance === 'number' &&
-              initialBalance > 0
-            ) {
+            if (dataIndex > 1 && initialBalance && typeof initialBalance === 'number' && initialBalance > 0) {
               const balanceDiff = Number(parsed.y) - initialBalance;
               const fraction = balanceDiff / initialBalance;
               const percentage = Math.round(fraction * 1000) / 10;
 
-              if (
-                !isNaN(percentage) &&
-                isFinite(percentage) &&
-                percentage !== 0
-              ) {
+              if (!isNaN(percentage) && isFinite(percentage) && percentage !== 0) {
                 afterLabel += '\nGlobal: ';
                 afterLabel += percentage > 0 ? '+' : '-';
-                afterLabel += `${Math.abs(percentage)}% (${currencyFormat(
-                  balanceDiff
-                )})`;
+                afterLabel += `${Math.abs(percentage)}% (${currencyFormat(balanceDiff)})`;
               }
             }
           }
@@ -110,11 +86,7 @@ export const lineOptions: ChartOptions<'line'> = {
   },
 };
 
-const CreditEvolutionChart = ({
-  creditReport,
-  period,
-  monthSelected,
-}: Props) => {
+const CreditEvolutionChart = ({ creditReport, period, monthSelected }: Props) => {
   const [chartData, setChartData] = useState<ChartData<'line'> | null>(null);
 
   const getLabels = (): string[] => {
@@ -129,8 +101,7 @@ const CreditEvolutionChart = ({
     } else if (period === ChartPeriod.monthly && !isNaN(month)) {
       labels.push(month > 0 ? MONTHS[month - 1].slice(0, 3) : lastYear);
       const daysInMonth = today.month(month).daysInMonth();
-      for (let day = 1; day <= daysInMonth; day += 1)
-        labels.push(day < 10 ? '0'.concat(String(day)) : String(day));
+      for (let day = 1; day <= daysInMonth; day += 1) labels.push(day < 10 ? '0'.concat(String(day)) : String(day));
     }
 
     return labels;
@@ -141,7 +112,7 @@ const CreditEvolutionChart = ({
     data: (number | null)[],
     color: string,
     opacity = 1,
-    hidden = false
+    hidden = false,
   ): ChartDataset<'line'> => {
     return {
       label,
@@ -162,25 +133,9 @@ const CreditEvolutionChart = ({
     let paymentsSum = 0;
     let balance = creditReport.initialBalance;
 
-    const balanceDataset = createDataset(
-      'Saldo',
-      [balance],
-      CHART_COLORS.burgundy,
-      0.9,
-      true
-    );
-    const paymentDataset = createDataset(
-      'Abonos',
-      [paymentsSum],
-      CHART_COLORS.forestGreen,
-      0.9
-    );
-    const creditDataset = createDataset(
-      'Creditos',
-      [creditsSum],
-      CHART_COLORS.red,
-      0.9
-    );
+    const balanceDataset = createDataset('Saldo', [balance], CHART_COLORS.burgundy, 0.9, true);
+    const paymentDataset = createDataset('Abonos', [paymentsSum], CHART_COLORS.forestGreen, 0.9);
+    const creditDataset = createDataset('Creditos', [creditsSum], CHART_COLORS.red, 0.9);
 
     const today = dayjs();
     let date = today.startOf('year');
@@ -191,8 +146,7 @@ const CreditEvolutionChart = ({
 
       creditReport.dailyReports.forEach(({ date, credits, payments }) => {
         const reportDate = dayjs(date);
-        if (reportDate.isBefore(startMonth) || reportDate.isAfter(endMonth))
-          return;
+        if (reportDate.isBefore(startMonth) || reportDate.isAfter(endMonth)) return;
 
         creditsSum += credits;
         paymentsSum += payments;
@@ -215,19 +169,8 @@ const CreditEvolutionChart = ({
     const datasets: ChartDataset<'line'>[] = [];
     const month = Number(monthSelected);
 
-    const balanceDataset = createDataset(
-      'Saldo',
-      [],
-      CHART_COLORS.burgundy,
-      0.9,
-      true
-    );
-    const paymentDataset = createDataset(
-      'Abonos',
-      [0],
-      CHART_COLORS.forestGreen,
-      0.9
-    );
+    const balanceDataset = createDataset('Saldo', [], CHART_COLORS.burgundy, 0.9, true);
+    const paymentDataset = createDataset('Abonos', [0], CHART_COLORS.forestGreen, 0.9);
     const creditDataset = createDataset('Creditos', [0], CHART_COLORS.red, 0.9);
 
     if (!isNaN(month) && month >= 0 && month < 12) {
@@ -252,10 +195,7 @@ const CreditEvolutionChart = ({
       // Get the daily report of month
       const dailyReports = creditReport.dailyReports.filter(({ date }) => {
         const dailyDate = dayjs(date);
-        return (
-          dailyDate.isSameOrAfter(startMonth) &&
-          dailyDate.isSameOrBefore(endMonth)
-        );
+        return dailyDate.isSameOrAfter(startMonth) && dailyDate.isSameOrBefore(endMonth);
       });
 
       while (currentDate.isSameOrBefore(endMonth)) {
@@ -264,10 +204,7 @@ const CreditEvolutionChart = ({
 
         const dailyReport = dailyReports.find(({ date }) => {
           const dailyDate = dayjs(date);
-          return (
-            dailyDate.isSameOrAfter(startDay) &&
-            dailyDate.isSameOrBefore(endDay)
-          );
+          return dailyDate.isSameOrAfter(startDay) && dailyDate.isSameOrBefore(endDay);
         });
 
         if (dailyReport) {

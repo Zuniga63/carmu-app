@@ -6,9 +6,7 @@ export const normalizeBox = (box: IBox | IBoxWithDayjs): IBoxWithDayjs => {
   const timeUnit = 'minutes';
   const timeDiffs: number[] = [];
 
-  let openBox: Dayjs | undefined,
-    closed: Dayjs | undefined,
-    dateRefreshRate: number | undefined;
+  let openBox: Dayjs | undefined, closed: Dayjs | undefined, dateRefreshRate: number | undefined;
 
   // Convert Date string to Dayjs
   const createdAt = dayjs(box.createdAt);

@@ -1,15 +1,11 @@
 import { Button, Checkbox, NumberInput, Select } from '@mantine/core';
-import { IconBox, IconCirclePlus } from '@tabler/icons';
+import { IconBox, IconCirclePlus } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import React, { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { boxPageSelector } from 'src/features/BoxPage';
 import { configSelector } from 'src/features/Config';
 import { useAppSelector } from 'src/store/hooks';
-import {
-  IInvoiceCashbox,
-  IInvoiceSummary,
-  INewInvoicePayment,
-} from 'src/types';
+import { IInvoiceCashbox, IInvoiceSummary, INewInvoicePayment } from 'src/types';
 import InvoiceFormGroup from './InvoiceFormGroup';
 import InvoiceFormPaymentList from './InvoiceFormPaymentList';
 
@@ -20,15 +16,9 @@ interface Props {
   setPayments: React.Dispatch<React.SetStateAction<INewInvoicePayment[]>>;
 }
 
-const InvoiceFormPayment: React.FC<Props> = ({
-  invoiceDate,
-  summary,
-  payments,
-  setPayments,
-}) => {
+const InvoiceFormPayment: React.FC<Props> = ({ invoiceDate, summary, payments, setPayments }) => {
   const { boxes } = useAppSelector(boxPageSelector);
-  const { premiseStoreSelected: commercialPremise } =
-    useAppSelector(configSelector);
+  const { premiseStoreSelected: commercialPremise } = useAppSelector(configSelector);
   const input = useRef<HTMLInputElement>(null);
 
   const [boxList, setBoxList] = useState<IInvoiceCashbox[]>([]);
@@ -52,12 +42,7 @@ const InvoiceFormPayment: React.FC<Props> = ({
     const equalPayment = result.find(payment => {
       let isEqual = true;
       if (Boolean(payment.box) !== Boolean(newPayment.box)) isEqual = false;
-      else if (
-        payment.box &&
-        newPayment.box &&
-        payment.box.id !== newPayment.box.id
-      )
-        isEqual = false;
+      else if (payment.box && newPayment.box && payment.box.id !== newPayment.box.id) isEqual = false;
       else if (payment.description !== newPayment.description) isEqual = false;
       else if (payment.register !== newPayment.register) isEqual = false;
 
@@ -108,11 +93,7 @@ const InvoiceFormPayment: React.FC<Props> = ({
   useEffect(() => {
     let date = dayjs();
     if (invoiceDate && dayjs(invoiceDate).isValid()) date = dayjs(invoiceDate);
-    setBoxList(
-      boxes.filter(box =>
-        Boolean(box.openBox && dayjs(box.openBox).isBefore(date))
-      )
-    );
+    setBoxList(boxes.filter(box => Boolean(box.openBox && dayjs(box.openBox).isBefore(date))));
     setBoxId(null);
   }, [boxes.length, invoiceDate]);
 
@@ -125,10 +106,7 @@ const InvoiceFormPayment: React.FC<Props> = ({
   useEffect(() => {
     if (commercialPremise) {
       const { defaultBox } = commercialPremise;
-      const id =
-        defaultBox && defaultBox.openBox && dayjs().isAfter(defaultBox.openBox)
-          ? defaultBox.id
-          : null;
+      const id = defaultBox && defaultBox.openBox && dayjs().isAfter(defaultBox.openBox) ? defaultBox.id : null;
 
       setBoxId(id);
     }
@@ -197,11 +175,7 @@ const InvoiceFormPayment: React.FC<Props> = ({
       </InvoiceFormGroup>
 
       <div className="col-span-2">
-        <InvoiceFormPaymentList
-          payments={payments}
-          removePayment={removePayment}
-          summary={summary}
-        />
+        <InvoiceFormPaymentList payments={payments} removePayment={removePayment} summary={summary} />
       </div>
     </div>
   );

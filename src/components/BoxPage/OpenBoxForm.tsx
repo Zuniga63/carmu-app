@@ -1,12 +1,8 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { Button, Modal, NumberInput } from '@mantine/core';
-import { IconLockOpen } from '@tabler/icons';
+import { IconLockOpen } from '@tabler/icons-react';
 import { toast } from 'react-toastify';
-import {
-  boxPageSelector,
-  unmountBoxToOpen,
-  openBox,
-} from 'src/features/BoxPage';
+import { boxPageSelector, unmountBoxToOpen, openBox } from 'src/features/BoxPage';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 import { IValidationErrors } from 'src/types';
 import { currencyFormat } from 'src/utils';
@@ -93,9 +89,7 @@ const OpenBoxForm = () => {
             parser={value => value?.replace(/\$\s?|(,*)/g, '')}
             formatter={value => {
               if (value) {
-                return !Number.isNaN(parseFloat(value))
-                  ? `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                  : '$ ';
+                return !Number.isNaN(parseFloat(value)) ? `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '$ ';
               }
 
               return '$ ';
@@ -103,12 +97,7 @@ const OpenBoxForm = () => {
           />
         </div>
         <footer className="flex items-center justify-end">
-          <Button
-            leftIcon={<IconLockOpen />}
-            loading={loading}
-            type="submit"
-            disabled={!enabled}
-          >
+          <Button leftIcon={<IconLockOpen />} loading={loading} type="submit" disabled={!enabled}>
             Abrir Caja
           </Button>
         </footer>

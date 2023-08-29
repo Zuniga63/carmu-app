@@ -5,13 +5,10 @@ import Swal from 'sweetalert2';
 import { ICustomerStore, ICustomerWithInvoices } from './types';
 import { ICustomer } from './types';
 
-export const fetchCustomers = createAsyncThunk(
-  'customerPage/fetchCustomers',
-  async () => {
-    const res = await axios.get<ICustomer[]>('/customers');
-    return res.data;
-  }
-);
+export const fetchCustomers = createAsyncThunk('customerPage/fetchCustomers', async () => {
+  const res = await axios.get<ICustomer[]>('/customers');
+  return res.data;
+});
 
 export const showCustomerForm = createAction('customerPage/showCustomerForm');
 export const hideCustomerForm = createAction('customerPage/hideCustomerForm');
@@ -29,11 +26,9 @@ export const storeCustomer = createAsyncThunk(
 
       throw error;
     }
-  }
+  },
 );
-export const mountCustomerToUpdate = createAction<string>(
-  'customerPage/mountCustomerToUpdate'
-);
+export const mountCustomerToUpdate = createAction<string>('customerPage/mountCustomerToUpdate');
 export const updateCustomer = createAsyncThunk(
   'customerPage/updateCustomer',
   async (data: ICustomerStore, { rejectWithValue }) => {
@@ -49,7 +44,7 @@ export const updateCustomer = createAsyncThunk(
 
       throw error;
     }
-  }
+  },
 );
 
 export const deleteCustomer = createAsyncThunk(
@@ -81,8 +76,7 @@ export const deleteCustomer = createAsyncThunk(
               result.ok = true;
               result.message = `¡El cliente ${customer.fullName} fue eliminado satisfactoriamente!`;
             } else {
-              result.message =
-                'El cliente no pudo ser removido, intentelo nuevamente mas tarde';
+              result.message = 'El cliente no pudo ser removido, intentelo nuevamente mas tarde';
             }
           } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -90,8 +84,7 @@ export const deleteCustomer = createAsyncThunk(
               if (response?.status === 404) dispatch(fetchCustomers());
               result.message = (response?.data as { message: string }).message;
             } else {
-              result.message =
-                'Hubo un error al procesar la solicitud, intentalo nuevamente mas tarde.';
+              result.message = 'Hubo un error al procesar la solicitud, intentalo nuevamente mas tarde.';
               console.log(error);
             }
           }
@@ -102,9 +95,7 @@ export const deleteCustomer = createAsyncThunk(
 
       if (result.isConfirmed && result.value) {
         const { ok, message } = result.value;
-        const title = ok
-          ? '<strong>¡Cliente Eliminado!</strong>'
-          : '¡Ops, algo salio mal!';
+        const title = ok ? '<strong>¡Cliente Eliminado!</strong>' : '¡Ops, algo salio mal!';
         const icon = ok ? 'success' : 'error';
 
         Swal.fire({ title, html: message, icon });
@@ -114,36 +105,25 @@ export const deleteCustomer = createAsyncThunk(
     }
 
     return null;
-  }
+  },
 );
 
-export const mountCustomerToFetch = createAction<string>(
-  'customerPage/mountCustomerToFetch'
-);
+export const mountCustomerToFetch = createAction<string>('customerPage/mountCustomerToFetch');
 
 export const unmountCustomer = createAction('customerPage/unmountCustomer');
 
-export const fetchCustomer = createAsyncThunk(
-  'customerPage/fetchCustomer',
-  async (customerId: string) => {
-    const res = await axios.get<ICustomerWithInvoices>(
-      `/customers/${customerId}`
-    );
+export const fetchCustomer = createAsyncThunk('customerPage/fetchCustomer', async (customerId: string) => {
+  const res = await axios.get<ICustomerWithInvoices>(`/customers/${customerId}`);
 
-    return res.data;
-  }
-);
+  return res.data;
+});
 
 // --------------------------------------------------------------------------
 // STORE PAYMENT
 // --------------------------------------------------------------------------
-export const mountCustomerToPayment = createAction<string>(
-  'customerPage/mountCustomerToPayment'
-);
+export const mountCustomerToPayment = createAction<string>('customerPage/mountCustomerToPayment');
 
-export const unmountCustomerToPayment = createAction(
-  'customerPage/unmountCustomerToPayment'
-);
+export const unmountCustomerToPayment = createAction('customerPage/unmountCustomerToPayment');
 
 export const storeCustomerPayment = createAsyncThunk(
   'customerPage/storeCustomerPayment',
@@ -160,5 +140,5 @@ export const storeCustomerPayment = createAsyncThunk(
 
       throw error;
     }
-  }
+  },
 );

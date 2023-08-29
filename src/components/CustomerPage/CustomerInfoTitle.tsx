@@ -10,10 +10,7 @@ const CustomerInfoTitle = () => {
     <div className="flex items-center gap-x-6">
       <div className="flex flex-col">
         <h1>
-          Cliente{' '}
-          <span className="font-bold tracking-widest">
-            {customer?.fullName}
-          </span>
+          Cliente <span className="font-bold tracking-widest">{customer?.fullName}</span>
         </h1>
         {customer?.documentNumber ? (
           <p className="text-xs">
@@ -22,11 +19,7 @@ const CustomerInfoTitle = () => {
         ) : null}
       </div>
 
-      {customer?.balance ? (
-        <p className="font-bold tracking-widest">
-          {currencyFormat(customer.balance)}
-        </p>
-      ) : null}
+      {customer?.balance ? <p className="font-bold tracking-widest">{currencyFormat(customer.balance)}</p> : null}
     </div>
   );
 };

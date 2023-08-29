@@ -19,10 +19,7 @@ class MyDocument extends Document {
             />
             <link
               rel="shortcut icon"
-              href={
-                process.env.NEXT_PUBLIC_BRAND_LOGO_URL ||
-                '/images/logo_62601199d793d.png'
-              }
+              href={process.env.NEXT_PUBLIC_BRAND_LOGO_URL || '/images/logo_62601199d793d.png'}
               type="image/x-icon"
             />
           </Head>

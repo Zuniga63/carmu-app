@@ -3,16 +3,16 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
 module.exports = {
   darkMode: 'class',
-  content: [
-    './src/pages/**/*.{js,ts,jsx,tsx}',
-    './src/components/**/*.{js,ts,jsx,tsx}',
-  ],
+  content: ['./src/pages/**/*.{js,ts,jsx,tsx}', './src/components/**/*.{js,ts,jsx,tsx}'],
   theme: {
+    screens: {
+      xxs: '180px',
+      ...defaultTheme.screens,
+      '3xl': '1920px',
+    },
     extend: {
       fontFamily: {
         sans: ['Roboto', 'sans-serif', ...defaultTheme.fontFamily.sans],
-        display: ['Zen Dots', 'cursive', ...defaultTheme.fontFamily.sans],
-        hand: ['Dancing Script', 'cursive', ...defaultTheme.fontFamily.sans],
       },
       zIndex: {
         back: '-1',
@@ -29,11 +29,6 @@ module.exports = {
         header: '#161b22',
         'btn-bg': '#21262d',
       },
-      screens: {
-        xxs: '180px',
-        '3xl': '1920px',
-      },
     },
   },
-  plugins: ['prettier', require('@tailwindcss/line-clamp')],
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconX } from '@tabler/icons';
+import { IconX } from '@tabler/icons-react';
 
 interface Props {
   title: string;

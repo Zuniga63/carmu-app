@@ -3,7 +3,4 @@ import { RootState } from 'src/store';
 
 export const categoryPage = (state: RootState) => state.categoryPage;
 
-export const categoryPageSelector = createSelector(
-  categoryPage,
-  state => state
-);
+export const categoryPageSelector = createSelector(categoryPage, state => state);

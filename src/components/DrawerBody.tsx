@@ -5,7 +5,7 @@ interface Props {
 }
 const DrawerBody = ({ children }: Props) => {
   return (
-    <div className="relative h-full overflow-y-auto bg-light pt-8 pb-40 text-dark dark:bg-defaul-body dark:text-light">
+    <div className="relative h-full overflow-y-auto bg-light pb-40 pt-8 text-dark dark:bg-defaul-body dark:text-light">
       {children}
     </div>
   );

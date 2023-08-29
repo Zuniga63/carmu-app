@@ -8,12 +8,7 @@ export default function LoginHeader() {
   return (
     <header className="mb-4">
       <figure className="relative mx-auto block h-20 w-1/2">
-        <Image
-          src={brandUrl}
-          alt={altContent}
-          fill
-          className="object-contain"
-        />
+        <Image src={brandUrl} alt={altContent} fill className="object-contain" />
       </figure>
     </header>
   );

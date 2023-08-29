@@ -9,15 +9,10 @@ import {
   IconMap2,
   IconPhone,
   IconTrash,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import { IPremiseStore } from 'src/features/Config/types';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import {
-  configSelector,
-  editPremiseStore,
-  selectCommercialPremise,
-  unselectPremiseStore,
-} from 'src/features/Config';
+import { configSelector, editPremiseStore, selectCommercialPremise, unselectPremiseStore } from 'src/features/Config';
 import { currencyFormat } from 'src/utils';
 
 interface Props {
@@ -36,11 +31,7 @@ const PremiseStoreTableItem: React.FC<Props> = ({ premiseStore }) => {
   };
 
   useEffect(() => {
-    setIsSelected(
-      Boolean(
-        premiseStoreSelected && premiseStoreSelected.id === premiseStore.id
-      )
-    );
+    setIsSelected(Boolean(premiseStoreSelected && premiseStoreSelected.id === premiseStore.id));
   }, [premiseStoreSelected]);
 
   return (
@@ -50,39 +41,27 @@ const PremiseStoreTableItem: React.FC<Props> = ({ premiseStore }) => {
           <ActionIcon size="xl" color="yellow" onClick={onClick}>
             <IconBuildingStore
               size={24}
-              className={
-                isSelected
-                  ? 'text-emerald-500 transition-colors'
-                  : 'text-gray-400 transition-colors'
-              }
+              className={isSelected ? 'text-emerald-500 transition-colors' : 'text-gray-400 transition-colors'}
             />
           </ActionIcon>
           <div className="cursor-pointer">
             <p className="font-bold">{premiseStore.name}</p>
             {premiseStore.address ? (
               <div className="flex items-center gap-x-2">
-                <IconMap2 size={18} />{' '}
-                <p className="text-sm">{premiseStore.address}</p>
+                <IconMap2 size={18} /> <p className="text-sm">{premiseStore.address}</p>
               </div>
             ) : null}
             {premiseStore.phone ? (
               <div className="flex items-center gap-x-2">
-                <IconPhone size={18} />{' '}
-                <p className="text-sm">{premiseStore.phone}</p>
+                <IconPhone size={18} /> <p className="text-sm">{premiseStore.phone}</p>
               </div>
             ) : null}
           </div>
         </div>
       </td>
-      <td className="whitespace-nowrap text-center">
-        {premiseStore.invoices.length}
-      </td>
-      <td className="whitespace-nowrap text-center">
-        {currencyFormat(premiseStore.weeklySales)}
-      </td>
-      <td className="whitespace-nowrap text-center">
-        {currencyFormat(premiseStore.monthlySales)}
-      </td>
+      <td className="whitespace-nowrap text-center">{premiseStore.invoices.length}</td>
+      <td className="whitespace-nowrap text-center">{currencyFormat(premiseStore.weeklySales)}</td>
+      <td className="whitespace-nowrap text-center">{currencyFormat(premiseStore.monthlySales)}</td>
       <td className="whitespace-nowrap">
         <div className="flex justify-center">
           {premiseStore.defaultBox ? (
@@ -101,10 +80,7 @@ const PremiseStoreTableItem: React.FC<Props> = ({ premiseStore }) => {
       </td>
       <td>
         <div className="flex gap-x-2">
-          <ActionIcon
-            color="green"
-            onClick={() => dispatch(editPremiseStore(premiseStore.id))}
-          >
+          <ActionIcon color="green" onClick={() => dispatch(editPremiseStore(premiseStore.id))}>
             <IconEdit size={16} />
           </ActionIcon>
           <ActionIcon color="red" disabled>

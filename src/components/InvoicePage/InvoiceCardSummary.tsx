@@ -12,22 +12,16 @@ const InvoiceCardSummary = ({ invoice }: Props) => {
   useEffect(() => {
     setPayments(
       invoice.payments.reduce(
-        (amount, payment) =>
-          (amount +=
-            !payment.initialPayment && !payment.cancel ? payment.amount : 0),
-        0
-      )
+        (amount, payment) => (amount += !payment.initialPayment && !payment.cancel ? payment.amount : 0),
+        0,
+      ),
     );
   }, [invoice]);
 
   return (
     <div className="sticky top-0 px-4 py-2">
       {/* SUBTOTAL && DISCOUNT */}
-      <div
-        className={`flex ${
-          invoice.discount ? 'justify-between' : 'justify-end'
-        } mb-2`}
-      >
+      <div className={`flex ${invoice.discount ? 'justify-between' : 'justify-end'} mb-2`}>
         {/* SUBTOTAL */}
         {Boolean(invoice.subtotal) && invoice.subtotal !== invoice.amount && (
           <div className="flex flex-col items-end">
@@ -50,16 +44,12 @@ const InvoiceCardSummary = ({ invoice }: Props) => {
       {/* AMOUNT */}
       <div className="mb-2 flex flex-col items-end">
         <p className="font-bold uppercase">Total</p>
-        <p className="border-t px-2 text-lg font-bold text-dark dark:text-gray-200">
-          {currencyFormat(invoice.amount)}
-        </p>
+        <p className="border-t px-2 text-lg font-bold text-dark dark:text-gray-200">{currencyFormat(invoice.amount)}</p>
       </div>
       {/* CASH && CASHCHAGE && PAYMENTS */}
       <div
         className={`flex ${
-          invoice.cash && (invoice.cashChange || payments > 0)
-            ? 'justify-between'
-            : 'justify-end'
+          invoice.cash && (invoice.cashChange || payments > 0) ? 'justify-between' : 'justify-end'
         } mb-2`}
       >
         {/* CASH */}
@@ -84,9 +74,7 @@ const InvoiceCardSummary = ({ invoice }: Props) => {
         {payments > 0 && (
           <div className="flex flex-col items-end">
             <p className="text-xs">Abonos</p>
-            <p className="border-t px-2 text-sm font-bold text-dark dark:text-gray-200">
-              {currencyFormat(payments)}
-            </p>
+            <p className="border-t px-2 text-sm font-bold text-dark dark:text-gray-200">{currencyFormat(payments)}</p>
           </div>
         )}
       </div>

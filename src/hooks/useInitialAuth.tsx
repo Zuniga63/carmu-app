@@ -1,10 +1,6 @@
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-import {
-  authSelector,
-  authSuccessIsNotify,
-  authenticate,
-} from 'src/features/Auth';
+import { authSelector, authSuccessIsNotify, authenticate } from 'src/features/Auth';
 import { fetchPremiseStores } from 'src/features/Config';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 

@@ -1,11 +1,7 @@
 import 'react-toastify/dist/ReactToastify.css';
 import 'nprogress/nprogress.css';
 
-import {
-  ColorScheme,
-  ColorSchemeProvider,
-  MantineProvider,
-} from '@mantine/core';
+import { ColorScheme, ColorSchemeProvider, MantineProvider } from '@mantine/core';
 import { useHotkeys, useLocalStorage } from '@mantine/hooks';
 import { ReactNode, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
@@ -65,10 +61,7 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <ColorSchemeProvider
-      colorScheme={colorScheme}
-      toggleColorScheme={toggleColorScheme}
-    >
+    <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
       <MantineProvider
         withGlobalStyles
         theme={{

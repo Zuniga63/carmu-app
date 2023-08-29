@@ -1,5 +1,5 @@
 import { Checkbox, Select, SelectItem, TextInput } from '@mantine/core';
-import { IconHome, IconPhone, IconSearch } from '@tabler/icons';
+import { IconHome, IconPhone, IconSearch } from '@tabler/icons-react';
 import React, { forwardRef, useEffect } from 'react';
 import { customerPageSelector } from 'src/features/CustomerPage';
 import { useAppSelector } from 'src/store/hooks';
@@ -36,7 +36,7 @@ const SelectItemCustomer = forwardRef<HTMLDivElement, ICustomerSelectProps>(
         </p>
       ) : null}
     </div>
-  )
+  ),
 );
 
 SelectItemCustomer.displayName = 'SelectItemCustomer';
@@ -50,9 +50,7 @@ const InvoiceFormCustomer = ({
 }: Props) => {
   const { customers } = useAppSelector(customerPageSelector);
 
-  const buildSelectCustomerData = (
-    customer: ICustomer
-  ): ICustomerSelectProps => {
+  const buildSelectCustomerData = (customer: ICustomer): ICustomerSelectProps => {
     let search = `${customer.fullName}`;
     if (customer.documentNumber) search += ` ${customer.documentNumber}`;
     if (customer.alias) search += ` ${customer.alias}`;
@@ -74,9 +72,7 @@ const InvoiceFormCustomer = ({
         name: customerData.fullName,
         document: customerData.documentNumber || current.document,
         documentType: customerData.documentType || current.documentType,
-        phone: customerData.contacts.length
-          ? customerData.contacts[0].phone
-          : current.phone,
+        phone: customerData.contacts.length ? customerData.contacts[0].phone : current.phone,
         address: customerData.address || current.address,
       }));
     }
@@ -92,9 +88,7 @@ const InvoiceFormCustomer = ({
           itemComponent={SelectItemCustomer}
           data={customers.map(buildSelectCustomerData)}
           filter={(value, item) => item.search.includes(normalizeText(value))}
-          onChange={value =>
-            onCustomerChange(current => ({ ...current, id: value }))
-          }
+          onChange={value => onCustomerChange(current => ({ ...current, id: value }))}
           size="xs"
           placeholder="Buscar cliente"
           icon={<IconSearch size={15} />}
@@ -108,9 +102,7 @@ const InvoiceFormCustomer = ({
           value={customer.name}
           placeholder="Nombre completo del cliente"
           size="xs"
-          onChange={({ target }) =>
-            onCustomerChange(current => ({ ...current, name: target.value }))
-          }
+          onChange={({ target }) => onCustomerChange(current => ({ ...current, name: target.value }))}
         />
 
         {/* Document */}
@@ -150,9 +142,7 @@ const InvoiceFormCustomer = ({
           size="xs"
           icon={<IconHome size={15} />}
           value={customer.address}
-          onChange={({ target }) =>
-            onCustomerChange(current => ({ ...current, address: target.value }))
-          }
+          onChange={({ target }) => onCustomerChange(current => ({ ...current, address: target.value }))}
         />
         {/* PHONE */}
         <TextInput
@@ -160,9 +150,7 @@ const InvoiceFormCustomer = ({
           size="xs"
           icon={<IconPhone size={15} />}
           value={customer.phone}
-          onChange={({ target }) =>
-            onCustomerChange(current => ({ ...current, phone: target.value }))
-          }
+          onChange={({ target }) => onCustomerChange(current => ({ ...current, phone: target.value }))}
           type="tel"
         />
 

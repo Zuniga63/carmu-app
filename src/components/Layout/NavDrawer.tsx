@@ -24,13 +24,7 @@ export default function NavDrawer({ opened, toggle }: Props) {
   };
 
   return (
-    <Drawer
-      opened={opened}
-      onClose={close}
-      padding={0}
-      size={largeScreen ? 'md' : '100%'}
-      withCloseButton={false}
-    >
+    <Drawer opened={opened} onClose={close} padding={0} size={largeScreen ? 'md' : '100%'} withCloseButton={false}>
       <>
         <header className="sticky top-0 z-fixed bg-neutral-200 text-dark dark:bg-header dark:text-gray-200">
           <nav className="flex h-16 items-center justify-between px-4 py-2">

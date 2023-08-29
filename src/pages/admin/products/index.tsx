@@ -1,10 +1,6 @@
 import { GetServerSideProps, NextPage } from 'next';
 import Layout from 'src/components/Layout';
-import {
-  ICategory,
-  IProductWithCategories,
-  IValidationErrors,
-} from 'src/types';
+import { ICategory, IProductWithCategories, IValidationErrors } from 'src/types';
 import { useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
@@ -55,8 +51,7 @@ interface Props {
 
 const ProductPage: NextPage<Props> = ({ data }) => {
   const [products, setProducts] = useState(data.products);
-  const [productToUpdate, setProductToUpdate] =
-    useState<IProductWithCategories | null>(null);
+  const [productToUpdate, setProductToUpdate] = useState<IProductWithCategories | null>(null);
   const [formOpened, setFormOpened] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<IValidationErrors | null>(null);
@@ -97,11 +92,7 @@ const ProductPage: NextPage<Props> = ({ data }) => {
     const url = '/products';
     try {
       setLoading(true);
-      const res = await axios.post<{ product: IProductWithCategories }>(
-        url,
-        formData,
-        { headers }
-      );
+      const res = await axios.post<{ product: IProductWithCategories }>(url, formData, { headers });
       const newProductList = products.slice();
       newProductList.push(res.data.product);
       newProductList.sort((p1, p2) => p1.name.localeCompare(p2.name));
@@ -118,11 +109,7 @@ const ProductPage: NextPage<Props> = ({ data }) => {
     const url = `/products/${productToUpdate?.id}`;
     try {
       setLoading(true);
-      const res = await axios.put<{ product: IProductWithCategories }>(
-        url,
-        formData,
-        { headers }
-      );
+      const res = await axios.put<{ product: IProductWithCategories }>(url, formData, { headers });
 
       const productUpdated = res.data.product;
       const list = products.slice();
@@ -171,8 +158,7 @@ const ProductPage: NextPage<Props> = ({ data }) => {
             if (response?.status === 404) removeProduct(product);
             result.message = response?.data.message;
           } else {
-            result.message =
-              '¡Intentalo nuevmanete mas tarde o recarga la pagina.';
+            result.message = '¡Intentalo nuevmanete mas tarde o recarga la pagina.';
             console.log(error);
           }
         }
@@ -183,9 +169,7 @@ const ProductPage: NextPage<Props> = ({ data }) => {
 
     if (result.isConfirmed && result.value) {
       const { ok, message } = result.value;
-      const title = ok
-        ? '<strong>Producto Eliminado!</strong>'
-        : '¡Ops, algo salio mal!';
+      const title = ok ? '<strong>Producto Eliminado!</strong>' : '¡Ops, algo salio mal!';
       const icon = ok ? 'success' : 'error';
 
       Swal.fire({ title, html: message, icon });

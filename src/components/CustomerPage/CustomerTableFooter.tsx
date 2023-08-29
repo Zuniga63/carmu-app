@@ -1,10 +1,5 @@
 import { Pagination, Tooltip } from '@mantine/core';
-import {
-  IconAlertCircle,
-  IconCircleCheck,
-  IconCircleX,
-  IconSkull,
-} from '@tabler/icons';
+import { IconAlertCircle, IconCircleCheck, IconCircleX, IconSkull } from '@tabler/icons-react';
 
 type Props = {
   page?: number;
@@ -12,11 +7,7 @@ type Props = {
   onUpdatePage?: (value: number) => void;
 };
 
-export default function CustomerTableFooter({
-  page = 0,
-  totalPages = 0,
-  onUpdatePage,
-}: Props) {
+export default function CustomerTableFooter({ page = 0, totalPages = 0, onUpdatePage }: Props) {
   return (
     <footer className="flex items-center justify-between rounded-b-md bg-gray-300 px-6 py-2 dark:bg-header">
       <div className="flex gap-x-2">
@@ -42,11 +33,7 @@ export default function CustomerTableFooter({
         </Tooltip>
       </div>
 
-      <div>
-        {totalPages > 1 && (
-          <Pagination total={totalPages} page={page} onChange={onUpdatePage} />
-        )}
-      </div>
+      <div>{totalPages > 1 && <Pagination total={totalPages} page={page} onChange={onUpdatePage} />}</div>
 
       <div className="flex gap-x-2">
         <Tooltip label="Pago relaizado en los ultimos 28 días" withArrow>

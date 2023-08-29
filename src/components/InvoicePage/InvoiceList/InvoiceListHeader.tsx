@@ -1,11 +1,4 @@
-import {
-  ActionIcon,
-  Collapse,
-  Loader,
-  SegmentedControl,
-  TextInput,
-  Tooltip,
-} from '@mantine/core';
+import { ActionIcon, Collapse, Loader, SegmentedControl, TextInput, Tooltip } from '@mantine/core';
 import {
   IconAdjustmentsHorizontal,
   IconAdjustmentsOff,
@@ -13,7 +6,7 @@ import {
   IconFileInvoice,
   IconReload,
   IconSearch,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import {
   invoicePageSelector,
   refreshInvoices,
@@ -48,13 +41,7 @@ export default function InvoiceListHeader({
         <div className="flex-grow">
           <TextInput
             size="xs"
-            icon={
-              loadingSearch ? (
-                <Loader size={14} variant="dots" />
-              ) : (
-                <IconSearch size={14} stroke={1.5} />
-              )
-            }
+            icon={loadingSearch ? <Loader size={14} variant="dots" /> : <IconSearch size={14} stroke={1.5} />}
             placeholder="Buscar Factura"
             onChange={({ target }) => updateSearch(target.value)}
           />
@@ -63,40 +50,26 @@ export default function InvoiceListHeader({
         {/* ACTIONS */}
         <div className="flex flex-shrink-0 gap-x-1">
           <Tooltip label="Actualizar Facturas">
-            <ActionIcon
-              loading={loading}
-              color="blue"
-              onClick={() => dispatch(refreshInvoices())}
-            >
+            <ActionIcon loading={loading} color="blue" onClick={() => dispatch(refreshInvoices())}>
               <IconReload size={18} />
             </ActionIcon>
           </Tooltip>
 
           <Tooltip label="Facturación Rápida">
-            <ActionIcon
-              color="green"
-              onClick={() => dispatch(showCounterSaleForm())}
-            >
+            <ActionIcon color="green" onClick={() => dispatch(showCounterSaleForm())}>
               <IconBuildingStore stroke={2} size={18} />
             </ActionIcon>
           </Tooltip>
 
           <Tooltip label="Facturación Normal">
-            <ActionIcon
-              color="grape"
-              onClick={() => dispatch(showNewInvoiceForm())}
-            >
+            <ActionIcon color="grape" onClick={() => dispatch(showNewInvoiceForm())}>
               <IconFileInvoice size={18} />
             </ActionIcon>
           </Tooltip>
 
           <Tooltip label="Filtros">
             <ActionIcon color="yellow" onClick={filterToggle}>
-              {filterOpened ? (
-                <IconAdjustmentsOff size={18} />
-              ) : (
-                <IconAdjustmentsHorizontal size={18} />
-              )}
+              {filterOpened ? <IconAdjustmentsOff size={18} /> : <IconAdjustmentsHorizontal size={18} />}
             </ActionIcon>
           </Tooltip>
         </div>

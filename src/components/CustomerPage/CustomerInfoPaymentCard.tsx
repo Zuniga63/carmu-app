@@ -11,9 +11,7 @@ const CustomerInfoPaymentCard = ({ paymentBase }: Props) => {
     <div className="rounded-lg border border-green-500 bg-green-500 bg-opacity-10 py-2">
       <header className="flex items-center justify-between px-4 py-2">
         <div>
-          <p className="text-xs">
-            {dayjs(paymentBase.paymentDate).format('DD/MM/YY hh:mm a')}
-          </p>
+          <p className="text-xs">{dayjs(paymentBase.paymentDate).format('DD/MM/YY hh:mm a')}</p>
           <p className="text-xs">{dayjs(paymentBase.paymentDate).fromNow()}</p>
         </div>
 

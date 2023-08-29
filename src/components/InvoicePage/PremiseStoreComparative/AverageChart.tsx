@@ -11,7 +11,7 @@ import { Line } from 'react-chartjs-2';
 import MonthlyReport from './MonthlyReport';
 import DailyReport, { ReportInvoice } from './DailyReport';
 import { configSelector } from 'src/features/Config';
-import { IconChartArcs3 } from '@tabler/icons';
+import { IconChartArcs3 } from '@tabler/icons-react';
 import ProtectWrapper from 'src/components/ProtectWrapper';
 
 dayjs.extend(isSameOrAfter);
@@ -42,8 +42,7 @@ export const lineOptions: ChartOptions<'line'> = {
           let label = dataset.label || '';
 
           if (label) label += ': ';
-          if (context.parsed.y !== null)
-            label += currencyFormat(context.parsed.y);
+          if (context.parsed.y !== null) label += currencyFormat(context.parsed.y);
 
           return label;
         },
@@ -111,16 +110,10 @@ export default function AverageChart() {
       const startMonth = date.clone();
       const endMonth = date.endOf('month');
       const monthlyInvoices = invoices.filter(
-        ({ date }) =>
-          startMonth.isSameOrBefore(date) && endMonth.isSameOrAfter(date)
+        ({ date }) => startMonth.isSameOrBefore(date) && endMonth.isSameOrAfter(date),
       );
 
-      const monthlyReport = new MonthlyReport(
-        date,
-        monthlyInvoices,
-        lastReport,
-        date.month() === today.month()
-      );
+      const monthlyReport = new MonthlyReport(date, monthlyInvoices, lastReport, date.month() === today.month());
 
       reports.push(monthlyReport);
       lastReport = monthlyReport;
@@ -148,15 +141,10 @@ export default function AverageChart() {
     label: string,
     value: number | null,
     points: number,
-    point: 'max' | 'middle' | 'min' = 'middle'
+    point: 'max' | 'middle' | 'min' = 'middle',
   ): ChartDataset<'line'> {
     const data: (number | null)[] = [];
-    const color =
-      point === 'middle'
-        ? CHART_COLORS.grey
-        : point === 'max'
-        ? CHART_COLORS.green
-        : CHART_COLORS.red;
+    const color = point === 'middle' ? CHART_COLORS.grey : point === 'max' ? CHART_COLORS.green : CHART_COLORS.red;
 
     for (let index = 0; index < points; index++) {
       data.push(value);
@@ -178,13 +166,11 @@ export default function AverageChart() {
   function getDailyDataset(
     dailyReports: DailyReport[],
     lastMonthlyReport?: MonthlyReport,
-    isDaily = true
+    isDaily = true,
   ): ChartDataset<'line'> {
     const data: (number | null)[] = [
       lastMonthlyReport?.dailyAverage || null,
-      ...dailyReports.map(({ amount, monthlyDailyAverage }) =>
-        isDaily ? amount : monthlyDailyAverage
-      ),
+      ...dailyReports.map(({ amount, monthlyDailyAverage }) => (isDaily ? amount : monthlyDailyAverage)),
     ];
 
     return {
@@ -231,8 +217,7 @@ export default function AverageChart() {
 
   function createReport() {
     const monthlyReports = createMonthlyReports();
-    const { average, maxDailyAverage, minDailyAverage } =
-      getAverages(monthlyReports);
+    const { average, maxDailyAverage, minDailyAverage } = getAverages(monthlyReports);
 
     const chartLabels = getChartLabels();
     const currentReport = monthlyReports.at(-1);
@@ -257,20 +242,18 @@ export default function AverageChart() {
   }, [allInvoices, storeSelected]);
 
   return (
-    <div className="mb-20 min-h-[300px] bg-gray-200 bg-opacity-90 px-4 pt-6 pb-2 dark:bg-dark">
+    <div className="mb-20 min-h-[300px] bg-gray-200 bg-opacity-90 px-4 pb-2 pt-6 dark:bg-dark">
       <header className="mb-4">
-        <h2 className="mb-1 text-center text-2xl font-bold text-dark dark:text-light">
-          Reporte promedio diario
-        </h2>
+        <h2 className="mb-1 text-center text-2xl font-bold text-dark dark:text-light">Reporte promedio diario</h2>
         <p className="mb-2 text-center text-sm italic">
-          Esta grafica tiene como objetivo mostrar la evolución del mes actual
-          contra los meses anteriores en cada una de las categorías
+          Esta grafica tiene como objetivo mostrar la evolución del mes actual contra los meses anteriores en cada una
+          de las categorías
         </p>
       </header>
 
       <ProtectWrapper>
         {/* CONTROLS */}
-        <div className="mb-4 flex flex-wrap items-center justify-center gap-y-2 gap-x-6">
+        <div className="mb-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
           <Select
             defaultValue="all"
             value={storeSelected}
@@ -332,8 +315,7 @@ export default function AverageChart() {
                     {Boolean(report.dailyAverageGrowth) && (
                       <span
                         className={`text-xs ${
-                          report.dailyAverageGrowth &&
-                          report.dailyAverageGrowth > 0
+                          report.dailyAverageGrowth && report.dailyAverageGrowth > 0
                             ? 'text-emerald-500'
                             : 'text-red-500'
                         }`}
@@ -345,14 +327,11 @@ export default function AverageChart() {
                 </td>
                 <td className="text-right">
                   <div className="flex items-center justify-end gap-x-2">
-                    <span>
-                      {currencyFormat(report.getAnnualDailyAverage())}
-                    </span>
+                    <span>{currencyFormat(report.getAnnualDailyAverage())}</span>
                     {Boolean(report.annualDailyAverageGrowth) && (
                       <span
                         className={`text-xs ${
-                          report.annualDailyAverageGrowth &&
-                          report.annualDailyAverageGrowth > 0
+                          report.annualDailyAverageGrowth && report.annualDailyAverageGrowth > 0
                             ? 'text-emerald-500'
                             : 'text-red-500'
                         }`}

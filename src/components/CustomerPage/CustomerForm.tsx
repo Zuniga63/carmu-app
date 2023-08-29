@@ -1,23 +1,12 @@
-import {
-  Button,
-  Drawer,
-  SegmentedControl,
-  Tabs,
-  TextInput,
-} from '@mantine/core';
+import { Button, Drawer, SegmentedControl, Tabs, TextInput } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { IconAt, IconMapPin, IconPhone, IconUser } from '@tabler/icons';
+import { IconAt, IconMapPin, IconPhone, IconUser } from '@tabler/icons-react';
 import DrawerBody from 'src/components/DrawerBody';
 import DrawerHeader from 'src/components/DrawerHeader';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { IValidationErrors } from 'src/types';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import {
-  customerPageSelector,
-  hideCustomerForm,
-  storeCustomer,
-  updateCustomer,
-} from 'src/features/CustomerPage';
+import { customerPageSelector, hideCustomerForm, storeCustomer, updateCustomer } from 'src/features/CustomerPage';
 import { toast } from 'react-toastify';
 import { ICustomerStore } from 'src/features/CustomerPage/types';
 
@@ -40,9 +29,7 @@ const CustomerForm = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [alias, setAlias] = useState('');
-  const [documentType, setDocumentType] = useState<
-    'CC' | 'TI' | 'NIT' | 'PAP' | string
-  >('CC');
+  const [documentType, setDocumentType] = useState<'CC' | 'TI' | 'NIT' | 'PAP' | string>('CC');
   const [documentNumber, setDocumentNumber] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -157,11 +144,7 @@ const CustomerForm = () => {
       <DrawerHeader title={title} onClose={onCloseHandler} />
       <DrawerBody>
         <form onSubmit={onSubmitHandler}>
-          <Tabs
-            variant="pills"
-            defaultValue="personal"
-            className="mx-auto mb-4 w-11/12"
-          >
+          <Tabs variant="pills" defaultValue="personal" className="mx-auto mb-4 w-11/12">
             <Tabs.List>
               <Tabs.Tab value="personal" icon={<IconUser size={14} />}>
                 Datos Personales
@@ -174,11 +157,7 @@ const CustomerForm = () => {
             <Tabs.Panel value="personal" pt="xs">
               {/* FIRST NAME */}
               <TextInput
-                label={
-                  <span className="font-sans text-gray-dark dark:text-light">
-                    Nombres
-                  </span>
-                }
+                label={<span className="font-sans text-gray-dark dark:text-light">Nombres</span>}
                 className="mb-2"
                 placeholder="Escribe el nombre aquí."
                 id="customerName"
@@ -191,11 +170,7 @@ const CustomerForm = () => {
 
               {/* LAST NAME */}
               <TextInput
-                label={
-                  <span className="font-sans text-gray-dark dark:text-light">
-                    Apellidos
-                  </span>
-                }
+                label={<span className="font-sans text-gray-dark dark:text-light">Apellidos</span>}
                 className="mb-2"
                 placeholder="Escribe los apellidos aquí"
                 id="customerLastName"
@@ -207,11 +182,7 @@ const CustomerForm = () => {
 
               {/* ALIAS */}
               <TextInput
-                label={
-                  <span className="font-sans text-gray-dark dark:text-light">
-                    Alias
-                  </span>
-                }
+                label={<span className="font-sans text-gray-dark dark:text-light">Alias</span>}
                 className="mb-2"
                 placeholder="A.K.A"
                 id="customerAlias"
@@ -223,11 +194,7 @@ const CustomerForm = () => {
 
               {/* DOCUMENT */}
               <TextInput
-                label={
-                  <span className="font-sans text-gray-dark dark:text-light">
-                    Identificación
-                  </span>
-                }
+                label={<span className="font-sans text-gray-dark dark:text-light">Identificación</span>}
                 className="mb-2"
                 placeholder="#.###.###.###"
                 id="customerDocument"
@@ -255,11 +222,7 @@ const CustomerForm = () => {
             <Tabs.Panel value="contact" pt="xs">
               {/* EMAIL */}
               <TextInput
-                label={
-                  <span className="font-sans text-gray-dark dark:text-light">
-                    Email
-                  </span>
-                }
+                label={<span className="font-sans text-gray-dark dark:text-light">Email</span>}
                 className="mb-2"
                 placeholder="ejemplo@ejemplo.com"
                 id="customerEmail"
@@ -273,11 +236,7 @@ const CustomerForm = () => {
 
               {/* PHONE */}
               <TextInput
-                label={
-                  <span className="font-sans text-gray-dark dark:text-light">
-                    Telefono
-                  </span>
-                }
+                label={<span className="font-sans text-gray-dark dark:text-light">Telefono</span>}
                 className="mb-2"
                 placeholder="555-5555"
                 id="customerPhone"
@@ -291,11 +250,7 @@ const CustomerForm = () => {
 
               {/* ADDRESS */}
               <TextInput
-                label={
-                  <span className="font-sans text-gray-dark dark:text-light">
-                    Dirección
-                  </span>
-                }
+                label={<span className="font-sans text-gray-dark dark:text-light">Dirección</span>}
                 className="mb-2"
                 placeholder="Avenida siempre vida 1234"
                 id="customerAddress"

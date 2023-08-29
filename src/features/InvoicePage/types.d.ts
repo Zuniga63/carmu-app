@@ -14,10 +14,7 @@ export type IInvoiceCustomer = Pick<
 
 export type IInvoiceCategory = Pick<Category, 'id' | 'name'>;
 
-export type IInvoiceProduct = Omit<
-  IProduct,
-  'images' | 'isInventoriable' | 'sold' | 'returned'
->;
+export type IInvoiceProduct = Omit<IProduct, 'images' | 'isInventoriable' | 'sold' | 'returned'>;
 
 export type IInvoiceCashbox = Pick<IBox, 'id' | 'name' | 'openBox'>;
 
@@ -80,10 +77,7 @@ export interface IInvoiceBase {
   updatedAt: string;
 }
 
-export type INewInvoiceItem = Omit<
-  IInvoiceItemBase,
-  'balance' | 'cancel' | 'cancelMessage'
->;
+export type INewInvoiceItem = Omit<IInvoiceItemBase, 'balance' | 'cancel' | 'cancelMessage'>;
 
 export interface INewInvoicePayment {
   id: number;

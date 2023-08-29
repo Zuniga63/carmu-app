@@ -1,5 +1,5 @@
 import { Select, SelectItem } from '@mantine/core';
-import { IconSearch } from '@tabler/icons';
+import { IconSearch } from '@tabler/icons-react';
 import React, { forwardRef, KeyboardEvent } from 'react';
 import { IImage, IInvoiceProduct } from 'src/types';
 import { normalizeText } from 'src/utils';
@@ -8,10 +8,7 @@ interface Props {
   products: IInvoiceProduct[];
   disabled?: boolean;
   onSelect(id: string | null): void;
-  onEnterPress(
-    event: KeyboardEvent<HTMLInputElement>,
-    maintainFocus?: boolean
-  ): void;
+  onEnterPress(event: KeyboardEvent<HTMLInputElement>, maintainFocus?: boolean): void;
   productId: string | null;
   className?: string;
   selectRef: React.RefObject<HTMLInputElement>;
@@ -25,14 +22,12 @@ interface ItemProps extends React.ComponentPropsWithoutRef<'div'> {
   barcode?: string;
 }
 
-const SelectItem = forwardRef<HTMLDivElement, ItemProps>(
-  ({ label, description, ...others }: ItemProps, ref) => (
-    <div ref={ref} {...others}>
-      <h2 className="font-bold">{label}</h2>
-      <p className="text-xs italic">{description}</p>
-    </div>
-  )
-);
+const SelectItem = forwardRef<HTMLDivElement, ItemProps>(({ label, description, ...others }: ItemProps, ref) => (
+  <div ref={ref} {...others}>
+    <h2 className="font-bold">{label}</h2>
+    <p className="text-xs italic">{description}</p>
+  </div>
+));
 
 SelectItem.displayName = 'SelectItemProduct';
 
@@ -46,9 +41,7 @@ const ProductSelect = ({
   disabled = false,
 }: Props) => {
   const filter = (value: string, item: SelectItem) => {
-    const text = normalizeText(
-      `${item.label} ${item.description} ${item.productref} ${item.barcode}`
-    );
+    const text = normalizeText(`${item.label} ${item.description} ${item.productref} ${item.barcode}`);
     return text.includes(normalizeText(value));
   };
 

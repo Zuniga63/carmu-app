@@ -1,4 +1,4 @@
-import { IconEdit, IconTrash } from '@tabler/icons';
+import { IconEdit, IconTrash } from '@tabler/icons-react';
 import React from 'react';
 import { IProductWithCategories } from 'src/types';
 import { currencyFormat } from 'src/utils';
@@ -38,18 +38,10 @@ const ProductTableItem = ({ product, mount, onDelete }: Props) => {
       <td className="px-3 py-2 text-center text-sm">{product.stock}</td>
       <td className="whitespace-nowrap px-3 py-2 text-right">
         <div>
-          <p
-            className={
-              product.hasDiscount
-                ? 'text-xs line-through dark:text-gray-400'
-                : ''
-            }
-          >
+          <p className={product.hasDiscount ? 'text-xs line-through dark:text-gray-400' : ''}>
             {currencyFormat(product.price)}
           </p>
-          {product.hasDiscount && product.priceWithDiscount ? (
-            <p>{currencyFormat(product.priceWithDiscount)}</p>
-          ) : null}
+          {product.hasDiscount && product.priceWithDiscount ? <p>{currencyFormat(product.priceWithDiscount)}</p> : null}
         </div>
       </td>
       <td className="px-3 py-2 pr-6 text-sm">

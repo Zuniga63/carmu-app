@@ -1,5 +1,5 @@
 import { DatePicker } from '@mantine/dates';
-import { IconCalendar } from '@tabler/icons';
+import { IconCalendar } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import React from 'react';
 import InvoiceFormGroup from './InvoiceFormGroup';

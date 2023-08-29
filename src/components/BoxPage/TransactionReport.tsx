@@ -1,6 +1,6 @@
 import { ActionIcon, Modal, Table } from '@mantine/core';
 import { DateRangePickerValue } from '@mantine/dates';
-import { IconPrinter } from '@tabler/icons';
+import { IconPrinter } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import React, { useEffect, useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
@@ -15,12 +15,7 @@ interface Props {
   setOpened: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const TransactionReport = ({
-  dates,
-  transactions,
-  opened,
-  setOpened,
-}: Props) => {
+const TransactionReport = ({ dates, transactions, opened, setOpened }: Props) => {
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [incomes, setIncomes] = useState(0);
@@ -79,24 +74,15 @@ const TransactionReport = ({
   }, [isPrinting]);
 
   return (
-    <Modal
-      opened={opened}
-      onClose={() => setOpened(false)}
-      title="Reporte de caja"
-      size="xl"
-    >
+    <Modal opened={opened} onClose={() => setOpened(false)} title="Reporte de caja" size="xl">
       <div>
         <div className="min-h-screen bg-white px-8 py-4" ref={printRef}>
           <header className="mb-4 flex items-center border-b-2 border-dark pb-2">
             <BrandLogo />
             <div className="flex-grow">
               <div className="flex flex-col items-center">
-                <h2 className="px-8 text-center text-xl uppercase text-gray-dark">
-                  Movimientos de caja
-                </h2>
-                <p className="text-center text-dark ">
-                  {process.env.NEXT_PUBLIC_APP_NAME}
-                </p>
+                <h2 className="px-8 text-center text-xl uppercase text-gray-dark">Movimientos de caja</h2>
+                <p className="text-center text-dark ">{process.env.NEXT_PUBLIC_APP_NAME}</p>
               </div>
             </div>
 
@@ -135,15 +121,11 @@ const TransactionReport = ({
                     <tr key={transaction.id}>
                       <td>
                         <div className="whitespace-nowrap text-center text-gray-dark">
-                          {dayjs(transaction.transactionDate).format(
-                            'DD-MM-YYYY'
-                          )}
+                          {dayjs(transaction.transactionDate).format('DD-MM-YYYY')}
                         </div>
                       </td>
                       <td>
-                        <p className="uppercase text-gray-dark">
-                          {transaction.description}
-                        </p>
+                        <p className="uppercase text-gray-dark">{transaction.description}</p>
                       </td>
                       <td>
                         <p className="whitespace-nowrap text-right text-gray-dark">

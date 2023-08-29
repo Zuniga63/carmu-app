@@ -61,7 +61,7 @@ export function useCustomerFilter() {
 
       setFilterCustomers(result);
     },
-    [customers]
+    [customers],
   );
 
   const updateActivePage = (value: number) => {
@@ -93,9 +93,7 @@ export function useCustomerFilter() {
   }, [filters]);
 
   useEffect(() => {
-    const newTotalPages = Math.ceil(
-      filteredCustomers.length / CUSTOMER_BY_PAGE
-    );
+    const newTotalPages = Math.ceil(filteredCustomers.length / CUSTOMER_BY_PAGE);
 
     setActivePage(1);
     setTotalPages(newTotalPages);

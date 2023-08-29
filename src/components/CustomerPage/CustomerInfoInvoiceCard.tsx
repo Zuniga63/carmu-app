@@ -29,9 +29,7 @@ const CustomerInfoInvoiceCard = ({ invoice }: Props) => {
       >
         <div className="flex items-center justify-between px-4 py-2">
           <div>
-            <p className="text-xs">
-              {dayjs(invoice.expeditionDate).format('DD/MM/YY hh:mm a')}
-            </p>
+            <p className="text-xs">{dayjs(invoice.expeditionDate).format('DD/MM/YY hh:mm a')}</p>
             <p className="text-xs">{dayjs(invoice.expeditionDate).fromNow()}</p>
           </div>
 
@@ -61,9 +59,7 @@ const CustomerInfoInvoiceCard = ({ invoice }: Props) => {
                   <span>( {item.quantity} und )</span>
                   {Boolean(item.balance) && (
                     <>
-                      <span className="italic">
-                        {currencyFormat(item.balance)}
-                      </span>
+                      <span className="italic">{currencyFormat(item.balance)}</span>
                       <span>/</span>
                     </>
                   )}

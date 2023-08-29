@@ -1,21 +1,9 @@
-import {
-  Button,
-  Checkbox,
-  Drawer,
-  NumberInput,
-  Select,
-  Textarea,
-  TextInput,
-} from '@mantine/core';
+import { Button, Checkbox, Drawer, NumberInput, Select, Textarea, TextInput } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import DrawerBody from 'src/components/DrawerBody';
 import DrawerHeader from 'src/components/DrawerHeader';
 import React, { FormEvent, useEffect, useState } from 'react';
-import {
-  ICategory,
-  IProductWithCategories,
-  IValidationErrors,
-} from 'src/types';
+import { ICategory, IProductWithCategories, IValidationErrors } from 'src/types';
 
 interface Props {
   product?: IProductWithCategories | null;
@@ -28,16 +16,7 @@ interface Props {
   update(formData: unknown): Promise<void>;
 }
 
-const ProductForm = ({
-  product,
-  categories,
-  opened,
-  loading,
-  errors,
-  close,
-  store,
-  update,
-}: Props) => {
+const ProductForm = ({ product, categories, opened, loading, errors, close, store, update }: Props) => {
   const [formTitle, setFormTitle] = useState('Registrar Producto');
   const [btnMessage, setBtnMessage] = useState('Guardar');
   const [productCategory, setProductCategory] = useState<string | null>(null);
@@ -47,9 +26,7 @@ const ProductForm = ({
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState<number | undefined>(undefined);
   const [hasDiscount, setHasDiscount] = useState(false);
-  const [priceWithDiscount, setPriceWithDiscount] = useState<
-    number | undefined
-  >(undefined);
+  const [priceWithDiscount, setPriceWithDiscount] = useState<number | undefined>(undefined);
   const [stock, setStock] = useState<number | undefined>(0);
   const [productIsNew, setProductIsNew] = useState(false);
   const [published, setPublished] = useState(false);
@@ -100,8 +77,7 @@ const ProductForm = ({
     }
     if (productIsNew) formData.append('productIsNew', String(productIsNew));
     if (published) formData.append('published', String(published));
-    if (stock && stock >= 0)
-      formData.append(!product ? 'initialStock' : 'stock', String(stock));
+    if (stock && stock >= 0) formData.append(!product ? 'initialStock' : 'stock', String(stock));
     if (isInventoriable) formData.append('isInventoriable', 'true');
 
     return formData;
@@ -127,8 +103,7 @@ const ProductForm = ({
         setName(product.name);
         setRef(product.ref || '');
         setBarcode(product.barcode || '');
-        if (product.categories.length > 0)
-          setProductCategory(product.categories[0].id);
+        if (product.categories.length > 0) setProductCategory(product.categories[0].id);
         setDescription(product.description || '');
         setPrice(product.price);
         setHasDiscount(Boolean(product.hasDiscount));
@@ -189,9 +164,7 @@ const ProductForm = ({
 
               {/* BARCODE */}
               <TextInput
-                label={
-                  <span className="font-sans dark:text-light">Codigo</span>
-                }
+                label={<span className="font-sans dark:text-light">Codigo</span>}
                 placeholder="Escribe el codigo aquí."
                 id="productBarcode"
                 value={barcode}
@@ -203,9 +176,7 @@ const ProductForm = ({
 
             {/* CATEGORY */}
             <Select
-              label={
-                <span className="font-sans dark:text-light">Categoría</span>
-              }
+              label={<span className="font-sans dark:text-light">Categoría</span>}
               placeholder="Selecciona una"
               className="mb-2"
               value={productCategory}
@@ -220,9 +191,7 @@ const ProductForm = ({
 
             {/* DESCRIPTION */}
             <Textarea
-              label={
-                <span className="font-sans dark:text-light">Descripción</span>
-              }
+              label={<span className="font-sans dark:text-light">Descripción</span>}
               id="productDescription"
               placeholder="Describe el producto aquí."
               className="mb-2"
@@ -237,9 +206,7 @@ const ProductForm = ({
               {/* PRICE AND CHECK */}
               <div className=" flex flex-col">
                 <NumberInput
-                  label={
-                    <span className="font-sans dark:text-light">Precio</span>
-                  }
+                  label={<span className="font-sans dark:text-light">Precio</span>}
                   id="productPrice"
                   required
                   placeholder="Escribe el precio aquí."
@@ -258,27 +225,17 @@ const ProductForm = ({
 
                 {/* HAS DISCOUNT */}
                 <Checkbox
-                  label={
-                    <span className="font-sans dark:text-light">
-                      Tiene descuento
-                    </span>
-                  }
+                  label={<span className="font-sans dark:text-light">Tiene descuento</span>}
                   size="xs"
                   checked={hasDiscount}
-                  onChange={({ currentTarget }) =>
-                    setHasDiscount(currentTarget.checked)
-                  }
+                  onChange={({ currentTarget }) => setHasDiscount(currentTarget.checked)}
                   disabled={loading}
                 />
               </div>
 
               {/* PRICE WITH DISCOUNT */}
               <NumberInput
-                label={
-                  <span className="font-sans dark:text-light">
-                    Precio con descuento
-                  </span>
-                }
+                label={<span className="font-sans dark:text-light">Precio con descuento</span>}
                 id="productPriceWithDiscount"
                 required
                 placeholder="Escribe el precio aquí."
@@ -298,11 +255,7 @@ const ProductForm = ({
 
             {/* STOCK */}
             <NumberInput
-              label={
-                <span className="font-sans dark:text-light">
-                  Unidades en stock
-                </span>
-              }
+              label={<span className="font-sans dark:text-light">Unidades en stock</span>}
               id="productStock"
               placeholder="Escribe las unidades en stock"
               className="mb-4"
@@ -320,33 +273,21 @@ const ProductForm = ({
               <Checkbox
                 label={<span className="font-sans dark:text-light">Nuevo</span>}
                 checked={published}
-                onChange={({ currentTarget }) =>
-                  setPublished(currentTarget.checked)
-                }
+                onChange={({ currentTarget }) => setPublished(currentTarget.checked)}
                 disabled={loading}
               />
 
               <Checkbox
-                label={
-                  <span className="font-sans dark:text-light">Publicar</span>
-                }
+                label={<span className="font-sans dark:text-light">Publicar</span>}
                 checked={productIsNew}
-                onChange={({ currentTarget }) =>
-                  setProductIsNew(currentTarget.checked)
-                }
+                onChange={({ currentTarget }) => setProductIsNew(currentTarget.checked)}
                 disabled={loading}
               />
 
               <Checkbox
-                label={
-                  <span className="font-sans dark:text-light">
-                    Es inventariable
-                  </span>
-                }
+                label={<span className="font-sans dark:text-light">Es inventariable</span>}
                 checked={isInventoriable}
-                onChange={({ currentTarget }) =>
-                  setIsInventoriable(currentTarget.checked)
-                }
+                onChange={({ currentTarget }) => setIsInventoriable(currentTarget.checked)}
                 disabled={loading}
               />
             </div>

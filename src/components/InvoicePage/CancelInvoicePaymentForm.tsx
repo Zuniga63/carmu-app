@@ -1,14 +1,10 @@
 import { Button, Checkbox, Modal, Select, Textarea } from '@mantine/core';
-import { IconBox } from '@tabler/icons';
+import { IconBox } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { boxPageSelector } from 'src/features/BoxPage';
-import {
-  cancelInvoicePayment,
-  hideCancelPaymentForm,
-  invoicePageSelector,
-} from 'src/features/InvoicePage';
+import { cancelInvoicePayment, hideCancelPaymentForm, invoicePageSelector } from 'src/features/InvoicePage';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 import { currencyFormat } from 'src/utils';
 
@@ -78,9 +74,7 @@ const CancelInvoicePaymentForm = () => {
   };
 
   useEffect(() => {
-    setTitle(
-      invoice ? `Factura N° ${invoice.prefixNumber}: Anulación de pago` : ''
-    );
+    setTitle(invoice ? `Factura N° ${invoice.prefixNumber}: Anulación de pago` : '');
   }, [invoice]);
 
   useEffect(() => {
@@ -103,19 +97,13 @@ const CancelInvoicePaymentForm = () => {
           <div className="mb-4 flex items-center justify-around gap-x-2 rounded border border-purple-500 p-2">
             <div className="flex-shrink-0">
               <div className="flex flex-col items-center">
-                <span className="text-sm">
-                  {dayjs(payment.paymentDate).format('DD/MM/YYYY')}
-                </span>
-                <span className="text-xs">
-                  {dayjs(payment.paymentDate).format('hh:mm a')}
-                </span>
+                <span className="text-sm">{dayjs(payment.paymentDate).format('DD/MM/YYYY')}</span>
+                <span className="text-xs">{dayjs(payment.paymentDate).format('hh:mm a')}</span>
               </div>
             </div>
             <div className="flex flex-col">
               <span className="text-sm">{payment.description}</span>
-              <span className="text-xs">
-                {dayjs(payment.paymentDate).fromNow()}
-              </span>
+              <span className="text-xs">{dayjs(payment.paymentDate).fromNow()}</span>
             </div>
             <div>{currencyFormat(payment.amount)}</div>
           </div>
@@ -136,9 +124,7 @@ const CancelInvoicePaymentForm = () => {
             label="Registrar transacción"
             checked={registerTransaction}
             className="mb-2"
-            onChange={({ currentTarget }) =>
-              setRegisterTransaction(currentTarget.checked)
-            }
+            onChange={({ currentTarget }) => setRegisterTransaction(currentTarget.checked)}
           />
 
           <Select

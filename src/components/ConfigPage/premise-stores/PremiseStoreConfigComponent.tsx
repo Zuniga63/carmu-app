@@ -14,18 +14,13 @@ const PremiseStoreConfigComponent = () => {
 
   return (
     <>
-      <FormSection
-        title="Locales"
-        description="This a generic description for component"
-      >
+      <FormSection title="Locales" description="This a generic description for component">
         <FormSectionCard>
           <FormSectionCard.Body>
             <PremiseStoreTable />
           </FormSectionCard.Body>
           <FormSectionCard.Footer>
-            {loading ? (
-              <span className="animate-pulse text-xs">Cargando locales...</span>
-            ) : null}
+            {loading ? <span className="animate-pulse text-xs">Cargando locales...</span> : null}
             <Button size="xs" onClick={() => dispatch(showPremiseForm())}>
               Agregar Local
             </Button>
