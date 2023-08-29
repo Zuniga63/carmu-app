@@ -1,4 +1,4 @@
-import { IInvoice, IInvoiceBase, IInvoiceBaseFull, IInvoiceFull } from 'src/types';
+import { IInvoice, IInvoiceBase, IInvoiceBaseFull, IInvoiceFull } from '@/types';
 import colorLib, { Color, RGBA } from '@kurkle/color';
 import dayjs from 'dayjs';
 

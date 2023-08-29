@@ -3,10 +3,10 @@ import { IconBox } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { boxPageSelector } from 'src/features/BoxPage';
-import { cancelInvoicePayment, hideCancelPaymentForm, invoicePageSelector } from 'src/features/InvoicePage';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import { currencyFormat } from 'src/utils';
+import { boxPageSelector } from '@/features/BoxPage';
+import { cancelInvoicePayment, hideCancelPaymentForm, invoicePageSelector } from '@/features/InvoicePage';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { currencyFormat } from '@/utils';
 
 export interface ICancelPaymentData {
   invoiceId: string;

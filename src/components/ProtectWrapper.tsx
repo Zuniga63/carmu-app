@@ -1,8 +1,8 @@
 import { Button, PasswordInput } from '@mantine/core';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { configSelector, unlockContent } from 'src/features/Config';
-import { useAppSelector } from 'src/store/hooks';
+import { configSelector, unlockContent } from '@/features/Config';
+import { useAppSelector } from '@/store/hooks';
 
 type Props = {
   children: React.ReactNode;

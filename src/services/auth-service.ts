@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { AuthResponse, LoginData } from 'src/types';
+import { AuthResponse, LoginData } from '@/types';
 
 export const AUTH_PATH = '/auth/local';
 export const LOGIN_PATH = `${AUTH_PATH}/signin`;

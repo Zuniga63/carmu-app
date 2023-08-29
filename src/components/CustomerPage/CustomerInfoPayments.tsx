@@ -1,5 +1,5 @@
 import React from 'react';
-import { IInvoicePaymentBase } from 'src/types';
+import { IInvoicePaymentBase } from '@/types';
 import CustomerInfoPaymentCard from './CustomerInfoPaymentCard';
 
 interface Props {

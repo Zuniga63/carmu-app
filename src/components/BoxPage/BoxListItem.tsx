@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { IBoxWithDayjs } from 'src/types';
+import { IBoxWithDayjs } from '@/types';
 import {
   IconAlertTriangle,
   IconAward,
@@ -10,12 +10,12 @@ import {
   IconLockOpen,
   IconTrash,
 } from '@tabler/icons-react';
-import { currencyFormat } from 'src/utils';
-import { useAppDispatch } from 'src/store/hooks';
+import { currencyFormat } from '@/utils';
+import { useAppDispatch } from '@/store/hooks';
 import { Collapse, Divider, Tooltip } from '@mantine/core';
 import Swal from 'sweetalert2';
 import axios, { AxiosError } from 'axios';
-import { fetchBoxes, removeBox, mountBoxToOpen, mountBoxToClose, mountBox } from 'src/features/BoxPage';
+import { fetchBoxes, removeBox, mountBoxToOpen, mountBoxToClose, mountBox } from '@/features/BoxPage';
 
 interface Props {
   box: IBoxWithDayjs;

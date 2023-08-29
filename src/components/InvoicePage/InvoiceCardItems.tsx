@@ -1,6 +1,6 @@
 import { Table } from '@mantine/core';
 import React from 'react';
-import { IInvoiceItemBase } from 'src/types';
+import { IInvoiceItemBase } from '@/types';
 import InvoiceCardItemsRow from './InvoiceCardItemsRow';
 
 interface Props {

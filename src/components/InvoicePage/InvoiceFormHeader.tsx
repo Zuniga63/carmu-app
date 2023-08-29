@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { IconX } from '@tabler/icons-react';
 import BrandLogo from '../Layout/BrandLogo';
-import { useAppSelector } from 'src/store/hooks';
-import { configSelector } from 'src/features/Config';
+import { useAppSelector } from '@/store/hooks';
+import { configSelector } from '@/features/Config';
 
 interface Props {
   isSeparate: boolean;

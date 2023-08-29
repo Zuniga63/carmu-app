@@ -4,9 +4,9 @@ import { toast } from 'react-toastify';
 import dayjs from 'dayjs';
 
 import { ActionIcon, Button, Select, Skeleton, Tabs } from '@mantine/core';
-import { IAnnualReport } from 'src/types';
+import { IAnnualReport } from '@/types';
 import { IconChartInfographic, IconReload, IconTrash } from '@tabler/icons-react';
-import { ChartPeriod, CHART_DATA_PERIODS, MONTHS } from 'src/utils';
+import { ChartPeriod, CHART_DATA_PERIODS, MONTHS } from '@/utils';
 
 import AnnualGeneralChart from './AnnualGeneralChart';
 import AnnualGeneralAux from './AnnualGeneralAux';

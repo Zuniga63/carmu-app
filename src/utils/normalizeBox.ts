@@ -1,5 +1,5 @@
 import dayjs, { Dayjs } from 'dayjs';
-import { IBox, IBoxWithDayjs } from 'src/types';
+import { IBox, IBoxWithDayjs } from '@/types';
 
 export const normalizeBox = (box: IBox | IBoxWithDayjs): IBoxWithDayjs => {
   const now = dayjs();

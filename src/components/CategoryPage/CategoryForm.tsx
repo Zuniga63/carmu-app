@@ -2,13 +2,13 @@ import React, { FormEvent, useEffect, useState } from 'react';
 import { useMediaQuery } from '@mantine/hooks';
 import { Drawer, Textarea, TextInput } from '@mantine/core';
 import { IconDatabase } from '@tabler/icons-react';
-import { IValidationErrors } from 'src/types';
-import CustomButton from 'src/components/CustomButton';
+import { IValidationErrors } from '@/types';
+import CustomButton from '@/components/CustomButton';
 import { AxiosResponse } from 'axios';
 import { toast } from 'react-toastify';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import DrawerHeader from 'src/components/DrawerHeader';
-import DrawerBody from 'src/components/DrawerBody';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import DrawerHeader from '@/components/DrawerHeader';
+import DrawerBody from '@/components/DrawerBody';
 import {
   categoryPageSelector,
   hideCategoryForm,
@@ -16,7 +16,7 @@ import {
   setUpdateIsSuccess,
   storeCategory,
   updateCategory,
-} from 'src/features/CategoryPage';
+} from '@/features/CategoryPage';
 
 export default function CategoryForm() {
   //---------------------------------------------------------------------------

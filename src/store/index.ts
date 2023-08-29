@@ -1,10 +1,10 @@
 import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
-import { authReducer } from 'src/features/Auth';
-import { boxPageReducer } from 'src/features/BoxPage';
-import { categoryPageReducer } from 'src/features/CategoryPage';
-import { invoicePageReducer } from 'src/features/InvoicePage';
-import { customerPageReducer } from 'src/features/CustomerPage';
-import { configStateReducer } from 'src/features/Config';
+import { authReducer } from '@/features/Auth';
+import { boxPageReducer } from '@/features/BoxPage';
+import { categoryPageReducer } from '@/features/CategoryPage';
+import { invoicePageReducer } from '@/features/InvoicePage';
+import { customerPageReducer } from '@/features/CustomerPage';
+import { configStateReducer } from '@/features/Config';
 
 export const store = configureStore({
   reducer: {

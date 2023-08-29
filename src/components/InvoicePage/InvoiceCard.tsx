@@ -1,7 +1,7 @@
 import { Tabs } from '@mantine/core';
 import { IconBox, IconFileInvoice } from '@tabler/icons-react';
 import React from 'react';
-import { IInvoiceFull } from 'src/types';
+import { IInvoiceFull } from '@/types';
 import InvoiceCardField from './InvoiceCardField';
 import InvoiceCardItems from './InvoiceCardItems';
 import InvoiceCardPayments from './InvoiceCardPayments';

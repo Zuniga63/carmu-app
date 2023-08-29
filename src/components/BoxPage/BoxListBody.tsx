@@ -1,8 +1,8 @@
 import { ScrollArea } from '@mantine/core';
 import React from 'react';
-import { boxPageSelector } from 'src/features/BoxPage';
-import { useAppSelector } from 'src/store/hooks';
-import normalizeBox from 'src/utils/normalizeBox';
+import { boxPageSelector } from '@/features/BoxPage';
+import { useAppSelector } from '@/store/hooks';
+import normalizeBox from '@/utils/normalizeBox';
 import BoxListItem from './BoxListItem';
 
 const BoxListBody = () => {

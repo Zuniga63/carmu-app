@@ -3,8 +3,8 @@ import dayjs from 'dayjs';
 import { GetServerSideProps, NextPage } from 'next';
 import Image from 'next/image';
 import brandLogo from 'public/images/logo_62601199d793d.png';
-import { IInvoiceBaseFull } from 'src/types';
-import { currencyFormat } from 'src/utils';
+import { IInvoiceBaseFull } from '@/types';
+import { currencyFormat } from '@/utils';
 
 interface Props {
   invoice: IInvoiceBaseFull;

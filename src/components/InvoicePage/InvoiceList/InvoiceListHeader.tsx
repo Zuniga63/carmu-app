@@ -7,13 +7,8 @@ import {
   IconReload,
   IconSearch,
 } from '@tabler/icons-react';
-import {
-  invoicePageSelector,
-  refreshInvoices,
-  showCounterSaleForm,
-  showNewInvoiceForm,
-} from 'src/features/InvoicePage';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
+import { invoicePageSelector, refreshInvoices, showCounterSaleForm, showNewInvoiceForm } from '@/features/InvoicePage';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
 type Props = {
   filter?: string;

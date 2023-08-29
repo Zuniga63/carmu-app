@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { useMediaQuery } from '@mantine/hooks';
-import { IInvoiceStoreData, IInvoiceSummary, INewInvoiceItem, INewInvoicePayment } from 'src/types';
+import { IInvoiceStoreData, IInvoiceSummary, INewInvoiceItem, INewInvoicePayment } from '@/types';
 
 import { Button, Modal, Stepper, Switch } from '@mantine/core';
 import {
@@ -22,9 +22,9 @@ import InvoiceFormCustomer from './InvoiceFormCustomer';
 import InvoiceFormDates from './InvoiceFormDates';
 import InvoiceFormItems from './InvoiceFormItems';
 import InvoiceFormConfirm from './InvoiceFormConfirm';
-import { hideNewInvoiceForm, invoicePageSelector, storeNewInvoice } from 'src/features/InvoicePage';
-import { authSelector } from 'src/features/Auth';
-import { configSelector } from 'src/features/Config';
+import { hideNewInvoiceForm, invoicePageSelector, storeNewInvoice } from '@/features/InvoicePage';
+import { authSelector } from '@/features/Auth';
+import { configSelector } from '@/features/Config';
 
 export enum InvoiceSteps {
   Invoicing,

@@ -1,9 +1,9 @@
 import { IconTrash } from '@tabler/icons-react';
 import React, { useEffect, useState } from 'react';
-import { categoryPageSelector } from 'src/features/CategoryPage';
-import { useAppSelector } from 'src/store/hooks';
-import { INewInvoiceItem } from 'src/types';
-import { currencyFormat } from 'src/utils';
+import { categoryPageSelector } from '@/features/CategoryPage';
+import { useAppSelector } from '@/store/hooks';
+import { INewInvoiceItem } from '@/types';
+import { currencyFormat } from '@/utils';
 
 interface Props {
   item: INewInvoiceItem;

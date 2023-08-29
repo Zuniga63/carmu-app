@@ -1,8 +1,8 @@
 import { ActionIcon, Loader, Switch, TextInput, Tooltip } from '@mantine/core';
 import { IconRefresh, IconSearch, IconUserPlus } from '@tabler/icons-react';
-import { customerPageSelector, fetchCustomers, showCustomerForm } from 'src/features/CustomerPage';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import { CustomerFilters } from 'src/types';
+import { customerPageSelector, fetchCustomers, showCustomerForm } from '@/features/CustomerPage';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { CustomerFilters } from '@/types';
 
 type Props = {
   filters: CustomerFilters;

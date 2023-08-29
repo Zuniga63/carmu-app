@@ -1,12 +1,12 @@
 import { NextPage } from 'next';
-import Layout from 'src/components/Layout';
+import Layout from '@/components/Layout';
 import { useEffect } from 'react';
-import CategoryDragAndDrop from 'src/components/CategoryPage/CategoryDragAndDrop';
-import CategoryForm from 'src/components/CategoryPage/CategoryForm';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import { categoryPageSelector, connectToSocket, disconnectWebSocket, fetchCategories } from 'src/features/CategoryPage';
+import CategoryDragAndDrop from '@/components/CategoryPage/CategoryDragAndDrop';
+import CategoryForm from '@/components/CategoryPage/CategoryForm';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { categoryPageSelector, connectToSocket, disconnectWebSocket, fetchCategories } from '@/features/CategoryPage';
 import { Loader } from '@mantine/core';
-import { authSelector } from 'src/features/Auth';
+import { authSelector } from '@/features/Auth';
 
 const Categories: NextPage = () => {
   const { loading } = useAppSelector(categoryPageSelector);

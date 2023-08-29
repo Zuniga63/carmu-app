@@ -1,21 +1,21 @@
 import { NextPage } from 'next';
-import Layout from 'src/components/Layout';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
+import Layout from '@/components/Layout';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { useEffect } from 'react';
-import InvoiceList from 'src/components/InvoicePage/InvoiceList';
-import InvoiceForm from 'src/components/InvoicePage/InvoiceForm';
-import InvoicePaymentForm from 'src/components/InvoicePage/InvoicePaymentForm';
-import InvoiceCardModal from 'src/components/InvoicePage/InvoiceCardModal';
-import WeeklyInvoiceChart from 'src/components/InvoicePage/WeeklyInvoiceChart';
+import InvoiceList from '@/components/InvoicePage/InvoiceList';
+import InvoiceForm from '@/components/InvoicePage/InvoiceForm';
+import InvoicePaymentForm from '@/components/InvoicePage/InvoicePaymentForm';
+import InvoiceCardModal from '@/components/InvoicePage/InvoiceCardModal';
+import WeeklyInvoiceChart from '@/components/InvoicePage/WeeklyInvoiceChart';
 
-import CounterSaleForm from 'src/components/InvoicePage/CounterSaleForm';
-import { authSelector } from 'src/features/Auth';
-import { fetchInvoiceData, invoicePageSelector, refreshInvoices } from 'src/features/InvoicePage';
-import { fetchCustomers } from 'src/features/CustomerPage';
-import { fetchBoxes } from 'src/features/BoxPage';
-import { fetchCategories } from 'src/features/CategoryPage';
-import CancelInvoicePaymentForm from 'src/components/InvoicePage/CancelInvoicePaymentForm';
-import CancelInvoiceForm from 'src/components/InvoicePage/CancelInvoiceForm';
+import CounterSaleForm from '@/components/InvoicePage/CounterSaleForm';
+import { authSelector } from '@/features/Auth';
+import { fetchInvoiceData, invoicePageSelector, refreshInvoices } from '@/features/InvoicePage';
+import { fetchCustomers } from '@/features/CustomerPage';
+import { fetchBoxes } from '@/features/BoxPage';
+import { fetchCategories } from '@/features/CategoryPage';
+import CancelInvoicePaymentForm from '@/components/InvoicePage/CancelInvoicePaymentForm';
+import CancelInvoiceForm from '@/components/InvoicePage/CancelInvoiceForm';
 
 const InvoicePage: NextPage = () => {
   const { isAuth, isAdmin } = useAppSelector(authSelector);

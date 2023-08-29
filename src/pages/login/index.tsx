@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
-import LoginCard from 'src/components/LoginPage/LoginCard';
-import LoginForm from 'src/components/LoginPage/LoginForm';
+import LoginCard from '@/components/LoginPage/LoginCard';
+import LoginForm from '@/components/LoginPage/LoginForm';
 
 const Login: NextPage = () => {
   return (

@@ -1,10 +1,10 @@
 import React from 'react';
 import { DraggableProvided } from '@hello-pangea/dnd';
 import { IconArrowsMove, IconBox, IconCategory2, IconEditCircle, IconTrash } from '@tabler/icons-react';
-import { ICategory } from 'src/types';
+import { ICategory } from '@/types';
 import { Button, Tooltip } from '@mantine/core';
-import { useAppDispatch } from 'src/store/hooks';
-import { showCategoryForm, destroyCategory } from 'src/features/CategoryPage';
+import { useAppDispatch } from '@/store/hooks';
+import { showCategoryForm, destroyCategory } from '@/features/CategoryPage';
 
 interface Props {
   provided: DraggableProvided;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ChartOptions, ChartData } from 'chart.js';
 import { Chart } from 'react-chartjs-2';
-import { CHART_COLORS, currencyFormat, transparentize } from 'src/utils';
+import { CHART_COLORS, currencyFormat, transparentize } from '@/utils';
 import axios from 'axios';
 import ProtectWrapper from '../ProtectWrapper';
 

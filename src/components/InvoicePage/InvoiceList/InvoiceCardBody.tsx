@@ -1,6 +1,6 @@
 import { Tabs } from '@mantine/core';
 import { IconCircleSquare, IconListCheck } from '@tabler/icons-react';
-import { IInvoice } from 'src/types';
+import { IInvoice } from '@/types';
 import InvoiceItem from './InvoiceItem';
 import InvoiceSumary from './InvoiceSumary';
 

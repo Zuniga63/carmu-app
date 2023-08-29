@@ -1,11 +1,11 @@
-import Layout from 'src/components/Layout';
+import Layout from '@/components/Layout';
 import { NextPage } from 'next';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import { authSelector } from 'src/features/Auth';
-import { fetchBoxes } from 'src/features/BoxPage';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { authSelector } from '@/features/Auth';
+import { fetchBoxes } from '@/features/BoxPage';
 import { useEffect } from 'react';
-import { fetchPremiseStores } from 'src/features/Config';
-import PremiseStoreConfigComponent from 'src/components/ConfigPage/premise-stores/PremiseStoreConfigComponent';
+import { fetchPremiseStores } from '@/features/Config';
+import PremiseStoreConfigComponent from '@/components/ConfigPage/premise-stores/PremiseStoreConfigComponent';
 
 const ConfigPage: NextPage = () => {
   const { isAuth, isAdmin } = useAppSelector(authSelector);

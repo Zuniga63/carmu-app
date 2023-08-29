@@ -1,5 +1,5 @@
-import { IInvoiceItemBase } from 'src/types';
-import { currencyFormat } from 'src/utils';
+import { IInvoiceItemBase } from '@/types';
+import { currencyFormat } from '@/utils';
 
 export default function InvoiceItem({ item }: { item: IInvoiceItemBase }) {
   const { quantity, description } = item;

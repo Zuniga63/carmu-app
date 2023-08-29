@@ -1,7 +1,7 @@
 import InvoiceRated from './InvoiceRated';
 import InvoiceListHeader from './InvoiceListHeader';
 import InvoiceListBody from './InvoiceListBody';
-import { useInvoiceList } from 'src/hooks/useInvoiceList';
+import { useInvoiceList } from '@/hooks/useInvoiceList';
 
 export default function InvoiceList() {
   const {

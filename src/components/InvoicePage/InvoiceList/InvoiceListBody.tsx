@@ -1,8 +1,8 @@
-import { invoicePageSelector } from 'src/features/InvoicePage';
-import { useAppSelector } from 'src/store/hooks';
+import { invoicePageSelector } from '@/features/InvoicePage';
+import { useAppSelector } from '@/store/hooks';
 import InvoiceListLoader from './InvoiceListLoader';
 import { Button, ScrollArea } from '@mantine/core';
-import { IInvoice } from 'src/types';
+import { IInvoice } from '@/types';
 import InvoiceCard from './InvoiceCard';
 
 type Props = {

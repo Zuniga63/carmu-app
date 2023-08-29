@@ -1,9 +1,9 @@
 import { Modal, Tabs } from '@mantine/core';
 import { IconCashBanknote, IconFileInvoice } from '@tabler/icons-react';
 import React, { useEffect, useState } from 'react';
-import { customerPageSelector, unmountCustomer } from 'src/features/CustomerPage';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import { IInvoicePaymentBase } from 'src/types';
+import { customerPageSelector, unmountCustomer } from '@/features/CustomerPage';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { IInvoicePaymentBase } from '@/types';
 import CustomerInfoInvoices from './CustomerInfoInvoices';
 import CustomerInfoPayments from './CustomerInfoPayments';
 import CustomerInfoTitle from './CustomerInfoTitle';

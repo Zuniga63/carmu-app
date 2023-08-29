@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
-import { IInvoiceBase } from 'src/types';
-import { currencyFormat } from 'src/utils';
+import { IInvoiceBase } from '@/types';
+import { currencyFormat } from '@/utils';
 
 type Props = {
   subtotal: IInvoiceBase['subtotal'];

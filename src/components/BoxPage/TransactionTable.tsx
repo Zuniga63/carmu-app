@@ -1,6 +1,6 @@
 import { Table } from '@mantine/core';
 import React from 'react';
-import { ITransaction } from 'src/types';
+import { ITransaction } from '@/types';
 import TransactionTableItem from './TransactionTableItem';
 
 interface Props {

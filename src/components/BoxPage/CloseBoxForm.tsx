@@ -2,10 +2,10 @@ import { Button, Modal, NumberInput, Textarea } from '@mantine/core';
 import { IconLock } from '@tabler/icons-react';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { boxPageSelector, closeBox, unmountBoxToClose } from 'src/features/BoxPage';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import { IValidationErrors } from 'src/types';
-import { currencyFormat } from 'src/utils';
+import { boxPageSelector, closeBox, unmountBoxToClose } from '@/features/BoxPage';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { IValidationErrors } from '@/types';
+import { currencyFormat } from '@/utils';
 
 function CloseBoxForm() {
   const [opened, setOpened] = useState(false);

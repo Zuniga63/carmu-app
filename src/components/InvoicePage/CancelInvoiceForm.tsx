@@ -1,8 +1,8 @@
 import { Button, Modal, Textarea } from '@mantine/core';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { cancelInvoice, hideCancelInvoiceForm, invoicePageSelector } from 'src/features/InvoicePage';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
+import { cancelInvoice, hideCancelInvoiceForm, invoicePageSelector } from '@/features/InvoicePage';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
 export interface ICancelInvoiceData {
   invoiceId: string;

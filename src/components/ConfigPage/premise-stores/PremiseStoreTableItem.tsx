@@ -10,10 +10,10 @@ import {
   IconPhone,
   IconTrash,
 } from '@tabler/icons-react';
-import { IPremiseStore } from 'src/features/Config/types';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import { configSelector, editPremiseStore, selectCommercialPremise, unselectPremiseStore } from 'src/features/Config';
-import { currencyFormat } from 'src/utils';
+import { IPremiseStore } from '@/features/Config/types';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { configSelector, editPremiseStore, selectCommercialPremise, unselectPremiseStore } from '@/features/Config';
+import { currencyFormat } from '@/utils';
 
 interface Props {
   premiseStore: IPremiseStore;

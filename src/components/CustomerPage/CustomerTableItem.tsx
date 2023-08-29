@@ -21,10 +21,10 @@ import {
   mountCustomerToFetch,
   mountCustomerToPayment,
   mountCustomerToUpdate,
-} from 'src/features/CustomerPage';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import { ICustomer } from 'src/types';
-import { currencyFormat } from 'src/utils';
+} from '@/features/CustomerPage';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { ICustomer } from '@/types';
+import { currencyFormat } from '@/utils';
 
 interface Props {
   customer: ICustomer;

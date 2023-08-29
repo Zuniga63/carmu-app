@@ -1,15 +1,15 @@
-import BoxList from 'src/components/BoxPage/BoxList';
-import BoxShow from 'src/components/BoxPage/BoxShow';
-import CloseBoxForm from 'src/components/BoxPage/CloseBoxForm';
-import CreateForm from 'src/components/BoxPage/CreateForm';
-import OpenBoxForm from 'src/components/BoxPage/OpenBoxForm';
-import Layout from 'src/components/Layout';
+import BoxList from '@/components/BoxPage/BoxList';
+import BoxShow from '@/components/BoxPage/BoxShow';
+import CloseBoxForm from '@/components/BoxPage/CloseBoxForm';
+import CreateForm from '@/components/BoxPage/CreateForm';
+import OpenBoxForm from '@/components/BoxPage/OpenBoxForm';
+import Layout from '@/components/Layout';
 import { NextPage } from 'next';
 import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import { fetchBoxes, unmountTransactions } from 'src/features/BoxPage';
-import { authSelector } from 'src/features/Auth';
-import CreateTransactionForm from 'src/components/BoxPage/CreateTransactionForm';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { fetchBoxes, unmountTransactions } from '@/features/BoxPage';
+import { authSelector } from '@/features/Auth';
+import CreateTransactionForm from '@/components/BoxPage/CreateTransactionForm';
 
 const BoxesPage: NextPage = () => {
   const { isAuth, isAdmin } = useAppSelector(authSelector);

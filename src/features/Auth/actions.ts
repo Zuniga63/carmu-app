@@ -1,8 +1,8 @@
 import { createAsyncThunk, createAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { LoginData } from './types';
-import { authenticateUser, validateToken } from 'src/services/auth-service';
-import { getTokenFromCookies } from 'src/logic/auth-logic';
+import { authenticateUser, validateToken } from '@/services/auth-service';
+import { getTokenFromCookies } from '@/logic/auth-logic';
 
 export const signin = createAsyncThunk('auth/signin', async (data: LoginData, { rejectWithValue }) => {
   try {

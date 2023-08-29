@@ -1,15 +1,15 @@
 import { NextPage } from 'next';
-import Layout from 'src/components/Layout';
-import CustomerTable from 'src/components/CustomerPage/CustomerTable';
+import Layout from '@/components/Layout';
+import CustomerTable from '@/components/CustomerPage/CustomerTable';
 import { useEffect } from 'react';
-import CustomerForm from 'src/components/CustomerPage/CustomerForm';
+import CustomerForm from '@/components/CustomerPage/CustomerForm';
 import { toast } from 'react-toastify';
-import CustomerPaymentModal from 'src/components/CustomerPage/CustomerPaymentModal';
-import { authSelector } from 'src/features/Auth';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import { customerPageSelector, fetchCustomers } from 'src/features/CustomerPage';
-import { fetchBoxes } from 'src/features/BoxPage';
-import CustomerInfo from 'src/components/CustomerPage/CustomerInfo';
+import CustomerPaymentModal from '@/components/CustomerPage/CustomerPaymentModal';
+import { authSelector } from '@/features/Auth';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { customerPageSelector, fetchCustomers } from '@/features/CustomerPage';
+import { fetchBoxes } from '@/features/BoxPage';
+import CustomerInfo from '@/components/CustomerPage/CustomerInfo';
 
 const CustomerPage: NextPage = () => {
   const { isAuth } = useAppSelector(authSelector);

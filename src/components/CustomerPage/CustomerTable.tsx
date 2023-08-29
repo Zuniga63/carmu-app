@@ -1,4 +1,4 @@
-import { useCustomerFilter } from 'src/hooks/useCustomerFilter';
+import { useCustomerFilter } from '@/hooks/useCustomerFilter';
 import CustomerTableHeader from './CustomerTableHeader';
 import CustomerTableFooter from './CustomerTableFooter';
 import CustomerTableBody from './CustomerTableBody';

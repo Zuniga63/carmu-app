@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import React from 'react';
-import { IInvoiceSummary, INewInvoiceItem, INewInvoicePayment } from 'src/types';
+import { IInvoiceSummary, INewInvoiceItem, INewInvoicePayment } from '@/types';
 import { IInvoiceCustomer } from './InvoiceForm';
 import InvoiceFormItemList from './InvoiceFormItemList';
 import InvoiceFormPaymentList from './InvoiceFormPaymentList';

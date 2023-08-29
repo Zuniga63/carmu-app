@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import React from 'react';
-import { IInvoicePaymentBase } from 'src/types';
-import { currencyFormat } from 'src/utils';
+import { IInvoicePaymentBase } from '@/types';
+import { currencyFormat } from '@/utils';
 
 interface Props {
   paymentBase: IInvoicePaymentBase;

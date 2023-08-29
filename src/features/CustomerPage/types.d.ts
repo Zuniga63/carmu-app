@@ -1,4 +1,4 @@
-import { ErrorResponse } from 'src/types';
+import { ErrorResponse } from '@/types';
 import { IInvoiceBaseFull } from '../InvoicePage/types';
 
 export interface ICustomerContact {

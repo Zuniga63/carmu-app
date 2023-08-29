@@ -1,5 +1,5 @@
-import { IInvoice } from 'src/types';
-import { currencyFormat } from 'src/utils';
+import { IInvoice } from '@/types';
+import { currencyFormat } from '@/utils';
 
 type Props = {
   invoice: IInvoice;

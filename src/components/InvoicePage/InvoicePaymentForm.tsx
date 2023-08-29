@@ -5,11 +5,11 @@ import { AxiosError } from 'axios';
 import dayjs from 'dayjs';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { boxPageSelector } from 'src/features/BoxPage';
-import { hidePaymentForm, invoicePageSelector, registerPayment } from 'src/features/InvoicePage';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import { IInvoicePaymentData, IValidationErrors } from 'src/types';
-import { currencyFormat } from 'src/utils';
+import { boxPageSelector } from '@/features/BoxPage';
+import { hidePaymentForm, invoicePageSelector, registerPayment } from '@/features/InvoicePage';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { IInvoicePaymentData, IValidationErrors } from '@/types';
+import { currencyFormat } from '@/utils';
 
 const InvoicePaymentForm = () => {
   const {

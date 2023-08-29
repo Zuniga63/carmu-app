@@ -1,5 +1,5 @@
 import React from 'react';
-import { IInvoiceSummary } from 'src/types';
+import { IInvoiceSummary } from '@/types';
 import InvoiceFormSummaryItem from './InvoiceFormSummaryItem';
 
 interface Props {

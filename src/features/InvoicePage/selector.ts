@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { RootState } from 'src/store';
+import { RootState } from '@/store';
 
 export const invoicePage = (state: RootState) => state.invoicePage;
 

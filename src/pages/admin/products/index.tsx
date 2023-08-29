@@ -1,12 +1,12 @@
 import { GetServerSideProps, NextPage } from 'next';
-import Layout from 'src/components/Layout';
-import { ICategory, IProductWithCategories, IValidationErrors } from 'src/types';
+import Layout from '@/components/Layout';
+import { ICategory, IProductWithCategories, IValidationErrors } from '@/types';
 import { useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
-import ProductTable from 'src/components/ProductPage/ProductTable';
-import ProductForm from 'src/components/ProductPage/ProductForm';
+import ProductTable from '@/components/ProductPage/ProductTable';
+import ProductForm from '@/components/ProductPage/ProductForm';
 
 export const getServerSideProps: GetServerSideProps = async context => {
   const { access_token: token } = context.req.cookies;

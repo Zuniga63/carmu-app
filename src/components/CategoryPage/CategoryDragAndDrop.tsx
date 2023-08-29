@@ -1,12 +1,12 @@
 import React from 'react';
-import { ICategory } from 'src/types';
+import { ICategory } from '@/types';
 import { useEffect, useState } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { IconCircleCheck, IconCircleX, IconPencilPlus } from '@tabler/icons-react';
 import DragAndDropCategoryItem from './DragAndDropCategoryItem';
-import Button from 'src/components/CustomButton';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import { categoryPageSelector, showCategoryForm, storeCategoryOrder } from 'src/features/CategoryPage';
+import Button from '@/components/CustomButton';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { categoryPageSelector, showCategoryForm, storeCategoryOrder } from '@/features/CategoryPage';
 import { Loader } from '@mantine/core';
 
 interface Props {

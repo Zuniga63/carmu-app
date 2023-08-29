@@ -1,6 +1,6 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { RootState } from 'src/store';
+import { RootState } from '@/store';
 import Swal from 'sweetalert2';
 import { ICustomerStore, ICustomerWithInvoices } from './types';
 import { ICustomer } from './types';

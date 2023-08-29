@@ -3,12 +3,12 @@ import { Button, Checkbox, Modal, NumberInput, Textarea } from '@mantine/core';
 import { IconCalendar, IconClock, IconDeviceFloppy, IconX } from '@tabler/icons-react';
 import { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import { IValidationErrors } from 'src/types';
-import { currencyFormat } from 'src/utils';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { IValidationErrors } from '@/types';
+import { currencyFormat } from '@/utils';
 import { DatePicker, TimeInput } from '@mantine/dates';
 import dayjs from 'dayjs';
-import { boxPageSelector, hideTransactionForm, storeTransaction } from 'src/features/BoxPage';
+import { boxPageSelector, hideTransactionForm, storeTransaction } from '@/features/BoxPage';
 
 const CreateTransactionForm = () => {
   const [date, setDate] = useState<Date | undefined | null>(undefined);

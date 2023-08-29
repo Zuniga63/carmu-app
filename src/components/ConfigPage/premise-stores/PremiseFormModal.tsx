@@ -2,10 +2,10 @@ import { Button, Modal, Select, TextInput } from '@mantine/core';
 import { IconBox } from '@tabler/icons-react';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { boxPageSelector } from 'src/features/BoxPage';
-import { configSelector, hidePremiseForm, storePremiseStore, updatePremiseStore } from 'src/features/Config';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import { IValidationErrors } from 'src/types';
+import { boxPageSelector } from '@/features/BoxPage';
+import { configSelector, hidePremiseForm, storePremiseStore, updatePremiseStore } from '@/features/Config';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { IValidationErrors } from '@/types';
 
 const PremiseFormModal = () => {
   const {

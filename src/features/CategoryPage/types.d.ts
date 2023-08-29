@@ -1,4 +1,4 @@
-import { IImage } from 'src/types';
+import { IImage } from '@/types';
 import { Socket } from 'socket.io-client';
 import { AxiosResponse } from 'axios';
 

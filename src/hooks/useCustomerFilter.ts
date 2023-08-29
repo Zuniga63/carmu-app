@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { customerPageSelector } from 'src/features/CustomerPage';
+import { customerPageSelector } from '@/features/CustomerPage';
 import {
   getCustomerBySearch,
   getCustomerWithBalance,
   sortCustomersByBalance,
   sortCustomersByLastPayment,
-} from 'src/logic/customer';
-import { useAppSelector } from 'src/store/hooks';
-import { ICustomer, CustomerFilters } from 'src/types';
+} from '@/logic/customer';
+import { useAppSelector } from '@/store/hooks';
+import { ICustomer, CustomerFilters } from '@/types';
 
 const CUSTOMER_BY_PAGE = 25;
 const INITIAL_FILTER: CustomerFilters = {

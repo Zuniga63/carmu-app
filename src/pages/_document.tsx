@@ -1,7 +1,7 @@
 import { createGetInitialProps } from '@mantine/next';
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 import { Provider } from 'react-redux';
-import { store } from 'src/store';
+import { store } from '@/store';
 
 const getInitialProps = createGetInitialProps();
 

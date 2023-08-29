@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollArea, Table } from '@mantine/core';
-import { ISaleHistory } from 'src/types';
+import { ISaleHistory } from '@/types';
 import WeeklyHistoryItem from './WeeklyHistoryItem';
 
 interface Props {

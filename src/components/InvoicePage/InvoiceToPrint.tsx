@@ -2,8 +2,8 @@ import { IconBrandWhatsapp, IconMapPin } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import React from 'react';
 import Image from 'next/image';
-import { IInvoiceBaseFull } from 'src/types';
-import { currencyFormat } from 'src/utils';
+import { IInvoiceBaseFull } from '@/types';
+import { currencyFormat } from '@/utils';
 import brandLogo from 'public/images/logo_62601199d793d.png';
 
 interface Props {
