@@ -1,13 +1,14 @@
 'use client';
 
-import { theme } from '@/config/chakra-theme';
+import '@/config/dates.config';
 import queryClient from '@/config/queryClient';
-import { CacheProvider } from '@chakra-ui/next-js';
-import { ChakraProvider } from '@chakra-ui/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
+import { theme } from '@/config/chakra-theme';
+import { CacheProvider } from '@chakra-ui/next-js';
+import { ChakraProvider } from '@chakra-ui/react';
 import { AppProgressBar as ProgressBar } from 'next-nprogress-bar';
-import '@/config/dates.config';
 
 type Props = {
   children: React.ReactNode;

@@ -13,10 +13,14 @@ module.exports = {
   theme: {
     screens: {
       xxs: '180px',
+      xs: '425px',
       ...defaultTheme.screens,
       '3xl': '1920px',
     },
     extend: {
+      backgroundImage: {
+        login: 'url(/images/bg-login.jpg)',
+      },
       fontFamily: {
         sans: ['var(--font-inter)', 'sans-serif', ...defaultTheme.fontFamily.sans],
         display: ['var(--font-poppins)', 'cursive', ...defaultTheme.fontFamily.sans],
