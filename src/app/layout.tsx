@@ -6,11 +6,11 @@ import { inter, poppins } from '@/config/fonts.config';
 export const metadata: Metadata = {
   title: {
     template: `%s | ${process.env.NEXT_PUBLIC_APP_NAME}`,
-    default: process.env.NEXT_PUBLIC_APP_NAME || 'Default',
+    default: process.env.NEXT_PUBLIC_APP_NAME || 'Carmú',
   },
   description: process.env.NEXT_PUBLIC_APP_DESCRIPTION,
   icons: {
-    icon: '/vercel.svg',
+    icon: '/images/logo_62601199d793d.png',
   },
 };
 
