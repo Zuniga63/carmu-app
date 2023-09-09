@@ -1,9 +1,15 @@
 /** @type {import('tailwindcss').Config} */
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const defaultTheme = require('tailwindcss/defaultTheme');
+import { colorPalette } from './src/config/color-palette';
+
 module.exports = {
   darkMode: 'class',
-  content: ['./src/pages/**/*.{js,ts,jsx,tsx}', './src/components/**/*.{js,ts,jsx,tsx}'],
+  content: [
+    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+  ],
   theme: {
     screens: {
       xxs: '180px',
@@ -12,7 +18,12 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        sans: ['Roboto', 'sans-serif', ...defaultTheme.fontFamily.sans],
+        sans: ['var(--font-inter)', 'sans-serif', ...defaultTheme.fontFamily.sans],
+        display: ['var(--font-poppins)', 'cursive', ...defaultTheme.fontFamily.sans],
+      },
+      spacing: {
+        header: 'var(--header-height)',
+        'without-header': 'calc(100vh - var(--header-height))',
       },
       zIndex: {
         back: '-1',
@@ -21,13 +32,14 @@ module.exports = {
         preload: '1100',
       },
       colors: {
+        dark: '#212529',
+        header: '#161b22',
+        light: '#f8f9fa',
         'defaul-body': '#0d1117',
         'gray-dark': '#343a40',
         'yellow-light': '#f1c40f',
-        dark: '#212529',
-        light: '#f8f9fa',
-        header: '#161b22',
         'btn-bg': '#21262d',
+        ...colorPalette,
       },
     },
   },

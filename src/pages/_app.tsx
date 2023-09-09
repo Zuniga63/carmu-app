@@ -9,6 +9,7 @@ import { useInitialAuth } from '@/hooks/useInitialAuth';
 import { rootConfig } from '@/config/root-config';
 import ThemeProvider from '@/context/CustomThemeProvider';
 import { emCache } from '@/utils/emotionCache';
+import { inter, poppins } from '@/config/fonts.config';
 
 rootConfig();
 
@@ -19,7 +20,9 @@ export function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider>
       <Provider store={store}>
-        <Component {...pageProps} />
+        <div className={`${inter.variable} ${poppins.variable} font-sans`}>
+          <Component {...pageProps} />
+        </div>
       </Provider>
     </ThemeProvider>
   );

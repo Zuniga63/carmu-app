@@ -14,16 +14,12 @@ class MyDocument extends Document {
         <Html lang="es" className="dark">
           <Head>
             <link
-              href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Zen+Dots&display=swap"
-              rel="stylesheet"
-            />
-            <link
               rel="shortcut icon"
               href={process.env.NEXT_PUBLIC_BRAND_LOGO_URL || '/images/logo_62601199d793d.png'}
               type="image/x-icon"
             />
           </Head>
-          <body className="bg-light dark:bg-defaul-body">
+          <body className={`bg-light font-sans dark:bg-defaul-body`}>
             <Main />
             <NextScript />
           </body>

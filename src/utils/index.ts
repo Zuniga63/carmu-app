@@ -12,6 +12,17 @@ export function normalizeText(text: string): string {
     : '';
 }
 
+/**
+ * Build a option for next-cookie
+ * @param duration Time in day of duration of cookie in the browser, default 1 day
+ * @returns
+ */
+export const buildCookieOption = (duration = 1) => ({
+  path: '/',
+  sameSite: true,
+  maxAge: 60 * 60 * 24 * duration,
+});
+
 //-----------------------------------------------------------------------------
 // INVOICE UTILS
 //-----------------------------------------------------------------------------
@@ -70,30 +81,23 @@ export const buildInvoiceFull = (invoice: IInvoiceBaseFull): IInvoiceFull => {
 // UTIL FOR FORMAT CURRENCY
 //-----------------------------------------------------------------------------
 export function currencyFormat(value: string | number | undefined, fractionDigits = 0): string {
-  const parseValue = parseFloat(String(value));
+  if (typeof value === 'undefined') return '';
 
-  if (!isNaN(parseValue)) {
-    const style = 'currency';
-    const currency = 'COP';
-    const formarter = new Intl.NumberFormat('es-CO', {
-      style,
-      currency,
-      minimumFractionDigits: fractionDigits,
-    });
+  const parseValue = typeof value === 'string' ? parseFloat(currencyParse(value)) : value;
+  if (isNaN(parseValue)) return '';
 
-    // if (typeof value === 'string') {
-    //   const parseValue = parseFloat(value);
-    //   if (Number.isNaN(parseValue)) {
-    //     return value.toString();
-    //   }
+  const formarter = new Intl.NumberFormat('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    minimumFractionDigits: fractionDigits,
+  });
 
-    //   return formarter.format(parseValue);
-    // }
+  return formarter.format(parseValue);
+}
 
-    return formarter.format(parseValue);
-  }
-
-  return String(value);
+export function currencyParse(value: string, decimalSeparator: '.' | ',' = ',') {
+  const exp = decimalSeparator === '.' ? /\$\s?|(,*)/g : /\$\s?|(\.*)/g;
+  return value.replace(exp, '').replaceAll(decimalSeparator, '.');
 }
 
 //-----------------------------------------------------------------------------
