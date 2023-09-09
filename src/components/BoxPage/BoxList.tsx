@@ -1,6 +1,6 @@
 import React from 'react';
-import { useAppSelector } from 'src/store/hooks';
-import { boxPageSelector } from 'src/features/BoxPage';
+import { useAppSelector } from '@/store/hooks';
+import { boxPageSelector } from '@/features/BoxPage';
 import BoxListHeader from './BoxListHeader';
 import BoxListBody from './BoxListBody';
 import BoxListFooter from './BoxListFooter';

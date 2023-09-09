@@ -1,18 +1,18 @@
 import { Button, Select, Table } from '@mantine/core';
 import dayjs, { Dayjs } from 'dayjs';
 import React, { useEffect, useState } from 'react';
-import { invoicePageSelector } from 'src/features/InvoicePage';
-import { useAppSelector } from 'src/store/hooks';
-import { CHART_COLORS, currencyFormat } from 'src/utils';
+import { invoicePageSelector } from '@/features/InvoicePage';
+import { useAppSelector } from '@/store/hooks';
+import { CHART_COLORS, currencyFormat } from '@/utils';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import MonthlyReport from './MonthlyReport';
 import DailyReport, { ReportInvoice } from './DailyReport';
-import { configSelector } from 'src/features/Config';
+import { configSelector } from '@/features/Config';
 import { IconChartArcs3 } from '@tabler/icons-react';
-import ProtectWrapper from 'src/components/ProtectWrapper';
+import ProtectWrapper from '@/components/ProtectWrapper';
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);

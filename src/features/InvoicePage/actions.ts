@@ -1,7 +1,7 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { ICancelInvoiceData } from 'src/components/InvoicePage/CancelInvoiceForm';
-import { ICancelPaymentData } from 'src/components/InvoicePage/CancelInvoicePaymentForm';
+import { ICancelInvoiceData } from '@/components/InvoicePage/CancelInvoiceForm';
+import { ICancelPaymentData } from '@/components/InvoicePage/CancelInvoicePaymentForm';
 import { IInvoiceBase, IInvoiceBaseFull, IInvoicePageData, IInvoicePaymentData, IInvoiceStoreData } from './types';
 import dayjs from 'dayjs';
 

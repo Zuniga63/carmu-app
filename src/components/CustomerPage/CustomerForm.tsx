@@ -1,14 +1,14 @@
 import { Button, Drawer, SegmentedControl, Tabs, TextInput } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconAt, IconMapPin, IconPhone, IconUser } from '@tabler/icons-react';
-import DrawerBody from 'src/components/DrawerBody';
-import DrawerHeader from 'src/components/DrawerHeader';
+import DrawerBody from '@/components/DrawerBody';
+import DrawerHeader from '@/components/DrawerHeader';
 import React, { FormEvent, useEffect, useState } from 'react';
-import { IValidationErrors } from 'src/types';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import { customerPageSelector, hideCustomerForm, storeCustomer, updateCustomer } from 'src/features/CustomerPage';
+import { IValidationErrors } from '@/types';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { customerPageSelector, hideCustomerForm, storeCustomer, updateCustomer } from '@/features/CustomerPage';
 import { toast } from 'react-toastify';
-import { ICustomerStore } from 'src/features/CustomerPage/types';
+import { ICustomerStore } from '@/features/CustomerPage/types';
 
 const CustomerForm = () => {
   const dispatch = useAppDispatch();

@@ -1,5 +1,5 @@
 import React from 'react';
-import { IInvoiceBaseFull } from 'src/types';
+import { IInvoiceBaseFull } from '@/types';
 import CustomerInfoInvoiceCard from './CustomerInfoInvoiceCard';
 import { IconTools } from '@tabler/icons-react';
 

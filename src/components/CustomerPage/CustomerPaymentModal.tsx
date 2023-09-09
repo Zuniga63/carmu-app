@@ -4,16 +4,16 @@ import { IconBox, IconCalendar, IconCash } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { boxPageSelector } from 'src/features/BoxPage';
+import { boxPageSelector } from '@/features/BoxPage';
 import {
   customerPageSelector,
   fetchCustomers,
   storeCustomerPayment,
   unmountCustomerToPayment,
-} from 'src/features/CustomerPage';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import { IInvoicePaymentData, IValidationErrors } from 'src/types';
-import { currencyFormat } from 'src/utils';
+} from '@/features/CustomerPage';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { IInvoicePaymentData, IValidationErrors } from '@/types';
+import { currencyFormat } from '@/utils';
 
 const CustomerPaymentModal = () => {
   const defaultDescription = 'Efectivo';

@@ -1,7 +1,7 @@
 import { Loader, ScrollArea } from '@mantine/core';
-import { customerPageSelector } from 'src/features/CustomerPage';
-import { useAppSelector } from 'src/store/hooks';
-import { ICustomer } from 'src/types';
+import { customerPageSelector } from '@/features/CustomerPage';
+import { useAppSelector } from '@/store/hooks';
+import { ICustomer } from '@/types';
 import CustomerTableItem from './CustomerTableItem';
 
 function Loading() {

@@ -1,10 +1,10 @@
 import { Checkbox, Select, SelectItem, TextInput } from '@mantine/core';
 import { IconHome, IconPhone, IconSearch } from '@tabler/icons-react';
 import React, { forwardRef, useEffect } from 'react';
-import { customerPageSelector } from 'src/features/CustomerPage';
-import { useAppSelector } from 'src/store/hooks';
-import { ICustomer } from 'src/types';
-import { currencyFormat, normalizeText } from 'src/utils';
+import { customerPageSelector } from '@/features/CustomerPage';
+import { useAppSelector } from '@/store/hooks';
+import { ICustomer } from '@/types';
+import { currencyFormat, normalizeText } from '@/utils';
 import { IInvoiceCustomer } from './InvoiceForm';
 import InvoiceFormGroup from './InvoiceFormGroup';
 

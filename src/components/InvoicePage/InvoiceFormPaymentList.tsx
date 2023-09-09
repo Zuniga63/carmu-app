@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table } from '@mantine/core';
-import { IInvoiceSummary, INewInvoicePayment } from 'src/types';
+import { IInvoiceSummary, INewInvoicePayment } from '@/types';
 import InvoiceFormPaymentListItem from './InvoiceFormPaymentListItem';
 import InvoiceFormSummary from './InvoiceFormSummary';
 

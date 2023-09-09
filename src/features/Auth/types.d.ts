@@ -1,4 +1,4 @@
-import { IImage } from 'src/types';
+import { IImage } from '@/types';
 
 export interface IUser {
   id: string;

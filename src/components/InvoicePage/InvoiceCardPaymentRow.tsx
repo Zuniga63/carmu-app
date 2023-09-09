@@ -1,10 +1,10 @@
 import { ActionIcon, Tooltip } from '@mantine/core';
 import { IconX } from '@tabler/icons-react';
 import React from 'react';
-import { showCancelPaymentForm } from 'src/features/InvoicePage';
-import { useAppDispatch } from 'src/store/hooks';
-import { IInvoicePayment } from 'src/types';
-import { currencyFormat } from 'src/utils';
+import { showCancelPaymentForm } from '@/features/InvoicePage';
+import { useAppDispatch } from '@/store/hooks';
+import { IInvoicePayment } from '@/types';
+import { currencyFormat } from '@/utils';
 
 interface Props {
   payment: IInvoicePayment;

@@ -2,9 +2,9 @@ import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { authSelector, signin } from 'src/features/Auth';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import { LoginData } from 'src/types';
+import { authSelector, signin } from '@/features/Auth';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { LoginData } from '@/types';
 
 export function useLogin() {
   const [email, setEmail] = useState('');

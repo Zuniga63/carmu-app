@@ -1,11 +1,11 @@
 import React from 'react';
 import { Button } from '@mantine/core';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import { configSelector, showPremiseForm } from 'src/features/Config';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { configSelector, showPremiseForm } from '@/features/Config';
 import PremiseFormModal from '../premise-stores/PremiseFormModal';
 
-import FormSection from 'src/components/FormSection';
-import FormSectionCard from 'src/components/FormSectionCard';
+import FormSection from '@/components/FormSection';
+import FormSectionCard from '@/components/FormSectionCard';
 import PremiseStoreTable from './PremiseStoreTable';
 
 const PremiseStoreConfigComponent = () => {

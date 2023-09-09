@@ -4,11 +4,12 @@ import type { AppProps } from 'next/app';
 import { Provider } from 'react-redux';
 import { createWrapper } from 'next-redux-wrapper';
 
-import { store } from 'src/store';
-import { useInitialAuth } from 'src/hooks/useInitialAuth';
-import { rootConfig } from 'src/config/root-config';
-import ThemeProvider from 'src/context/CustomThemeProvider';
-import { emCache } from 'src/utils/emotionCache';
+import { store } from '@/store';
+import { useInitialAuth } from '@/hooks/useInitialAuth';
+import { rootConfig } from '@/config/root-config';
+import ThemeProvider from '@/context/CustomThemeProvider';
+import { emCache } from '@/utils/emotionCache';
+import { inter, poppins } from '@/config/fonts.config';
 
 rootConfig();
 
@@ -19,7 +20,9 @@ export function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider>
       <Provider store={store}>
-        <Component {...pageProps} />
+        <div className={`${inter.variable} ${poppins.variable} font-sans`}>
+          <Component {...pageProps} />
+        </div>
       </Provider>
     </ThemeProvider>
   );

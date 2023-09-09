@@ -6,14 +6,14 @@ import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { toast } from 'react-toastify';
-import { authSelector } from 'src/features/Auth';
-import { invoicePageSelector } from 'src/features/InvoicePage';
-import { useAppSelector } from 'src/store/hooks';
-import { ISaleHistory } from 'src/types';
-import { CHART_COLORS, currencyFormat, transparentize } from 'src/utils';
+import { authSelector } from '@/features/Auth';
+import { invoicePageSelector } from '@/features/InvoicePage';
+import { useAppSelector } from '@/store/hooks';
+import { ISaleHistory } from '@/types';
+import { CHART_COLORS, currencyFormat, transparentize } from '@/utils';
 import AnnualReportStatistics from '../dashboard/AnnualReportStatistics';
 import WeeklyHistory from './WeeklyHistory';
-import { configSelector } from 'src/features/Config';
+import { configSelector } from '@/features/Config';
 import AverageChart from './PremiseStoreComparative/AverageChart';
 
 export const barOptions: ChartOptions<'bar'> = {

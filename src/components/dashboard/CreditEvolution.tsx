@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Select, Skeleton } from '@mantine/core';
 import dayjs from 'dayjs';
-import { ChartPeriod, CHART_DATA_PERIODS, MONTHS } from 'src/utils';
+import { ChartPeriod, CHART_DATA_PERIODS, MONTHS } from '@/utils';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-import { ICreditEvolutionReport } from 'src/types';
+import { ICreditEvolutionReport } from '@/types';
 import CreditEvolutionChart from './CreditEvolutionChart';
 import CreditEvolutionChartAux from './CreditEvolutionChartAux';
 import ProtectWrapper from '../ProtectWrapper';

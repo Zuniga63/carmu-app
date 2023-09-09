@@ -1,5 +1,5 @@
 import React from 'react';
-import { IInvoiceSummary, INewInvoiceItem } from 'src/types';
+import { IInvoiceSummary, INewInvoiceItem } from '@/types';
 import InvoiceFormItemListItem from './InvoiceFormItemListItem';
 import InvoiceFormSummary from './InvoiceFormSummary';
 

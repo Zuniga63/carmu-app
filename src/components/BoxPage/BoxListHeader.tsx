@@ -1,8 +1,8 @@
 import { ActionIcon, Tooltip } from '@mantine/core';
 import { IconCirclePlus, IconRefresh } from '@tabler/icons-react';
 import React from 'react';
-import { boxPageSelector, fetchBoxes, showCreateForm } from 'src/features/BoxPage';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
+import { boxPageSelector, fetchBoxes, showCreateForm } from '@/features/BoxPage';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
 const BoxListHeader = () => {
   const { fetchLoading } = useAppSelector(boxPageSelector);

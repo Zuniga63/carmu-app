@@ -2,10 +2,10 @@ import { FormEvent, useEffect, useState } from 'react';
 import { Button, Modal, NumberInput } from '@mantine/core';
 import { IconLockOpen } from '@tabler/icons-react';
 import { toast } from 'react-toastify';
-import { boxPageSelector, unmountBoxToOpen, openBox } from 'src/features/BoxPage';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import { IValidationErrors } from 'src/types';
-import { currencyFormat } from 'src/utils';
+import { boxPageSelector, unmountBoxToOpen, openBox } from '@/features/BoxPage';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { IValidationErrors } from '@/types';
+import { currencyFormat } from '@/utils';
 
 const OpenBoxForm = () => {
   const [opened, setOpened] = useState(false);

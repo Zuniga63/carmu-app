@@ -1,0 +1,19 @@
+:root {
+  --header-height: 4rem;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+::-webkit-scrollbar {
+  @apply w-1 lg:w-2;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-primary-50;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply rounded bg-primary-300 hover:bg-primary-400;
+}

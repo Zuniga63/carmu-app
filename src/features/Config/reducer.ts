@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { ConfigState } from './types';
-import { ErrorResponse } from 'src/types';
+import { ErrorResponse } from '@/types';
 import {
   PREMISE_STORE_KEY,
   editPremiseStore,

@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { authenticate, authSuccessIsNotify, logout, signin } from './actions';
 import { AuthState, AuthErrorResponse } from './types';
-import { clearAuthData, saveAuthData } from 'src/logic/auth-logic';
+import { clearAuthData, saveAuthData } from '@/logic/auth-logic';
 
 const initialState: AuthState = {
   isAuth: false,

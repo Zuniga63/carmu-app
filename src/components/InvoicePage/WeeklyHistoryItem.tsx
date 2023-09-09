@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { ISaleHistory } from 'src/types';
+import { ISaleHistory } from '@/types';
 import dayjs from 'dayjs';
 import isToday from 'dayjs/plugin/isToday';
 import isYesterday from 'dayjs/plugin/isYesterday';
-import { currencyFormat } from 'src/utils';
+import { currencyFormat } from '@/utils';
 
 dayjs.extend(isToday);
 dayjs.extend(isYesterday);

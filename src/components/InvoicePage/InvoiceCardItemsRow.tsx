@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { categoryPageSelector } from 'src/features/CategoryPage';
-import { useAppSelector } from 'src/store/hooks';
-import { IInvoiceItemBase } from 'src/types';
-import { currencyFormat } from 'src/utils';
+import { categoryPageSelector } from '@/features/CategoryPage';
+import { useAppSelector } from '@/store/hooks';
+import { IInvoiceItemBase } from '@/types';
+import { currencyFormat } from '@/utils';
 
 interface Props {
   item: IInvoiceItemBase;

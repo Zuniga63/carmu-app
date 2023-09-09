@@ -1,9 +1,9 @@
 import { ActionIcon, Tooltip } from '@mantine/core';
 import { IconBox, IconLock, IconLockOpen, IconWorld } from '@tabler/icons-react';
 import React, { useEffect, useState } from 'react';
-import { boxPageSelector, mountGlobalTransactions } from 'src/features/BoxPage';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import { currencyFormat } from 'src/utils';
+import { boxPageSelector, mountGlobalTransactions } from '@/features/BoxPage';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { currencyFormat } from '@/utils';
 
 const BoxListFooter = () => {
   const [openBoxes, setOpenBoxes] = useState(0);

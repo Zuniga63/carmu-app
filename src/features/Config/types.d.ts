@@ -1,4 +1,4 @@
-import { ErrorResponse, IBox } from 'src/types';
+import { ErrorResponse, IBox } from '@/types';
 
 export interface IPremiseStore {
   id: string;

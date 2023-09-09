@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { invoicePageSelector } from 'src/features/InvoicePage';
-import { useAppSelector } from 'src/store/hooks';
-import { IInvoice } from 'src/types';
-import { buildInvoice, normalizeText } from 'src/utils';
+import { invoicePageSelector } from '@/features/InvoicePage';
+import { useAppSelector } from '@/store/hooks';
+import { IInvoice } from '@/types';
+import { buildInvoice, normalizeText } from '@/utils';
 
 export function useInvoiceList() {
   const { invoices, loading: loadingData } = useAppSelector(invoicePageSelector);

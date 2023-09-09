@@ -2,10 +2,10 @@ import { ActionIcon } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
 import axios, { AxiosError } from 'axios';
 import React from 'react';
-import { boxPageSelector, removeTransaction } from 'src/features/BoxPage';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import { IMainTransaction, ITransaction, ITransactionResponse } from 'src/types';
-import { currencyFormat } from 'src/utils';
+import { boxPageSelector, removeTransaction } from '@/features/BoxPage';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { IMainTransaction, ITransaction, ITransactionResponse } from '@/types';
+import { currencyFormat } from '@/utils';
 import Swal from 'sweetalert2';
 
 interface Props {

@@ -1,12 +1,12 @@
 import type { NextPage } from 'next';
-import { useAppSelector } from 'src/store/hooks';
+import { useAppSelector } from '@/store/hooks';
 
-import Layout from 'src/components/Layout';
-import CashChart from 'src/components/dashboard/CashChart';
+import Layout from '@/components/Layout';
+import CashChart from '@/components/dashboard/CashChart';
 
-import ReportStatistics from 'src/components/dashboard/ReportStatistics';
-import CreditEvolution from 'src/components/dashboard/CreditEvolution';
-import { authSelector } from 'src/features/Auth';
+import ReportStatistics from '@/components/dashboard/ReportStatistics';
+import CreditEvolution from '@/components/dashboard/CreditEvolution';
+import { authSelector } from '@/features/Auth';
 
 const Home: NextPage = () => {
   const { user, isAdmin } = useAppSelector(authSelector);

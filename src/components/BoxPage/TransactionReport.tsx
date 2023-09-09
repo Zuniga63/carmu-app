@@ -4,8 +4,8 @@ import { IconPrinter } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import React, { useEffect, useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
-import { ITransaction } from 'src/types';
-import { currencyFormat } from 'src/utils';
+import { ITransaction } from '@/types';
+import { currencyFormat } from '@/utils';
 import BrandLogo from '../Layout/BrandLogo';
 
 interface Props {

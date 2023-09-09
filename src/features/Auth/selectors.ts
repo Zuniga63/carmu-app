@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { RootState } from 'src/store';
+import { RootState } from '@/store';
 
 export const auth = (state: RootState) => state.auth;
 export const user = (state: RootState) => state.auth.user;

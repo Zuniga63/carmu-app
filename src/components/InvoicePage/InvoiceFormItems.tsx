@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef, KeyboardEvent } from 'react';
 import { Button, NumberInput, Select, TextInput } from '@mantine/core';
-import { useAppSelector } from 'src/store/hooks';
+import { useAppSelector } from '@/store/hooks';
 import { IconCategory, IconPlus, IconTrash } from '@tabler/icons-react';
 import ProductSelect from './ProductSelect';
 import InvoiceFormGroup from './InvoiceFormGroup';
-import { IInvoiceSummary, INewInvoiceItem } from 'src/types';
-import { currencyFormat } from 'src/utils';
+import { IInvoiceSummary, INewInvoiceItem } from '@/types';
+import { currencyFormat } from '@/utils';
 import InvoiceFormItemList from './InvoiceFormItemList';
-import { invoicePageSelector } from 'src/features/InvoicePage';
-import { categoryPageSelector } from 'src/features/CategoryPage';
+import { invoicePageSelector } from '@/features/InvoicePage';
+import { categoryPageSelector } from '@/features/CategoryPage';
 
 interface Props {
   items: INewInvoiceItem[];

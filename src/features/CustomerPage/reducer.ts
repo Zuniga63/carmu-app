@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { ErrorResponse } from 'src/types';
+import { ErrorResponse } from '@/types';
 import {
   deleteCustomer,
   fetchCustomer,

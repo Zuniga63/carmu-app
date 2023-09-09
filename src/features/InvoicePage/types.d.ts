@@ -1,7 +1,7 @@
 import { IUser } from '../Auth/types';
-import { ErrorResponse, ICustomer } from 'src/types';
-import { IProduct } from 'src/types';
-import { IBox } from 'src/types';
+import { ErrorResponse, ICustomer } from '@/types';
+import { IProduct } from '@/types';
+import { IBox } from '@/types';
 import { Dayjs } from 'dayjs';
 import { IPremiseStore } from '../Config/types';
 

@@ -1,7 +1,7 @@
 import React from 'react';
-import { customerPageSelector } from 'src/features/CustomerPage';
-import { useAppSelector } from 'src/store/hooks';
-import { currencyFormat } from 'src/utils';
+import { customerPageSelector } from '@/features/CustomerPage';
+import { useAppSelector } from '@/store/hooks';
+import { currencyFormat } from '@/utils';
 
 const CustomerInfoTitle = () => {
   const { customer } = useAppSelector(customerPageSelector);

@@ -1,16 +1,16 @@
 import { Button, PasswordInput } from '@mantine/core';
 import { IconEyeCheck, IconEyeOff, IconLock } from '@tabler/icons-react';
 import axios, { AxiosError } from 'axios';
-import Layout from 'src/components/Layout';
+import Layout from '@/components/Layout';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { FormEvent, useState } from 'react';
 import { toast } from 'react-toastify';
-import { useAppDispatch } from 'src/store/hooks';
-import { logout } from 'src/features/Auth';
-import { IValidationErrors } from 'src/types';
-import FormSection from 'src/components/FormSection';
-import FormSectionCard from 'src/components/FormSectionCard';
+import { useAppDispatch } from '@/store/hooks';
+import { logout } from '@/features/Auth';
+import { IValidationErrors } from '@/types';
+import FormSection from '@/components/FormSection';
+import FormSectionCard from '@/components/FormSectionCard';
 
 const ProfilePage: NextPage = () => {
   const [password, setPassword] = useState('');

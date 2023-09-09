@@ -2,7 +2,7 @@ import React from 'react';
 import { Tabs } from '@mantine/core';
 import { IconChartInfographic } from '@tabler/icons-react';
 import dayjs from 'dayjs';
-import { IAnnualReport } from 'src/types';
+import { IAnnualReport } from '@/types';
 import CategoryChart from './CategoryChart';
 
 interface Props {

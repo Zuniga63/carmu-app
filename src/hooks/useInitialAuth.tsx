@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { authSelector, authSuccessIsNotify, authenticate } from 'src/features/Auth';
-import { fetchPremiseStores } from 'src/features/Config';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
+import { authSelector, authSuccessIsNotify, authenticate } from '@/features/Auth';
+import { fetchPremiseStores } from '@/features/Config';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
 export function useInitialAuth() {
   const { user, authIsSuccess, isAuth } = useAppSelector(authSelector);

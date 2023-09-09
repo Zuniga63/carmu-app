@@ -2,10 +2,10 @@ import { Button, Checkbox, NumberInput, Select } from '@mantine/core';
 import { IconBox, IconCirclePlus } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import React, { KeyboardEvent, useEffect, useRef, useState } from 'react';
-import { boxPageSelector } from 'src/features/BoxPage';
-import { configSelector } from 'src/features/Config';
-import { useAppSelector } from 'src/store/hooks';
-import { IInvoiceCashbox, IInvoiceSummary, INewInvoicePayment } from 'src/types';
+import { boxPageSelector } from '@/features/BoxPage';
+import { configSelector } from '@/features/Config';
+import { useAppSelector } from '@/store/hooks';
+import { IInvoiceCashbox, IInvoiceSummary, INewInvoicePayment } from '@/types';
 import InvoiceFormGroup from './InvoiceFormGroup';
 import InvoiceFormPaymentList from './InvoiceFormPaymentList';
 

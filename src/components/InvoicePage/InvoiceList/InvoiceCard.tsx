@@ -1,10 +1,10 @@
 import { Button, Collapse } from '@mantine/core';
 import { IconFileInvoice } from '@tabler/icons-react';
 import { MouseEventHandler, useState } from 'react';
-import { useAppDispatch } from 'src/store/hooks';
-import { IInvoice } from 'src/types';
+import { useAppDispatch } from '@/store/hooks';
+import { IInvoice } from '@/types';
 
-import { mountInvoice } from 'src/features/InvoicePage';
+import { mountInvoice } from '@/features/InvoicePage';
 import InvoiceCardHeader from './InvoiceCardHeader';
 import InvoiceCardBody from './InvoiceCardBody';
 

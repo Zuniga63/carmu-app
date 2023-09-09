@@ -1,9 +1,9 @@
 import { Button, Checkbox, Drawer, NumberInput, Select, Textarea, TextInput } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import DrawerBody from 'src/components/DrawerBody';
-import DrawerHeader from 'src/components/DrawerHeader';
+import DrawerBody from '@/components/DrawerBody';
+import DrawerHeader from '@/components/DrawerHeader';
 import React, { FormEvent, useEffect, useState } from 'react';
-import { ICategory, IProductWithCategories, IValidationErrors } from 'src/types';
+import { ICategory, IProductWithCategories, IValidationErrors } from '@/types';
 
 interface Props {
   product?: IProductWithCategories | null;

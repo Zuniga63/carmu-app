@@ -1,7 +1,7 @@
 import { Table } from '@mantine/core';
 import React from 'react';
-import { configSelector } from 'src/features/Config';
-import { useAppSelector } from 'src/store/hooks';
+import { configSelector } from '@/features/Config';
+import { useAppSelector } from '@/store/hooks';
 import PremiseStoreTableItem from './PremiseStoreTableItem';
 
 const PremiseStoreTable = () => {

@@ -1,7 +1,7 @@
 import { IconTrash } from '@tabler/icons-react';
 import React from 'react';
-import { INewInvoicePayment } from 'src/types';
-import { currencyFormat } from 'src/utils';
+import { INewInvoicePayment } from '@/types';
+import { currencyFormat } from '@/utils';
 
 interface Props {
   payment: INewInvoicePayment;
