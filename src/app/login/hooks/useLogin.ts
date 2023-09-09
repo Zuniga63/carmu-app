@@ -3,8 +3,8 @@ import { useRouter } from 'next-nprogress-bar';
 import { useAuthenticateUser } from '@/hooks/react-query/auth.hooks';
 
 export function useLogin() {
-  const [email, setEmail] = useState('admin@admin.com');
-  const [password, setPassword] = useState('Carmú007');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isEnabledLogin, setIsEnabledLogin] = useState(false);
   const router = useRouter();
 
