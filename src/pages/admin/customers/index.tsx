@@ -5,14 +5,14 @@ import { useEffect } from 'react';
 import CustomerForm from '@/components/CustomerPage/CustomerForm';
 import { toast } from 'react-toastify';
 import CustomerPaymentModal from '@/components/CustomerPage/CustomerPaymentModal';
-import { authSelector } from '@/features/Auth';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { customerPageSelector, fetchCustomers } from '@/features/CustomerPage';
 import { fetchBoxes } from '@/features/BoxPage';
 import CustomerInfo from '@/components/CustomerPage/CustomerInfo';
+import { useAuthStore } from '@/store/auth-store';
 
 const CustomerPage: NextPage = () => {
-  const { isAuth } = useAppSelector(authSelector);
+  const isAuth = useAuthStore(state => state.isAuth);
   const { fetchError } = useAppSelector(customerPageSelector);
   const dispatch = useAppDispatch();
 

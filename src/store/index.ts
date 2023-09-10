@@ -1,5 +1,4 @@
 import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
-import { authReducer } from '@/features/Auth';
 import { boxPageReducer } from '@/features/BoxPage';
 import { categoryPageReducer } from '@/features/CategoryPage';
 import { invoicePageReducer } from '@/features/InvoicePage';
@@ -8,7 +7,6 @@ import { configStateReducer } from '@/features/Config';
 
 export const store = configureStore({
   reducer: {
-    auth: authReducer,
     categoryPage: categoryPageReducer,
     boxPage: boxPageReducer,
     invoicePage: invoicePageReducer,

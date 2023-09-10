@@ -9,8 +9,11 @@ import { ToastContainer } from 'react-toastify';
 // For route progress with NProgress
 import Router from 'next/router';
 import NProgress from 'nprogress';
+import { useInitialAuth } from '@/hooks/useInitialAuth';
 
 export default function ThemeProvider({ children }: { children: ReactNode }) {
+  useInitialAuth();
+
   const KEY_THEME = 'mantine-color-scheme';
 
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
@@ -67,7 +70,7 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
         theme={{
           /** Put your mantine theme override here */
           colorScheme,
-          fontFamily: 'inherit',
+          fontFamily: 'var(--font-inter)',
           loader: 'oval',
         }}
       >

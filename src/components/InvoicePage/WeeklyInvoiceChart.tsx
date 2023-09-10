@@ -6,7 +6,6 @@ import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { toast } from 'react-toastify';
-import { authSelector } from '@/features/Auth';
 import { invoicePageSelector } from '@/features/InvoicePage';
 import { useAppSelector } from '@/store/hooks';
 import { ISaleHistory } from '@/types';
@@ -15,6 +14,7 @@ import AnnualReportStatistics from '../dashboard/AnnualReportStatistics';
 import WeeklyHistory from './WeeklyHistory';
 import { configSelector } from '@/features/Config';
 import AverageChart from './PremiseStoreComparative/AverageChart';
+import { useAuthStore } from '@/store/auth-store';
 
 export const barOptions: ChartOptions<'bar'> = {
   responsive: true,
@@ -57,7 +57,7 @@ export const barOptions: ChartOptions<'bar'> = {
 
 const WeeklyInvoiceChart = () => {
   const { storeSuccess, storePaymentSuccess, refreshIsSuccess } = useAppSelector(invoicePageSelector);
-  const { isAuth } = useAppSelector(authSelector);
+  const isAuth = useAuthStore(state => state.isAuth);
   const { premiseStores } = useAppSelector(configSelector);
   const [chartData, setChartData] = useState<ChartData<'bar'>>({
     labels: [],

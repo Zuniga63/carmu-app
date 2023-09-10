@@ -9,16 +9,18 @@ import InvoiceCardModal from '@/components/InvoicePage/InvoiceCardModal';
 import WeeklyInvoiceChart from '@/components/InvoicePage/WeeklyInvoiceChart';
 
 import CounterSaleForm from '@/components/InvoicePage/CounterSaleForm';
-import { authSelector } from '@/features/Auth';
 import { fetchInvoiceData, invoicePageSelector, refreshInvoices } from '@/features/InvoicePage';
 import { fetchCustomers } from '@/features/CustomerPage';
 import { fetchBoxes } from '@/features/BoxPage';
 import { fetchCategories } from '@/features/CategoryPage';
 import CancelInvoicePaymentForm from '@/components/InvoicePage/CancelInvoicePaymentForm';
 import CancelInvoiceForm from '@/components/InvoicePage/CancelInvoiceForm';
+import { useAuthStore } from '@/store/auth-store';
 
 const InvoicePage: NextPage = () => {
-  const { isAuth, isAdmin } = useAppSelector(authSelector);
+  const isAuth = useAuthStore(state => state.isAuth);
+  const isAdmin = useAuthStore(state => state.isAdmin);
+
   const { firstLoading } = useAppSelector(invoicePageSelector);
   const dispatch = useAppDispatch();
 

@@ -2,7 +2,6 @@ import { Button, Group, Modal, NumberInput, Select, Table, Tabs, TextInput } fro
 import { IconBox, IconCategory, IconDeviceFloppy, IconPlus, IconTrash, IconUsers } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import React, { KeyboardEvent, useEffect, useRef, useState } from 'react';
-import { authSelector } from '@/features/Auth';
 import { boxPageSelector } from '@/features/BoxPage';
 import { categoryPageSelector } from '@/features/CategoryPage';
 import { configSelector } from '@/features/Config';
@@ -14,6 +13,7 @@ import { IInvoiceCustomer } from './InvoiceForm';
 import InvoiceFormCustomer from './InvoiceFormCustomer';
 import InvoiceFormHeader from './InvoiceFormHeader';
 import ProductSelect from './ProductSelect';
+import { useAuthStore } from '@/store/auth-store';
 
 const defaulCustomer: IInvoiceCustomer = {
   id: null,
@@ -32,7 +32,7 @@ const CounterSaleForm = () => {
     storeError: error,
     storeSuccess: success,
   } = useAppSelector(invoicePageSelector);
-  const { user } = useAppSelector(authSelector);
+  const user = useAuthStore(state => state.user);
   const { boxes } = useAppSelector(boxPageSelector);
   const { categories } = useAppSelector(categoryPageSelector);
   const { premiseStoreSelected: store } = useAppSelector(configSelector);

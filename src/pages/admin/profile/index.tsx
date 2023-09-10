@@ -6,11 +6,10 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { FormEvent, useState } from 'react';
 import { toast } from 'react-toastify';
-import { useAppDispatch } from '@/store/hooks';
-import { logout } from '@/features/Auth';
 import { IValidationErrors } from '@/types';
 import FormSection from '@/components/FormSection';
 import FormSectionCard from '@/components/FormSectionCard';
+import { useAuthStore } from '@/store/auth-store';
 
 const ProfilePage: NextPage = () => {
   const [password, setPassword] = useState('');
@@ -18,8 +17,8 @@ const ProfilePage: NextPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<IValidationErrors | null>(null);
-  const dispatch = useAppDispatch();
   const router = useRouter();
+  const clearCredentials = useAuthStore(state => state.clearCredentials);
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -42,7 +41,7 @@ const ProfilePage: NextPage = () => {
 
         if (response?.status === 404 || response?.status === 401) {
           toast.error('No se ha podido cambiar la contraseña');
-          dispatch(logout());
+          clearCredentials();
           setTimeout(() => {
             router.push('/login');
           }, 1000);
