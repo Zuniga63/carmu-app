@@ -1,15 +1,15 @@
 import type { NextPage } from 'next';
-import { useAppSelector } from '@/store/hooks';
 
 import Layout from '@/components/Layout';
 import CashChart from '@/components/dashboard/CashChart';
 
 import ReportStatistics from '@/components/dashboard/ReportStatistics';
 import CreditEvolution from '@/components/dashboard/CreditEvolution';
-import { authSelector } from '@/features/Auth';
+import { useAuthStore } from '@/store/auth-store';
 
 const Home: NextPage = () => {
-  const { user, isAdmin } = useAppSelector(authSelector);
+  const user = useAuthStore(state => state.user);
+  const isAdmin = useAuthStore(state => state.isAdmin);
 
   return (
     <Layout title="Dashboard">

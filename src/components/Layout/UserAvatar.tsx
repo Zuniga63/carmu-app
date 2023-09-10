@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { Avatar, Menu } from '@mantine/core';
-import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { IconCategory, IconLogout, IconSettings, IconUser } from '@tabler/icons-react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { authSelector, logout } from '@/features/Auth';
+import { useAuthStore } from '@/store/auth-store';
 
 export default function UserAvatar() {
-  const { user, isAdmin } = useAppSelector(authSelector);
+  const user = useAuthStore(state => state.user);
+  const isAdmin = useAuthStore(state => state.isAdmin);
+  const clearCredentials = useAuthStore(state => state.clearCredentials);
+
   const [initials, setInitials] = useState('');
 
-  const dispatch = useAppDispatch();
   const router = useRouter();
 
   const logoutHandle = () => {
-    dispatch(logout());
+    clearCredentials();
     router.push('/login');
   };
 

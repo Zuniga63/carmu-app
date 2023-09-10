@@ -6,13 +6,14 @@ import OpenBoxForm from '@/components/BoxPage/OpenBoxForm';
 import Layout from '@/components/Layout';
 import { NextPage } from 'next';
 import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { useAppDispatch } from '@/store/hooks';
 import { fetchBoxes, unmountTransactions } from '@/features/BoxPage';
-import { authSelector } from '@/features/Auth';
 import CreateTransactionForm from '@/components/BoxPage/CreateTransactionForm';
+import { useAuthStore } from '@/store/auth-store';
 
 const BoxesPage: NextPage = () => {
-  const { isAuth, isAdmin } = useAppSelector(authSelector);
+  const isAuth = useAuthStore(state => state.isAuth);
+  const isAdmin = useAuthStore(state => state.isAdmin);
   const dispatch = useAppDispatch();
 
   useEffect(() => {

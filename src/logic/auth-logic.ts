@@ -20,12 +20,12 @@ export function createCookieOptions(duration = 1) {
   };
 }
 
-export const saveAuthData = (token: string) => {
+export const saveAuthToken = (token: string) => {
   setCookie('access_token', token, createCookieOptions(30));
   axios.defaults.headers.common.Authorization = `Bearer ${token}`;
 };
 
-export const clearAuthData = () => {
+export const clearAuthToken = () => {
   setCookie('access_token', '', createCookieOptions(0));
   axios.defaults.headers.common.Authorization = '';
 };

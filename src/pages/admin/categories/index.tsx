@@ -6,11 +6,11 @@ import CategoryForm from '@/components/CategoryPage/CategoryForm';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { categoryPageSelector, connectToSocket, disconnectWebSocket, fetchCategories } from '@/features/CategoryPage';
 import { Loader } from '@mantine/core';
-import { authSelector } from '@/features/Auth';
+import { useAuthStore } from '@/store/auth-store';
 
 const Categories: NextPage = () => {
   const { loading } = useAppSelector(categoryPageSelector);
-  const { isAuth } = useAppSelector(authSelector);
+  const isAuth = useAuthStore(state => state.isAuth);
   const dispatch = useAppDispatch();
 
   useEffect(() => {

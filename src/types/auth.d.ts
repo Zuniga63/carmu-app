@@ -34,3 +34,23 @@ export type AuthState = {
   loading: boolean;
   authIsSuccess: boolean;
 };
+
+// ----------------------------------------------------------------------------
+// AUTH STORE
+// ----------------------------------------------------------------------------
+export interface IAuthState {
+  isAuth: boolean;
+  user?: IUser;
+  isAdmin: boolean;
+}
+
+export interface IAuthActions {
+  saveCredentials: ({ user, token }: CredentialProps) => void;
+  clearCredentials: () => void;
+  updateUser: (user: User) => void;
+}
+
+export type CredentialProps = {
+  user: IUser;
+  token: string;
+};
