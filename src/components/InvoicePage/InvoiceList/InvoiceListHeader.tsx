@@ -39,6 +39,8 @@ export default function InvoiceListHeader({
             icon={loadingSearch ? <Loader size={14} variant="dots" /> : <IconSearch size={14} stroke={1.5} />}
             placeholder="Buscar Factura"
             onChange={({ target }) => updateSearch(target.value)}
+            name="search-invoices"
+            autoComplete="off"
           />
         </div>
 
