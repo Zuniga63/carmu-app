@@ -33,6 +33,7 @@ export * from './auth';
 export * from '@/features/CategoryPage/types';
 export * from '@/features/BoxPage/types';
 export * from '@/features/InvoicePage/types';
+export * from './cash-report';
 
 //-----------------------------------------------------------------------------
 // DASHBOARD PAGE

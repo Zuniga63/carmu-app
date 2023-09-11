@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { ChartOptions, ChartData } from 'chart.js';
+import { useCallback, useMemo } from 'react';
+import { ChartOptions, ChartData, ChartDataset } from 'chart.js';
 import { Chart } from 'react-chartjs-2';
 import { CHART_COLORS, currencyFormat, transparentize } from '@/utils';
-import axios from 'axios';
 import ProtectWrapper from '../ProtectWrapper';
+import { useGetCashReports } from '@/hooks/react-query/dashboard.hooks';
+import { CashReport } from '@/types';
 
 export const options: ChartOptions = {
   responsive: true,
@@ -40,104 +41,114 @@ export const options: ChartOptions = {
   },
 };
 
+type createBarDatasetProps = {
+  label: string;
+  data: number[];
+  color: string;
+  hidden?: boolean;
+};
+
+type CreateLineDatasetProps = {
+  label: string;
+  data: number[];
+  color: string;
+  hidden?: boolean;
+  tension?: number;
+};
+
 const CashChart = () => {
-  const [data, setData] = useState<ChartData | null>(null);
+  const { data } = useGetCashReports();
 
-  const buildDataSets = async (): Promise<void> => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let data: any[] | null = null;
-    try {
-      const res = await axios.get('/dashboard/cash-report');
-      data = res.data.reports;
-    } catch (error) {
-      console.log(error);
-    }
-
-    if (data) {
-      const labels: string[] = [];
-      const incomes: number[] = [];
-      const averageIncomes: (number | null)[] = [];
-      const annualAverageIncomes: number[] = [];
-      const expenses: number[] = [];
-      const averageExpeses: number[] = [];
-      const annualAverageExpenses: number[] = [];
-
-      data.forEach((item, index) => {
-        labels.push(item.month);
-        incomes.push(item.incomes);
-        expenses.push(item.expenses);
-        averageIncomes.push(item.averageIncomes);
-        averageExpeses.push(item.averageExpenses);
-        annualAverageIncomes.push(item.annualAverageIncomes);
-        annualAverageExpenses.push(item.annualAverageExpenses);
-      });
-
-      setData({
-        labels,
-        datasets: [
-          {
-            label: 'Ingresos',
-            type: 'bar' as const,
-            data: incomes,
-            backgroundColor: transparentize(CHART_COLORS.green),
-          },
-          {
-            label: 'Prom.',
-            type: 'line' as const,
-            borderColor: CHART_COLORS.green,
-            borderWidth: 2,
-            fill: false,
-            data: averageIncomes,
-            tension: 0.1,
-          },
-          {
-            label: 'Prom. Anual',
-            type: 'line' as const,
-            borderColor: transparentize(CHART_COLORS.green),
-            borderWidth: 2,
-            fill: false,
-            data: annualAverageIncomes,
-            tension: 0.1,
-            hidden: true,
-          },
-          {
-            label: 'Egresos',
-            hidden: true,
-            type: 'bar' as const,
-            data: expenses,
-            backgroundColor: transparentize(CHART_COLORS.red),
-          },
-          {
-            label: 'Prom.',
-            hidden: true,
-            type: 'line' as const,
-            borderColor: transparentize(CHART_COLORS.red),
-            borderWidth: 2,
-            fill: false,
-            data: averageExpeses,
-          },
-          {
-            label: 'Prom. Anual',
-            hidden: true,
-            type: 'line' as const,
-            borderColor: transparentize(CHART_COLORS.red),
-            borderWidth: 2,
-            fill: false,
-            data: annualAverageExpenses,
-          },
-        ],
-      });
-    }
+  const createBarDataset = ({ label, data, color, hidden = false }: createBarDatasetProps): ChartDataset => {
+    return {
+      label,
+      hidden,
+      type: 'bar' as const,
+      data: data,
+      backgroundColor: transparentize(color),
+    };
   };
 
-  useEffect(() => {
-    buildDataSets();
+  const createLineDataset = (props: CreateLineDatasetProps): ChartDataset => {
+    const { label, data, color, hidden = false, tension } = props;
+    return {
+      label,
+      type: 'line' as const,
+      borderColor: transparentize(color),
+      borderWidth: 2,
+      fill: false,
+      data,
+      tension,
+      hidden,
+    };
+  };
+
+  const getResume = useCallback((data: CashReport[]) => {
+    const labels: string[] = [];
+    const incomes: number[] = [];
+    const averageIncomes: number[] = [];
+    const annualAverageIncomes: number[] = [];
+    const expenses: number[] = [];
+    const averageExpeses: number[] = [];
+    const annualAverageExpenses: number[] = [];
+
+    data.forEach((item, index) => {
+      labels.push(item.month);
+      incomes.push(item.incomes);
+      expenses.push(item.expenses);
+      averageIncomes.push(item.averageIncomes);
+      averageExpeses.push(item.averageExpenses);
+      annualAverageIncomes.push(item.annualAverageIncomes);
+      annualAverageExpenses.push(item.annualAverageExpenses);
+    });
+
+    return {
+      labels,
+      incomes,
+      averageIncomes,
+      annualAverageIncomes,
+      expenses,
+      averageExpeses,
+      annualAverageExpenses,
+    };
   }, []);
+
+  const chartData: ChartData = useMemo(() => {
+    if (!data) return { labels: [], datasets: [] };
+    const resume = getResume(data);
+
+    return {
+      labels: resume.labels,
+      datasets: [
+        createBarDataset({ label: 'Ingresos', data: resume.incomes, color: CHART_COLORS.green }),
+        createLineDataset({ label: 'Prom.', color: CHART_COLORS.green, data: resume.averageIncomes, tension: 0.1 }),
+        createLineDataset({
+          label: 'Prom. Anual',
+          color: CHART_COLORS.green,
+          data: resume.annualAverageIncomes,
+          hidden: true,
+        }),
+        createBarDataset({ label: 'Egresos', data: resume.expenses, color: CHART_COLORS.red, hidden: true }),
+        createLineDataset({
+          label: 'Prom',
+          color: CHART_COLORS.red,
+          data: resume.averageExpeses,
+          hidden: true,
+        }),
+        createLineDataset({
+          label: 'Prom. Anual',
+          color: CHART_COLORS.red,
+          data: resume.annualAverageExpenses,
+          hidden: true,
+        }),
+      ],
+    };
+  }, [data]);
 
   return (
     <ProtectWrapper>
       <div className="relative h-96 w-full rounded-md bg-gray-200 bg-opacity-90 px-4 py-2 dark:bg-dark">
-        {data && <Chart type="bar" options={options} data={data} />}
+        <Chart type="bar" options={options} data={chartData} />
       </div>
     </ProtectWrapper>
   );

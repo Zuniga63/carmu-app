@@ -16,10 +16,6 @@ import ThemeProvider from '@/context/CustomThemeProvider';
 import { emCache } from '@/utils/emotionCache';
 import { inter, poppins } from '@/config/fonts.config';
 
-import { theme } from '@/config/chakra-theme';
-import { CacheProvider } from '@chakra-ui/next-js';
-import { ChakraProvider } from '@chakra-ui/react';
-
 rootConfig();
 
 export function MyApp({ Component, pageProps }: AppProps) {
@@ -29,13 +25,9 @@ export function MyApp({ Component, pageProps }: AppProps) {
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
         <ThemeProvider>
-          <CacheProvider prepend={false}>
-            <ChakraProvider theme={theme}>
-              <div className={`${inter.variable} ${poppins.variable} font-sans ${inter.className}`}>
-                <Component {...pageProps} />
-              </div>
-            </ChakraProvider>
-          </CacheProvider>
+          <div className={`${inter.variable} ${poppins.variable} font-sans ${inter.className}`}>
+            <Component {...pageProps} />
+          </div>
         </ThemeProvider>
       </Provider>
       <ReactQueryDevtools initialIsOpen={false} />
