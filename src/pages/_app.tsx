@@ -25,7 +25,7 @@ export function MyApp({ Component, pageProps }: AppProps) {
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
         <ThemeProvider>
-          <div className={`${inter.variable} ${poppins.variable} font-sans`}>
+          <div className={`${inter.variable} ${poppins.variable} font-sans ${inter.className}`}>
             <Component {...pageProps} />
           </div>
         </ThemeProvider>

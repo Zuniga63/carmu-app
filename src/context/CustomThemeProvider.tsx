@@ -70,7 +70,7 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
         theme={{
           /** Put your mantine theme override here */
           colorScheme,
-          fontFamily: 'var(--font-inter)',
+          fontFamily: 'inherit',
           loader: 'oval',
         }}
       >

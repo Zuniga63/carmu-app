@@ -9,7 +9,6 @@ import {
   selectCommercialPremise,
   showPremiseForm,
   storePremiseStore,
-  unlockContent,
   unselectPremiseStore,
   updatePremiseStore,
 } from './actions';
@@ -24,8 +23,6 @@ const initialState: ConfigState = {
   premiseFormLoading: false,
   premiseFormIsSuccess: false,
   premiseFormError: null,
-  // BLOCK CHARTS
-  blockSensitiveInformation: true,
 };
 
 export const configStateReducer = createReducer(initialState, builder => {
@@ -55,12 +52,6 @@ export const configStateReducer = createReducer(initialState, builder => {
       state.premiseStoreSelected = undefined;
       localStorage.removeItem(PREMISE_STORE_KEY);
     });
-
-  builder.addCase(unlockContent, (state, { payload }) => {
-    if (payload === 'contraseña') {
-      state.blockSensitiveInformation = false;
-    }
-  });
 
   // --------------------------------------------------------------------------
   // STORE NEW COMMERCIAL PREMISE
