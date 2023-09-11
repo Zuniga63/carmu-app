@@ -32,6 +32,4 @@ export type ConfigState = {
   premiseFormLoading: boolean;
   premiseFormIsSuccess: boolean;
   premiseFormError: ErrorResponse | null;
-
-  blockSensitiveInformation: boolean;
 };
