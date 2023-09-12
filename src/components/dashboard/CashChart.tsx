@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { ChartOptions, ChartData, ChartDataset } from 'chart.js';
 import { Chart } from 'react-chartjs-2';
-import { CHART_COLORS, currencyFormat, transparentize } from '@/utils';
+import { CHART_COLORS, MONTHS, currencyFormat, transparentize } from '@/utils';
 import ProtectWrapper from '../ProtectWrapper';
 import { useGetCashReports } from '@/hooks/react-query/dashboard.hooks';
 import { CashReport } from '@/types';
@@ -114,7 +114,7 @@ const CashChart = () => {
   }, []);
 
   const chartData: ChartData = useMemo(() => {
-    if (!data) return { labels: [], datasets: [] };
+    if (!data) return { labels: MONTHS, datasets: [] };
     const resume = getResume(data);
 
     return {
