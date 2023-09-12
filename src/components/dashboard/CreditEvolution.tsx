@@ -15,6 +15,7 @@ const CreditEvolution = () => {
   const { data, isLoading, isError, error } = useGetCreditEvolution();
 
   useEffect(() => {
+    if (!isError) return;
     console.log(error);
     toast.error('Hubo un erro en la consulta, intentalo mas tarde.');
   }, [isError]);
