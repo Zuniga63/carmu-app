@@ -1,5 +1,10 @@
 {
-  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended", "prettier"],
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
+    "plugin:@tanstack/eslint-plugin-query/recommended"
+  ],
   "plugins": ["prettier"],
   "rules": {
     "prettier/prettier": "warn",
