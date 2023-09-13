@@ -12,9 +12,9 @@ import { ISaleHistory } from '@/types';
 import { CHART_COLORS, currencyFormat, transparentize } from '@/utils';
 import AnnualReportStatistics from '../dashboard/AnnualReportStatistics';
 import WeeklyHistory from './WeeklyHistory';
-import { configSelector } from '@/features/Config';
 import AverageChart from './PremiseStoreComparative/AverageChart';
 import { useAuthStore } from '@/store/auth-store';
+import { useGetAllPremiseStore } from '@/hooks/react-query/premise-store.hooks';
 
 export const barOptions: ChartOptions<'bar'> = {
   responsive: true,
@@ -58,7 +58,7 @@ export const barOptions: ChartOptions<'bar'> = {
 const WeeklyInvoiceChart = () => {
   const { storeSuccess, storePaymentSuccess, refreshIsSuccess } = useAppSelector(invoicePageSelector);
   const isAuth = useAuthStore(state => state.isAuth);
-  const { premiseStores } = useAppSelector(configSelector);
+  const { data: premiseStores } = useGetAllPremiseStore();
   const [chartData, setChartData] = useState<ChartData<'bar'>>({
     labels: [],
     datasets: [],
@@ -233,7 +233,7 @@ const WeeklyInvoiceChart = () => {
         <Tabs.Tab value="annualChart" color="blue" icon={<IconChartBar size={14} />}>
           Reporte Anual
         </Tabs.Tab>
-        {premiseStores.length > 0 && (
+        {premiseStores && premiseStores?.length > 0 && (
           <Tabs.Tab value="saleByStore" color="blue" icon={<IconBuildingStore size={14} />}>
             Por Negocio
           </Tabs.Tab>
@@ -275,7 +275,7 @@ const WeeklyInvoiceChart = () => {
           description="Se resumen las ventas directas por mostrador u otros medios pagadas en efectivo, tarjeta o transferencia"
         />
       </Tabs.Panel>
-      {premiseStores.length > 0 && (
+      {premiseStores && premiseStores?.length > 0 && (
         <Tabs.Panel value="saleByStore" pt="xs">
           <div className="flex flex-col gap-y-4">
             <AverageChart />

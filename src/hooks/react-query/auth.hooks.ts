@@ -43,8 +43,7 @@ export function useAuthenticateToken() {
 
   return useMutation({
     mutationFn: validateToken,
-    onSuccess({ user }, variables, context) {
-      console.log(user);
+    onSuccess({ user }) {
       if (user) updateUser(user);
     },
   });

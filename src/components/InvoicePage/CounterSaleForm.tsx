@@ -4,7 +4,6 @@ import dayjs from 'dayjs';
 import React, { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { boxPageSelector } from '@/features/BoxPage';
 import { categoryPageSelector } from '@/features/CategoryPage';
-import { configSelector } from '@/features/Config';
 import { hideCounterSaleForm, invoicePageSelector, storeNewInvoice } from '@/features/InvoicePage';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { IInvoiceStoreData, IInvoiceSummary, INewInvoiceItem } from '@/types';
@@ -14,6 +13,7 @@ import InvoiceFormCustomer from './InvoiceFormCustomer';
 import InvoiceFormHeader from './InvoiceFormHeader';
 import ProductSelect from './ProductSelect';
 import { useAuthStore } from '@/store/auth-store';
+import { useConfigStore } from '@/store/config-store';
 
 const defaulCustomer: IInvoiceCustomer = {
   id: null,
@@ -35,7 +35,7 @@ const CounterSaleForm = () => {
   const user = useAuthStore(state => state.user);
   const { boxes } = useAppSelector(boxPageSelector);
   const { categories } = useAppSelector(categoryPageSelector);
-  const { premiseStoreSelected: store } = useAppSelector(configSelector);
+  const store = useConfigStore(state => state.premiseStore);
   const dispatch = useAppDispatch();
 
   // ITEMS
@@ -55,7 +55,6 @@ const CounterSaleForm = () => {
 
   // Cashbox
   const [cashboxId, setCashboxId] = useState<string | null>(null);
-  // const [box, setBox] = useState<IInvoiceCashbox | null>(null);
 
   // CUSTOMER
   const [customer, setCustomer] = useState(defaulCustomer);

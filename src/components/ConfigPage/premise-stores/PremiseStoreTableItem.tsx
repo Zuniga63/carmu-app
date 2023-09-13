@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import { ActionIcon } from '@mantine/core';
 import {
   IconBoxOff,
@@ -10,29 +9,29 @@ import {
   IconPhone,
   IconTrash,
 } from '@tabler/icons-react';
-import { IPremiseStore } from '@/features/Config/types';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { configSelector, editPremiseStore, selectCommercialPremise, unselectPremiseStore } from '@/features/Config';
+import type { IPremiseStore } from '@/types';
 import { currencyFormat } from '@/utils';
+import { useConfigStore } from '@/store/config-store';
 
 interface Props {
   premiseStore: IPremiseStore;
 }
 
 const PremiseStoreTableItem: React.FC<Props> = ({ premiseStore }) => {
-  const { premiseStoreSelected } = useAppSelector(configSelector);
-  const dispatch = useAppDispatch();
+  const premiseStoreSelected = useConfigStore(state => state.premiseStore);
+  const setPremiseStore = useConfigStore(state => state.setPremiseStore);
+  const showForm = useConfigStore(state => state.showPremiseStoreForm);
 
-  const [isSelected, setIsSelected] = useState(false);
+  const isSelected = premiseStoreSelected ? premiseStoreSelected.id === premiseStore.id : false;
 
   const onClick = () => {
-    if (isSelected) dispatch(unselectPremiseStore());
-    else dispatch(selectCommercialPremise(premiseStore.id));
+    if (isSelected) setPremiseStore();
+    else setPremiseStore(premiseStore);
   };
 
-  useEffect(() => {
-    setIsSelected(Boolean(premiseStoreSelected && premiseStoreSelected.id === premiseStore.id));
-  }, [premiseStoreSelected]);
+  const handleEditPremiseStore = () => {
+    showForm(premiseStore.id);
+  };
 
   return (
     <tr>
@@ -80,7 +79,7 @@ const PremiseStoreTableItem: React.FC<Props> = ({ premiseStore }) => {
       </td>
       <td>
         <div className="flex gap-x-2">
-          <ActionIcon color="green" onClick={() => dispatch(editPremiseStore(premiseStore.id))}>
+          <ActionIcon color="green" onClick={handleEditPremiseStore}>
             <IconEdit size={16} />
           </ActionIcon>
           <ActionIcon color="red" disabled>

@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { IInvoiceBaseFull } from '@/types';
 import { currencyFormat } from '@/utils';
 import brandLogo from 'public/images/logo_62601199d793d.png';
+import { useConfigStore } from '@/store/config-store';
 
 interface Props {
   invoice: IInvoiceBaseFull;
@@ -14,6 +15,8 @@ interface Props {
 export type InvoiceSize = 'sm' | 'md' | 'lg';
 
 const InvoiceToPrint = ({ invoice, size = 'lg' }: Props) => {
+  const premiseStore = useConfigStore(state => state.premiseStore);
+
   return (
     <div className={`mx-auto bg-white text-dark ${size === 'lg' && 'w-11/12 pt-10'}`}>
       <header
@@ -22,14 +25,14 @@ const InvoiceToPrint = ({ invoice, size = 'lg' }: Props) => {
         }`}
       >
         {/* Brand Logo */}
-        <figure className={`mx-auto ${size === 'lg' ? 'mx-0 mb-0 w-40' : 'mb-2'} flex w-10/12 items-center`}>
+        <figure className={`${size === 'lg' ? 'mx-0 mb-0 w-40 ' : 'mx-auto mb-2 w-10/12'} flex items-center`}>
           <Image src={brandLogo} alt="Carmú Logo" />
         </figure>
 
         {/* Bussiness Information */}
         <div className={`${size === 'sm' ? 'text-xs' : 'text-sm'}`}>
           <h1 className={`text-center ${size === 'sm' ? 'text-xl' : 'text-2xl'} font-bold italic tracking-wider`}>
-            Tienda Carmú
+            {premiseStore ? premiseStore.name : 'Tienda Carmú'}
           </h1>
 
           <p className="text-center">
@@ -37,11 +40,13 @@ const InvoiceToPrint = ({ invoice, size = 'lg' }: Props) => {
           </p>
           <div className="flex items-center justify-center gap-x-2 text-gray-800">
             {size === 'md' ? <IconMapPin size={16} /> : null}
-            <p className="text-center font-bold tracking-widest">C.C Ibirico plaza Local 15 al 17</p>
+            <p className="text-center font-bold tracking-widest">
+              {premiseStore?.address ? premiseStore.address : 'C.C Ibirico plaza Local 15 al 17'}
+            </p>
           </div>
           <div className="flex items-center justify-center gap-x-2">
             <IconBrandWhatsapp size={16} className="inline-block" />
-            <p className="font-bold tracking-widest">320 555 5387</p>
+            <p className="font-bold tracking-widest">{premiseStore?.phone ? premiseStore.phone : '320 555 5387'}</p>
           </div>
         </div>
 
@@ -104,6 +109,7 @@ const InvoiceToPrint = ({ invoice, size = 'lg' }: Props) => {
           </div>
         )}
       </div>
+
       {/* INVOICE ITEMS */}
       <div className="mb-2 border-b-4 border-double border-dark pb-2">
         <div className="mb-2 border-b border-dashed pb-2">
@@ -156,8 +162,9 @@ const InvoiceToPrint = ({ invoice, size = 'lg' }: Props) => {
           </div>
         </div>
       </div>
+
       {/* PAYMENTS */}
-      <div className="mb-4">
+      <div className="">
         <h3 className={size === 'sm' ? 'mb-2 text-center text-sm font-bold' : 'mb-2 text-center text-base font-bold'}>
           Forma de pago
         </h3>
@@ -206,7 +213,7 @@ const InvoiceToPrint = ({ invoice, size = 'lg' }: Props) => {
       <p className="text-center text-sm">
         Vendedor: <span className="font-bold">{invoice.sellerName}</span>
       </p>
-      <p className="text-center text-xs font-bold">Tienda Carmú</p>
+      <p className="text-center text-xs font-bold">{premiseStore ? premiseStore.name : 'Tienda Carmú'}</p>
     </div>
   );
 };

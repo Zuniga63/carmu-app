@@ -35,6 +35,28 @@ export * from '@/features/BoxPage/types';
 export * from '@/features/InvoicePage/types';
 export * from './cash-report';
 
+export interface IPremiseStore {
+  id: string;
+  name: string;
+  phone?: string;
+  address?: string;
+  defaultBox?: IBox;
+  invoices: string[];
+  monthlySales: number;
+  weeklySales: number;
+}
+
+export interface IStorePremiseStore {
+  name: string;
+  address?: string;
+  phone?: string;
+  defaultBox?: string;
+}
+
+export interface IUpdatePremiseStore extends IStorePremiseStore {
+  storeId: string;
+}
+
 //-----------------------------------------------------------------------------
 // DASHBOARD PAGE
 //-----------------------------------------------------------------------------

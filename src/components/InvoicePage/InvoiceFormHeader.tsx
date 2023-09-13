@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { IconX } from '@tabler/icons-react';
 import BrandLogo from '../Layout/BrandLogo';
-import { useAppSelector } from '@/store/hooks';
-import { configSelector } from '@/features/Config';
+import { useConfigStore } from '@/store/config-store';
 
 interface Props {
   isSeparate: boolean;
@@ -10,7 +9,7 @@ interface Props {
 }
 
 const InvoiceFormHeader = ({ isSeparate, onClose }: Props) => {
-  const { premiseStoreSelected } = useAppSelector(configSelector);
+  const premiseStoreSelected = useConfigStore(state => state.premiseStore);
   const [title, setTitle] = useState(process.env.NEXT_PUBLIC_APP_NAME);
 
   useEffect(() => {

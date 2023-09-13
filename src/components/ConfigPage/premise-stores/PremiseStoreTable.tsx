@@ -1,11 +1,10 @@
 import { Table } from '@mantine/core';
 import React from 'react';
-import { configSelector } from '@/features/Config';
-import { useAppSelector } from '@/store/hooks';
 import PremiseStoreTableItem from './PremiseStoreTableItem';
+import { useGetAllPremiseStore } from '@/hooks/react-query/premise-store.hooks';
 
 const PremiseStoreTable = () => {
-  const { premiseStores: list } = useAppSelector(configSelector);
+  const { data: premiseStores } = useGetAllPremiseStore();
   return (
     <Table highlightOnHover>
       <thead>
@@ -32,11 +31,7 @@ const PremiseStoreTable = () => {
           <th></th>
         </tr>
       </thead>
-      <tbody>
-        {list.map(item => (
-          <PremiseStoreTableItem key={item.id} premiseStore={item} />
-        ))}
-      </tbody>
+      <tbody>{premiseStores?.map(item => <PremiseStoreTableItem key={item.id} premiseStore={item} />)}</tbody>
     </Table>
   );
 };

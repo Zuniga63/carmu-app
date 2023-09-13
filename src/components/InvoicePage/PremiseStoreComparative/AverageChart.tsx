@@ -10,9 +10,9 @@ import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import MonthlyReport from './MonthlyReport';
 import DailyReport, { ReportInvoice } from './DailyReport';
-import { configSelector } from '@/features/Config';
 import { IconChartArcs3 } from '@tabler/icons-react';
 import ProtectWrapper from '@/components/ProtectWrapper';
+import { useGetAllPremiseStore } from '@/hooks/react-query/premise-store.hooks';
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
@@ -68,7 +68,8 @@ export const lineOptions: ChartOptions<'line'> = {
 
 export default function AverageChart() {
   const { invoices: allInvoices } = useAppSelector(invoicePageSelector);
-  const { premiseStores } = useAppSelector(configSelector);
+  const { data: premiseStores } = useGetAllPremiseStore();
+
   const [storeSelected, setStoreSelected] = useState<string | null>('all');
   const [monthlyReports, setMonthlyReports] = useState<MonthlyReport[]>([]);
   const [isUpdated, setIsUpdated] = useState(false);
@@ -260,10 +261,12 @@ export default function AverageChart() {
             onChange={setStoreSelected}
             data={[
               { label: 'Todos los locales', value: 'all' },
-              ...premiseStores.map(store => ({
-                label: store.name,
-                value: store.id,
-              })),
+              ...(premiseStores
+                ? premiseStores.map(store => ({
+                    label: store.name,
+                    value: store.id,
+                  }))
+                : []),
             ]}
             size="xs"
           />

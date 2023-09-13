@@ -3,7 +3,6 @@ import { NextPage } from 'next';
 import { useAppDispatch } from '@/store/hooks';
 import { fetchBoxes } from '@/features/BoxPage';
 import { useEffect } from 'react';
-import { fetchPremiseStores } from '@/features/Config';
 import PremiseStoreConfigComponent from '@/components/ConfigPage/premise-stores/PremiseStoreConfigComponent';
 import { useAuthStore } from '@/store/auth-store';
 
@@ -15,7 +14,6 @@ const ConfigPage: NextPage = () => {
   useEffect(() => {
     if (isAuth && isAdmin) {
       dispatch(fetchBoxes());
-      dispatch(fetchPremiseStores());
     }
   }, [isAuth, isAdmin]);
 

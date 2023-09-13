@@ -23,8 +23,8 @@ import InvoiceFormDates from './InvoiceFormDates';
 import InvoiceFormItems from './InvoiceFormItems';
 import InvoiceFormConfirm from './InvoiceFormConfirm';
 import { hideNewInvoiceForm, invoicePageSelector, storeNewInvoice } from '@/features/InvoicePage';
-import { configSelector } from '@/features/Config';
 import { useAuthStore } from '@/store/auth-store';
+import { useConfigStore } from '@/store/config-store';
 
 export enum InvoiceSteps {
   Invoicing,
@@ -60,7 +60,7 @@ const InvoiceForm = () => {
     storeSuccess: success,
   } = useAppSelector(invoicePageSelector);
   const user = useAuthStore(state => state.user);
-  const { premiseStoreSelected } = useAppSelector(configSelector);
+  const premiseStoreSelected = useConfigStore(state => state.premiseStore);
   const dispatch = useAppDispatch();
   const [enabled, setEnabled] = useState(false);
   const largeScreen = useMediaQuery('(min-width: 768px)');

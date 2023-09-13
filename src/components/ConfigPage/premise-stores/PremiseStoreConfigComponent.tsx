@@ -1,16 +1,16 @@
 import React from 'react';
 import { Button } from '@mantine/core';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { configSelector, showPremiseForm } from '@/features/Config';
 import PremiseFormModal from '../premise-stores/PremiseFormModal';
 
 import FormSection from '@/components/FormSection';
 import FormSectionCard from '@/components/FormSectionCard';
 import PremiseStoreTable from './PremiseStoreTable';
+import { useGetAllPremiseStore } from '@/hooks/react-query/premise-store.hooks';
+import { useConfigStore } from '@/store/config-store';
 
 const PremiseStoreConfigComponent = () => {
-  const dispatch = useAppDispatch();
-  const { fetchPremiseStoresLoading: loading } = useAppSelector(configSelector);
+  const { isInitialLoading: loading } = useGetAllPremiseStore();
+  const showForm = useConfigStore(state => state.showPremiseStoreForm);
 
   return (
     <>
@@ -21,7 +21,7 @@ const PremiseStoreConfigComponent = () => {
           </FormSectionCard.Body>
           <FormSectionCard.Footer>
             {loading ? <span className="animate-pulse text-xs">Cargando locales...</span> : null}
-            <Button size="xs" onClick={() => dispatch(showPremiseForm())}>
+            <Button size="xs" onClick={() => showForm()}>
               Agregar Local
             </Button>
           </FormSectionCard.Footer>

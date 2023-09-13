@@ -5,29 +5,38 @@ import Image from 'next/image';
 import brandLogo from 'public/images/logo_62601199d793d.png';
 import { IInvoiceBaseFull } from '@/types';
 import { currencyFormat } from '@/utils';
+import { useConfigStore } from '@/store/config-store';
 
 interface Props {
   invoice: IInvoiceBaseFull;
 }
 
 const PrintPage: NextPage<Props> = ({ invoice }) => {
+  const premiseStore = useConfigStore(state => state.premiseStore);
+
   return (
     <div className="mx-auto min-h-screen max-w-sm bg-white text-dark">
       <header className="mb-2 border-b-4 border-double border-dark pb-2">
         <figure className="mx-auto mb-2 flex w-10/12 items-center">
           <Image src={brandLogo} alt="Carmú Logo" />
         </figure>
-        <h1 className="text-center text-xl font-bold italic tracking-wider xxs:text-2xl">Tienda Carmú</h1>
+        <h1 className="text-center text-xl font-bold italic tracking-wider xxs:text-2xl">
+          {premiseStore ? premiseStore.name : 'Tienda Carmú'}
+        </h1>
         <p className="text-center text-xs xxs:text-sm">
           Nit: <span className="font-bold tracking-widest">1098617663-1</span>
         </p>
         <div className="flex items-center justify-center gap-x-2 text-gray-800">
           <IconMapPin size={16} className="hidden xxs:inline-block" />
-          <p className="text-center text-xs font-bold tracking-widest xxs:text-sm">C.C Ibirico plaza Local 15 al 17</p>
+          <p className="text-center text-xs font-bold tracking-widest xxs:text-sm">
+            {premiseStore?.address ? premiseStore.address : 'C.C Ibirico plaza Local 15 al 17'}
+          </p>
         </div>
         <div className="flex items-center justify-center gap-x-2">
           <IconBrandWhatsapp size={16} className="inline-block" />
-          <p className="text-xs font-bold tracking-widest xxs:text-sm">320 555 5387</p>
+          <p className="text-xs font-bold tracking-widest xxs:text-sm">
+            {premiseStore?.phone ? premiseStore.phone : '320 555 5387'}
+          </p>
         </div>
       </header>
       {/* INVOICE INFO */}

@@ -1,3 +1,5 @@
+import { authApi } from '@/services/auth-service';
+import { premiseStoreApi } from '@/services/premise-store.service';
 import axios from 'axios';
 import { getCookie, setCookie } from 'cookies-next';
 
@@ -22,10 +24,22 @@ export function createCookieOptions(duration = 1) {
 
 export const saveAuthToken = (token: string) => {
   setCookie('access_token', token, createCookieOptions(30));
-  axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+  setAccesToken(token);
 };
 
 export const clearAuthToken = () => {
   setCookie('access_token', '', createCookieOptions(0));
-  axios.defaults.headers.common.Authorization = '';
+  setAccesToken();
+};
+
+/**
+ * Se encarga de agregar el header de authorizacion a las entidades axios de la app
+ * @param token Token for acces to end points
+ */
+export const setAccesToken = (token?: string) => {
+  const authorization = token ? `Bearer ${token}` : token;
+
+  axios.defaults.headers.common.Authorization = authorization;
+  authApi.defaults.headers.common.Authorization = authorization;
+  premiseStoreApi.defaults.headers.common.Authorization = authorization;
 };

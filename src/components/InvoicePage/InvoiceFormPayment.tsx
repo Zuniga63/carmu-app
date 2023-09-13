@@ -3,11 +3,11 @@ import { IconBox, IconCirclePlus } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import React, { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { boxPageSelector } from '@/features/BoxPage';
-import { configSelector } from '@/features/Config';
 import { useAppSelector } from '@/store/hooks';
 import { IInvoiceCashbox, IInvoiceSummary, INewInvoicePayment } from '@/types';
 import InvoiceFormGroup from './InvoiceFormGroup';
 import InvoiceFormPaymentList from './InvoiceFormPaymentList';
+import { useConfigStore } from '@/store/config-store';
 
 interface Props {
   invoiceDate: Date | null;
@@ -18,7 +18,7 @@ interface Props {
 
 const InvoiceFormPayment: React.FC<Props> = ({ invoiceDate, summary, payments, setPayments }) => {
   const { boxes } = useAppSelector(boxPageSelector);
-  const { premiseStoreSelected: commercialPremise } = useAppSelector(configSelector);
+  const commercialPremise = useConfigStore(state => state.premiseStore);
   const input = useRef<HTMLInputElement>(null);
 
   const [boxList, setBoxList] = useState<IInvoiceCashbox[]>([]);

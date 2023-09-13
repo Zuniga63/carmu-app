@@ -3,20 +3,24 @@ import { IconBox } from '@tabler/icons-react';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { boxPageSelector } from '@/features/BoxPage';
-import { configSelector, hidePremiseForm, storePremiseStore, updatePremiseStore } from '@/features/Config';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { useAppSelector } from '@/store/hooks';
 import { IValidationErrors } from '@/types';
+import { useConfigStore } from '@/store/config-store';
+import {
+  useCreatePremiseStore,
+  useGetAllPremiseStore,
+  useUpdatePremiseStore,
+} from '@/hooks/react-query/premise-store.hooks';
+import axios from 'axios';
 
 const PremiseFormModal = () => {
-  const {
-    premiseFormOpened: opened,
-    premiseFormLoading: loading,
-    premiseFormIsSuccess: isSuccess,
-    premiseFormError: error,
-    commercialPremiseToUpdate: commercialToUpdate,
-  } = useAppSelector(configSelector);
   const { boxes } = useAppSelector(boxPageSelector);
-  const dispatch = useAppDispatch();
+
+  const isOpen = useConfigStore(state => state.premiseStoreFormOpened);
+  const premiseStoreIdToUpdate = useConfigStore(state => state.premiseStoreIdToUpdate);
+  const { data: premiseStores } = useGetAllPremiseStore();
+
+  const closeForm = useConfigStore(state => state.hidePremiseStoreForm);
 
   const [modalTitle, setModalTitle] = useState('Agregar Local Comercial');
   const [name, setName] = useState('');
@@ -25,73 +29,90 @@ const PremiseFormModal = () => {
   const [defaultBox, setDefaultBox] = useState<string | null>(null);
   const [errors, setErrors] = useState<IValidationErrors | null>(null);
 
+  const {
+    mutate: createPremiseStore,
+    isLoading: createIsLoading,
+    isError: createIsError,
+    isSuccess: createIsSuccess,
+    error: createError,
+  } = useCreatePremiseStore();
+
+  const {
+    mutate: updatePremiseStore2,
+    isLoading: updateIsLoading,
+    isError: updateIsError,
+    isSuccess: updateIsSuccess,
+    error: updateError,
+  } = useUpdatePremiseStore();
+
   const close = () => {
-    if (!loading) {
-      dispatch(hidePremiseForm());
-      setName('');
-      setAddress('');
-      setPhone('');
-      setDefaultBox(null);
-    }
+    if (createIsLoading || updateIsLoading) return;
+    closeForm();
+    setName('');
+    setAddress('');
+    setPhone('');
+    setDefaultBox(null);
   };
 
   const submitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (name) {
-      if (commercialToUpdate) {
-        dispatch(
-          updatePremiseStore({
-            storeId: commercialToUpdate.id,
-            name,
-            address: address || undefined,
-            phone: phone || undefined,
-            defaultBox: defaultBox || undefined,
-          }),
-        );
-      } else {
-        dispatch(
-          storePremiseStore({
-            name,
-            address: address || undefined,
-            phone: phone || undefined,
-            defaultBox: defaultBox || undefined,
-          }),
-        );
-      }
+    if (createIsLoading || updateIsLoading || !name) return;
+
+    if (premiseStoreIdToUpdate) {
+      updatePremiseStore2({
+        storeId: premiseStoreIdToUpdate,
+        name,
+        address: address || undefined,
+        phone: phone || undefined,
+        defaultBox: defaultBox || undefined,
+      });
+    } else {
+      createPremiseStore({
+        name,
+        address: address || undefined,
+        phone: phone || undefined,
+        defaultBox: defaultBox || undefined,
+      });
     }
   };
 
   useEffect(() => {
-    if (isSuccess) {
-      if (commercialToUpdate) {
-        toast.success('¡Local comercial actualizado!');
-      } else {
-        toast.success('¡Local comercial registrado!');
-      }
+    const isSuccess = createIsSuccess || updateIsSuccess;
+    if (!isSuccess) return;
+
+    const message = premiseStoreIdToUpdate ? '¡Local comercial actualizado!' : '¡Local comercial registrado!';
+    toast.success(message);
+    close();
+  }, [createIsSuccess, updateIsSuccess]);
+
+  useEffect(() => {
+    if (!premiseStoreIdToUpdate || !premiseStores) return;
+
+    const premiseStore = premiseStores.find(item => item.id === premiseStoreIdToUpdate);
+    if (!premiseStore) {
       close();
-    }
-  }, [isSuccess]);
-
-  useEffect(() => {
-    if (commercialToUpdate) {
-      setModalTitle('Actualizar local comercial');
-      const { name, address, phone, defaultBox } = commercialToUpdate;
-      setName(name);
-      setAddress(address || '');
-      setPhone(phone || '');
-
-      const box = boxes.find(item => item.id === defaultBox?.id);
-      if (box) {
-        setDefaultBox(box.id);
-      }
-    } else {
       setModalTitle('Agregar local comercial');
+      return;
     }
-  }, [commercialToUpdate]);
+
+    setModalTitle('Actualizar local comercial');
+    const { name, address, phone, defaultBox } = premiseStore;
+    setName(name);
+    setAddress(address || '');
+    setPhone(phone || '');
+
+    const box = boxes.find(item => item.id === defaultBox?.id);
+    if (box) {
+      setDefaultBox(box.id);
+    }
+  }, [premiseStoreIdToUpdate]);
 
   useEffect(() => {
-    if (error) {
-      const { data, status } = error;
+    const error = createError || updateError;
+    if (!error) return;
+
+    if (axios.isAxiosError(error) && error.response) {
+      const { data, status } = error.response;
       if (status === 422 && data.validationErrors) {
         setErrors(data.validationErrors);
       } else if (status === 401 || status === 404) {
@@ -100,10 +121,10 @@ const PremiseFormModal = () => {
         console.log(error);
       }
     }
-  }, [error]);
+  }, [createIsError, updateIsError]);
 
   return (
-    <Modal opened={opened} onClose={close} title={modalTitle}>
+    <Modal opened={isOpen} onClose={close} title={modalTitle}>
       <form onSubmit={submitHandler}>
         <div className="mb-6">
           <TextInput
@@ -149,10 +170,10 @@ const PremiseFormModal = () => {
           />
         </div>
         <footer className="flex justify-between">
-          <Button size="xs" color="red" onClick={close} disabled={loading}>
+          <Button size="xs" color="red" onClick={close} disabled={createIsLoading || updateIsLoading}>
             Cancelar
           </Button>
-          <Button size="xs" color="green" loading={loading} type="submit">
+          <Button size="xs" color="green" loading={createIsLoading || updateIsLoading} type="submit">
             Guardar
           </Button>
         </footer>
