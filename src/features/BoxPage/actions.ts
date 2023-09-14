@@ -9,6 +9,7 @@ import {
   IStoreTransactionRequest,
   ITransactionResponse,
 } from './types';
+import { getAllBoxes } from '@/services/boxes.service';
 // ----------------------------------------------------------------------------
 // MOUNT BOXES ACTIONS
 // ----------------------------------------------------------------------------
@@ -16,8 +17,8 @@ export const mountBoxes = createAction<IBox[]>('boxPage/mountBoxes');
 export const mountMainBox = createAction<IMainBox | null>('boxPage/mountMainBox');
 export const fetchBoxes = createAsyncThunk('boxPage/fetchBoxes', async (_, { rejectWithValue }) => {
   try {
-    const res = await axios.get<IBoxesResponse>('/boxes');
-    return res.data;
+    const res = await getAllBoxes();
+    return res;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       const { data, status } = error.response;
@@ -27,6 +28,8 @@ export const fetchBoxes = createAsyncThunk('boxPage/fetchBoxes', async (_, { rej
     throw error;
   }
 });
+
+export const updateBoxes = createAction<IBoxesResponse>('pageBox/updateBoxes');
 
 export const removeBox = createAction<string>('pageBox/removeBox');
 // ----------------------------------------------------------------------------

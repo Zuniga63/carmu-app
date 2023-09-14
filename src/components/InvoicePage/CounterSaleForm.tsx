@@ -2,11 +2,10 @@ import { Button, Group, Modal, NumberInput, Select, Table, Tabs, TextInput } fro
 import { IconBox, IconCategory, IconDeviceFloppy, IconPlus, IconTrash, IconUsers } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import React, { KeyboardEvent, useEffect, useRef, useState } from 'react';
-import { boxPageSelector } from '@/features/BoxPage';
 import { categoryPageSelector } from '@/features/CategoryPage';
 import { hideCounterSaleForm, invoicePageSelector, storeNewInvoice } from '@/features/InvoicePage';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { IInvoiceStoreData, IInvoiceSummary, INewInvoiceItem } from '@/types';
+import { IBox, IInvoiceStoreData, IInvoiceSummary, INewInvoiceItem } from '@/types';
 import { currencyFormat } from '@/utils';
 import { IInvoiceCustomer } from './InvoiceForm';
 import InvoiceFormCustomer from './InvoiceFormCustomer';
@@ -14,6 +13,7 @@ import InvoiceFormHeader from './InvoiceFormHeader';
 import ProductSelect from './ProductSelect';
 import { useAuthStore } from '@/store/auth-store';
 import { useConfigStore } from '@/store/config-store';
+import { useGetAllBoxes } from '@/hooks/react-query/boxes.hooks';
 
 const defaulCustomer: IInvoiceCustomer = {
   id: null,
@@ -33,10 +33,12 @@ const CounterSaleForm = () => {
     storeSuccess: success,
   } = useAppSelector(invoicePageSelector);
   const user = useAuthStore(state => state.user);
-  const { boxes } = useAppSelector(boxPageSelector);
   const { categories } = useAppSelector(categoryPageSelector);
   const store = useConfigStore(state => state.premiseStore);
   const dispatch = useAppDispatch();
+
+  const { data: boxesResponse } = useGetAllBoxes();
+  const boxes: IBox[] = boxesResponse?.boxes || [];
 
   // ITEMS
   const searchRef = useRef<HTMLInputElement>(null);

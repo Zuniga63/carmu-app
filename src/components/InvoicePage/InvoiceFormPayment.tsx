@@ -2,12 +2,11 @@ import { Button, Checkbox, NumberInput, Select } from '@mantine/core';
 import { IconBox, IconCirclePlus } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import React, { KeyboardEvent, useEffect, useRef, useState } from 'react';
-import { boxPageSelector } from '@/features/BoxPage';
-import { useAppSelector } from '@/store/hooks';
-import { IInvoiceCashbox, IInvoiceSummary, INewInvoicePayment } from '@/types';
+import { IBox, IInvoiceCashbox, IInvoiceSummary, INewInvoicePayment } from '@/types';
 import InvoiceFormGroup from './InvoiceFormGroup';
 import InvoiceFormPaymentList from './InvoiceFormPaymentList';
 import { useConfigStore } from '@/store/config-store';
+import { useGetAllBoxes } from '@/hooks/react-query/boxes.hooks';
 
 interface Props {
   invoiceDate: Date | null;
@@ -17,9 +16,11 @@ interface Props {
 }
 
 const InvoiceFormPayment: React.FC<Props> = ({ invoiceDate, summary, payments, setPayments }) => {
-  const { boxes } = useAppSelector(boxPageSelector);
   const commercialPremise = useConfigStore(state => state.premiseStore);
   const input = useRef<HTMLInputElement>(null);
+
+  const { data: boxesResponse } = useGetAllBoxes();
+  const boxes: IBox[] = boxesResponse?.boxes || [];
 
   const [boxList, setBoxList] = useState<IInvoiceCashbox[]>([]);
   const [boxId, setBoxId] = useState<string | null>(null);

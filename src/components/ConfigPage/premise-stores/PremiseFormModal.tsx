@@ -2,9 +2,7 @@ import { Button, Modal, Select, TextInput } from '@mantine/core';
 import { IconBox } from '@tabler/icons-react';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { boxPageSelector } from '@/features/BoxPage';
-import { useAppSelector } from '@/store/hooks';
-import { IValidationErrors } from '@/types';
+import { IBox, IValidationErrors } from '@/types';
 import { useConfigStore } from '@/store/config-store';
 import {
   useCreatePremiseStore,
@@ -12,9 +10,11 @@ import {
   useUpdatePremiseStore,
 } from '@/hooks/react-query/premise-store.hooks';
 import axios from 'axios';
+import { useGetAllBoxes } from '@/hooks/react-query/boxes.hooks';
 
 const PremiseFormModal = () => {
-  const { boxes } = useAppSelector(boxPageSelector);
+  const { data: boxesResponse } = useGetAllBoxes();
+  const boxes: IBox[] = boxesResponse?.boxes || [];
 
   const isOpen = useConfigStore(state => state.premiseStoreFormOpened);
   const premiseStoreIdToUpdate = useConfigStore(state => state.premiseStoreIdToUpdate);

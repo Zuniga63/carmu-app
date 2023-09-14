@@ -7,7 +7,6 @@ import { toast } from 'react-toastify';
 import CustomerPaymentModal from '@/components/CustomerPage/CustomerPaymentModal';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { customerPageSelector, fetchCustomers } from '@/features/CustomerPage';
-import { fetchBoxes } from '@/features/BoxPage';
 import CustomerInfo from '@/components/CustomerPage/CustomerInfo';
 import { useAuthStore } from '@/store/auth-store';
 
@@ -19,7 +18,6 @@ const CustomerPage: NextPage = () => {
   useEffect(() => {
     if (isAuth) {
       dispatch(fetchCustomers());
-      dispatch(fetchBoxes());
     }
   }, [isAuth]);
 

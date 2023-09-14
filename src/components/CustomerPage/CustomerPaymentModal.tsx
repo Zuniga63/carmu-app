@@ -4,7 +4,6 @@ import { IconBox, IconCalendar, IconCash } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { boxPageSelector } from '@/features/BoxPage';
 import {
   customerPageSelector,
   fetchCustomers,
@@ -12,8 +11,9 @@ import {
   unmountCustomerToPayment,
 } from '@/features/CustomerPage';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { IInvoicePaymentData, IValidationErrors } from '@/types';
+import { IBox, IInvoicePaymentData, IValidationErrors } from '@/types';
 import { currencyFormat } from '@/utils';
+import { useGetAllBoxes } from '@/hooks/react-query/boxes.hooks';
 
 const CustomerPaymentModal = () => {
   const defaultDescription = 'Efectivo';
@@ -26,7 +26,8 @@ const CustomerPaymentModal = () => {
     paymentFormIsSuccess: isSuccess,
   } = useAppSelector(customerPageSelector);
 
-  const { boxes } = useAppSelector(boxPageSelector);
+  const { data: boxesResponse } = useGetAllBoxes();
+  const boxes: IBox[] = boxesResponse?.boxes || [];
 
   const dispatch = useAppDispatch();
 

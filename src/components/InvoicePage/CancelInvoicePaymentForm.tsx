@@ -3,10 +3,11 @@ import { IconBox } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { boxPageSelector } from '@/features/BoxPage';
 import { cancelInvoicePayment, hideCancelPaymentForm, invoicePageSelector } from '@/features/InvoicePage';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { currencyFormat } from '@/utils';
+import { IBox } from '@/types';
+import { useGetAllBoxes } from '@/hooks/react-query/boxes.hooks';
 
 export interface ICancelPaymentData {
   invoiceId: string;
@@ -25,7 +26,10 @@ const CancelInvoicePaymentForm = () => {
     cancelPaymentLoading: loading,
     cancelPaymentError: error,
   } = useAppSelector(invoicePageSelector);
-  const { boxes } = useAppSelector(boxPageSelector);
+
+  const { data: boxesResponse } = useGetAllBoxes();
+  const boxes: IBox[] = boxesResponse?.boxes || [];
+
   const dispatch = useAppDispatch();
 
   const [title, setTitle] = useState('');

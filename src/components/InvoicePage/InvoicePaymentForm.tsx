@@ -5,11 +5,11 @@ import { AxiosError } from 'axios';
 import dayjs from 'dayjs';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { boxPageSelector } from '@/features/BoxPage';
 import { hidePaymentForm, invoicePageSelector, registerPayment } from '@/features/InvoicePage';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { IInvoicePaymentData, IValidationErrors } from '@/types';
+import { IBox, IInvoicePaymentData, IValidationErrors } from '@/types';
 import { currencyFormat } from '@/utils';
+import { useGetAllBoxes } from '@/hooks/react-query/boxes.hooks';
 
 const InvoicePaymentForm = () => {
   const {
@@ -20,7 +20,8 @@ const InvoicePaymentForm = () => {
     storePaymentSuccess: success,
   } = useAppSelector(invoicePageSelector);
 
-  const { boxes } = useAppSelector(boxPageSelector);
+  const { data: boxesResponse } = useGetAllBoxes();
+  const boxes: IBox[] = boxesResponse?.boxes || [];
 
   const dispatch = useAppDispatch();
   const defaultDescription = 'Efectivo';

@@ -19,6 +19,7 @@ import {
   unmountBoxToClose,
   unmountBoxToOpen,
   unmountTransactions,
+  updateBoxes,
 } from './actions';
 import { BoxPageState } from './types';
 
@@ -79,6 +80,10 @@ export const boxPageReducer = createReducer(initialState, builder => {
     .addCase(fetchBoxes.rejected, state => {
       state.fetchLoading = false;
       state.fetchError = 'No se pudieron cargar las cajas';
+    })
+    .addCase(updateBoxes, (state, { payload }) => {
+      state.boxes = payload.boxes;
+      state.mainBox = payload.mainBox;
     });
   // --------------------------------------------------------------------------
   // CREATE NEW BOXES

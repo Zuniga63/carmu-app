@@ -3,4 +3,5 @@ export enum ServerStateKeysEnum {
   CashReport = 'cash-report',
   CreditEvolution = 'credit-evolution',
   PremiseStore = 'premise-store',
+  Boxes = 'boxes',
 }
