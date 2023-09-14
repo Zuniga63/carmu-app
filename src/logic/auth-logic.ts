@@ -1,5 +1,6 @@
 import { authApi } from '@/services/auth-service';
 import { boxesApi } from '@/services/boxes.service';
+import { customerApi } from '@/services/customers.service';
 import { premiseStoreApi } from '@/services/premise-store.service';
 import axios from 'axios';
 import { getCookie, setCookie } from 'cookies-next';
@@ -40,8 +41,9 @@ export const clearAuthToken = () => {
 export const setAccesToken = (token?: string) => {
   const authorization = token ? `Bearer ${token}` : token;
 
-  axios.defaults.headers.common.Authorization = authorization;
-  authApi.defaults.headers.common.Authorization = authorization;
-  premiseStoreApi.defaults.headers.common.Authorization = authorization;
-  boxesApi.defaults.headers.common.Authorization = authorization;
+  const axiosInstances = [axios, authApi, premiseStoreApi, boxesApi, customerApi];
+
+  axiosInstances.forEach(instance => {
+    instance.defaults.headers.common.Authorization = authorization;
+  });
 };

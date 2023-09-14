@@ -1,12 +1,11 @@
 import { Checkbox, Select, SelectItem, TextInput } from '@mantine/core';
 import { IconHome, IconPhone, IconSearch } from '@tabler/icons-react';
 import React, { forwardRef, useEffect } from 'react';
-import { customerPageSelector } from '@/features/CustomerPage';
-import { useAppSelector } from '@/store/hooks';
 import { ICustomer } from '@/types';
 import { currencyFormat, normalizeText } from '@/utils';
 import { IInvoiceCustomer } from './InvoiceForm';
 import InvoiceFormGroup from './InvoiceFormGroup';
+import { useGetAllCustomers } from '@/hooks/react-query/customers.hooks';
 
 interface Props {
   customer: IInvoiceCustomer;
@@ -48,7 +47,8 @@ const InvoiceFormCustomer = ({
   setRegisterWithOtherData,
   className,
 }: Props) => {
-  const { customers } = useAppSelector(customerPageSelector);
+  // const { customers } = useAppSelector(customerPageSelector);
+  const { data: customers } = useGetAllCustomers({ staleTime: Infinity });
 
   const buildSelectCustomerData = (customer: ICustomer): ICustomerSelectProps => {
     let search = `${customer.fullName}`;
@@ -65,17 +65,17 @@ const InvoiceFormCustomer = ({
   };
 
   useEffect(() => {
-    const customerData = customers.find(c => c.id === customer.id);
-    if (customerData) {
-      onCustomerChange(current => ({
-        id: customerData.id,
-        name: customerData.fullName,
-        document: customerData.documentNumber || current.document,
-        documentType: customerData.documentType || current.documentType,
-        phone: customerData.contacts.length ? customerData.contacts[0].phone : current.phone,
-        address: customerData.address || current.address,
-      }));
-    }
+    const customerData = customers?.find(c => c.id === customer.id);
+    if (!customerData) return;
+
+    onCustomerChange(current => ({
+      id: customerData.id,
+      name: customerData.fullName,
+      document: customerData.documentNumber || current.document,
+      documentType: customerData.documentType || current.documentType,
+      phone: customerData.contacts.length ? customerData.contacts[0].phone : current.phone,
+      address: customerData.address || current.address,
+    }));
   }, [customer.id]);
 
   return (
@@ -86,7 +86,7 @@ const InvoiceFormCustomer = ({
           className="lg:col-span-2"
           value={customer.id}
           itemComponent={SelectItemCustomer}
-          data={customers.map(buildSelectCustomerData)}
+          data={customers ? customers.map(buildSelectCustomerData) : []}
           filter={(value, item) => item.search.includes(normalizeText(value))}
           onChange={value => onCustomerChange(current => ({ ...current, id: value }))}
           size="xs"

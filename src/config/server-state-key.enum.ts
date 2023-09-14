@@ -4,4 +4,6 @@ export enum ServerStateKeysEnum {
   CreditEvolution = 'credit-evolution',
   PremiseStore = 'premise-store',
   Boxes = 'boxes',
+  Customers = 'customers',
+  Products = 'products',
 }

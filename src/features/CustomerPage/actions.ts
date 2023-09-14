@@ -4,11 +4,9 @@ import { RootState } from '@/store';
 import Swal from 'sweetalert2';
 import { ICustomerStore, ICustomerWithInvoices } from './types';
 import { ICustomer } from './types';
+import { getAllCustomers } from '@/services/customers.service';
 
-export const fetchCustomers = createAsyncThunk('customerPage/fetchCustomers', async () => {
-  const res = await axios.get<ICustomer[]>('/customers');
-  return res.data;
-});
+export const fetchCustomers = createAsyncThunk('customerPage/fetchCustomers', getAllCustomers);
 
 export const showCustomerForm = createAction('customerPage/showCustomerForm');
 export const hideCustomerForm = createAction('customerPage/hideCustomerForm');

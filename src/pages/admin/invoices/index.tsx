@@ -10,7 +10,6 @@ import WeeklyInvoiceChart from '@/components/InvoicePage/WeeklyInvoiceChart';
 
 import CounterSaleForm from '@/components/InvoicePage/CounterSaleForm';
 import { fetchInvoiceData, invoicePageSelector, refreshInvoices } from '@/features/InvoicePage';
-import { fetchCustomers } from '@/features/CustomerPage';
 import { fetchCategories } from '@/features/CategoryPage';
 import CancelInvoicePaymentForm from '@/components/InvoicePage/CancelInvoicePaymentForm';
 import CancelInvoiceForm from '@/components/InvoicePage/CancelInvoiceForm';
@@ -27,7 +26,6 @@ const InvoicePage: NextPage = () => {
     if (isAuth && isAdmin) {
       if (firstLoading) {
         dispatch(fetchInvoiceData());
-        dispatch(fetchCustomers());
         dispatch(fetchCategories());
       } else {
         dispatch(refreshInvoices());

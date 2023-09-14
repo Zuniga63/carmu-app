@@ -25,6 +25,8 @@ import InvoiceFormConfirm from './InvoiceFormConfirm';
 import { hideNewInvoiceForm, invoicePageSelector, storeNewInvoice } from '@/features/InvoicePage';
 import { useAuthStore } from '@/store/auth-store';
 import { useConfigStore } from '@/store/config-store';
+import { useQueryClient } from '@tanstack/react-query';
+import { ServerStateKeysEnum } from '@/config/server-state-key.enum';
 
 export enum InvoiceSteps {
   Invoicing,
@@ -64,6 +66,7 @@ const InvoiceForm = () => {
   const dispatch = useAppDispatch();
   const [enabled, setEnabled] = useState(false);
   const largeScreen = useMediaQuery('(min-width: 768px)');
+  const queryCache = useQueryClient();
 
   // ------------------------------------------------------------------------------------------------------------------
   // INVOICE STEP
@@ -219,11 +222,12 @@ const InvoiceForm = () => {
   }, [error]);
 
   useEffect(() => {
-    if (success) {
-      toast.success('Factura Creada');
-      closeInvoice();
-      resetForm();
-    }
+    if (!success) return;
+    if (customer) queryCache.invalidateQueries([ServerStateKeysEnum.Customers]);
+
+    toast.success('Factura Creada');
+    closeInvoice();
+    resetForm();
   }, [success]);
 
   useEffect(() => {
