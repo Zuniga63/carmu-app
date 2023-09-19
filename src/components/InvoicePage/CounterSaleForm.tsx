@@ -14,6 +14,7 @@ import ProductSelect from './ProductSelect';
 import { useAuthStore } from '@/store/auth-store';
 import { useConfigStore } from '@/store/config-store';
 import { useGetAllBoxes } from '@/hooks/react-query/boxes.hooks';
+import { useGetAllLiteProducts } from '@/hooks/react-query/product.hooks';
 
 const defaulCustomer: IInvoiceCustomer = {
   id: null,
@@ -27,7 +28,6 @@ const defaulCustomer: IInvoiceCustomer = {
 const CounterSaleForm = () => {
   const {
     counterSaleFormOpened: opened,
-    products,
     storeLoading: loading,
     storeError: error,
     storeSuccess: success,
@@ -36,6 +36,7 @@ const CounterSaleForm = () => {
   const { categories } = useAppSelector(categoryPageSelector);
   const store = useConfigStore(state => state.premiseStore);
   const dispatch = useAppDispatch();
+  const { data: products } = useGetAllLiteProducts();
 
   const { data: boxesResponse } = useGetAllBoxes();
   const boxes: IBox[] = boxesResponse?.boxes || [];
@@ -270,7 +271,7 @@ const CounterSaleForm = () => {
   // EFFECTS
   // --------------------------------------------------------------------------
   useEffect(() => {
-    const product = products.find(p => p.id === productId);
+    const product = products?.find(p => p.id === productId);
     if (product) {
       setItemDescription(product.name);
       setItemUnitValue(product.price);
@@ -354,7 +355,7 @@ const CounterSaleForm = () => {
             <div className="rounded-md bg-gray-200 p-4 shadow-lg dark:bg-header dark:shadow dark:shadow-light ">
               {/* PRODUCT */}
               <ProductSelect
-                products={products}
+                products={products || []}
                 productId={productId}
                 selectRef={searchRef}
                 onSelect={setProductId}

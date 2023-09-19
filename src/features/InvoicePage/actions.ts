@@ -33,7 +33,7 @@ export const fetchInvoiceData = createAsyncThunk('invoicePage/fetchInvoiceData',
   const res1 = await axios.get<IInvoicePageData>('/invoices', {
     params: {
       to: date1,
-      withProducts: true,
+      withProducts: false,
     },
   });
 

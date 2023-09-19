@@ -6,4 +6,5 @@ export enum ServerStateKeysEnum {
   Boxes = 'boxes',
   Customers = 'customers',
   Products = 'products',
+  ProductList = 'product-list',
 }
