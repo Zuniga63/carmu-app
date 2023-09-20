@@ -1,4 +1,4 @@
-import { IInvoiceProduct, INewInvoiceItem } from '@/types';
+import type { ICategory, IInvoiceProduct, INewInvoiceItem } from '@/types';
 
 export const getDiscountFromProduct = (product: IInvoiceProduct): number | undefined => {
   const { hasDiscount, priceWithDiscount, price } = product;
@@ -63,4 +63,20 @@ export const addNewItemToList = ({ items, newItem }: AddNewItemToListProps) => {
   result.splice(index, 1, equalItem);
 
   return result;
+};
+
+/**
+ * Obtiene una cadena de texto con los nombres de las categorías
+ * @param item Articulo al que se desea resumir las categorías
+ * @param categories Listado de categorías
+ * @returns Una cadena de texto con las categorías separadas por espacio
+ */
+export const getItemCategory = (item: INewInvoiceItem, categories: ICategory[] = []) => {
+  const result: string[] = [];
+  item.categories.forEach(categoryId => {
+    const category = categories.find(c => c.id === categoryId);
+    if (category) result.push(category.name);
+  });
+
+  return result.length > 0 ? result.join(' ') : 'Sin categoría';
 };
