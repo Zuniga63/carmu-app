@@ -1,20 +1,24 @@
-import { Button, Group, Modal, NumberInput, Select, Table, Tabs, TextInput } from '@mantine/core';
-import { IconBox, IconCategory, IconDeviceFloppy, IconPlus, IconTrash, IconUsers } from '@tabler/icons-react';
 import dayjs from 'dayjs';
-import React, { KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import type { IInvoiceStoreData, INewInvoiceItem } from '@/types';
+
 import { categoryPageSelector } from '@/features/CategoryPage';
 import { hideCounterSaleForm, invoicePageSelector, storeNewInvoice } from '@/features/InvoicePage';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { IBox, IInvoiceStoreData, IInvoiceSummary, INewInvoiceItem } from '@/types';
+import { useConfigStore } from '@/store/config-store';
+import { useAuthStore } from '@/store/auth-store';
+
 import { currencyFormat } from '@/utils';
+import { addNewItemToList } from '@/logic/invoices-form';
+
+import { Button, Group, Modal, Table, Tabs } from '@mantine/core';
+import { IconDeviceFloppy, IconTrash, IconUsers } from '@tabler/icons-react';
+
 import { IInvoiceCustomer } from './InvoiceForm';
 import InvoiceFormCustomer from './InvoiceFormCustomer';
 import InvoiceFormHeader from './InvoiceFormHeader';
-import ProductSelect from './ProductSelect';
-import { useAuthStore } from '@/store/auth-store';
-import { useConfigStore } from '@/store/config-store';
-import { useGetAllBoxes } from '@/hooks/react-query/boxes.hooks';
-import { useGetAllLiteProducts } from '@/hooks/react-query/product.hooks';
+import CounterSaleBoxSelect from './CounterSaleBoxSelect';
+import CounterSaleItemForm from './CounterSaleItemForm';
 
 const defaulCustomer: IInvoiceCustomer = {
   id: null,
@@ -36,23 +40,6 @@ const CounterSaleForm = () => {
   const { categories } = useAppSelector(categoryPageSelector);
   const store = useConfigStore(state => state.premiseStore);
   const dispatch = useAppDispatch();
-  const { data: products } = useGetAllLiteProducts();
-
-  const { data: boxesResponse } = useGetAllBoxes();
-  const boxes: IBox[] = boxesResponse?.boxes || [];
-
-  // ITEMS
-  const searchRef = useRef<HTMLInputElement>(null);
-  const categoryRef = useRef<HTMLInputElement>(null);
-
-  const [productId, setProductId] = useState<string | null>(null);
-  const [categoryId, setCategoryId] = useState<string | null>(null);
-  const [itemDescription, setItemDescription] = useState('');
-  const [itemQuantity, setItemQuantity] = useState<number | undefined>(1);
-  const [itemUnitValue, setItemUnitValue] = useState<number | undefined>(undefined);
-  const [itemDiscount, setItemDiscount] = useState<number | undefined>(undefined);
-  const [itemAmount, setItemAmount] = useState<number | undefined>(undefined);
-  const [enabled, setEnabled] = useState(false);
 
   const [items, setItems] = useState<INewInvoiceItem[]>([]);
 
@@ -63,15 +50,9 @@ const CounterSaleForm = () => {
   const [customer, setCustomer] = useState(defaulCustomer);
   const [registerWithOtherData, setRegisterWithOtherData] = useState(false);
 
-  // SUMMARY
-  const [summary, setSummary] = useState<IInvoiceSummary>({
-    subtotal: 0,
-    discount: undefined,
-    amount: 0,
-    cash: undefined,
-    cashChange: undefined,
-    balance: undefined,
-  });
+  const amount = useMemo(() => {
+    return items.reduce((sum, { amount }) => sum + amount, 0);
+  }, [items]);
 
   // ------------------------------------------------------------------------------------------------------------------
   // METHOD
@@ -94,127 +75,9 @@ const CounterSaleForm = () => {
     }
   };
 
-  const updateSummary = () => {
-    let subtotal = 0,
-      discount = 0,
-      amount = 0,
-      balance = 0,
-      cash = 0,
-      cashChange = 0;
-
-    items.forEach(item => {
-      subtotal += item.quantity * item.unitValue;
-      if (item.discount) discount += item.quantity * item.discount;
-    });
-
-    amount += subtotal - discount;
-    balance = amount;
-    cash = balance;
-
-    if (cash < balance) balance -= cash;
-    else {
-      cashChange = cash - balance;
-      balance = 0;
-    }
-
-    setSummary({
-      subtotal,
-      discount: discount || undefined,
-      amount,
-      cash: cash || undefined,
-      cashChange: cashChange || undefined,
-      balance: balance || undefined,
-    });
-  };
-
-  const resetItem = (focus: 'search' | 'category' = 'category') => {
-    setProductId(null);
-    setCategoryId(null);
-    setItemDescription('');
-    setItemQuantity(1);
-    setItemUnitValue(undefined);
-    setItemDiscount(undefined);
-    if (focus === 'search' && searchRef.current) searchRef.current.focus();
-    else if (categoryRef.current) categoryRef.current.focus();
-  };
-
-  const addNewItem = (from: 'search' | 'other' = 'other') => {
-    const newItem: INewInvoiceItem = {
-      id: String(new Date().getTime()),
-      categories: [],
-      tags: [],
-      description: itemDescription,
-      quantity: itemQuantity || 0,
-      unitValue: itemUnitValue || 0,
-      discount: itemDiscount,
-      amount: itemAmount || 0,
-    };
-
-    if (categoryId) newItem.categories.push(categoryId);
-    if (productId) newItem.product = productId;
-
-    // Verify if exist other item with this characteristics
-    const equalItem = items.find(item => {
-      let isEqual = true;
-      if (item.categories.length !== newItem.categories.length) isEqual = false;
-      else if (item.product !== newItem.product) isEqual = false;
-      else if (item.productColor !== newItem.productColor) isEqual = false;
-      else if (item.productSize !== newItem.productSize) isEqual = false;
-      else if (item.tags.length !== newItem.tags.length) isEqual = false;
-      else if (item.description !== newItem.description) isEqual = false;
-      else if (item.unitValue !== newItem.unitValue) isEqual = false;
-      else if (item.discount !== newItem.discount) isEqual = false;
-
-      // Verify categories
-      if (isEqual && item.categories.length > 0) {
-        newItem.categories.forEach(category => {
-          const exist = item.categories.some(ctg => ctg === category);
-          if (!exist) isEqual = false;
-        });
-      }
-
-      // Verify tags
-      if (isEqual && item.tags.length > 0) {
-        newItem.tags.forEach(tag => {
-          const exist = item.tags.some(tg => tg === tag);
-          if (!exist) isEqual = false;
-        });
-      }
-
-      return isEqual;
-    });
-
-    if (equalItem) {
-      const index = items.findIndex(item => item.id === equalItem.id);
-      equalItem.quantity += newItem.quantity;
-      equalItem.amount += newItem.amount;
-
-      setItems(current => {
-        const list = current.slice();
-        list.splice(index, 1, equalItem);
-        return list;
-      });
-    } else {
-      setItems(current => [...current, newItem]);
-    }
-
-    resetItem(from === 'other' ? 'category' : 'search');
-  };
-
-  const itemKeyPress = (event: KeyboardEvent<HTMLInputElement>, maintainFocus?: boolean) => {
-    if (event.key === 'Enter' && itemDescription && itemQuantity && itemUnitValue) {
-      if (!maintainFocus) event.currentTarget.blur();
-      addNewItem(event.currentTarget.type === 'search' ? 'search' : 'other');
-    }
-  };
-
-  const formater = (value: string | undefined) => {
-    let result = '$ ';
-    if (value && !Number.isNaN(parseFloat(value))) {
-      result = `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    }
-
-    return result;
+  const handleAddNewItem = (newItem: INewInvoiceItem) => {
+    const newList = addNewItemToList({ items, newItem });
+    setItems(newList);
   };
 
   const getItemCategory = (item: INewInvoiceItem) => {
@@ -246,13 +109,13 @@ const CounterSaleForm = () => {
       customerPhone: customer.phone || undefined,
       expeditionDate: dayjs().toDate(),
       expirationDate: dayjs().add(1, 'month').toDate(),
-      cash: summary.amount,
+      cash: amount,
       items: items.map(item => ({ ...item, id: undefined, amount: undefined })),
       cashPayments: [
         {
           cashboxId: cashboxId || undefined,
           description: 'Pago en efectivo',
-          amount: summary.amount,
+          amount: amount,
           register: true,
         },
       ],
@@ -261,7 +124,7 @@ const CounterSaleForm = () => {
   };
 
   const checkIn = () => {
-    if (summary.amount > 0) {
+    if (amount > 0) {
       const invoiceData = getData();
       dispatch(storeNewInvoice(invoiceData));
     }
@@ -270,41 +133,6 @@ const CounterSaleForm = () => {
   // --------------------------------------------------------------------------
   // EFFECTS
   // --------------------------------------------------------------------------
-  useEffect(() => {
-    const product = products?.find(p => p.id === productId);
-    if (product) {
-      setItemDescription(product.name);
-      setItemUnitValue(product.price);
-
-      if (product.hasDiscount && product.priceWithDiscount) {
-        setItemDiscount(product.price - product.priceWithDiscount);
-      } else {
-        setItemDiscount(undefined);
-      }
-
-      if (product.categories.length > 0) setCategoryId(product.categories[0]);
-    }
-  }, [productId]);
-
-  useEffect(() => {
-    if (itemQuantity && itemUnitValue) {
-      let amount = itemQuantity * itemUnitValue;
-      if (itemDiscount && itemDiscount < itemUnitValue) amount -= itemQuantity * itemDiscount;
-      setItemAmount(amount);
-    } else {
-      setItemAmount(undefined);
-    }
-
-    setEnabled(Boolean(itemAmount && itemDescription && itemAmount > 0));
-  }, [itemQuantity, itemUnitValue, itemDiscount, itemDescription, itemAmount]);
-
-  useEffect(updateSummary, [items]);
-
-  // useEffect(() => {
-  //   // const boxSelected = boxes.find(item => item.id === cashboxId);
-  //   // setBox(boxSelected || null);
-  // }, [cashboxId]);
-
   useEffect(() => {
     if (error) console.log(error);
   }, [error]);
@@ -324,24 +152,7 @@ const CounterSaleForm = () => {
     <Modal opened={opened} onClose={close} padding={0} withCloseButton={false} size="xl">
       <InvoiceFormHeader onClose={close} isSeparate={false} />
       <div className="mx-auto mb-8 flex w-11/12 flex-col">
-        <div className="mb-8 rounded-lg border border-gray-400 p-4 shadow-lg dark:shadow dark:shadow-light">
-          {/* BOX */}
-          <Select
-            label="Caja"
-            placeholder="Selecciona una caja"
-            value={cashboxId}
-            onChange={setCashboxId}
-            icon={<IconBox size={18} />}
-            data={boxes
-              .filter(item => Boolean(item.openBox))
-              .map(box => ({
-                value: box.id,
-                label: box.name,
-              }))}
-            searchable
-            clearable
-          />
-        </div>
+        <CounterSaleBoxSelect value={cashboxId} onChange={setCashboxId} />
 
         <Tabs defaultValue="items" className="mb-8">
           <Tabs.List>
@@ -352,112 +163,7 @@ const CounterSaleForm = () => {
           </Tabs.List>
 
           <Tabs.Panel value="items" pt="xs">
-            <div className="rounded-md bg-gray-200 p-4 shadow-lg dark:bg-header dark:shadow dark:shadow-light ">
-              {/* PRODUCT */}
-              <ProductSelect
-                products={products || []}
-                productId={productId}
-                selectRef={searchRef}
-                onSelect={setProductId}
-                onEnterPress={itemKeyPress}
-                className="mb-4"
-              />
-
-              {/* ITEM INFO */}
-              <div className="mb-4 grid grid-cols-12 gap-2">
-                {/* QUANTITY */}
-                <NumberInput
-                  label="Cant."
-                  placeholder="1.0"
-                  size="xs"
-                  min={1}
-                  step={1}
-                  value={itemQuantity}
-                  type="number"
-                  onChange={val => setItemQuantity(val)}
-                  onKeyDown={itemKeyPress}
-                  ref={categoryRef}
-                  className="col-span-4 lg:col-span-1"
-                />
-
-                {/* category */}
-                <Select
-                  placeholder="Selecciona categoría"
-                  label="Categoría"
-                  className="col-span-8 lg:col-span-2"
-                  value={categoryId}
-                  onChange={setCategoryId}
-                  icon={<IconCategory size={14} />}
-                  data={categories.map(category => ({
-                    value: category.id,
-                    label: category.name,
-                  }))}
-                  searchable
-                  clearable
-                  size="xs"
-                />
-
-                {/* ITEM DESCRIPTION */}
-                <TextInput
-                  label="Descripción"
-                  className="col-span-12 lg:col-span-5"
-                  value={itemDescription}
-                  placeholder="Nombre del producto o servicio"
-                  size="xs"
-                  onChange={({ target }) => setItemDescription(target.value)}
-                />
-
-                {/* UNIT VALUE */}
-                <NumberInput
-                  label="Precio"
-                  placeholder="1.0"
-                  className="col-span-6 lg:col-span-2"
-                  hideControls
-                  size="xs"
-                  value={itemUnitValue}
-                  min={50}
-                  step={100}
-                  onFocus={({ target }) => target.select()}
-                  onChange={value => setItemUnitValue(value)}
-                  parser={value => value?.replace(/\$\s?|(,*)/g, '')}
-                  formatter={formater}
-                  onKeyDown={itemKeyPress}
-                />
-                {/* DISCOUNT */}
-                <NumberInput
-                  label="Desc. Unt"
-                  placeholder="1.0"
-                  className="col-span-6 lg:col-span-2"
-                  hideControls
-                  size="xs"
-                  value={itemDiscount}
-                  min={50}
-                  max={itemUnitValue}
-                  step={100}
-                  onFocus={({ target }) => target.select()}
-                  onChange={value => setItemDiscount(value)}
-                  parser={value => value?.replace(/\$\s?|(,*)/g, '')}
-                  formatter={formater}
-                  onKeyDown={itemKeyPress}
-                />
-              </div>
-
-              <div className="flex flex-col items-center justify-end gap-4 lg:flex-row">
-                {itemAmount ? <span className="text-xs">Importe: {currencyFormat(itemAmount)}</span> : null}
-
-                <Button
-                  leftIcon={<IconPlus size={15} stroke={4} />}
-                  size="xs"
-                  disabled={!enabled}
-                  onClick={() => addNewItem()}
-                >
-                  Agregar Item
-                </Button>
-                <Button leftIcon={<IconTrash size={15} stroke={2} />} size="xs" color="red" onClick={() => resetItem()}>
-                  Descartar Item
-                </Button>
-              </div>
-            </div>
+            <CounterSaleItemForm onAddItem={handleAddNewItem} />
           </Tabs.Panel>
 
           <Tabs.Panel value="customer" pt="xl">
@@ -526,10 +232,10 @@ const CounterSaleForm = () => {
               ))}
             </tbody>
           </Table>
-          {summary.amount > 0 ? (
+          {amount > 0 ? (
             <div className="mt-4 flex justify-end">
               <p className="text-lg">
-                Total: <span className="font-bold">{currencyFormat(summary.amount)}</span>
+                Total: <span className="font-bold">{currencyFormat(amount)}</span>
               </p>
             </div>
           ) : null}
@@ -540,7 +246,7 @@ const CounterSaleForm = () => {
             onClick={checkIn}
             leftIcon={<IconDeviceFloppy size={24} stroke={2.5} />}
             loading={loading}
-            disabled={summary.amount <= 0}
+            disabled={amount <= 0}
           >
             Registrar Venta
           </Button>
