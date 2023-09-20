@@ -9,15 +9,15 @@ import { useAuthStore } from '@/store/auth-store';
 
 import { addNewItemToList } from '@/logic/invoices-form';
 
-import { Button, Group, Modal, Tabs } from '@mantine/core';
+import { Button, Group, Tabs } from '@mantine/core';
 import { IconDeviceFloppy, IconUsers } from '@tabler/icons-react';
 
 import { IInvoiceCustomer } from './InvoiceForm';
 import InvoiceFormCustomer from './InvoiceFormCustomer';
-import InvoiceFormHeader from './InvoiceFormHeader';
 import CounterSaleBoxSelect from './CounterSaleBoxSelect';
 import CounterSaleItemForm from './CounterSaleItemForm';
 import CounterSaleItemList from './CounterSaleItemList';
+import InvoiceFormModal from './InvoiceFormModal';
 
 const defaulCustomer: IInvoiceCustomer = {
   id: null,
@@ -137,8 +137,7 @@ const CounterSaleForm = () => {
   }, [success]);
 
   return (
-    <Modal opened={opened} onClose={close} padding={0} withCloseButton={false} size="xl">
-      <InvoiceFormHeader onClose={close} isSeparate={false} />
+    <InvoiceFormModal isOpen={opened} onClose={close} size="xl">
       <div className="mx-auto mb-8 flex w-11/12 flex-col">
         <CounterSaleBoxSelect value={cashboxId} onChange={setCashboxId} />
 
@@ -179,7 +178,7 @@ const CounterSaleForm = () => {
           </Button>
         </Group>
       </div>
-    </Modal>
+    </InvoiceFormModal>
   );
 };
 
