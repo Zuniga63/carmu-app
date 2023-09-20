@@ -49,7 +49,7 @@ const CounterSaleForm = () => {
             onClick={checkIn}
             leftIcon={<IconDeviceFloppy size={24} stroke={2.5} />}
             loading={isLoading}
-            disabled={isEnabled}
+            disabled={!isEnabled}
           >
             Registrar Venta
           </Button>

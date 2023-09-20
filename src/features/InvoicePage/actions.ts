@@ -89,6 +89,8 @@ export const storeNewInvoice = createAsyncThunk(
 export const showCounterSaleForm = createAction('invoicePage/showCounterSaleForm');
 export const hideCounterSaleForm = createAction('invoicePage/hideCounterSaleForm');
 
+export const hidePrintModal = createAction('invoicePage/hidePrintModal');
+
 // ----------------------------------------------------------------------------
 // MOUNT INVOICE
 // ----------------------------------------------------------------------------

@@ -14,6 +14,7 @@ import { fetchCategories } from '@/features/CategoryPage';
 import CancelInvoicePaymentForm from '@/components/InvoicePage/CancelInvoicePaymentForm';
 import CancelInvoiceForm from '@/components/InvoicePage/CancelInvoiceForm';
 import { useAuthStore } from '@/store/auth-store';
+import InvoiceToPrintModal from '@/components/InvoicePage/InvoiceToPrintModal';
 
 const InvoicePage: NextPage = () => {
   const isAuth = useAuthStore(state => state.isAuth);
@@ -47,6 +48,7 @@ const InvoicePage: NextPage = () => {
       <CounterSaleForm />
       <CancelInvoicePaymentForm />
       <CancelInvoiceForm />
+      <InvoiceToPrintModal />
     </Layout>
   );
 };
