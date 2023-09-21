@@ -11,7 +11,7 @@ interface Props {
   onEnterPress(event: KeyboardEvent<HTMLInputElement>, maintainFocus?: boolean): void;
   productId: string | null;
   className?: string;
-  selectRef: React.RefObject<HTMLInputElement>;
+  selectRef?: React.RefObject<HTMLInputElement>;
 }
 
 interface ItemProps extends React.ComponentPropsWithoutRef<'div'> {

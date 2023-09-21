@@ -9,6 +9,7 @@ import {
   hideCounterSaleForm,
   hideNewInvoiceForm,
   hidePaymentForm,
+  hidePrintModal,
   mountInvoice,
   refreshInvoices,
   registerPayment,
@@ -25,6 +26,7 @@ import { InvoicePageState } from './types';
 
 const initialState: InvoicePageState = {
   invoices: [],
+  invoiceToPrint: undefined,
   products: [],
   firstLoading: true,
   loading: true,
@@ -123,6 +125,7 @@ export const invoicePageReducer = createReducer(initialState, builder => {
       state.invoices.push(payload);
       state.storeSuccess = true;
       state.storeLoading = false;
+      state.invoiceToPrint = payload;
     })
     .addCase(storeNewInvoice.rejected, (state, { payload }) => {
       state.storeLoading = false;
@@ -150,6 +153,10 @@ export const invoicePageReducer = createReducer(initialState, builder => {
     .addCase(unmountInvoice, state => {
       state.selectedInvoiceOpened = false;
     });
+
+  builder.addCase(hidePrintModal, state => {
+    state.invoiceToPrint = undefined;
+  });
 
   // --------------------------------------------------------------------------
   // PAY INVOICE

@@ -7,35 +7,13 @@ import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 import ProductTable from '@/components/ProductPage/ProductTable';
 import ProductForm from '@/components/ProductPage/ProductForm';
+import { getProductPageInititalData } from '@/services/product.service';
+import { useQueryClient } from '@tanstack/react-query';
+import { ServerStateKeysEnum } from '@/config/server-state-key.enum';
 
 export const getServerSideProps: GetServerSideProps = async context => {
   const { access_token: token } = context.req.cookies;
-  const data = {
-    products: [],
-    categories: [],
-  };
-
-  if (token) {
-    const baseUrl = process.env.NEXT_PUBLIC_URL_API;
-    const productUrl = `${baseUrl}/products`;
-    const categoryUrl = `${baseUrl}/categories`;
-    const headers = { Authorization: `Bearer ${token}` };
-
-    try {
-      const [produtRes, categoryRes] = await Promise.all([
-        fetch(productUrl, { headers }),
-        fetch(categoryUrl, { headers }),
-      ]);
-
-      const productResData = await produtRes.json();
-      const categoryResData = await categoryRes.json();
-
-      data.products = productResData.products;
-      data.categories = categoryResData.categories;
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  const data = await getProductPageInititalData(token);
 
   return {
     props: { data },
@@ -56,6 +34,7 @@ const ProductPage: NextPage<Props> = ({ data }) => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<IValidationErrors | null>(null);
   const headers = { 'Content-Type': 'multipart/form-data' };
+  const queryClient = useQueryClient();
 
   const openForm = () => setFormOpened(true);
 
@@ -97,6 +76,7 @@ const ProductPage: NextPage<Props> = ({ data }) => {
       newProductList.push(res.data.product);
       newProductList.sort((p1, p2) => p1.name.localeCompare(p2.name));
       setProducts(newProductList);
+      queryClient.invalidateQueries([ServerStateKeysEnum.ProductList]);
       closeForm();
     } catch (error) {
       handleError(error);
@@ -117,6 +97,7 @@ const ProductPage: NextPage<Props> = ({ data }) => {
       if (index >= 0) list.splice(index, 1, productUpdated);
       list.sort((p1, p2) => p1.name.localeCompare(p2.name));
       setProducts(list);
+      queryClient.invalidateQueries([ServerStateKeysEnum.ProductList]);
 
       closeForm();
     } catch (error) {
@@ -149,6 +130,7 @@ const ProductPage: NextPage<Props> = ({ data }) => {
             result.ok = true;
             result.message = `¡El producto ${product.name} fue eliminado satisfactoriamente!`;
             removeProduct(product);
+            queryClient.invalidateQueries([ServerStateKeysEnum.ProductList]);
           } else {
             result.message = 'EL producto no se pudo eliminar.';
           }

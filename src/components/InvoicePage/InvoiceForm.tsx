@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { useMediaQuery } from '@mantine/hooks';
 import { IInvoiceStoreData, IInvoiceSummary, INewInvoiceItem, INewInvoicePayment } from '@/types';
 
-import { Button, Modal, Stepper, Switch } from '@mantine/core';
+import { Button, Stepper, Switch } from '@mantine/core';
 import {
   IconArrowBack,
   IconArrowNarrowRight,
@@ -16,7 +16,6 @@ import {
   IconFileInvoice,
 } from '@tabler/icons-react';
 
-import InvoiceFormHeader from './InvoiceFormHeader';
 import InvoiceFormPayment from './InvoiceFormPayment';
 import InvoiceFormCustomer from './InvoiceFormCustomer';
 import InvoiceFormDates from './InvoiceFormDates';
@@ -27,6 +26,7 @@ import { useAuthStore } from '@/store/auth-store';
 import { useConfigStore } from '@/store/config-store';
 import { useQueryClient } from '@tanstack/react-query';
 import { ServerStateKeysEnum } from '@/config/server-state-key.enum';
+import InvoiceFormModal from './InvoiceFormModal';
 
 export enum InvoiceSteps {
   Invoicing,
@@ -237,14 +237,7 @@ const InvoiceForm = () => {
   }, [customer.id]);
 
   return (
-    <Modal
-      opened={opened}
-      size={largeScreen ? '80%' : '100%'}
-      padding={0}
-      withCloseButton={false}
-      onClose={closeInvoice}
-    >
-      <InvoiceFormHeader onClose={closeInvoice} isSeparate={isSeparate} />
+    <InvoiceFormModal isOpen={opened} size={largeScreen ? '80%' : '100%'} onClose={closeInvoice}>
       <div className="px-6 py-2 lg:py-6">
         <Stepper active={step} onStepClick={setStep} size="xs">
           {/* PRODUCTS */}
@@ -322,7 +315,7 @@ const InvoiceForm = () => {
           )}
         </div>
       </div>
-    </Modal>
+    </InvoiceFormModal>
   );
 };
 

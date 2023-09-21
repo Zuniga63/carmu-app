@@ -7,8 +7,8 @@ import InvoiceFormGroup from './InvoiceFormGroup';
 import { IInvoiceSummary, INewInvoiceItem } from '@/types';
 import { currencyFormat } from '@/utils';
 import InvoiceFormItemList from './InvoiceFormItemList';
-import { invoicePageSelector } from '@/features/InvoicePage';
 import { categoryPageSelector } from '@/features/CategoryPage';
+import { useGetAllLiteProducts } from '@/hooks/react-query/product.hooks';
 
 interface Props {
   items: INewInvoiceItem[];
@@ -20,7 +20,6 @@ const InvoiceFormItems: React.FC<Props> = ({ items, summary, setItems }) => {
   // --------------------------------------------------------------------------
   // STATE
   // --------------------------------------------------------------------------
-  const { products } = useAppSelector(invoicePageSelector);
   const { categories } = useAppSelector(categoryPageSelector);
   const [productId, setProductId] = useState<string | null>(null);
   const [categoryId, setCategoryId] = useState<string | null>(null);
@@ -30,6 +29,7 @@ const InvoiceFormItems: React.FC<Props> = ({ items, summary, setItems }) => {
   const [itemDiscount, setItemDiscount] = useState<number | undefined>(undefined);
   const [itemAmount, setItemAmount] = useState<number | undefined>(undefined);
   const [enabled, setEnabled] = useState(false);
+  const { data: products } = useGetAllLiteProducts();
 
   // --------------------------------------------------------------------------
   // REF
@@ -146,7 +146,7 @@ const InvoiceFormItems: React.FC<Props> = ({ items, summary, setItems }) => {
 
   useEffect(() => {
     if (productId) {
-      const product = products.find(p => p.id === productId);
+      const product = products?.find(p => p.id === productId);
       if (product) {
         setItemDescription(product.name);
         setItemUnitValue(product.price);
@@ -181,7 +181,7 @@ const InvoiceFormItems: React.FC<Props> = ({ items, summary, setItems }) => {
             <div className="flex-grow">
               {/* PRODUCT */}
               <ProductSelect
-                products={products}
+                products={products || []}
                 productId={productId}
                 selectRef={searchRef}
                 onSelect={setProductId}

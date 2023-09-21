@@ -33,7 +33,7 @@ export const fetchInvoiceData = createAsyncThunk('invoicePage/fetchInvoiceData',
   const res1 = await axios.get<IInvoicePageData>('/invoices', {
     params: {
       to: date1,
-      withProducts: true,
+      withProducts: false,
     },
   });
 
@@ -88,6 +88,8 @@ export const storeNewInvoice = createAsyncThunk(
 
 export const showCounterSaleForm = createAction('invoicePage/showCounterSaleForm');
 export const hideCounterSaleForm = createAction('invoicePage/hideCounterSaleForm');
+
+export const hidePrintModal = createAction('invoicePage/hidePrintModal');
 
 // ----------------------------------------------------------------------------
 // MOUNT INVOICE

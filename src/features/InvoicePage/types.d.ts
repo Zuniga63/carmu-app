@@ -160,6 +160,7 @@ export interface IInvoicePageData {
 
 export type InvoicePageState = {
   invoices: IInvoiceBase[];
+  invoiceToPrint?: IInvoiceBase;
   products: IInvoiceProduct[];
   loading: boolean;
   firstLoading: boolean;
