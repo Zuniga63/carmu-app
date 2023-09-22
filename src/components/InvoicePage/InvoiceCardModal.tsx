@@ -1,15 +1,18 @@
 import { ActionIcon, Button, Modal } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconCash, IconPrinter } from '@tabler/icons-react';
-import React, { useEffect, useRef, useState } from 'react';
-import { useReactToPrint } from 'react-to-print';
-import { invoicePageSelector, showCancelInvoiceForm, showPaymentForm, unmountInvoice } from '@/features/InvoicePage';
+import {
+  invoicePageSelector,
+  showCancelInvoiceForm,
+  showPaymentForm,
+  showPrintModal,
+  unmountInvoice,
+} from '@/features/InvoicePage';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { buildInvoiceFull } from '@/utils';
 import EmptyInvoice from './EmptyInvoice';
 import InvoiceCard from './InvoiceCard';
 import InvoiceCardModalHeader from './InvoiceCardModalHeader';
-import InvoiceToPrint, { InvoiceSize } from './InvoiceToPrint';
 
 const InvoiceCardModal = () => {
   const {
@@ -20,34 +23,23 @@ const InvoiceCardModal = () => {
   } = useAppSelector(invoicePageSelector);
   const dispatch = useAppDispatch();
   const largeScreen = useMediaQuery('(min-width: 768px)');
-  const invoiceRef = useRef<HTMLDivElement | null>(null);
-  const promiseResolveRef = useRef<unknown>(null);
-  const [isPrinting, setIsPrinting] = useState(false);
-  const [invoiceSize, setInvoiceSize] = useState<InvoiceSize>('sm');
-
-  useEffect(() => {
-    if (isPrinting && promiseResolveRef.current) {
-      (promiseResolveRef.current as () => void)();
-    }
-  }, [isPrinting]);
 
   const onClose = () => {
     if (!loading) dispatch(unmountInvoice());
   };
 
-  const handlePrint = useReactToPrint({
-    content: () => invoiceRef.current,
-    onBeforeGetContent: () => {
-      return new Promise(resolve => {
-        promiseResolveRef.current = resolve;
-        setIsPrinting(true);
-      });
-    },
-    onAfterPrint: () => {
-      promiseResolveRef.current = null;
-      setIsPrinting(false);
-    },
-  });
+  const handlePrint = () => {
+    if (!invoice) return;
+    dispatch(showPrintModal(invoice));
+  };
+
+  const handleCancelInvoice = () => {
+    dispatch(showCancelInvoiceForm());
+  };
+
+  const handleAddPayment = () => {
+    dispatch(showPaymentForm());
+  };
 
   return (
     <>
@@ -75,55 +67,18 @@ const InvoiceCardModal = () => {
 
           <footer className="flex items-center justify-between rounded-b-lg bg-gray-300 p-4 dark:bg-header">
             <div className="flex items-center gap-x-2">
-              <ActionIcon
-                size="lg"
-                color="green"
-                disabled={!invoice}
-                onClick={() => {
-                  setInvoiceSize('lg');
-                  handlePrint();
-                }}
-              >
+              <ActionIcon size="lg" color="blue" disabled={!invoice} onClick={handlePrint}>
                 <IconPrinter size={24} stroke={2} />
-              </ActionIcon>
-
-              <ActionIcon
-                size="md"
-                color="green"
-                disabled={!invoice}
-                onClick={() => {
-                  setInvoiceSize('md');
-                  handlePrint();
-                }}
-              >
-                <IconPrinter size={20} stroke={2} />
-              </ActionIcon>
-
-              <ActionIcon
-                size="sm"
-                color="green"
-                disabled={!invoice}
-                onClick={() => {
-                  setInvoiceSize('sm');
-                  handlePrint();
-                }}
-              >
-                <IconPrinter size={16} stroke={2} />
               </ActionIcon>
             </div>
 
             {!invoice?.cancel ? (
               <div className="flex gap-x-4">
-                <Button leftIcon={<IconCash />} color="red" onDoubleClick={() => dispatch(showCancelInvoiceForm())}>
+                <Button leftIcon={<IconCash />} color="red" onDoubleClick={handleCancelInvoice}>
                   Anular Factura
                 </Button>
 
-                <Button
-                  leftIcon={<IconCash />}
-                  color="grape"
-                  disabled={!invoice?.balance}
-                  onClick={() => dispatch(showPaymentForm())}
-                >
+                <Button leftIcon={<IconCash />} color="grape" disabled={!invoice?.balance} onClick={handleAddPayment}>
                   Registrar Pago
                 </Button>
               </div>
@@ -131,10 +86,6 @@ const InvoiceCardModal = () => {
           </footer>
         </div>
       </Modal>
-
-      <div className="hidden">
-        <div ref={invoiceRef}>{invoice ? <InvoiceToPrint invoice={invoice} size={invoiceSize} /> : null}</div>
-      </div>
     </>
   );
 };
