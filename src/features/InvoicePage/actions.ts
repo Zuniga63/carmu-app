@@ -90,6 +90,7 @@ export const showCounterSaleForm = createAction('invoicePage/showCounterSaleForm
 export const hideCounterSaleForm = createAction('invoicePage/hideCounterSaleForm');
 
 export const hidePrintModal = createAction('invoicePage/hidePrintModal');
+export const showPrintModal = createAction<IInvoiceBaseFull>('invoicePage/showPrintModal');
 
 // ----------------------------------------------------------------------------
 // MOUNT INVOICE

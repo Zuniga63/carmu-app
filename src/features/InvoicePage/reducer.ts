@@ -19,6 +19,7 @@ import {
   showCounterSaleForm,
   showNewInvoiceForm,
   showPaymentForm,
+  showPrintModal,
   storeNewInvoice,
   unmountInvoice,
 } from './actions';
@@ -154,9 +155,13 @@ export const invoicePageReducer = createReducer(initialState, builder => {
       state.selectedInvoiceOpened = false;
     });
 
-  builder.addCase(hidePrintModal, state => {
-    state.invoiceToPrint = undefined;
-  });
+  builder
+    .addCase(hidePrintModal, state => {
+      state.invoiceToPrint = undefined;
+    })
+    .addCase(showPrintModal, (state, { payload }) => {
+      state.invoiceToPrint = payload;
+    });
 
   // --------------------------------------------------------------------------
   // PAY INVOICE
