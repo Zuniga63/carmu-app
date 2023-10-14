@@ -13,8 +13,8 @@ const ProductTableItem = ({ product, mount, onDelete }: Props) => {
   return (
     <tr className="text-gray-dark dark:text-light">
       <td className="whitespace-nowrap px-3 py-2 lg:whitespace-normal">
-        <div className="text-center">
-          <p className="font-bold">{product.name}</p>
+        <div className="text-center lg:text-left">
+          <p className="text-sm font-bold uppercase">{product.name}</p>
           <p className="text-xs text-gray-400">{product.description}</p>
         </div>
       </td>

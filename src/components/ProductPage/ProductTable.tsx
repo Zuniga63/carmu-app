@@ -48,12 +48,13 @@ const ProductTable = ({ allProducts, openForm, mountProduct, deleteProduct }: Pr
   return (
     <div className="mx-auto w-11/12 pt-4 dark:text-light">
       <header className="rounded-t-md bg-gray-300 px-6 py-2 dark:bg-header">
-        <h2 className="text-center text-xl font-bold tracking-wider">Listado de productos</h2>
         <div className="grid grid-cols-3">
           <TextInput
             size="xs"
+            type="search"
             icon={loading ? <Loader size={14} variant="dots" /> : <IconSearch size={14} stroke={1.5} />}
             placeholder="Buscar producto"
+            role="search"
             className="col-span-3 flex-grow lg:col-span-1"
             onChange={({ target }) => updateSearch(target.value)}
             onFocus={({ target }) => {
