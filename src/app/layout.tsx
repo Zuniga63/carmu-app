@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   },
   description: process.env.NEXT_PUBLIC_APP_DESCRIPTION,
   icons: {
-    icon: '/images/logo_62601199d793d.png',
+    icon: process.env.NEXT_PUBLIC_BRAND_LOGO_URL || '/images/logo_62601199d793d.png',
   },
 };
 
