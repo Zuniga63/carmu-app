@@ -14,7 +14,7 @@ export function useLogin() {
     const emailRegex = /^[^\s@]+@[^s@]+\.[^\s@]+$/;
     const emailIsOk = emailRegex.test(email);
 
-    const passwordIsOk = password.length >= 8;
+    const passwordIsOk = password.length >= 1;
 
     setIsEnabledLogin(emailIsOk && passwordIsOk);
   };
