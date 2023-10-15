@@ -1,12 +1,10 @@
 import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
 import { boxPageReducer } from '@/features/BoxPage';
-import { categoryPageReducer } from '@/features/CategoryPage';
 import { invoicePageReducer } from '@/features/InvoicePage';
 import { customerPageReducer } from '@/features/CustomerPage';
 
 export const store = configureStore({
   reducer: {
-    categoryPage: categoryPageReducer,
     boxPage: boxPageReducer,
     invoicePage: invoicePageReducer,
     customerPage: customerPageReducer,

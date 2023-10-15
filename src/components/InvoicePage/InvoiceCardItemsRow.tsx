@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { categoryPageSelector } from '@/features/CategoryPage';
-import { useAppSelector } from '@/store/hooks';
 import { IInvoiceItemBase } from '@/types';
 import { currencyFormat } from '@/utils';
+import { useGetAllCategories } from '@/hooks/react-query/categories.hooks';
 
 interface Props {
   item: IInvoiceItemBase;
 }
 
 const InvoiceCardItemsRow = ({ item }: Props) => {
-  const { categories } = useAppSelector(categoryPageSelector);
+  const { data: categories = [] } = useGetAllCategories();
   const [itemCategories, setItemCategories] = useState('');
 
   useEffect(() => {

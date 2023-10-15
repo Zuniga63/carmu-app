@@ -1,6 +1,5 @@
-import { categoryPageSelector } from '@/features/CategoryPage';
+import { useGetAllCategories } from '@/hooks/react-query/categories.hooks';
 import { getItemCategory } from '@/logic/invoices-form';
-import { useAppSelector } from '@/store/hooks';
 import type { INewInvoiceItem } from '@/types';
 import { currencyFormat } from '@/utils';
 import { Table } from '@mantine/core';
@@ -37,7 +36,7 @@ function ItemListHeader() {
 }
 
 export default function CounterSaleItemList({ items = [], onRemoveItem }: Props) {
-  const { categories } = useAppSelector(categoryPageSelector);
+  const { data: categories = [] } = useGetAllCategories();
 
   const amount = useMemo(() => {
     return items.reduce((sum, { amount }) => sum + amount, 0);

@@ -1,9 +1,8 @@
 import { IconTrash } from '@tabler/icons-react';
 import React, { useEffect, useState } from 'react';
-import { categoryPageSelector } from '@/features/CategoryPage';
-import { useAppSelector } from '@/store/hooks';
 import { INewInvoiceItem } from '@/types';
 import { currencyFormat } from '@/utils';
+import { useGetAllCategories } from '@/hooks/react-query/categories.hooks';
 
 interface Props {
   item: INewInvoiceItem;
@@ -11,7 +10,7 @@ interface Props {
 }
 
 const InvoiceFormItemListItem = ({ item, onRemove }: Props) => {
-  const { categories } = useAppSelector(categoryPageSelector);
+  const { data: categories = [] } = useGetAllCategories();
   const [itemCategories, setItemCategories] = useState('');
 
   useEffect(() => {

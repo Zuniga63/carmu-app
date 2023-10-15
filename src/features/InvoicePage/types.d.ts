@@ -4,6 +4,9 @@ import { IProduct } from '@/types';
 import { IBox } from '@/types';
 import { Dayjs } from 'dayjs';
 import { IPremiseStore } from '../Config/types';
+import { type AxiosResponse } from 'axios';
+
+export type ErrorResponse = Pick<AxiosResponse, 'data' | 'status'>;
 
 export type IInvoiceSeller = Pick<IUser, 'name' | 'id'>;
 

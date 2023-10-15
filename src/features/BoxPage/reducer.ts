@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { ErrorResponse } from '../CategoryPage/types';
+import { ErrorResponse } from './types';
 import {
   closeBox,
   fetchBoxes,

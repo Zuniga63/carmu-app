@@ -1,5 +1,6 @@
 import { authApi } from '@/services/auth-service';
 import { boxesApi } from '@/services/boxes.service';
+import { categoryApi } from '@/services/categories.service';
 import { customerApi } from '@/services/customers.service';
 import { premiseStoreApi } from '@/services/premise-store.service';
 import { productApi } from '@/services/product.service';
@@ -42,7 +43,7 @@ export const clearAuthToken = () => {
 export const setAccesToken = (token?: string) => {
   const authorization = token ? `Bearer ${token}` : token;
 
-  const axiosInstances = [axios, authApi, premiseStoreApi, boxesApi, customerApi, productApi];
+  const axiosInstances = [axios, authApi, premiseStoreApi, boxesApi, customerApi, productApi, categoryApi];
 
   axiosInstances.forEach(instance => {
     instance.defaults.headers.common.Authorization = authorization;

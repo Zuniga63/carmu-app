@@ -3,8 +3,7 @@ import { DraggableProvided } from '@hello-pangea/dnd';
 import { IconArrowsMove, IconBox, IconCategory2, IconEditCircle, IconTrash } from '@tabler/icons-react';
 import { ICategory } from '@/types';
 import { Button, Tooltip } from '@mantine/core';
-import { useAppDispatch } from '@/store/hooks';
-import { showCategoryForm, destroyCategory } from '@/features/CategoryPage';
+import { useCategoryPageStore } from '@/store/categories-store';
 
 interface Props {
   provided: DraggableProvided;
@@ -12,9 +11,13 @@ interface Props {
 }
 
 export default function DragAndDropCategoryItem({ provided, category }: Props) {
-  const dispatch = useAppDispatch();
   const productCount = category.products.length;
   const subcategoryCount = category.subcategories.length;
+  const showForm = useCategoryPageStore(state => state.showForm);
+  const deleteCategory = useCategoryPageStore(state => state.deleteCategory);
+
+  const handleUpdateClick = () => showForm(category.id);
+  const handleDeleteClick = () => deleteCategory(category.id);
 
   return (
     <li
@@ -46,15 +49,10 @@ export default function DragAndDropCategoryItem({ provided, category }: Props) {
 
       {/* Actions */}
       <div className="ml-10 mt-2 flex gap-x-2">
-        <Button size="xs" leftIcon={<IconEditCircle size={16} />} onClick={() => dispatch(showCategoryForm(category))}>
+        <Button size="xs" leftIcon={<IconEditCircle size={16} />} onClick={handleUpdateClick}>
           <span className="text-xs">Editar</span>
         </Button>
-        <Button
-          size="xs"
-          color="red"
-          leftIcon={<IconTrash size={16} />}
-          onClick={() => dispatch(destroyCategory(category))}
-        >
+        <Button size="xs" color="red" leftIcon={<IconTrash size={16} />} onClick={handleDeleteClick}>
           <span className="text-xs">Eliminar</span>
         </Button>
       </div>

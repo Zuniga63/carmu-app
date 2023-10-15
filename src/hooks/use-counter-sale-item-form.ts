@@ -1,13 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { useGetAllLiteProducts } from '@/hooks/react-query/product.hooks';
-import { useAppSelector } from '@/store/hooks';
-import { categoryPageSelector } from '@/features/CategoryPage';
 import type { INewInvoiceItem } from '@/types';
 import { getDiscountFromProduct } from '@/logic/invoices-form';
+import { useGetAllCategories } from './react-query/categories.hooks';
 
 export function useCounterSaleItemForm() {
-  const { data: products } = useGetAllLiteProducts();
-  const { categories } = useAppSelector(categoryPageSelector);
+  const { data: products = [] } = useGetAllLiteProducts();
+  const { data: categories = [] } = useGetAllCategories();
   const quantityRef = useRef<HTMLInputElement>(null);
 
   const [productId, setProductId] = useState<string | null>(null);
