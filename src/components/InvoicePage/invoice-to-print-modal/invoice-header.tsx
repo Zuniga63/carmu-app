@@ -12,7 +12,7 @@ type Props = {
 
 export default function InvoiceHeader({ size, isSeparate, invoiceNumber }: Props) {
   const premiseStore = useConfigStore(state => state.premiseStore);
-  const title = premiseStore?.name || 'Tienda Carmú';
+  const title = premiseStore?.name || process.env.NEXT_PUBLIC_APP_NAME;
 
   return (
     <header
@@ -21,8 +21,13 @@ export default function InvoiceHeader({ size, isSeparate, invoiceNumber }: Props
       }`}
     >
       {/* Brand Logo */}
-      <figure className={`${size === 'lg' ? 'mx-0 mb-0 w-40 ' : 'mx-auto mb-2 w-10/12'} flex items-center`}>
-        <Image src={brandLogo} alt="Carmú Logo" />
+      <figure className={`${size === 'lg' ? 'mx-0 mb-0 w-40 ' : 'mx-auto mb-2 w-10/12'} relative flex items-center`}>
+        <Image
+          src={process.env.NEXT_PUBLIC_BRAND_LOGO_URL || brandLogo}
+          alt={process.env.NEXT_PUBLIC_APP_NAME || 'App Name'}
+          className="object-contain"
+          fill
+        />
       </figure>
 
       {/* Bussiness Information */}

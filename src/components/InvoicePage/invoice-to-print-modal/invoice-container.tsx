@@ -26,19 +26,3 @@ const InvoiceContainer = forwardRef<HTMLDivElement, Props>(({ children, size }, 
 InvoiceContainer.displayName = 'InvoiceContainer';
 
 export default InvoiceContainer;
-
-// export default function InvoiceContainer({ children, size }: Props) {
-//   return (
-//     <div className="flex-grow bg-gray-200 p-4">
-//       <div className="flex w-full justify-center">
-//         <div
-//           className={`flex-grow-0 rounded bg-white p-2 ${size === 'sm' && 'w-[55mm]'}  ${size === 'md' && 'w-[80mm]'} ${
-//             size === 'lg' && 'w-full'
-//           }`}
-//         >
-//           {children}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
