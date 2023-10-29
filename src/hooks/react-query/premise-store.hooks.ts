@@ -20,7 +20,7 @@ export function useCreatePremiseStore() {
   return useMutation({
     mutationFn: storePremiseStore,
     onSuccess() {
-      cache.invalidateQueries([ServerStateKeysEnum.PremiseStore]);
+      cache.invalidateQueries({ queryKey: [ServerStateKeysEnum.PremiseStore] });
     },
   });
 }
@@ -31,7 +31,7 @@ export function useUpdatePremiseStore() {
   return useMutation({
     mutationFn: updatePremiseStore,
     onSuccess() {
-      cache.invalidateQueries([ServerStateKeysEnum.PremiseStore]);
+      cache.invalidateQueries({ queryKey: [ServerStateKeysEnum.PremiseStore] });
     },
   });
 }

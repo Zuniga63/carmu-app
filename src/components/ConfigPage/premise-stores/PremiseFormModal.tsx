@@ -31,7 +31,7 @@ const PremiseFormModal = () => {
 
   const {
     mutate: createPremiseStore,
-    isLoading: createIsLoading,
+    isPending: createIsLoading,
     isError: createIsError,
     isSuccess: createIsSuccess,
     error: createError,
@@ -39,7 +39,7 @@ const PremiseFormModal = () => {
 
   const {
     mutate: updatePremiseStore2,
-    isLoading: updateIsLoading,
+    isPending: updateIsLoading,
     isError: updateIsError,
     isSuccess: updateIsSuccess,
     error: updateError,

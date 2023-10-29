@@ -8,7 +8,7 @@ export function useLogin() {
   const [isEnabledLogin, setIsEnabledLogin] = useState(false);
   const router = useRouter();
 
-  const { mutate, isLoading, isSuccess } = useAuthenticateUser();
+  const { mutate, isPending, isSuccess } = useAuthenticateUser();
 
   const validateInputs = (email: string, password: string) => {
     const emailRegex = /^[^\s@]+@[^s@]+\.[^\s@]+$/;
@@ -45,7 +45,7 @@ export function useLogin() {
   return {
     email,
     password,
-    loading: isLoading,
+    loading: isPending,
     isEnabledLogin,
     updateEmail,
     updatePassword,

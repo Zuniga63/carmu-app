@@ -25,7 +25,7 @@ export function useStoreNewCategory() {
   return useMutation({
     mutationFn: storeNewCategory,
     onSuccess(data, variables, context) {
-      cache.invalidateQueries([ServerStateKeysEnum.Categories]);
+      cache.invalidateQueries({ queryKey: [ServerStateKeysEnum.Categories] });
     },
   });
 }
@@ -36,7 +36,7 @@ export function useUpdateCategory() {
   return useMutation({
     mutationFn: updateCategory,
     onSuccess(data, variables, context) {
-      cache.invalidateQueries([ServerStateKeysEnum.Categories]);
+      cache.invalidateQueries({ queryKey: [ServerStateKeysEnum.Categories] });
     },
   });
 }
@@ -47,7 +47,7 @@ export function useDeleteCategory() {
   return useMutation({
     mutationFn: deleteCategory,
     onSuccess(data, variables, context) {
-      cache.invalidateQueries([ServerStateKeysEnum.Categories]);
+      cache.invalidateQueries({ queryKey: [ServerStateKeysEnum.Categories] });
     },
   });
 }
@@ -58,7 +58,7 @@ export function useUpdateCategoryOrder() {
   return useMutation({
     mutationFn: updateCategoryOrder,
     onError(error, variables, context) {
-      cache.invalidateQueries([ServerStateKeysEnum.Categories]);
+      cache.invalidateQueries({ queryKey: [ServerStateKeysEnum.Categories] });
     },
   });
 }

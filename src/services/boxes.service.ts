@@ -1,4 +1,4 @@
-import { IBoxesResponse } from '@/types';
+import type { IBoxesResponse } from '@/types';
 import axios from 'axios';
 
 export const boxesApi = axios.create({ baseURL: `${process.env.NEXT_PUBLIC_URL_API}/boxes` });

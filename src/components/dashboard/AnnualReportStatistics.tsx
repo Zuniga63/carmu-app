@@ -62,7 +62,9 @@ const AnnualReportStatistics = ({ title, description, type = 'sale' }: Props) =>
 
   const handleRefresh = () => {
     const currentYear = dayjs().year();
-    queryClient.invalidateQueries([ServerStateKeysEnum.AnnualReports, { year: currentYear, operation: type }]);
+    queryClient.invalidateQueries({
+      queryKey: [ServerStateKeysEnum.AnnualReports, { year: currentYear, operation: type }],
+    });
   };
 
   return (

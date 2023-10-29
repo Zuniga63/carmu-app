@@ -76,7 +76,7 @@ const ProductPage: NextPage<Props> = ({ data }) => {
       newProductList.push(res.data.product);
       newProductList.sort((p1, p2) => p1.name.localeCompare(p2.name));
       setProducts(newProductList);
-      queryClient.invalidateQueries([ServerStateKeysEnum.ProductList]);
+      queryClient.invalidateQueries({ queryKey: [ServerStateKeysEnum.ProductList] });
       closeForm();
     } catch (error) {
       handleError(error);
@@ -97,7 +97,7 @@ const ProductPage: NextPage<Props> = ({ data }) => {
       if (index >= 0) list.splice(index, 1, productUpdated);
       list.sort((p1, p2) => p1.name.localeCompare(p2.name));
       setProducts(list);
-      queryClient.invalidateQueries([ServerStateKeysEnum.ProductList]);
+      queryClient.invalidateQueries({ queryKey: [ServerStateKeysEnum.ProductList] });
 
       closeForm();
     } catch (error) {
@@ -130,7 +130,7 @@ const ProductPage: NextPage<Props> = ({ data }) => {
             result.ok = true;
             result.message = `¡El producto ${product.name} fue eliminado satisfactoriamente!`;
             removeProduct(product);
-            queryClient.invalidateQueries([ServerStateKeysEnum.ProductList]);
+            queryClient.invalidateQueries({ queryKey: [ServerStateKeysEnum.ProductList] });
           } else {
             result.message = 'EL producto no se pudo eliminar.';
           }
