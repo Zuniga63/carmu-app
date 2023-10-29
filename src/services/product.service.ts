@@ -16,8 +16,8 @@ export async function getProductPageInititalData(token?: string) {
 
   try {
     const [produtRes, categoryRes] = await Promise.all([
-      fetch(PRODUCT_BASE_URL, { headers }),
-      fetch(CATEGORY_BASE_URL, { headers }),
+      fetch(PRODUCT_BASE_URL, { headers, cache: 'no-cache' }),
+      fetch(CATEGORY_BASE_URL, { headers, cache: 'no-cache' }),
     ]);
 
     const productResData = await produtRes.json();
@@ -33,7 +33,7 @@ export async function getProductPageInititalData(token?: string) {
 }
 
 export async function getAllProducts() {
-  const res = await axios.get<IProductWithCategories>(PRODUCT_BASE_URL);
+  const res = await axios.get<IProductWithCategories[]>(PRODUCT_BASE_URL);
   return res.data;
 }
 

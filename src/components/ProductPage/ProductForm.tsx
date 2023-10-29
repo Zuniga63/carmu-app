@@ -3,11 +3,11 @@ import { useMediaQuery } from '@mantine/hooks';
 import DrawerBody from '@/components/DrawerBody';
 import DrawerHeader from '@/components/DrawerHeader';
 import React, { FormEvent, useEffect, useState } from 'react';
-import { ICategory, IProductWithCategories, IValidationErrors } from '@/types';
+import type { IProductWithCategories, IValidationErrors } from '@/types';
+import { useGetAllCategories } from '@/hooks/react-query/categories.hooks';
 
 interface Props {
   product?: IProductWithCategories | null;
-  categories: ICategory[];
   opened: boolean;
   loading: boolean;
   errors: IValidationErrors | null | undefined;
@@ -16,7 +16,8 @@ interface Props {
   update(formData: unknown): Promise<void>;
 }
 
-const ProductForm = ({ product, categories, opened, loading, errors, close, store, update }: Props) => {
+const ProductForm = ({ product, opened, loading, errors, close, store, update }: Props) => {
+  const { data: categories = [] } = useGetAllCategories();
   const [formTitle, setFormTitle] = useState('Registrar Producto');
   const [btnMessage, setBtnMessage] = useState('Guardar');
   const [productCategory, setProductCategory] = useState<string | null>(null);

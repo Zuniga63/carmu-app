@@ -1,34 +1,19 @@
-import { GetServerSideProps, NextPage } from 'next';
+import { NextPage } from 'next';
 import Layout from '@/components/Layout';
-import { ICategory, IProductWithCategories, IValidationErrors } from '@/types';
+import { IProductWithCategories, IValidationErrors } from '@/types';
 import { useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 import ProductTable from '@/components/ProductPage/ProductTable';
 import ProductForm from '@/components/ProductPage/ProductForm';
-import { getProductPageInititalData } from '@/services/product.service';
 import { useQueryClient } from '@tanstack/react-query';
 import { ServerStateKeysEnum } from '@/config/server-state-key.enum';
+import { useGetAllProducts } from '@/hooks/react-query/product.hooks';
 
-export const getServerSideProps: GetServerSideProps = async context => {
-  const { access_token: token } = context.req.cookies;
-  const data = await getProductPageInititalData(token);
+const ProductPage: NextPage = () => {
+  const { data: products = [] } = useGetAllProducts();
 
-  return {
-    props: { data },
-  };
-};
-
-interface Props {
-  data: {
-    products: IProductWithCategories[];
-    categories: ICategory[];
-  };
-}
-
-const ProductPage: NextPage<Props> = ({ data }) => {
-  const [products, setProducts] = useState(data.products);
   const [productToUpdate, setProductToUpdate] = useState<IProductWithCategories | null>(null);
   const [formOpened, setFormOpened] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -64,7 +49,8 @@ const ProductPage: NextPage<Props> = ({ data }) => {
     const copy = products.slice();
     const index = copy.findIndex(p => p.id === product.id);
     if (index >= 0) copy.splice(index, 1);
-    setProducts(copy);
+    queryClient.setQueryData([ServerStateKeysEnum.Products], copy);
+    // setProducts(copy);
   };
 
   const storeProduct = async (formData: unknown) => {
@@ -75,8 +61,9 @@ const ProductPage: NextPage<Props> = ({ data }) => {
       const newProductList = products.slice();
       newProductList.push(res.data.product);
       newProductList.sort((p1, p2) => p1.name.localeCompare(p2.name));
-      setProducts(newProductList);
-      queryClient.invalidateQueries({ queryKey: [ServerStateKeysEnum.ProductList] });
+      queryClient.setQueryData([ServerStateKeysEnum.ProductList], newProductList);
+      // setProducts(newProductList);
+      queryClient.invalidateQueries({ queryKey: [ServerStateKeysEnum.Products] });
       closeForm();
     } catch (error) {
       handleError(error);
@@ -96,8 +83,9 @@ const ProductPage: NextPage<Props> = ({ data }) => {
       const index = list.findIndex(p => p.id === productUpdated.id);
       if (index >= 0) list.splice(index, 1, productUpdated);
       list.sort((p1, p2) => p1.name.localeCompare(p2.name));
-      setProducts(list);
-      queryClient.invalidateQueries({ queryKey: [ServerStateKeysEnum.ProductList] });
+      queryClient.setQueryData([ServerStateKeysEnum.ProductList], list);
+      // setProducts(list);
+      queryClient.invalidateQueries({ queryKey: [ServerStateKeysEnum.Products] });
 
       closeForm();
     } catch (error) {
@@ -130,7 +118,7 @@ const ProductPage: NextPage<Props> = ({ data }) => {
             result.ok = true;
             result.message = `¡El producto ${product.name} fue eliminado satisfactoriamente!`;
             removeProduct(product);
-            queryClient.invalidateQueries({ queryKey: [ServerStateKeysEnum.ProductList] });
+            queryClient.invalidateQueries({ queryKey: [ServerStateKeysEnum.Products] });
           } else {
             result.message = 'EL producto no se pudo eliminar.';
           }
@@ -168,7 +156,6 @@ const ProductPage: NextPage<Props> = ({ data }) => {
       />
       <ProductForm
         product={productToUpdate}
-        categories={data.categories}
         loading={loading}
         errors={errors}
         opened={formOpened}
