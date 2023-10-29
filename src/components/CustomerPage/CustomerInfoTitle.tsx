@@ -1,11 +1,12 @@
 import React from 'react';
-import { customerPageSelector } from '@/features/CustomerPage';
-import { useAppSelector } from '@/store/hooks';
 import { currencyFormat } from '@/utils';
+import type { ICustomer } from '@/types';
 
-const CustomerInfoTitle = () => {
-  const { customer } = useAppSelector(customerPageSelector);
+type Props = {
+  customer: ICustomer;
+};
 
+const CustomerInfoTitle = ({ customer }: Props) => {
   return (
     <div className="flex items-center gap-x-6">
       <div className="flex flex-col">

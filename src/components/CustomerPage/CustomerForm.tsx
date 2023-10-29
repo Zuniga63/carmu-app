@@ -1,147 +1,36 @@
 import { Button, Drawer, SegmentedControl, Tabs, TextInput } from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
 import { IconAt, IconMapPin, IconPhone, IconUser } from '@tabler/icons-react';
 import DrawerBody from '@/components/DrawerBody';
 import DrawerHeader from '@/components/DrawerHeader';
-import React, { FormEvent, useEffect, useState } from 'react';
-import { IValidationErrors } from '@/types';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { customerPageSelector, hideCustomerForm, storeCustomer, updateCustomer } from '@/features/CustomerPage';
-import { toast } from 'react-toastify';
-import { ICustomerStore } from '@/features/CustomerPage/types';
+import { FormEvent } from 'react';
+import { useCustomerForm } from '@/hooks/customer-page/use-customer-form';
 
 const CustomerForm = () => {
-  const dispatch = useAppDispatch();
-  const {
-    customerToUpdate: customer,
-    customerFormOpened: opened,
-    customerFormIsSuccess: isSuccess,
-    customerFormError: error,
-    customerFormIsLoading: loading,
-  } = useAppSelector(customerPageSelector);
-  const [errors, setErrors] = useState<IValidationErrors | null>(null);
-  const [successShow, setSuccessShow] = useState(true);
-
-  const [title, setTitle] = useState('');
-  const [btnMessage, setBtnMessage] = useState('Guardar');
-
-  // FIELDS OF FORM
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [alias, setAlias] = useState('');
-  const [documentType, setDocumentType] = useState<'CC' | 'TI' | 'NIT' | 'PAP' | string>('CC');
-  const [documentNumber, setDocumentNumber] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [address, setAddress] = useState('');
-
-  const largeScreen = useMediaQuery('(min-width: 768px)');
-
-  ///---------------------------------------------------------------------------
-  // FUNTIONALITY
-  ///---------------------------------------------------------------------------
-  const resetFields = () => {
-    setFirstName('');
-    setLastName('');
-    setAlias('');
-    setEmail('');
-    setPhone('');
-    setAddress('');
-    setDocumentType('CC');
-    setDocumentNumber('');
-  };
+  const { form, isLargeScreen, customer, hideForm, updateForm } = useCustomerForm();
 
   const onCloseHandler = () => {
-    if (!loading) {
-      dispatch(hideCustomerForm());
-      resetFields();
-    }
-  };
+    if (form.isLoading) return;
 
-  const getFormData = () => {
-    const data: ICustomerStore = {
-      firstName,
-      contacts: [],
-    };
-
-    if (lastName) data.lastName = lastName;
-    if (alias) data.alias = alias;
-    if (documentNumber) {
-      data.documentType = documentType || 'CC';
-      data.documentNumber = documentNumber;
-    }
-    if (email) data.email = email;
-    if (address) data.address = address;
-    if (phone) data.contacts.push({ phone, description: 'Telefono' });
-    if (customer) data.id = customer.id;
-
-    return data;
+    hideForm();
+    form.reset();
   };
 
   const onSubmitHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = getFormData();
-    if (!customer) dispatch(storeCustomer(formData));
-    else dispatch(updateCustomer(formData));
+    if (form.isLoading) return;
+    form.submit();
   };
-
-  useEffect(() => {
-    if (isSuccess && !successShow) {
-      const message = customer ? '¡Cliente actualizado!' : '¡Cliente guardado!';
-      toast.success(message);
-      setSuccessShow(true);
-      dispatch(hideCustomerForm());
-      resetFields();
-    } else {
-      setSuccessShow(false);
-    }
-  }, [isSuccess]);
-
-  useEffect(() => {
-    if (error) {
-      const { data, status } = error;
-      if (status === 422 && data.validationErrors) {
-        setErrors(data.validationErrors);
-      } else if (status === 401) {
-        toast.error(data.message);
-      } else {
-        console.log(error);
-      }
-    } else {
-      setErrors(null);
-    }
-  }, [error]);
-
-  useEffect(() => {
-    setTitle(customer ? 'Actualizar Cliente' : 'Nuevo Cliente');
-    setBtnMessage(customer ? 'Actualizar' : 'Guardar');
-    if (customer) {
-      setFirstName(customer.firstName);
-      if (customer.lastName) setLastName(customer.lastName);
-      if (customer.alias) setAlias(customer.alias);
-      if (customer.documentType) setDocumentType(customer.documentType);
-      if (customer.documentNumber) setDocumentNumber(customer.documentNumber);
-      if (customer.email) setEmail(customer.email);
-      if (customer.address) setAddress(customer.address);
-      if (customer.contacts.length) setPhone(customer.contacts[0].phone);
-    }
-  }, [customer]);
-
-  useEffect(() => {
-    if (loading) setBtnMessage(customer ? 'Actualizando...' : 'Guardando...');
-    else setBtnMessage(customer ? 'Actualizar' : 'Guardar');
-  }, [loading]);
 
   return (
     <Drawer
-      opened={opened}
+      opened={form.isOpen}
       onClose={onCloseHandler}
       padding={0}
-      size={largeScreen ? 'lg' : '100%'}
+      size={isLargeScreen ? 'lg' : '100%'}
       withCloseButton={false}
       position="right"
     >
-      <DrawerHeader title={title} onClose={onCloseHandler} />
+      <DrawerHeader title={form.title} onClose={onCloseHandler} />
       <DrawerBody>
         <form onSubmit={onSubmitHandler}>
           <Tabs variant="pills" defaultValue="personal" className="mx-auto mb-4 w-11/12">
@@ -162,10 +51,10 @@ const CustomerForm = () => {
                 placeholder="Escribe el nombre aquí."
                 id="customerName"
                 required
-                value={firstName}
-                onChange={({ target }) => setFirstName(target.value)}
-                disabled={loading}
-                error={errors?.firstName?.message}
+                value={customer.firstName}
+                onChange={({ target }) => updateForm('firstName', target.value)}
+                disabled={form.isLoading}
+                error={form.errors?.firstName?.message}
               />
 
               {/* LAST NAME */}
@@ -174,10 +63,10 @@ const CustomerForm = () => {
                 className="mb-2"
                 placeholder="Escribe los apellidos aquí"
                 id="customerLastName"
-                value={lastName}
-                onChange={({ target }) => setLastName(target.value)}
-                disabled={loading}
-                error={errors?.lastName?.message}
+                value={customer.lastName}
+                onChange={({ target }) => updateForm('lastName', target.value)}
+                disabled={form.isLoading}
+                error={form.errors?.lastName?.message}
               />
 
               {/* ALIAS */}
@@ -186,10 +75,10 @@ const CustomerForm = () => {
                 className="mb-2"
                 placeholder="A.K.A"
                 id="customerAlias"
-                value={alias}
-                onChange={({ target }) => setAlias(target.value)}
-                disabled={loading}
-                error={errors?.alias?.message}
+                value={customer.alias}
+                onChange={({ target }) => updateForm('alias', target.value)}
+                disabled={form.isLoading}
+                error={form.errors?.alias?.message}
               />
 
               {/* DOCUMENT */}
@@ -198,18 +87,18 @@ const CustomerForm = () => {
                 className="mb-2"
                 placeholder="#.###.###.###"
                 id="customerDocument"
-                value={documentNumber}
-                onChange={({ target }) => setDocumentNumber(target.value)}
-                disabled={loading}
-                error={errors?.documentNumber?.message}
+                value={customer.documentNumber}
+                onChange={({ target }) => updateForm('documentNumber', target.value)}
+                disabled={form.isLoading}
+                error={form.errors?.documentNumber?.message}
               />
 
               {/* DOCUMENT TYPE */}
               <SegmentedControl
-                value={documentType}
-                onChange={setDocumentType}
+                value={customer.documentType}
+                onChange={value => updateForm('documentType', value)}
                 fullWidth
-                disabled={loading}
+                disabled={form.isLoading}
                 data={[
                   { label: 'CC', value: 'CC' },
                   { label: 'TI', value: 'TI' },
@@ -226,12 +115,12 @@ const CustomerForm = () => {
                 className="mb-2"
                 placeholder="ejemplo@ejemplo.com"
                 id="customerEmail"
-                value={email}
-                onChange={({ target }) => setEmail(target.value)}
+                value={customer.email}
+                onChange={({ target }) => updateForm('email', target.value)}
                 type="email"
                 icon={<IconAt size={20} />}
-                disabled={loading}
-                error={errors?.email?.message}
+                disabled={form.isLoading}
+                error={form.errors?.email?.message}
               />
 
               {/* PHONE */}
@@ -240,12 +129,12 @@ const CustomerForm = () => {
                 className="mb-2"
                 placeholder="555-5555"
                 id="customerPhone"
-                value={phone}
-                onChange={({ target }) => setPhone(target.value)}
+                value={customer.phone}
+                onChange={({ target }) => updateForm('phone', target.value)}
                 type="tel"
                 icon={<IconPhone size={20} />}
-                disabled={loading}
-                error={errors?.['contact.1.phone']?.message}
+                disabled={form.isLoading}
+                error={form.errors?.['contact.1.phone']?.message}
               />
 
               {/* ADDRESS */}
@@ -254,17 +143,17 @@ const CustomerForm = () => {
                 className="mb-2"
                 placeholder="Avenida siempre vida 1234"
                 id="customerAddress"
-                value={address}
-                onChange={({ target }) => setAddress(target.value)}
+                value={customer.address}
+                onChange={({ target }) => updateForm('address', target.value)}
                 icon={<IconMapPin size={20} />}
-                disabled={loading}
-                error={errors?.address?.message}
+                disabled={form.isLoading}
+                error={form.errors?.address?.message}
               />
             </Tabs.Panel>
           </Tabs>
           <footer className="mx-auto flex w-11/12 justify-end">
-            <Button loading={loading} disabled={!firstName} type="submit">
-              {btnMessage}
+            <Button loading={form.isLoading} disabled={!customer.firstName} type="submit">
+              {form.btnMessage}
             </Button>
           </footer>
         </form>

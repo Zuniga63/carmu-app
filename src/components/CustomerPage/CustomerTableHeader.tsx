@@ -1,8 +1,10 @@
 import { ActionIcon, Loader, Switch, TextInput, Tooltip } from '@mantine/core';
 import { IconRefresh, IconSearch, IconUserPlus } from '@tabler/icons-react';
-import { customerPageSelector, fetchCustomers, showCustomerForm } from '@/features/CustomerPage';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { CustomerFilters } from '@/types';
+import { useGetAllCustomers } from '@/hooks/react-query/customers.hooks';
+import { useQueryClient } from '@tanstack/react-query';
+import { ServerStateKeysEnum } from '@/config/server-state-key.enum';
+import { useCustomerPageStore } from '@/store/customer-store';
 
 type Props = {
   filters: CustomerFilters;
@@ -11,15 +13,21 @@ type Props = {
 };
 
 export default function CustomerTableHeader({ filters, searchWaiting, updateFilters }: Props) {
-  const { fetchLoading } = useAppSelector(customerPageSelector);
-  const dispatch = useAppDispatch();
+  const { isFetching } = useGetAllCustomers();
+  const showCustomerForm = useCustomerPageStore(state => state.showForm);
+
+  const queryCache = useQueryClient();
 
   const handleSearch = (value: string) => {
     updateFilters({ ...filters, search: value });
   };
 
-  const handleClick = () => {
-    dispatch(fetchCustomers());
+  const handleShowCustomerForm = () => {
+    showCustomerForm();
+  };
+
+  const handleRefreshCleck = () => {
+    queryCache.invalidateQueries({ queryKey: [ServerStateKeysEnum.Customers] });
   };
 
   return (
@@ -39,13 +47,13 @@ export default function CustomerTableHeader({ filters, searchWaiting, updateFilt
           />
 
           <Tooltip label="Actualizar clientes">
-            <ActionIcon loading={fetchLoading} onClick={handleClick}>
+            <ActionIcon loading={isFetching} onClick={handleRefreshCleck}>
               <IconRefresh size={18} />
             </ActionIcon>
           </Tooltip>
 
           <Tooltip label="Nuevo Cliente">
-            <ActionIcon onClick={() => dispatch(showCustomerForm())} variant="filled" color="blue">
+            <ActionIcon onClick={handleShowCustomerForm} variant="filled" color="blue">
               <IconUserPlus size={18} stroke={1.5} />
             </ActionIcon>
           </Tooltip>

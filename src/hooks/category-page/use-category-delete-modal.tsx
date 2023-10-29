@@ -8,13 +8,13 @@ export function useCategoryDeleteModal() {
   const { data: categories = [] } = useGetAllCategories();
   const categoryIdToDelete = useCategoryPageStore(state => state.categoryToDelete);
   const cancelDelete = useCategoryPageStore(state => state.cancelDeleteCategory);
-  const { mutate: deleteCategory, isLoading, isSuccess, isError } = useDeleteCategory();
+  const { mutate: deleteCategory, isPending, isSuccess, isError } = useDeleteCategory();
 
   const [isOpen, setIsOpen] = useState(false);
   const [category, setCategory] = useState<ICategory | undefined>();
 
   const closeModal = () => {
-    if (isLoading) return;
+    if (isPending) return;
     setIsOpen(false);
     setTimeout(cancelDelete, 150);
   };
@@ -54,7 +54,7 @@ export function useCategoryDeleteModal() {
   return {
     isOpen,
     category,
-    isLoading,
+    isLoading: isPending,
     closeModal,
     confirm,
   };

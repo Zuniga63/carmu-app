@@ -1,8 +1,7 @@
 import { Loader, ScrollArea } from '@mantine/core';
-import { customerPageSelector } from '@/features/CustomerPage';
-import { useAppSelector } from '@/store/hooks';
 import { ICustomer } from '@/types';
 import CustomerTableItem from './CustomerTableItem';
+import { useGetAllCustomers } from '@/hooks/react-query/customers.hooks';
 
 function Loading() {
   return (
@@ -20,7 +19,7 @@ type Props = {
 };
 
 export default function CustomerTableBody({ customers }: Props) {
-  const { firstFetchLoading } = useAppSelector(customerPageSelector);
+  const { isLoading: firstFetchLoading } = useGetAllCustomers();
 
   if (firstFetchLoading) return <Loading />;
 

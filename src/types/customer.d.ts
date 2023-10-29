@@ -1,3 +1,5 @@
+import { IInvoiceBaseFull } from '.';
+
 //Use this type in the Custome table
 export type CustomerFilters = {
   search: string;
@@ -53,4 +55,8 @@ export interface ICustomerStore {
     phone: string;
     description: string;
   }[];
+}
+
+export interface ICustomerWithInvoices extends ICustomer {
+  invoices: IInvoiceBaseFull[];
 }

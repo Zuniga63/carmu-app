@@ -1,22 +1,27 @@
 import { Modal, Tabs } from '@mantine/core';
 import { IconCashBanknote, IconFileInvoice } from '@tabler/icons-react';
 import React, { useEffect, useState } from 'react';
-import { customerPageSelector, unmountCustomer } from '@/features/CustomerPage';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { IInvoicePaymentBase } from '@/types';
 import CustomerInfoInvoices from './CustomerInfoInvoices';
 import CustomerInfoPayments from './CustomerInfoPayments';
 import CustomerInfoTitle from './CustomerInfoTitle';
+import { useGetCustomerById } from '@/hooks/react-query/customers.hooks';
+import { useCustomerPageStore } from '@/store/customer-store';
 
 const CustomerInfo = () => {
-  const { customer } = useAppSelector(customerPageSelector);
-  const dispatch = useAppDispatch();
+  const customerId = useCustomerPageStore(state => state.customerToInfo);
+  const closeModal = useCustomerPageStore(state => state.unmoutCustomerToInfo);
 
-  const [opened, setOpened] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [payments, setPayments] = useState<IInvoicePaymentBase[]>([]);
+  const { data: customer } = useGetCustomerById({ id: customerId });
+
+  const handleClose = () => {
+    closeModal();
+  };
 
   useEffect(() => {
-    setOpened(Boolean(customer));
+    setIsOpen(Boolean(customer));
     const paymentList: IInvoicePaymentBase[] = [];
     if (customer) {
       customer.invoices.forEach(invoice => {
@@ -30,7 +35,6 @@ const CustomerInfo = () => {
             } else {
               paymentList.push({ ...payment });
             }
-            // paymentList.push({ ...payment });
           }
         });
       });
@@ -42,7 +46,7 @@ const CustomerInfo = () => {
   }, [customer]);
 
   return customer ? (
-    <Modal opened={opened} onClose={() => dispatch(unmountCustomer())} title={<CustomerInfoTitle />} size="70%">
+    <Modal opened={isOpen} onClose={handleClose} title={<CustomerInfoTitle customer={customer} />} size="70%">
       <Tabs defaultValue="invoices">
         <Tabs.List>
           <Tabs.Tab value="invoices" icon={<IconFileInvoice size={14} />}>

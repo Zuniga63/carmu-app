@@ -2,55 +2,24 @@ import { Button, Checkbox, Modal, NumberInput, Select } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { IconBox, IconCalendar, IconCash } from '@tabler/icons-react';
 import dayjs from 'dayjs';
-import React, { FormEvent, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
-import {
-  customerPageSelector,
-  fetchCustomers,
-  storeCustomerPayment,
-  unmountCustomerToPayment,
-} from '@/features/CustomerPage';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { IBox, IInvoicePaymentData, IValidationErrors } from '@/types';
+import React, { FormEvent } from 'react';
+
 import { currencyFormat } from '@/utils';
-import { useGetAllBoxes } from '@/hooks/react-query/boxes.hooks';
+import { useCustomerPaymentModal } from '@/hooks/customer-page/use-customer-payment-modal';
 
 const CustomerPaymentModal = () => {
-  const defaultDescription = 'Efectivo';
-
   const {
-    customerToPayment: customer,
-    paymentFormOpened: opened,
-    paymentFormLoading: loading,
-    paymnerFormError: error,
-    paymentFormIsSuccess: isSuccess,
-  } = useAppSelector(customerPageSelector);
-
-  const { data: boxesResponse } = useGetAllBoxes();
-  const boxes: IBox[] = boxesResponse?.boxes || [];
-
-  const dispatch = useAppDispatch();
-
-  const [boxId, setBoxId] = useState<string | null>(null);
-  const [paymentDate, setPaymentDate] = useState<Date | null>(dayjs().toDate());
-  const [register, setRegister] = useState(true);
-  const [description, setDescription] = useState<string | null>(defaultDescription);
-  const [amount, setAmount] = useState<number | undefined>(undefined);
-  const [errors, setErrors] = useState<IValidationErrors | null>(null);
-
-  const resetForm = () => {
-    setBoxId(null);
-    setRegister(true);
-    setDescription(defaultDescription);
-    setAmount(undefined);
-  };
-
-  const closeForm = () => {
-    if (!loading) {
-      dispatch(unmountCustomerToPayment());
-      resetForm();
-    }
-  };
+    form,
+    errors,
+    payment,
+    customer,
+    boxes,
+    updateBox,
+    updateDescription,
+    updateAmount,
+    updatePaymentDate,
+    updateRegister,
+  } = useCustomerPaymentModal();
 
   const formater = (value: string | undefined) => {
     let result = '';
@@ -61,62 +30,15 @@ const CustomerPaymentModal = () => {
     return result;
   };
 
-  const getData = (): IInvoicePaymentData => {
-    const date = dayjs(paymentDate);
-
-    return {
-      invoiceId: '',
-      cashboxId: boxId || undefined,
-      paymentDate: date.toDate(),
-      description: description || 'Efectivo',
-      amount: amount || 0,
-      register: boxId ? true : register,
-    };
-  };
-
   const onSubmitHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (description && amount && amount > 0 && customer && paymentDate) {
-      const data = getData();
-      dispatch(storeCustomerPayment(data));
-    } else {
-      toast.error('¡Hacen falta datos!');
-    }
+    form.submit();
   };
-
-  useEffect(() => {
-    if (opened && (!customer || !customer.balance)) closeForm();
-  }, [customer]);
-
-  useEffect(() => {
-    if (error) {
-      const { data, status } = error;
-      if (status === 422 && data.validationErrors) {
-        setErrors(data.validationErrors);
-      } else if (status === 401) {
-        toast.error(data.message);
-      } else {
-        console.log(error);
-      }
-    } else {
-      setErrors(null);
-    }
-  }, [error]);
-
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success(
-        `El pago por valor de ${currencyFormat(amount)} al cliente ${customer?.fullName} fue registrado con éxito.`,
-      );
-      closeForm();
-      dispatch(fetchCustomers());
-    }
-  }, [isSuccess]);
 
   return (
     <Modal
-      opened={opened}
-      onClose={closeForm}
+      opened={form.isOpen}
+      onClose={form.close}
       title={<h2 className="font-bold uppercase">Registrar Pago</h2>}
       size="sm"
     >
@@ -134,15 +56,10 @@ const CustomerPaymentModal = () => {
           <div className="mb-2 flex flex-col gap-y-2">
             <Select
               placeholder="Caja a registrar el abono"
-              value={boxId}
-              onChange={setBoxId}
+              value={payment.boxId}
+              onChange={updateBox}
               icon={<IconBox size={14} />}
-              data={boxes
-                .filter(b => Boolean(b.openBox))
-                .map(box => ({
-                  value: box.id,
-                  label: box.name,
-                }))}
+              data={boxes}
               searchable
               clearable
               size="xs"
@@ -157,8 +74,8 @@ const CustomerPaymentModal = () => {
             required
             icon={<IconCalendar size={14} />}
             placeholder="Selecciona una fecha"
-            value={paymentDate}
-            onChange={value => setPaymentDate(value)}
+            value={payment.paymentDate}
+            onChange={value => updatePaymentDate(value)}
             clearable
             className="mb-2"
             size="xs"
@@ -170,8 +87,8 @@ const CustomerPaymentModal = () => {
           <Select
             label="Forma de pago"
             placeholder="Forma de pago"
-            value={description}
-            onChange={setDescription}
+            value={payment.description}
+            onChange={updateDescription}
             icon={<IconBox size={14} />}
             data={['Efectivo', 'Consignación', 'Transferencia']}
             size="xs"
@@ -186,25 +103,25 @@ const CustomerPaymentModal = () => {
             required
             hideControls
             size="xs"
-            value={amount}
+            value={payment.amount}
             parser={value => value?.replace(/\$\s?|(,*)/g, '')}
-            onChange={val => setAmount(val)}
+            onChange={val => updateAmount(val)}
             formatter={formater}
             onFocus={({ target }) => target.select()}
             error={errors?.amount?.message}
           />
-          {!boxId && (
+          {!payment.boxId && (
             <Checkbox
               className="mt-2"
               label={<span className="font-sans text-light">Registrar Transacción</span>}
               size="xs"
-              checked={register}
-              onChange={({ currentTarget }) => setRegister(currentTarget.checked)}
+              checked={payment.register}
+              onChange={({ currentTarget }) => updateRegister(currentTarget.checked)}
             />
           )}
         </div>
         <footer className="flex justify-end">
-          <Button leftIcon={<IconCash size={16} />} type="submit" loading={loading}>
+          <Button leftIcon={<IconCash size={16} />} type="submit" loading={form.isLoading}>
             Registrar
           </Button>
         </footer>

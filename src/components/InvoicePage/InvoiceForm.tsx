@@ -223,7 +223,7 @@ const InvoiceForm = () => {
 
   useEffect(() => {
     if (!success) return;
-    if (customer) queryCache.invalidateQueries([ServerStateKeysEnum.Customers]);
+    if (customer) queryCache.invalidateQueries({ queryKey: [ServerStateKeysEnum.Customers] });
 
     toast.success('Factura Creada');
     closeInvoice();

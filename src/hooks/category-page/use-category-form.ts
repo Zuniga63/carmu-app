@@ -19,7 +19,7 @@ export function useCategoryForm() {
 
   const {
     mutate: storeCategory,
-    isLoading: storeIsLoading,
+    isPending: storeIsLoading,
     isSuccess: storeIsSuccess,
     isError: storeIsError,
     error: storeError,
@@ -27,7 +27,7 @@ export function useCategoryForm() {
 
   const {
     mutate: updateCategory,
-    isLoading: updateIsLoading,
+    isPending: updateIsLoading,
     isSuccess: updateIsSuccess,
     isError: updateIsError,
     error: updateError,

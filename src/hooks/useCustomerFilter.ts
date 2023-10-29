@@ -1,13 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { customerPageSelector } from '@/features/CustomerPage';
 import {
   getCustomerBySearch,
   getCustomerWithBalance,
   sortCustomersByBalance,
   sortCustomersByLastPayment,
 } from '@/logic/customer';
-import { useAppSelector } from '@/store/hooks';
 import { ICustomer, CustomerFilters } from '@/types';
+import { useGetAllCustomers } from './react-query/customers.hooks';
 
 const CUSTOMER_BY_PAGE = 25;
 const INITIAL_FILTER: CustomerFilters = {
@@ -19,7 +18,7 @@ const INITIAL_FILTER: CustomerFilters = {
 };
 
 export function useCustomerFilter() {
-  const { customers } = useAppSelector(customerPageSelector);
+  const { data: customers = [] } = useGetAllCustomers();
 
   const [filters, setFilters] = useState<CustomerFilters>(INITIAL_FILTER);
   const [waiting, setWaiting] = useState(false);

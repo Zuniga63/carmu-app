@@ -13,35 +13,42 @@ import {
   IconTrash,
 } from '@tabler/icons-react';
 import dayjs from 'dayjs';
-import React, { useEffect, useState } from 'react';
-import {
-  customerPageSelector,
-  deleteCustomer,
-  fetchCustomer,
-  mountCustomerToFetch,
-  mountCustomerToPayment,
-  mountCustomerToUpdate,
-} from '@/features/CustomerPage';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import React, { useMemo } from 'react';
 import { ICustomer } from '@/types';
 import { currencyFormat } from '@/utils';
+import { useCustomerPageStore } from '@/store/customer-store';
+import { useIsFetching } from '@tanstack/react-query';
+import { ServerStateKeysEnum } from '@/config/server-state-key.enum';
 
 interface Props {
   customer: ICustomer;
 }
 
 const CustomerTableItem = ({ customer }: Props) => {
-  const { fetchCustomerId } = useAppSelector(customerPageSelector);
-  const [customerState, setCustomerState] = useState(<IconCircleCheck size={40} className="text-green-500" />);
+  const showEditForm = useCustomerPageStore(state => state.showForm);
+  const showDeleteDialog = useCustomerPageStore(state => state.showDeleteCustomerAlert);
+  const showPaymentForm = useCustomerPageStore(state => state.mountCustomerToPayment);
+  const showCustomerInfo = useCustomerPageStore(state => state.mountCustomerToInfo);
 
-  const dispatch = useAppDispatch();
+  const isFetching = useIsFetching({ queryKey: [ServerStateKeysEnum.Customers, customer.id] });
 
-  const onFetchCustomer = () => {
-    dispatch(mountCustomerToFetch(customer.id));
-    dispatch(fetchCustomer(customer.id));
+  const handleEditClick = () => {
+    showEditForm(customer.id);
   };
 
-  useEffect(() => {
+  const handleDeleteClick = () => {
+    showDeleteDialog(customer.id);
+  };
+
+  const handlePaymentClick = () => {
+    showPaymentForm(customer.id);
+  };
+
+  const handleCustomerInfoClick = () => {
+    showCustomerInfo(customer.id);
+  };
+
+  const customerState = useMemo(() => {
     const size = 40;
     let Icon = IconCircleCheck;
     let className = 'text-green-500';
@@ -67,7 +74,7 @@ const CustomerTableItem = ({ customer }: Props) => {
       }
     }
 
-    setCustomerState(<Icon size={size} className={className} />);
+    return <Icon size={size} className={className} />;
   }, [customer.balance]);
 
   return (
@@ -134,37 +141,26 @@ const CustomerTableItem = ({ customer }: Props) => {
         <div className="flex items-center justify-end gap-x-2">
           {customer.balance ? (
             <Tooltip label="Hacer abono" withArrow>
-              <ActionIcon
-                size="lg"
-                color="green"
-                onClick={() => dispatch(mountCustomerToPayment(customer.id))}
-                radius="xl"
-              >
+              <ActionIcon size="lg" color="green" onClick={handlePaymentClick} radius="xl">
                 <IconCash size={18} stroke={2} />
               </ActionIcon>
             </Tooltip>
           ) : null}
 
           <Tooltip label="Ver información" withArrow>
-            <ActionIcon
-              size="lg"
-              color="grape"
-              onClick={onFetchCustomer}
-              radius="xl"
-              loading={fetchCustomerId === customer.id}
-            >
+            <ActionIcon size="lg" color="grape" onClick={handleCustomerInfoClick} radius="xl" loading={isFetching > 0}>
               <IconFolder size={18} stroke={2} />
             </ActionIcon>
           </Tooltip>
           <Tooltip label="Actualizar Cliente" withArrow>
-            <ActionIcon size="lg" color="blue" onClick={() => dispatch(mountCustomerToUpdate(customer.id))} radius="xl">
+            <ActionIcon size="lg" color="blue" onClick={handleEditClick} radius="xl">
               <IconEdit size={18} stroke={2} />
             </ActionIcon>
           </Tooltip>
 
           {!Boolean(customer.balance) ? (
             <Tooltip label="Eliminar Cliente" withArrow>
-              <ActionIcon size="lg" color="red" onClick={() => dispatch(deleteCustomer(customer.id))} radius="xl">
+              <ActionIcon size="lg" color="red" onClick={handleDeleteClick} radius="xl">
                 <IconTrash size={16} stroke={2} />
               </ActionIcon>
             </Tooltip>

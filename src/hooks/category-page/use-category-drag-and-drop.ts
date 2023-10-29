@@ -13,13 +13,13 @@ export function useCategoryDragAndDrop() {
 
   const queryClient = useQueryClient();
   const { data: categories = [] } = useGetAllCategories();
-  const { mutate: updateCategoryOrder, isLoading, isSuccess, isError } = useUpdateCategoryOrder();
+  const { mutate: updateCategoryOrder, isPending, isSuccess, isError } = useUpdateCategoryOrder();
 
   const reorderList = (fromIndex: number, toIndex: number) => {
     const result = categories.slice();
     const [removed] = result.splice(fromIndex, 1);
     result.splice(toIndex, 0, removed);
-    queryClient.setQueriesData([ServerStateKeysEnum.Categories], result);
+    queryClient.setQueriesData({ queryKey: [ServerStateKeysEnum.Categories] }, result);
 
     const categoryIds = result.map(({ id }) => id);
     updateCategoryOrder({ categoryIds });
@@ -41,5 +41,15 @@ export function useCategoryDragAndDrop() {
     return () => clearTimeout(id);
   }, [isSuccess, isError]);
 
-  return { isBrowser, message, showMessage, isLoading, isSuccess, isError, categories, reorderList, showCreateForm };
+  return {
+    isBrowser,
+    message,
+    showMessage,
+    isLoading: isPending,
+    isSuccess,
+    isError,
+    categories,
+    reorderList,
+    showCreateForm,
+  };
 }
