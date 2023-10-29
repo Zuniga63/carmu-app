@@ -7,7 +7,7 @@ interface Props {
 }
 const CustomerInfoPayments = ({ payments }: Props) => {
   return (
-    <div className="relative grid min-h-[20rem] grid-cols-3 items-start gap-4">
+    <div className="relative grid min-h-[20rem] grid-cols-3 place-content-start gap-4 lg:grid-cols-4">
       {payments.map(payment => (
         <CustomerInfoPaymentCard paymentBase={payment} key={payment.id} />
       ))}
