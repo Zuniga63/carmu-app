@@ -17,11 +17,15 @@ export default function InvoiceHeader({ size, isSeparate, invoiceNumber }: Props
   return (
     <header
       className={`mb-2 border-b-4 border-double border-dark pb-2 ${
-        size === 'lg' && 'lg:flex lg:items-start lg:justify-between'
+        size === 'lg' && 'flex items-center justify-between'
       }`}
     >
       {/* Brand Logo */}
-      <figure className={`${size === 'lg' ? 'mx-0 mb-0 w-40 ' : 'mx-auto mb-2 w-10/12'} relative flex items-center`}>
+      <figure
+        className={`${
+          size === 'lg' ? 'mx-0 mb-0 w-40 ' : 'mx-auto mb-2 w-10/12'
+        } relative flex aspect-video items-center outline-red-50`}
+      >
         <Image
           src={process.env.NEXT_PUBLIC_BRAND_LOGO_URL || brandLogo}
           alt={process.env.NEXT_PUBLIC_APP_NAME || 'App Name'}
@@ -52,15 +56,13 @@ export default function InvoiceHeader({ size, isSeparate, invoiceNumber }: Props
       </div>
 
       {/* Invoice Number */}
-      {size === 'lg' ? (
-        <div className="hidden lg:block">
-          <h2 className="text-center text-base uppercase xxs:text-xl">{isSeparate ? 'Apartado' : 'Factura'}</h2>
+      <div className={` ${size === 'lg' ? 'block' : 'hidden'}`}>
+        <h2 className="text-center text-base uppercase xxs:text-xl">{isSeparate ? 'Apartado' : 'Factura'}</h2>
 
-          <p className="text-center text-base xxs:text-xl">
-            N° <span className="font-bold text-dark xxs:text-red-500">{invoiceNumber}</span>
-          </p>
-        </div>
-      ) : null}
+        <p className="text-center text-base xxs:text-xl">
+          N° <span className="font-bold text-dark xxs:text-red-500">{invoiceNumber}</span>
+        </p>
+      </div>
     </header>
   );
 }
