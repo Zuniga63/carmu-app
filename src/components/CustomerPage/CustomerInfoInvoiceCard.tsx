@@ -20,10 +20,10 @@ const CustomerInfoInvoiceCard = ({ invoice }: Props) => {
           isCancel
             ? 'cursor-pointer rounded-t-lg border border-gray-500 bg-gray-500 bg-opacity-10'
             : hasBalance
-            ? isCredit
-              ? 'cursor-pointer rounded-t-lg border border-red-500 bg-red-500 bg-opacity-10' //Credit Style
-              : 'cursor-pointer rounded-t-lg border border-blue-500 bg-blue-500 bg-opacity-10' //Separate Style
-            : 'cursor-pointer rounded-t-lg border border-green-500 bg-green-500 bg-opacity-10'
+              ? isCredit
+                ? 'cursor-pointer rounded-t-lg border border-red-500 bg-red-500 bg-opacity-10' //Credit Style
+                : 'cursor-pointer rounded-t-lg border border-blue-500 bg-blue-500 bg-opacity-10' //Separate Style
+              : 'cursor-pointer rounded-t-lg border border-green-500 bg-green-500 bg-opacity-10'
         }
         onClick={() => setOpened(current => !current)}
       >
