@@ -1,72 +1,69 @@
 import { ActionIcon } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
-import axios, { AxiosError } from 'axios';
-import React from 'react';
-import { boxPageSelector, removeTransaction } from '@/features/BoxPage';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { IMainTransaction, ITransaction, ITransactionResponse } from '@/types';
+import { IMainTransaction, ITransaction } from '@/types';
 import { currencyFormat } from '@/utils';
-import Swal from 'sweetalert2';
+import { useBoxesPageStore } from '@/store/boxes-page-store';
 
 interface Props {
   transaction: ITransaction;
 }
 const TransactionTableItem = ({ transaction }: Props) => {
-  const { showingMainBox: isMainBox } = useAppSelector(boxPageSelector);
-  const dispatch = useAppDispatch();
+  const isMainBox = useBoxesPageStore(state => state.mainBoxIsSelected);
+  const mountTransactionToDelete = useBoxesPageStore(state => state.mountTransactionToDelete);
   const otherBox = isMainBox && !!transaction.cashbox;
 
-  const deleteTransaction = async () => {
-    const { id, cashbox, description, amount } = transaction;
-    const url = cashbox ? `/boxes/${cashbox}/transactions/${id}` : `/main-box/transactions/${id}`;
+  const handleDeleteClick = async () => {
+    mountTransactionToDelete(transaction.id);
+    // const { id, cashbox, description, amount } = transaction;
+    // const url = cashbox ? `/boxes/${cashbox}/transactions/${id}` : `/main-box/transactions/${id}`;
 
-    const message = /*html */ `
-      La transacción "<strong>${description}</strong>"
-      por valor de <strong>${currencyFormat(amount)}</strong>
-      será eliminada permanentemente y esta acción no puede revertirse.`;
+    // const message = /*html */ `
+    //   La transacción "<strong>${description}</strong>"
+    //   por valor de <strong>${currencyFormat(amount)}</strong>
+    //   será eliminada permanentemente y esta acción no puede revertirse.`;
 
-    const result = await Swal.fire({
-      title: '<strong>¿Desea eliminar la transacción?</strong>',
-      html: message,
-      showCancelButton: true,
-      cancelButtonText: 'Cancelar',
-      confirmButtonText: 'Si, ¡Eliminala!',
-      backdrop: true,
-      icon: 'warning',
-      showLoaderOnConfirm: true,
-      preConfirm: async () => {
-        const result = { ok: false, message: '' };
+    // const result = await Swal.fire({
+    //   title: '<strong>¿Desea eliminar la transacción?</strong>',
+    //   html: message,
+    //   showCancelButton: true,
+    //   cancelButtonText: 'Cancelar',
+    //   confirmButtonText: 'Si, ¡Eliminala!',
+    //   backdrop: true,
+    //   icon: 'warning',
+    //   showLoaderOnConfirm: true,
+    //   preConfirm: async () => {
+    //     const result = { ok: false, message: '' };
 
-        try {
-          await axios.delete<{ transaction: ITransactionResponse }>(url);
-          result.ok = true;
-          result.message = `¡La transacción por valor de <strong>${currencyFormat(
-            amount,
-          )}</strong> fue eliminada con éxito!`;
+    //     try {
+    //       await axios.delete<{ transaction: ITransactionResponse }>(url);
+    //       result.ok = true;
+    //       result.message = `¡La transacción por valor de <strong>${currencyFormat(
+    //         amount,
+    //       )}</strong> fue eliminada con éxito!`;
 
-          dispatch(removeTransaction(transaction.id));
-        } catch (error) {
-          if (error instanceof AxiosError) {
-            const { response } = error;
-            if (response?.status === 404) {
-              dispatch(removeTransaction(transaction.id));
-            }
-            result.message = response?.data.message;
-          } else {
-            console.log(error);
-          }
-        }
-        return result;
-      },
-    });
+    //       dispatch(removeTransaction(transaction.id));
+    //     } catch (error) {
+    //       if (error instanceof AxiosError) {
+    //         const { response } = error;
+    //         if (response?.status === 404) {
+    //           dispatch(removeTransaction(transaction.id));
+    //         }
+    //         result.message = response?.data.message;
+    //       } else {
+    //         console.log(error);
+    //       }
+    //     }
+    //     return result;
+    //   },
+    // });
 
-    if (result.isConfirmed && result.value) {
-      const { ok, message } = result.value;
-      const title = ok ? '<strong>¡Transacción Eliminada!</strong>' : '¡Ops, algo salio mal!';
-      const icon = ok ? 'success' : 'error';
+    // if (result.isConfirmed && result.value) {
+    //   const { ok, message } = result.value;
+    //   const title = ok ? '<strong>¡Transacción Eliminada!</strong>' : '¡Ops, algo salio mal!';
+    //   const icon = ok ? 'success' : 'error';
 
-      Swal.fire({ title, html: message, icon });
-    }
+    //   Swal.fire({ title, html: message, icon });
+    // }
   };
 
   return (
@@ -95,7 +92,7 @@ const TransactionTableItem = ({ transaction }: Props) => {
       </td>
       <td>
         <div className="flex justify-center">
-          <ActionIcon color="red" size="lg" onClick={deleteTransaction}>
+          <ActionIcon color="red" size="lg" onClick={handleDeleteClick}>
             <IconTrash size={16} stroke={2} />
           </ActionIcon>
         </div>

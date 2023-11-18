@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { MouseEventHandler, useEffect, useState } from 'react';
 import { IBoxWithDayjs } from '@/types';
 import {
   IconAlertTriangle,
@@ -11,11 +11,8 @@ import {
   IconTrash,
 } from '@tabler/icons-react';
 import { currencyFormat } from '@/utils';
-import { useAppDispatch } from '@/store/hooks';
 import { Collapse, Divider, Tooltip } from '@mantine/core';
-import Swal from 'sweetalert2';
-import axios, { AxiosError } from 'axios';
-import { fetchBoxes, removeBox, mountBoxToOpen, mountBoxToClose, mountBox } from '@/features/BoxPage';
+import { useBoxesPageStore } from '@/store/boxes-page-store';
 
 interface Props {
   box: IBoxWithDayjs;
@@ -29,7 +26,10 @@ const BoxListItem = ({ box }: Props) => {
   const [opened, setOpened] = useState(false);
   const [mouseIsOver, setMouseIsOver] = useState(false);
 
-  const dispatch = useAppDispatch();
+  const showDeleteBoxAlert = useBoxesPageStore(state => state.showDeleteBoxAlert);
+  const mountBoxToOpen = useBoxesPageStore(state => state.mountBoxToOpen);
+  const mountBoxToClose = useBoxesPageStore(state => state.mountBoxToClose);
+  const mountBotToInfo = useBoxesPageStore(state => state.mountBoxToInfo);
 
   const setDateString = () => {
     if (box.openBox) setOpenFromNow(box.openBox.fromNow());
@@ -38,56 +38,25 @@ const BoxListItem = ({ box }: Props) => {
     setUpdatedAt(box.updatedAt.fromNow());
   };
 
-  const deleteBox = async () => {
-    const url = `/boxes/${box.id}`;
-    const message = /*html */ `La caja "<strong>${box.name}</strong>" será eliminada permanentemente y esta acción no puede revertirse.`;
+  const handleDeleteClick: MouseEventHandler<HTMLButtonElement> = e => {
+    e.stopPropagation();
+    showDeleteBoxAlert(box.id);
+  };
 
-    const result = await Swal.fire({
-      title: '<strong>¿Desea eliminar la caja?',
-      html: message,
-      showCancelButton: true,
-      cancelButtonText: 'Cancelar',
-      confirmButtonText: 'Si, ¡Eliminala!',
-      backdrop: true,
-      icon: 'warning',
-      showLoaderOnConfirm: true,
-      preConfirm: async () => {
-        const result = { ok: false, message: '' };
-        try {
-          const res = await axios.delete(url);
-          result.ok = true;
-          result.message = `La caja <strong>${res.data.cashbox.name}</strong> fue eliminada con éxito.`;
-          dispatch(removeBox(box.id));
-        } catch (error) {
-          if (error instanceof AxiosError) {
-            const { response } = error;
-            if (response?.status === 404) dispatch(fetchBoxes());
-            result.message = response?.data.message;
-          } else {
-            console.log(error);
-          }
-        }
+  const handleOpenBoxClick: MouseEventHandler<HTMLButtonElement> = e => {
+    e.stopPropagation();
+    mountBoxToOpen(box.id);
+  };
 
-        return result;
-      },
-    });
+  const handleCloseBoxClick: MouseEventHandler<HTMLButtonElement> = e => {
+    e.stopPropagation();
+    mountBoxToClose(box.id);
+  };
 
-    if (result.isConfirmed && result.value) {
-      const { ok, message } = result.value;
-      if (ok) {
-        Swal.fire({
-          title: '<strong>¡Caja Eliminada!</strong>',
-          html: message,
-          icon: 'success',
-        });
-      } else {
-        Swal.fire({
-          title: '¡Ops, algo salio mal!',
-          text: message,
-          icon: 'error',
-        });
-      }
-    }
+  const handleShowInfoClick: MouseEventHandler<HTMLButtonElement> = e => {
+    e.stopPropagation();
+    setOpened(true);
+    mountBotToInfo(box.id);
   };
 
   useEffect(() => {
@@ -147,10 +116,7 @@ const BoxListItem = ({ box }: Props) => {
                     {/* CERRAR CAJA */}
                     <Tooltip label="Cerrar caja" color="orange">
                       <button
-                        onClick={e => {
-                          e.stopPropagation();
-                          dispatch(mountBoxToClose(box.id));
-                        }}
+                        onClick={handleCloseBoxClick}
                         className="rounded-full border border-gray-600 p-1 text-gray-600 transition-colors hover:border-orange-500 hover:text-orange-500 active:border-gray-600 active:text-gray-600"
                       >
                         <IconLock size={14} stroke={2} />
@@ -160,11 +126,7 @@ const BoxListItem = ({ box }: Props) => {
                     {/* VER TRANSACCIONES CAJA */}
                     <Tooltip label="Ver transacciones" color="blue">
                       <button
-                        onClick={e => {
-                          e.stopPropagation();
-                          setOpened(true);
-                          dispatch(mountBox(box.id));
-                        }}
+                        onClick={handleShowInfoClick}
                         className="rounded-full border border-gray-600 p-1 text-gray-600 transition-colors hover:border-blue-500 hover:text-blue-500 active:border-gray-600 active:text-gray-600"
                       >
                         <IconFolder size={14} stroke={2} />
@@ -176,10 +138,7 @@ const BoxListItem = ({ box }: Props) => {
                     {/* OPEN BOX */}
                     <Tooltip label="Abrir caja" color="green">
                       <button
-                        onClick={e => {
-                          e.stopPropagation();
-                          dispatch(mountBoxToOpen(box.id));
-                        }}
+                        onClick={handleOpenBoxClick}
                         className="rounded-full border border-gray-600 p-1 text-gray-600 transition-colors hover:border-green-500 hover:text-green-500 active:border-gray-600 active:text-gray-600"
                       >
                         <IconLockOpen size={14} stroke={2} />
@@ -189,10 +148,7 @@ const BoxListItem = ({ box }: Props) => {
                     {/* DELETE BOX */}
                     <Tooltip label="Eliminar caja" color="red">
                       <button
-                        onClick={e => {
-                          e.stopPropagation();
-                          deleteBox();
-                        }}
+                        onClick={handleDeleteClick}
                         className="rounded-full border border-gray-600 p-1 text-gray-600 transition-colors hover:border-red-500 hover:text-red-500 active:border-gray-600 active:text-gray-600"
                       >
                         <IconTrash size={14} stroke={2} />

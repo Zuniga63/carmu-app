@@ -31,7 +31,7 @@ export type ErrorResponse = Pick<AxiosResponse, 'data' | 'status'>;
 
 export * from './auth';
 export * from './categories';
-export * from '@/features/BoxPage/types';
+export * from './cashboxes';
 export * from '@/features/InvoicePage/types';
 export * from './cash-report';
 

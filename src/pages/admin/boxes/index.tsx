@@ -5,20 +5,11 @@ import CreateForm from '@/components/BoxPage/CreateForm';
 import OpenBoxForm from '@/components/BoxPage/OpenBoxForm';
 import Layout from '@/components/Layout';
 import { NextPage } from 'next';
-import { useEffect } from 'react';
-import { useAppDispatch } from '@/store/hooks';
-import { unmountTransactions } from '@/features/BoxPage';
 import CreateTransactionForm from '@/components/BoxPage/CreateTransactionForm';
+import BoxDeleteDialog from '@/components/BoxPage/BoxDeleteDialog';
+import TransactionDeleteDialog from '@/components/BoxPage/TransactionDeleteDialog';
 
 const BoxesPage: NextPage = () => {
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    return () => {
-      dispatch(unmountTransactions());
-    };
-  }, []);
-
   return (
     <>
       <Layout title="Cajas">
@@ -35,6 +26,8 @@ const BoxesPage: NextPage = () => {
       <OpenBoxForm />
       <CloseBoxForm />
       <CreateTransactionForm />
+      <BoxDeleteDialog />
+      <TransactionDeleteDialog />
     </>
   );
 };

@@ -77,7 +77,6 @@ export interface IBoxesResponse {
 }
 
 export interface IOpenBoxRequest {
-  boxId: string;
   base: number;
   cashierId?: string;
 }
@@ -88,6 +87,14 @@ export interface ICloseBoxRequest {
   observations?: string;
 }
 
+export type CloseBoxRequest = {
+  cashboxId: string;
+  data: {
+    cash: number;
+    observations?: string;
+  };
+};
+
 export interface IStoreTransactionRequest {
   boxId?: string;
   date?: Dayjs;
@@ -95,37 +102,8 @@ export interface IStoreTransactionRequest {
   amount: number;
 }
 
-export type BoxPageState = {
-  boxes: IBox[];
-  mainBox: IMainBox | null;
-  showingMainBox: boolean;
-  fetchLoading: boolean;
-  fetchIsSuccess: boolean;
-  fetchError: string | null;
-  // Add box
-  createFormOpened: boolean;
-  storeBoxLoading: boolean;
-  storeBoxIsSuccess: boolean;
-  storeBoxError: ErrorResponse | null;
-  // Open box
-  boxToOpen?: IBox;
-  openBoxLoading: boolean;
-  openBoxIsSuccess: boolean;
-  openBoxError: ErrorResponse | null;
-  // Close Box
-  boxToClose?: IBox;
-  closeBoxLoading: boolean;
-  closeBoxIsSuccess: boolean;
-  closeBoxError: ErrorResponse | null;
-  // Show Box
-  boxSelected?: IBox;
-  loadingTransactions: boolean;
-  mountBoxIsSuccess: boolean;
-  transactions: ITransactionResponse[];
-  transactionsError: ErrorResponse | null;
-  // Add Transaction
-  storeTransactionFormOpened: boolean;
-  storeTransactionLoading: boolean;
-  storeTransactionIsSuccess: boolean;
-  storeTransactionError: ErrorResponse | null;
+export type StoreTransactionRequest = {
+  date?: Dayjs;
+  description: string;
+  amount: number;
 };
