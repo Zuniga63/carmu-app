@@ -2,7 +2,10 @@
 const nextConfig = {
   swcMinify: true,
   images: {
-    domains: ['ui-avatars.com', 'res.cloudinary.com'],
+    remotePatterns: [
+      { protocol: 'https', hostname: 'ui-avatars.com' },
+      { protocol: 'https', hostname: 'res.cloudinary.com' },
+    ],
   },
 };
 
