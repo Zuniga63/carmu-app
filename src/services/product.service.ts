@@ -43,3 +43,8 @@ export async function getAllLiteProducts() {
   });
   return res.data;
 }
+
+export async function removePropduct(id: string) {
+  const res = await axios.delete(`${PRODUCT_BASE_URL}/${id}`);
+  return res.data;
+}
