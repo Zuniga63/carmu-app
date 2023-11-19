@@ -5,8 +5,8 @@ import { currencyFormat } from '@/utils';
 
 interface Props {
   product: IProductWithCategories;
-  mount(customer: IProductWithCategories): void;
-  onDelete(customer: IProductWithCategories): Promise<void>;
+  mount(product: IProductWithCategories): void;
+  onDelete(product: IProductWithCategories): void;
 }
 
 const ProductTableItem = ({ product, mount, onDelete }: Props) => {

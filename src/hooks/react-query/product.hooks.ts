@@ -1,7 +1,8 @@
 import { ServerStateKeysEnum } from '@/config/server-state-key.enum';
-import { getAllLiteProducts, getAllProducts } from '@/services/product.service';
+import { getAllLiteProducts, getAllProducts, removePropduct } from '@/services/product.service';
 import { useAuthStore } from '@/store/auth-store';
-import { useQuery } from '@tanstack/react-query';
+import type { IProductWithCategories } from '@/types';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 type GetAllLiteProductOptions = {
   staleTime?: number;
@@ -25,5 +26,20 @@ export function useGetAllProducts() {
     queryKey: [ServerStateKeysEnum.Products],
     queryFn: getAllProducts,
     enabled: isAuth,
+  });
+}
+
+export function useRemoveProduct() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: removePropduct,
+    onSuccess: (data, productId) => {
+      queryClient.setQueryData([ServerStateKeysEnum.Products], (oldData: IProductWithCategories[] | undefined) => {
+        if (!oldData) return oldData;
+        const productCopy = oldData.filter(product => product.id !== productId);
+        return productCopy;
+      });
+    },
   });
 }

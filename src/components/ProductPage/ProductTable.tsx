@@ -9,10 +9,10 @@ interface Props {
   allProducts: IProductWithCategories[];
   openForm(): void;
   mountProduct(product: IProductWithCategories): void;
-  deleteProduct(product: IProductWithCategories): Promise<void>;
+  onSelectProductToDelete(product: IProductWithCategories): void;
 }
 
-const ProductTable = ({ allProducts, openForm, mountProduct, deleteProduct }: Props) => {
+const ProductTable = ({ allProducts, openForm, mountProduct, onSelectProductToDelete }: Props) => {
   const [search, setSearch] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState<IProductWithCategories[]>([]);
@@ -89,7 +89,12 @@ const ProductTable = ({ allProducts, openForm, mountProduct, deleteProduct }: Pr
           </thead>
           <tbody className="divide-y divide-gray-400">
             {products.map(product => (
-              <ProductTableItem product={product} key={product.id} mount={mountProduct} onDelete={deleteProduct} />
+              <ProductTableItem
+                product={product}
+                key={product.id}
+                mount={mountProduct}
+                onDelete={onSelectProductToDelete}
+              />
             ))}
           </tbody>
         </table>

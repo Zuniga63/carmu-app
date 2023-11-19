@@ -1,15 +1,15 @@
 import { NextPage } from 'next';
 import Layout from '@/components/Layout';
 import { IProductWithCategories, IValidationErrors } from '@/types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
-import Swal from 'sweetalert2';
 import ProductTable from '@/components/ProductPage/ProductTable';
 import ProductForm from '@/components/ProductPage/ProductForm';
 import { useQueryClient } from '@tanstack/react-query';
 import { ServerStateKeysEnum } from '@/config/server-state-key.enum';
-import { useGetAllProducts } from '@/hooks/react-query/product.hooks';
+import { useGetAllProducts, useRemoveProduct } from '@/hooks/react-query/product.hooks';
+import ProductDeleteDialog from '@/components/ProductPage/ProductDeleteDialog';
 
 const ProductPage: NextPage = () => {
   const { data: products = [] } = useGetAllProducts();
@@ -20,6 +20,14 @@ const ProductPage: NextPage = () => {
   const [errors, setErrors] = useState<IValidationErrors | null>(null);
   const headers = { 'Content-Type': 'multipart/form-data' };
   const queryClient = useQueryClient();
+  const [productToDelete, setProductToDelete] = useState<IProductWithCategories | null>(null);
+
+  const {
+    mutate: removeProduct,
+    isPending: removeIsPending,
+    isSuccess: removeIsSuccess,
+    isError: removeIsError,
+  } = useRemoveProduct();
 
   const openForm = () => setFormOpened(true);
 
@@ -43,14 +51,6 @@ const ProductPage: NextPage = () => {
     } else {
       console.log(error);
     }
-  };
-
-  const removeProduct = (product: IProductWithCategories) => {
-    const copy = products.slice();
-    const index = copy.findIndex(p => p.id === product.id);
-    if (index >= 0) copy.splice(index, 1);
-    queryClient.setQueryData([ServerStateKeysEnum.Products], copy);
-    // setProducts(copy);
   };
 
   const storeProduct = async (formData: unknown) => {
@@ -95,56 +95,26 @@ const ProductPage: NextPage = () => {
     }
   };
 
-  const deleteProduct = async (product: IProductWithCategories) => {
-    const url = `products/${product.id}`;
-    const message = /*html */ `
-      El producto "<strong>${product.name}</strong>" 
-      será eliminado permanentemente y esta acción no puede revertirse.`;
-
-    const result = await Swal.fire({
-      title: '<strong>¿Desea eliminar este producto?</strong>',
-      html: message,
-      showCancelButton: true,
-      cancelButtonText: 'Cancelar',
-      confirmButtonText: 'Si, ¡Eliminalo!',
-      backdrop: true,
-      icon: 'warning',
-      showLoaderOnConfirm: true,
-      preConfirm: async () => {
-        const result = { ok: false, message: '' };
-        try {
-          const res = await axios.delete(url);
-          if (res.data.product) {
-            result.ok = true;
-            result.message = `¡El producto ${product.name} fue eliminado satisfactoriamente!`;
-            removeProduct(product);
-            queryClient.invalidateQueries({ queryKey: [ServerStateKeysEnum.Products] });
-          } else {
-            result.message = 'EL producto no se pudo eliminar.';
-          }
-        } catch (error) {
-          if (error instanceof AxiosError) {
-            const { response } = error;
-            if (response?.status === 404) removeProduct(product);
-            result.message = response?.data.message;
-          } else {
-            result.message = '¡Intentalo nuevmanete mas tarde o recarga la pagina.';
-            console.log(error);
-          }
-        }
-
-        return result;
-      },
-    });
-
-    if (result.isConfirmed && result.value) {
-      const { ok, message } = result.value;
-      const title = ok ? '<strong>Producto Eliminado!</strong>' : '¡Ops, algo salio mal!';
-      const icon = ok ? 'success' : 'error';
-
-      Swal.fire({ title, html: message, icon });
-    }
+  const handleRemoveProduct = () => {
+    if (removeIsPending || !productToDelete) return;
+    removeProduct(productToDelete.id);
   };
+
+  const handleMountToDelete = (product: IProductWithCategories) => {
+    setProductToDelete(product);
+  };
+
+  useEffect(() => {
+    if (!removeIsError) return;
+    setProductToDelete(null);
+    toast.error('No se pudo eliminar el producto, intentalo nuevamente');
+  }, [removeIsError]);
+
+  useEffect(() => {
+    if (!removeIsSuccess) return;
+    setProductToDelete(null);
+    toast.success('¡Producto Eliminado!');
+  }, [removeIsSuccess]);
 
   return (
     <Layout title="Productos">
@@ -152,7 +122,7 @@ const ProductPage: NextPage = () => {
         allProducts={products}
         openForm={openForm}
         mountProduct={mountProduct}
-        deleteProduct={deleteProduct}
+        onSelectProductToDelete={handleMountToDelete}
       />
       <ProductForm
         product={productToUpdate}
@@ -162,6 +132,13 @@ const ProductPage: NextPage = () => {
         close={closeForm}
         store={storeProduct}
         update={updateProduct}
+      />
+
+      <ProductDeleteDialog
+        product={productToDelete}
+        onConfirm={handleRemoveProduct}
+        onCancel={() => setProductToDelete(null)}
+        isLoading={removeIsPending}
       />
     </Layout>
   );
