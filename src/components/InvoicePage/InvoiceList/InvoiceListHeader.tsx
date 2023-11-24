@@ -1,6 +1,8 @@
 import { useGetAllInvoices } from '@/hooks/react-query/invoices.hooks';
 import { ChangeEventHandler, useEffect, useRef, useState } from 'react';
 import { useInvoicePageStore } from '@/store/invoices-page.store';
+import { useQueryClient } from '@tanstack/react-query';
+import { ServerStateKeysEnum } from '@/config/server-state-key.enum';
 
 import { ActionIcon, Collapse, Loader, SegmentedControl, TextInput, Tooltip } from '@mantine/core';
 import {
@@ -14,6 +16,7 @@ import {
 
 export default function InvoiceListHeader() {
   const { isRefetching, refetch } = useGetAllInvoices();
+  const queryClient = useQueryClient();
 
   const filtersIsOpen = useInvoicePageStore(state => state.filtersIsOpen);
   const filter = useInvoicePageStore(state => state.filter);
@@ -39,7 +42,10 @@ export default function InvoiceListHeader() {
     }, 300);
   };
 
-  const handleRefresh = () => refetch();
+  const handleRefresh = () => {
+    refetch();
+    queryClient.invalidateQueries({ queryKey: [ServerStateKeysEnum.InvoiceWeeklyHistory] });
+  };
   const handleFilterClick = () => filterToggle();
   const handleGeneralFormClick = () => showGeneralForm();
   const handleCounterFormClick = () => showCounterForm();
