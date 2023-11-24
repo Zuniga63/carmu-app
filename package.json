@@ -30,6 +30,8 @@
     "axios": "1.6.2",
     "chakra-react-select": "4.7.6",
     "chart.js": "4.4.0",
+    "class-variance-authority": "0.7.0",
+    "clsx": "2.0.0",
     "cookies-next": "4.1.0",
     "dayjs": "1.11.10",
     "framer-motion": "10.16.5",
@@ -49,6 +51,7 @@
     "redux-thunk": "2.4.2",
     "remeda": "1.29.0",
     "sharp": "0.32.6",
+    "tailwind-merge": "2.0.0",
     "zustand": "4.4.6"
   },
   "devDependencies": {
