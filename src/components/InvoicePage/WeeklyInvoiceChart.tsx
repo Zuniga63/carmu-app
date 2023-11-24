@@ -1,20 +1,18 @@
 import { Tabs } from '@mantine/core';
 import { IconBuildingStore, IconChartBar, IconTable } from '@tabler/icons-react';
-import axios, { CancelTokenSource } from 'axios';
 import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
 import dayjs from 'dayjs';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Bar } from 'react-chartjs-2';
-import { toast } from 'react-toastify';
-import { invoicePageSelector } from '@/features/InvoicePage';
-import { useAppSelector } from '@/store/hooks';
 import { ISaleHistory } from '@/types';
 import { CHART_COLORS, currencyFormat, transparentize } from '@/utils';
 import AnnualReportStatistics from '../dashboard/AnnualReportStatistics';
 import WeeklyHistory from './WeeklyHistory';
 import AverageChart from './PremiseStoreComparative/AverageChart';
-import { useAuthStore } from '@/store/auth-store';
 import { useGetAllPremiseStore } from '@/hooks/react-query/premise-store.hooks';
+import { useGetWeeklyInvoiceHistory } from '@/hooks/react-query/dashboard.hooks';
+import { useQueryClient } from '@tanstack/react-query';
+import { ServerStateKeysEnum } from '@/config/server-state-key.enum';
 
 export const barOptions: ChartOptions<'bar'> = {
   responsive: true,
@@ -56,19 +54,10 @@ export const barOptions: ChartOptions<'bar'> = {
 };
 
 const WeeklyInvoiceChart = () => {
-  const { storeSuccess, storePaymentSuccess, refreshIsSuccess } = useAppSelector(invoicePageSelector);
-  const isAuth = useAuthStore(state => state.isAuth);
-  const { data: premiseStores } = useGetAllPremiseStore();
-  const [chartData, setChartData] = useState<ChartData<'bar'>>({
-    labels: [],
-    datasets: [],
-  });
-  const [history, setHistory] = useState<ISaleHistory[]>([]);
-  const [initialData, setInitialData] = useState(true);
-  const [waiting, setWaiting] = useState(false);
+  const queryClient = useQueryClient();
 
-  const CancelToken = axios.CancelToken;
-  let source: CancelTokenSource;
+  const { data: premiseStores } = useGetAllPremiseStore();
+  const { data: history = [] } = useGetWeeklyInvoiceHistory();
 
   const getLabels = (): string[] => {
     const labels: string[] = [];
@@ -177,47 +166,16 @@ const WeeklyInvoiceChart = () => {
     return datasets;
   };
 
-  const fetchData = async () => {
+  const chartData = useMemo<ChartData<'bar'>>(() => {
     const labels = getLabels();
-    let datasets: ChartDataset<'bar'>[] = getDatasets([]);
-    const weekAgo = dayjs().subtract(1, 'week').startOf('day');
+    const datasets = getDatasets(history);
 
-    try {
-      setWaiting(true);
-      const res = await axios.get<{ history: ISaleHistory[] }>('/sale-history', {
-        cancelToken: source?.token,
-        params: {
-          from: weekAgo.toDate(),
-        },
-      });
-
-      datasets = getDatasets(res.data.history);
-      setHistory(res.data.history.reverse());
-      if (initialData) setInitialData(false);
-    } catch (error) {
-      toast.error('Hubo un error y no se pudo cargar los datos de la grafica');
-      console.log(error);
-    } finally {
-      setWaiting(false);
-    }
-
-    setChartData({ labels, datasets });
-  };
-
-  useEffect(() => {
-    if (isAuth && (storeSuccess || storePaymentSuccess || refreshIsSuccess || initialData)) {
-      if (waiting) source?.cancel('El estado cambió');
-      source = CancelToken.source();
-      fetchData();
-    }
-  }, [isAuth, storeSuccess, storePaymentSuccess, refreshIsSuccess]);
+    return { labels, datasets };
+  }, [history]);
 
   useEffect(() => {
     return () => {
-      if (source) {
-        source.cancel('Desmontando el componente.');
-      }
-      setInitialData(true);
+      queryClient.cancelQueries({ queryKey: [ServerStateKeysEnum.InvoiceWeeklyHistory] });
     };
   }, []);
 

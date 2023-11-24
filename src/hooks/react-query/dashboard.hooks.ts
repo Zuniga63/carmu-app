@@ -1,6 +1,11 @@
 import { AnnualReportParams } from '@/components/dashboard/AnnualReportStatistics';
 import { ServerStateKeysEnum } from '@/config/server-state-key.enum';
-import { getAnnualReportStatistics, getCashReports, getCreditEvolution } from '@/services/dashboard.service';
+import {
+  getAnnualReportStatistics,
+  getCashReports,
+  getCreditEvolution,
+  getWeeklyInvoiceHistory,
+} from '@/services/dashboard.service';
 import { useAuthStore } from '@/store/auth-store';
 import { useConfigStore } from '@/store/config-store';
 import { useQueries, useQuery } from '@tanstack/react-query';
@@ -46,4 +51,14 @@ export function useGetAnnualReports(params: AnnualReportParams[]) {
     reports: result.map(query => query.data).filter(report => typeof report !== 'undefined'),
     isLoading,
   };
+}
+
+export function useGetWeeklyInvoiceHistory() {
+  const isAuth = useAuthStore(state => state.isAuth);
+
+  return useQuery({
+    queryKey: [ServerStateKeysEnum.InvoiceWeeklyHistory],
+    queryFn: getWeeklyInvoiceHistory,
+    enabled: isAuth,
+  });
 }
