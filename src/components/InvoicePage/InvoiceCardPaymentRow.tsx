@@ -1,18 +1,15 @@
+import type { IInvoicePayment } from '@/types';
+import { currencyFormat } from '@/utils';
+
 import { ActionIcon, Tooltip } from '@mantine/core';
 import { IconX } from '@tabler/icons-react';
-import React from 'react';
-import { showCancelPaymentForm } from '@/features/InvoicePage';
-import { useAppDispatch } from '@/store/hooks';
-import { IInvoicePayment } from '@/types';
-import { currencyFormat } from '@/utils';
 
 interface Props {
   payment: IInvoicePayment;
+  onPaymentCancel: (paymentId: IInvoicePayment) => void;
 }
 
-const InvoiceCardPaymentRow = ({ payment }: Props) => {
-  const dispatch = useAppDispatch();
-
+const InvoiceCardPaymentRow = ({ payment, onPaymentCancel }: Props) => {
   return (
     <tr className={payment.cancel ? 'line-through' : ''}>
       <td className="text-center">
@@ -28,7 +25,7 @@ const InvoiceCardPaymentRow = ({ payment }: Props) => {
         {!payment.cancel ? (
           <div className="flex justify-center">
             <Tooltip label="Cancelar pago">
-              <ActionIcon size="lg" color="red" onClick={() => dispatch(showCancelPaymentForm(payment.id))}>
+              <ActionIcon size="lg" color="red" onClick={() => onPaymentCancel(payment)}>
                 <IconX size={18} />
               </ActionIcon>
             </Tooltip>

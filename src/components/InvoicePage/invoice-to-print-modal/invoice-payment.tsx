@@ -1,8 +1,7 @@
-import { InvoicePrintSize } from '@/hooks/use-invoice-to-print-modal';
-import { IInvoicePaymentBase } from '@/types';
 import { currencyFormat } from '@/utils';
-import dayjs from 'dayjs';
-import React from 'react';
+import type { IInvoicePayment } from '@/types';
+import { type InvoicePrintSize } from '@/hooks/use-invoice-to-print-modal';
+import { type Dayjs } from 'dayjs';
 
 //-----------------------------------------------------------------------------
 // ONLY CASH PAYMENT COMPONENT
@@ -33,12 +32,12 @@ const OnlyCashPayment = ({ cash, cashChange, size }: OnlyCashPaymentProps) => {
 //-----------------------------------------------------------------------------
 type PaymentListProps = {
   size: InvoicePrintSize;
-  payments?: IInvoicePaymentBase[];
+  payments?: IInvoicePayment[];
 };
 const PaymentList = ({ size, payments = [] }: PaymentListProps) => {
-  const formatDate = (date?: string) => {
+  const formatDate = (date?: Dayjs) => {
     const format = size === 'lg' ? 'dddd DD-MM-YYYY hh:mm a' : 'DD-MM-YY';
-    return dayjs(date).format(format);
+    return date ? date.format(format) : '';
   };
   return (
     <div className={`${size === 'lg' && 'col-span-2'}`}>
@@ -91,9 +90,9 @@ type Props = {
   cash?: number;
   cashChange?: number;
   balance?: number;
-  payments?: IInvoicePaymentBase[];
+  payments?: IInvoicePayment[];
 };
-export default function InvoicePayment({ size, cash, cashChange, payments, balance }: Props) {
+export default function InvoicePayment({ size, cash, cashChange, payments = [], balance }: Props) {
   const isOnlyCash = Boolean(cashChange);
 
   return (

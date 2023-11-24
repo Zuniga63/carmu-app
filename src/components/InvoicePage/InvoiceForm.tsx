@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
+import type { IInvoiceStoreData, IInvoiceSummary, INewInvoiceItem, INewInvoicePayment } from '@/types';
 import { toast } from 'react-toastify';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { useEffect, useState } from 'react';
 import { useMediaQuery } from '@mantine/hooks';
-import { IInvoiceStoreData, IInvoiceSummary, INewInvoiceItem, INewInvoicePayment } from '@/types';
+import { useAuthStore } from '@/store/auth-store';
+import { useConfigStore } from '@/store/config-store';
+import { useQueryClient } from '@tanstack/react-query';
+import { ServerStateKeysEnum } from '@/config/server-state-key.enum';
+import { useInvoicePageStore } from '@/store/invoices-page.store';
+import { useCreateInvoice } from '@/hooks/react-query/invoices.hooks';
 
-import { Button, Stepper, Switch } from '@mantine/core';
 import {
   IconArrowBack,
   IconArrowNarrowRight,
@@ -16,16 +20,12 @@ import {
   IconFileInvoice,
 } from '@tabler/icons-react';
 
+import { Button, Stepper, Switch } from '@mantine/core';
+import InvoiceFormConfirm from './InvoiceFormConfirm';
 import InvoiceFormPayment from './InvoiceFormPayment';
 import InvoiceFormCustomer from './InvoiceFormCustomer';
 import InvoiceFormDates from './InvoiceFormDates';
 import InvoiceFormItems from './InvoiceFormItems';
-import InvoiceFormConfirm from './InvoiceFormConfirm';
-import { hideNewInvoiceForm, invoicePageSelector, storeNewInvoice } from '@/features/InvoicePage';
-import { useAuthStore } from '@/store/auth-store';
-import { useConfigStore } from '@/store/config-store';
-import { useQueryClient } from '@tanstack/react-query';
-import { ServerStateKeysEnum } from '@/config/server-state-key.enum';
 import InvoiceFormModal from './InvoiceFormModal';
 
 export enum InvoiceSteps {
@@ -55,18 +55,17 @@ const defaulCustomer: IInvoiceCustomer = {
 };
 
 const InvoiceForm = () => {
-  const {
-    formOpened: opened,
-    storeLoading: loading,
-    storeError: error,
-    storeSuccess: success,
-  } = useAppSelector(invoicePageSelector);
   const user = useAuthStore(state => state.user);
   const premiseStoreSelected = useConfigStore(state => state.premiseStore);
-  const dispatch = useAppDispatch();
+  const isOpen = useInvoicePageStore(state => state.generalFormIsOpen);
+  const closeForm = useInvoicePageStore(state => state.hideGeneralForm);
+  const showPrinterModal = useInvoicePageStore(state => state.showPrinterModal);
+
   const [enabled, setEnabled] = useState(false);
   const largeScreen = useMediaQuery('(min-width: 768px)');
   const queryCache = useQueryClient();
+
+  const { mutate: createNewInvoice, isPending, isSuccess, data, error } = useCreateInvoice();
 
   // ------------------------------------------------------------------------------------------------------------------
   // INVOICE STEP
@@ -110,8 +109,8 @@ const InvoiceForm = () => {
   // METHODS
   // --------------------------------------------------------------------------
   const closeInvoice = () => {
-    if (!loading) {
-      dispatch(hideNewInvoiceForm());
+    if (!isPending) {
+      closeForm();
     }
   };
 
@@ -177,7 +176,8 @@ const InvoiceForm = () => {
   const checkIn = () => {
     if (enabled) {
       const invoiceData = getData();
-      dispatch(storeNewInvoice(invoiceData));
+      // dispatch(storeNewInvoice(invoiceData));
+      createNewInvoice(invoiceData);
     }
   };
 
@@ -222,13 +222,14 @@ const InvoiceForm = () => {
   }, [error]);
 
   useEffect(() => {
-    if (!success) return;
+    if (!isSuccess) return;
     if (customer) queryCache.invalidateQueries({ queryKey: [ServerStateKeysEnum.Customers] });
 
     toast.success('Factura Creada');
     closeInvoice();
     resetForm();
-  }, [success]);
+    if (data) showPrinterModal(data.id);
+  }, [isSuccess]);
 
   useEffect(() => {
     if (!customer.id) {
@@ -237,16 +238,16 @@ const InvoiceForm = () => {
   }, [customer.id]);
 
   return (
-    <InvoiceFormModal isOpen={opened} size={largeScreen ? '80%' : '100%'} onClose={closeInvoice}>
+    <InvoiceFormModal isOpen={isOpen} size={largeScreen ? '80%' : '100%'} onClose={closeInvoice}>
       <div className="px-6 py-2 lg:py-6">
         <Stepper active={step} onStepClick={setStep} size="xs">
           {/* PRODUCTS */}
-          <Stepper.Step label="Productos" icon={<IconBox size={18} />} disabled={loading}>
+          <Stepper.Step label="Productos" icon={<IconBox size={18} />} disabled={isPending}>
             <InvoiceFormItems items={items} setItems={setItems} summary={summary} />
           </Stepper.Step>
 
           {/* INVOICING */}
-          <Stepper.Step label="Facturación" icon={<IconFileInvoice size={18} />} disabled={loading}>
+          <Stepper.Step label="Facturación" icon={<IconFileInvoice size={18} />} disabled={isPending}>
             <div className="grid gap-4 lg:grid-cols-12 lg:gap-y-2">
               {/* CUSTOMER */}
               <InvoiceFormCustomer
@@ -268,7 +269,7 @@ const InvoiceForm = () => {
           </Stepper.Step>
 
           {/* PAYMENTS */}
-          <Stepper.Step label="Forma de pago" icon={<IconFileDollar size={18} />} disabled={loading}>
+          <Stepper.Step label="Forma de pago" icon={<IconFileDollar size={18} />} disabled={isPending}>
             <InvoiceFormPayment
               summary={summary}
               invoiceDate={expeditionDate}
@@ -278,7 +279,7 @@ const InvoiceForm = () => {
           </Stepper.Step>
 
           {/* CONFIRM */}
-          <Stepper.Step label="Confirmar" icon={<IconCircleCheck size={18} />} loading={loading}>
+          <Stepper.Step label="Confirmar" icon={<IconCircleCheck size={18} />} loading={isPending}>
             <InvoiceFormConfirm
               customer={customer}
               items={items}
@@ -299,15 +300,15 @@ const InvoiceForm = () => {
             }}
             className="flex"
           />
-          <Button variant="default" onClick={prevStep} leftIcon={<IconArrowBack />} disabled={loading}>
+          <Button variant="default" onClick={prevStep} leftIcon={<IconArrowBack />} disabled={isPending}>
             Atras
           </Button>
           {step !== InvoiceSteps.Confirm ? (
-            <Button onClick={nextStep} rightIcon={<IconArrowNarrowRight />} disabled={loading}>
+            <Button onClick={nextStep} rightIcon={<IconArrowNarrowRight />} disabled={isPending}>
               Siguiente
             </Button>
           ) : (
-            <Button onClick={checkIn} rightIcon={<IconDatabase />} loading={loading} disabled={!enabled}>
+            <Button onClick={checkIn} rightIcon={<IconDatabase />} loading={isPending} disabled={!enabled}>
               {isSeparate ? <span>Registrar Apartado</span> : null}
               {!isSeparate && summary.balance ? <span>Registrar Crédito</span> : null}
               {!isSeparate && !summary.balance ? <span>Registrar Venta</span> : null}

@@ -10,4 +10,7 @@ export enum ServerStateKeysEnum {
   Products = 'products',
   ProductList = 'product-list',
   Categories = 'categories',
+  Invoices = 'invoices',
+  InvoiceId = 'invoice-id',
+  InvoiceWeeklyHistory = 'invoice-weekly-history',
 }

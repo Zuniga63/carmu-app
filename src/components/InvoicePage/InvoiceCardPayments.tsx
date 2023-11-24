@@ -1,12 +1,13 @@
+import type { IInvoicePayment } from '@/types';
+
 import { Table } from '@mantine/core';
-import React from 'react';
-import { IInvoicePayment } from '@/types';
 import InvoiceCardPaymentRow from './InvoiceCardPaymentRow';
 
 interface Props {
   payments: IInvoicePayment[];
+  onPaymentCancel: (paymentId: IInvoicePayment) => void;
 }
-const InvoiceCardPayments = ({ payments }: Props) => {
+const InvoiceCardPayments = ({ payments, onPaymentCancel }: Props) => {
   return (
     <Table>
       <thead>
@@ -25,7 +26,7 @@ const InvoiceCardPayments = ({ payments }: Props) => {
       </thead>
       <tbody>
         {payments.map(payment => (
-          <InvoiceCardPaymentRow payment={payment} key={payment.id} />
+          <InvoiceCardPaymentRow payment={payment} key={payment.id} onPaymentCancel={onPaymentCancel} />
         ))}
       </tbody>
     </Table>

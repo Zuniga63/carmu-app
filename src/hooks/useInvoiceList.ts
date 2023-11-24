@@ -1,117 +1,56 @@
-import { useEffect, useRef, useState } from 'react';
-import { invoicePageSelector } from '@/features/InvoicePage';
-import { useAppSelector } from '@/store/hooks';
-import { IInvoice } from '@/types';
-import { buildInvoice, normalizeText } from '@/utils';
+import { useEffect, useMemo, useState } from 'react';
+import { normalizeText } from '@/utils';
+import { useGetAllInvoices } from './react-query/invoices.hooks';
+import { useInvoicePageStore } from '@/store/invoices-page.store';
 
 export function useInvoiceList() {
-  const { invoices, loading: loadingData } = useAppSelector(invoicePageSelector);
   const growRate = 25;
 
-  const [paidInvoices, setPaidInvoices] = useState<IInvoice[]>([]);
-  const [separatedInvoices, setSeparateInvoices] = useState<IInvoice[]>([]);
-  const [pendingInvoices, setPendingInvoices] = useState<IInvoice[]>([]);
-  const [canceledInvoices, setCancelInvoices] = useState<IInvoice[]>([]);
+  const search = useInvoicePageStore(state => state.search);
+  const filter = useInvoicePageStore(state => state.filter);
+  const udpateFilter = useInvoicePageStore(state => state.updateFilter);
 
-  const [filter, setFilter] = useState<string | undefined>('all');
-  const [filterOpened, setFilterOpened] = useState(false);
-  const [search, setSearch] = useState<string | undefined>(undefined);
-  const [searchLoading, setSearchLoading] = useState(false);
-  const [filteredInvoices, setFilteredInvoices] = useState<IInvoice[]>([]);
-  const [invoiceList, setInvoceList] = useState<IInvoice[]>([]);
+  const { data: invoices = [], isLoading, isRefetching } = useGetAllInvoices();
+
   const [invoiceLegth, setInvoiceLength] = useState(growRate);
-  const debounceInterval = useRef<undefined | NodeJS.Timeout>(undefined);
 
-  const filterInvoices = () => {
-    let result: IInvoice[] = [];
+  const filteredInvoices = useMemo(() => {
+    let result: typeof invoices = [];
 
-    if (filter === 'all') result = invoices.map(buildInvoice);
-    else if (filter === 'paid') result = paidInvoices.slice();
-    else if (filter === 'pending') result = pendingInvoices.slice();
-    else if (filter === 'separated') result = separatedInvoices.slice();
-    else if (filter === 'canceled') result = canceledInvoices.slice();
+    if (filter === 'all') result = [...invoices];
+    else if (filter === 'paid') result = invoices.filter(invoice => !invoice.balance);
+    else if (filter === 'pending') result = invoices.filter(invoice => invoice.balance && !invoice.isSeparate);
+    else if (filter === 'separated') result = invoices.filter(invoice => invoice.isSeparate && invoice.balance);
+    else if (filter === 'canceled') result = invoices.filter(invoice => invoice.cancel);
 
-    if (search) {
+    if (search && search.trim().length > 0) {
       const text = normalizeText(search);
       result = result.filter(invoice => invoice.search.includes(text));
     }
 
     result.reverse();
-    setFilteredInvoices(result);
-    setInvoceList(result.slice(0, growRate));
-    setInvoiceLength(growRate);
-  };
+    return result;
+  }, [invoices, filter, search]);
 
-  const classifyInvoices = () => {
-    const paid: IInvoice[] = [];
-    const cancel: IInvoice[] = [];
-    const separate: IInvoice[] = [];
-    const pending: IInvoice[] = [];
-
-    invoices.forEach(invoiceData => {
-      const invoice = buildInvoice(invoiceData);
-
-      if (invoice.cancel) cancel.push(invoice);
-      else if (!invoice.balance) paid.push(invoice);
-      else if (invoice.isSeparate) separate.push(invoice);
-      else pending.push(invoice);
-    });
-
-    setPaidInvoices(paid);
-    setCancelInvoices(cancel);
-    setSeparateInvoices(separate);
-    setPendingInvoices(pending);
-    filterInvoices();
-  };
-
-  const updateSearch = (value: string) => {
-    if (debounceInterval.current) clearTimeout(debounceInterval.current);
-    setSearchLoading(true);
-    debounceInterval.current = setTimeout(() => {
-      setSearchLoading(false);
-      setSearch(value);
-    }, 500);
-  };
+  const invoiceList = useMemo(() => {
+    return filteredInvoices.slice(0, invoiceLegth);
+  }, [filteredInvoices, invoiceLegth]);
 
   const showMoreInvoices = () => {
     setInvoiceLength(current => (current += growRate));
   };
 
-  const filterToggle = () => {
-    setFilterOpened(!filterOpened);
-  };
-
   useEffect(() => {
-    setFilter('all');
-    classifyInvoices();
-  }, [invoices]);
-
-  useEffect(() => {
-    filterInvoices();
-  }, [filter, search]);
-
-  useEffect(() => {
-    setInvoceList(filteredInvoices.slice(0, invoiceLegth));
-  }, [invoiceLegth]);
+    udpateFilter('all');
+  }, [isRefetching]);
 
   const showMoreButtonInvoice =
-    Boolean(invoiceList.length && !loadingData) && invoiceLegth <= filteredInvoices.length + 1;
+    Boolean(invoiceList.length && !isLoading) && invoiceLegth <= filteredInvoices.length + 1;
 
   return {
     invoices: invoiceList,
-    searchLoading,
-    updateSearch,
-    filter,
-    setFilter,
-    filterOpened,
-    filterToggle,
+    isLoading,
     showMoreButtonInvoice,
     showMoreInvoices,
-    invoiceCount: {
-      paid: paidInvoices.length,
-      pending: pendingInvoices.length,
-      separated: separatedInvoices.length,
-      canceled: canceledInvoices.length,
-    },
   };
 }

@@ -1,10 +1,9 @@
+import { useInvoicePageStore } from '@/store/invoices-page.store';
+import { MouseEventHandler, useState } from 'react';
+import type { IInvoice } from '@/types';
+
 import { Button, Collapse } from '@mantine/core';
 import { IconFileInvoice } from '@tabler/icons-react';
-import { MouseEventHandler, useState } from 'react';
-import { useAppDispatch } from '@/store/hooks';
-import { IInvoice } from '@/types';
-
-import { mountInvoice } from '@/features/InvoicePage';
 import InvoiceCardHeader from './InvoiceCardHeader';
 import InvoiceCardBody from './InvoiceCardBody';
 
@@ -14,13 +13,13 @@ interface Props {
 
 export default function InvoiceCard({ invoice }: Props) {
   const [opened, setOpened] = useState(false);
-  const dispatch = useAppDispatch();
+  const mountInvoiceToShow = useInvoicePageStore(state => state.mountInvoiceToShow);
 
   const isToday = invoice.expeditionDate.isToday();
 
   const showInvoice: MouseEventHandler<HTMLButtonElement> = event => {
     event.stopPropagation();
-    dispatch(mountInvoice(invoice.id));
+    mountInvoiceToShow(invoice.id);
   };
 
   return (

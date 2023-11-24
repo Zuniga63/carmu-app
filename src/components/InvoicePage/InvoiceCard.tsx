@@ -1,7 +1,7 @@
+import { IInvoiceFull, IInvoicePayment } from '@/types';
+
 import { Tabs } from '@mantine/core';
 import { IconBox, IconFileInvoice } from '@tabler/icons-react';
-import React from 'react';
-import { IInvoiceFull } from '@/types';
 import InvoiceCardField from './InvoiceCardField';
 import InvoiceCardItems from './InvoiceCardItems';
 import InvoiceCardPayments from './InvoiceCardPayments';
@@ -9,9 +9,10 @@ import InvoiceCardSummary from './InvoiceCardSummary';
 
 interface Props {
   invoice: IInvoiceFull;
+  onPaymentCancel: (paymentId: IInvoicePayment) => void;
 }
 
-const InvoiceCard = ({ invoice }: Props) => {
+const InvoiceCard = ({ invoice, onPaymentCancel }: Props) => {
   return (
     <>
       <div className="mb-4 grid gap-3 lg:grid-cols-3">
@@ -88,7 +89,7 @@ const InvoiceCard = ({ invoice }: Props) => {
               </Tabs.Panel>
               <Tabs.Panel value="payments">
                 <div>
-                  <InvoiceCardPayments payments={invoice.payments} />
+                  <InvoiceCardPayments payments={invoice.payments} onPaymentCancel={onPaymentCancel} />
                 </div>
               </Tabs.Panel>
             </Tabs>

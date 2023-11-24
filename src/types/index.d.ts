@@ -32,7 +32,7 @@ export type ErrorResponse = Pick<AxiosResponse, 'data' | 'status'>;
 export * from './auth';
 export * from './categories';
 export * from './cashboxes';
-export * from '@/features/InvoicePage/types';
+export * from './invoices';
 export * from './cash-report';
 
 export interface IPremiseStore {

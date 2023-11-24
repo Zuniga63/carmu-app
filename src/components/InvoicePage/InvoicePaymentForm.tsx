@@ -1,29 +1,28 @@
+import dayjs from 'dayjs';
+import { AxiosError } from 'axios';
+import { toast } from 'react-toastify';
+import { useGetAllBoxes } from '@/hooks/react-query/boxes.hooks';
+import { currencyFormat } from '@/utils';
+import { useCreateInvoicePayment } from '@/hooks/react-query/invoices.hooks';
+import { FormEvent, useEffect, useState } from 'react';
+import type { IBox, IInvoiceFull, IInvoicePaymentData, IValidationErrors } from '@/types';
+
 import { Button, Checkbox, Modal, NumberInput, Select } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { IconBox, IconCalendar, IconCash } from '@tabler/icons-react';
-import { AxiosError } from 'axios';
-import dayjs from 'dayjs';
-import React, { FormEvent, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
-import { hidePaymentForm, invoicePageSelector, registerPayment } from '@/features/InvoicePage';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { IBox, IInvoicePaymentData, IValidationErrors } from '@/types';
-import { currencyFormat } from '@/utils';
-import { useGetAllBoxes } from '@/hooks/react-query/boxes.hooks';
 
-const InvoicePaymentForm = () => {
-  const {
-    paymentFormOpened: opened,
-    selectedInvoice: invoice,
-    storePaymentLoading: loading,
-    storePaymentError: error,
-    storePaymentSuccess: success,
-  } = useAppSelector(invoicePageSelector);
+type Props = {
+  isOpen: boolean;
+  invoice?: IInvoiceFull;
+  onClose: () => void;
+};
 
+const InvoicePaymentForm = ({ isOpen, invoice, onClose }: Props) => {
   const { data: boxesResponse } = useGetAllBoxes();
   const boxes: IBox[] = boxesResponse?.boxes || [];
 
-  const dispatch = useAppDispatch();
+  const { mutate: addPayment, data, isSuccess, isPending, error } = useCreateInvoicePayment();
+
   const defaultDescription = 'Efectivo';
 
   const [boxId, setBoxId] = useState<string | null>(null);
@@ -41,10 +40,9 @@ const InvoicePaymentForm = () => {
   };
 
   const closeForm = () => {
-    if (!loading) {
-      dispatch(hidePaymentForm());
-      resetForm();
-    }
+    if (isPending) return;
+    onClose();
+    resetForm();
   };
 
   const formater = (value: string | undefined) => {
@@ -73,7 +71,8 @@ const InvoicePaymentForm = () => {
     event.preventDefault();
     if (description && amount && amount > 0 && invoice && paymentDate) {
       const data = getData();
-      dispatch(registerPayment(data));
+      addPayment(data);
+      // dispatch(registerPayment(data));
     } else {
       toast.error('¡Hacen falta datos!');
     }
@@ -84,39 +83,36 @@ const InvoicePaymentForm = () => {
   }, [invoice]);
 
   useEffect(() => {
-    if (error) {
-      if (error instanceof AxiosError) {
-        const { response } = error;
-        const data = response?.data;
+    if (!error) return;
 
-        if (data) {
-          if (response.status === 422 && data.validationErrors) {
-            setErrors(data.validationErrors);
-          } else if (response.status === 401) {
-            toast.error(response.data.message);
-          } else {
-            console.log(error);
-          }
-        }
+    if (error instanceof AxiosError) {
+      const { response } = error;
+      const data = response?.data;
+
+      if (!data) return;
+
+      if (response.status === 422 && data.validationErrors) {
+        setErrors(data.validationErrors);
+      } else if (response.status === 401) {
+        toast.error(response.data.message);
       } else {
         console.log(error);
       }
     } else {
-      setErrors(null);
+      console.log(error);
     }
   }, [error]);
 
   useEffect(() => {
-    if (success) {
-      toast.success(success);
-      dispatch(hidePaymentForm());
-      resetForm();
-    }
-  }, [success]);
+    if (!isSuccess) return;
+
+    toast.success(data.message);
+    closeForm();
+  }, [isSuccess]);
 
   return (
     <Modal
-      opened={opened}
+      opened={isOpen}
       onClose={closeForm}
       title={<h2 className="font-bold uppercase">Registrar Pago</h2>}
       size="sm"
@@ -206,7 +202,7 @@ const InvoicePaymentForm = () => {
           )}
         </div>
         <footer className="flex justify-end">
-          <Button leftIcon={<IconCash size={16} />} type="submit" loading={loading}>
+          <Button leftIcon={<IconCash size={16} />} type="submit" loading={isPending}>
             Registrar
           </Button>
         </footer>

@@ -1,21 +1,16 @@
-import { Button, Select, Table } from '@mantine/core';
-import dayjs, { Dayjs } from 'dayjs';
-import React, { useEffect, useState } from 'react';
-import { invoicePageSelector } from '@/features/InvoicePage';
-import { useAppSelector } from '@/store/hooks';
+import dayjs, { type Dayjs } from 'dayjs';
+import { useEffect, useState } from 'react';
 import { CHART_COLORS, currencyFormat } from '@/utils';
-import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
-import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import { useGetAllPremiseStore } from '@/hooks/react-query/premise-store.hooks';
+import { useGetAllInvoices } from '@/hooks/react-query/invoices.hooks';
+
+import { Button, Select, Table } from '@mantine/core';
+import DailyReport, { type ReportInvoice } from './DailyReport';
 import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import MonthlyReport from './MonthlyReport';
-import DailyReport, { ReportInvoice } from './DailyReport';
 import { IconChartArcs3 } from '@tabler/icons-react';
 import ProtectWrapper from '@/components/ProtectWrapper';
-import { useGetAllPremiseStore } from '@/hooks/react-query/premise-store.hooks';
-
-dayjs.extend(isSameOrAfter);
-dayjs.extend(isSameOrBefore);
 
 export const lineOptions: ChartOptions<'line'> = {
   responsive: true,
@@ -67,8 +62,8 @@ export const lineOptions: ChartOptions<'line'> = {
 };
 
 export default function AverageChart() {
-  const { invoices: allInvoices } = useAppSelector(invoicePageSelector);
   const { data: premiseStores } = useGetAllPremiseStore();
+  const { data: allInvoices = [] } = useGetAllInvoices();
 
   const [storeSelected, setStoreSelected] = useState<string | null>('all');
   const [monthlyReports, setMonthlyReports] = useState<MonthlyReport[]>([]);
@@ -95,7 +90,7 @@ export default function AverageChart() {
       })
       .map(({ id, expeditionDate, amount }) => ({
         id,
-        date: expeditionDate,
+        date: expeditionDate.toDate().toDateString(),
         amount,
       }));
   }

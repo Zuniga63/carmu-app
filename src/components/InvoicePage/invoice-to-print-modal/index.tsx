@@ -12,11 +12,12 @@ import InvoicePayment from './invoice-payment';
 import InvoiceFooter from './invoice-footer';
 
 export default function InvoiceToPrintModal() {
-  const { isOpen, size, printRef, invoice, closeModal, handlePrint, changeInvoiceSize } = useInvoiceToPrintModal();
+  const { isOpen, size, printRef, invoice, isError, isLoading, closeModal, handlePrint, changeInvoiceSize } =
+    useInvoiceToPrintModal();
 
   return (
     <ModalContainer isOpen={isOpen} onClose={closeModal} onPrint={handlePrint}>
-      <InvoiceContainer size={size} ref={printRef}>
+      <InvoiceContainer size={size} ref={printRef} isLoading={isLoading} hasError={isError}>
         <InvoiceHeader size={size} isSeparate={invoice?.isSeparate} invoiceNumber={invoice?.prefixNumber} />
 
         <InvoiceInfo size={size} invoice={invoice} />

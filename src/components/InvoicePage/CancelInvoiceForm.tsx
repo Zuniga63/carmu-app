@@ -1,36 +1,29 @@
+import { FormEvent, useEffect, useState } from 'react';
+import type { IInvoiceFull } from '@/types';
+import { useCancelInvoice } from '@/hooks/react-query/invoices.hooks';
 import { Button, Modal, Textarea } from '@mantine/core';
-import React, { FormEvent, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
-import { cancelInvoice, hideCancelInvoiceForm, invoicePageSelector } from '@/features/InvoicePage';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
 export interface ICancelInvoiceData {
   invoiceId: string;
   message?: string;
 }
 
-const CancelInvoiceForm = () => {
-  const {
-    selectedInvoice: invoice,
-    cancelInvoiceFormOpened: opened,
-    cancelInvoiceLoading: loading,
-    cancelInvoiceIsSuccess: isSuccess,
-    cancelInvoiceError: error,
-  } = useAppSelector(invoicePageSelector);
-  const dispatch = useAppDispatch();
+type Props = {
+  isOpen: boolean;
+  invoice?: IInvoiceFull;
+  onClose: () => void;
+};
 
+const CancelInvoiceForm = ({ isOpen, invoice, onClose }: Props) => {
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
 
-  const reset = () => {
-    dispatch(hideCancelInvoiceForm());
-    setMessage('');
-  };
+  const { mutate: cancelInvoice, isSuccess, isPending } = useCancelInvoice();
 
-  const onClose = () => {
-    if (!loading) {
-      reset();
-    }
+  const handleClose = () => {
+    if (isPending) return;
+    onClose();
+    setMessage('');
   };
 
   const getData = (): ICancelInvoiceData | null => {
@@ -48,10 +41,9 @@ const CancelInvoiceForm = () => {
 
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (isPending) return;
     const data = getData();
-    if (data) {
-      dispatch(cancelInvoice(data));
-    }
+    if (data) cancelInvoice(data);
   };
 
   useEffect(() => {
@@ -59,20 +51,11 @@ const CancelInvoiceForm = () => {
   }, [invoice]);
 
   useEffect(() => {
-    if (isSuccess) {
-      toast.success('¡Factura anulada!');
-      reset();
-    }
+    if (isSuccess) handleClose();
   }, [isSuccess]);
 
-  useEffect(() => {
-    if (error) {
-      toast.error(error);
-    }
-  }, [error]);
-
   return (
-    <Modal opened={opened} onClose={onClose} title={title}>
+    <Modal opened={isOpen} onClose={handleClose} title={title}>
       <form onSubmit={onSubmit}>
         <div className="mb-4">
           <Textarea
@@ -87,7 +70,7 @@ const CancelInvoiceForm = () => {
         </div>
 
         <footer className="flex justify-end">
-          <Button color="red" type="submit" loading={loading}>
+          <Button color="red" type="submit" loading={isPending}>
             Anular Factura
           </Button>
         </footer>

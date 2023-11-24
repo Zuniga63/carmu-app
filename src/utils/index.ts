@@ -1,6 +1,8 @@
-import { IInvoice, IInvoiceBase, IInvoiceBaseFull, IInvoiceFull } from '@/types';
-import colorLib, { Color, RGBA } from '@kurkle/color';
 import dayjs from 'dayjs';
+import colorLib, { Color, type RGBA } from '@kurkle/color';
+import { twMerge } from 'tailwind-merge';
+import { clsx, type ClassValue } from 'clsx';
+import type { IInvoiceBase, IInvoiceBaseFull } from '@/types';
 
 export function normalizeText(text: string): string {
   return text
@@ -23,10 +25,19 @@ export const buildCookieOption = (duration = 1) => ({
   maxAge: 60 * 60 * 24 * duration,
 });
 
+/**
+ * Se encarga de aplicar las reglas de Tailwind merge y la funcionalidad de clxs
+ * @param inputs Los valores de las clases
+ * @returns Listado de clases
+ */
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
 //-----------------------------------------------------------------------------
 // INVOICE UTILS
 //-----------------------------------------------------------------------------
-export const createSearch = (invoice: IInvoiceBase | IInvoiceBaseFull) => {
+export const createInvoiceSearchProp = (invoice: IInvoiceBase | IInvoiceBaseFull) => {
   const search = `
   #${invoice.prefixNumber}#
   ${invoice.customer ? invoice.customer.fullName : invoice.customerName} 
@@ -47,34 +58,6 @@ export const createInvoiceDates = (invoice: IInvoiceBase | IInvoiceBaseFull) => 
     expirationDate: dayjs(expirationDate),
     createdAt: dayjs(createdAt),
     updatedAt: dayjs(updatedAt),
-  };
-};
-
-export const buildInvoice = (invoice: IInvoiceBase): IInvoice => {
-  const search = createSearch(invoice);
-  const dates = createInvoiceDates(invoice);
-  return {
-    ...invoice,
-    ...dates,
-    search,
-  };
-};
-
-export const buildInvoiceFull = (invoice: IInvoiceBaseFull): IInvoiceFull => {
-  const search = createSearch(invoice);
-  const dates = createInvoiceDates(invoice);
-  const payments = invoice.payments.map(payment => ({
-    ...payment,
-    paymentDate: dayjs(payment.paymentDate),
-    createdAt: dayjs(payment.createdAt),
-    updatedAt: dayjs(payment.updatedAt),
-  }));
-
-  return {
-    ...invoice,
-    ...dates,
-    payments,
-    search,
   };
 };
 //-----------------------------------------------------------------------------

@@ -1,22 +1,24 @@
-import { hidePrintModal, invoicePageSelector } from '@/features/InvoicePage';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { useInvoicePageStore } from '@/store/invoices-page.store';
 import { useEffect, useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
+import { useGetInvoiceById } from './react-query/invoices.hooks';
 
 export type InvoicePrintSize = 'md' | 'lg' | 'sm';
 
 export function useInvoiceToPrintModal() {
-  const { invoiceToPrint: invoice, formOpened, counterSaleFormOpened } = useAppSelector(invoicePageSelector);
+  const invoiceId = useInvoicePageStore(state => state.invoiceIdToPrint);
+  const hidePrinterModal = useInvoicePageStore(state => state.hidePrinterModal);
+
+  const { data: invoice, isError, isLoading } = useGetInvoiceById(invoiceId);
 
   const [size, setSize] = useState<InvoicePrintSize>('lg');
   const printRef = useRef<HTMLDivElement | null>(null);
   const promiseResolveRef = useRef<unknown>(null);
   const [isPrinting, setIsPrinting] = useState(false);
 
-  const dispatch = useAppDispatch();
-
   const closeModal = () => {
-    dispatch(hidePrintModal());
+    if (isPrinting) return;
+    hidePrinterModal();
   };
 
   const handlePrint = useReactToPrint({
@@ -42,7 +44,9 @@ export function useInvoiceToPrintModal() {
   const changeInvoiceSize = (size: InvoicePrintSize) => setSize(size);
 
   return {
-    isOpen: !(formOpened || counterSaleFormOpened) && Boolean(invoice),
+    isOpen: Boolean(invoice),
+    isLoading,
+    isError,
     size,
     printRef,
     invoice,

@@ -1,3 +1,7 @@
+import { useGetAllInvoices } from '@/hooks/react-query/invoices.hooks';
+import { ChangeEventHandler, useEffect, useRef, useState } from 'react';
+import { useInvoicePageStore } from '@/store/invoices-page.store';
+
 import { ActionIcon, Collapse, Loader, SegmentedControl, TextInput, Tooltip } from '@mantine/core';
 import {
   IconAdjustmentsHorizontal,
@@ -7,28 +11,42 @@ import {
   IconReload,
   IconSearch,
 } from '@tabler/icons-react';
-import { invoicePageSelector, refreshInvoices, showCounterSaleForm, showNewInvoiceForm } from '@/features/InvoicePage';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
-type Props = {
-  filter?: string;
-  filterOpened: boolean;
-  updateFilter: (value: string) => void;
-  filterToggle: () => void;
-  loadingSearch: boolean;
-  updateSearch: (value: string) => void;
-};
+export default function InvoiceListHeader() {
+  const { isRefetching, refetch } = useGetAllInvoices();
 
-export default function InvoiceListHeader({
-  filter,
-  filterOpened,
-  updateFilter,
-  filterToggle,
-  loadingSearch,
-  updateSearch,
-}: Props) {
-  const { loading } = useAppSelector(invoicePageSelector);
-  const dispatch = useAppDispatch();
+  const filtersIsOpen = useInvoicePageStore(state => state.filtersIsOpen);
+  const filter = useInvoicePageStore(state => state.filter);
+  const updateSearch = useInvoicePageStore(state => state.updateSearch);
+  const filterToggle = useInvoicePageStore(state => state.toggleFilters);
+  const updateFilter = useInvoicePageStore(state => state.updateFilter);
+  const showGeneralForm = useInvoicePageStore(state => state.showGeneralForm);
+  const showCounterForm = useInvoicePageStore(state => state.showCounterForm);
+
+  const [searchIsLoading, setSearchIsLoading] = useState(false);
+  const debounceInterval = useRef<undefined | NodeJS.Timeout>(undefined);
+
+  const clearIntervals = () => {
+    if (debounceInterval.current) clearTimeout(debounceInterval.current);
+  };
+
+  const handleSearchChange: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
+    clearIntervals();
+    setSearchIsLoading(true);
+    debounceInterval.current = setTimeout(() => {
+      setSearchIsLoading(false);
+      updateSearch(target.value);
+    }, 300);
+  };
+
+  const handleRefresh = () => refetch();
+  const handleFilterClick = () => filterToggle();
+  const handleGeneralFormClick = () => showGeneralForm();
+  const handleCounterFormClick = () => showCounterForm();
+
+  useEffect(() => {
+    return clearIntervals;
+  }, []);
 
   return (
     <header className="px-4 py-2">
@@ -36,43 +54,44 @@ export default function InvoiceListHeader({
         <div className="flex-grow">
           <TextInput
             size="xs"
-            icon={loadingSearch ? <Loader size={14} variant="dots" /> : <IconSearch size={14} stroke={1.5} />}
+            icon={searchIsLoading ? <Loader size={14} variant="dots" /> : <IconSearch size={14} stroke={1.5} />}
             placeholder="Buscar Factura"
-            onChange={({ target }) => updateSearch(target.value)}
+            onChange={handleSearchChange}
             name="search-invoices"
             autoComplete="off"
+            role="search"
           />
         </div>
 
         {/* ACTIONS */}
         <div className="flex flex-shrink-0 gap-x-1">
           <Tooltip label="Actualizar Facturas">
-            <ActionIcon loading={loading} color="blue" onClick={() => dispatch(refreshInvoices())}>
+            <ActionIcon loading={isRefetching} color="blue" onClick={handleRefresh}>
               <IconReload size={18} />
             </ActionIcon>
           </Tooltip>
 
           <Tooltip label="Facturación Rápida">
-            <ActionIcon color="green" onClick={() => dispatch(showCounterSaleForm())}>
+            <ActionIcon color="green" onClick={handleCounterFormClick}>
               <IconBuildingStore stroke={2} size={18} />
             </ActionIcon>
           </Tooltip>
 
           <Tooltip label="Facturación Normal">
-            <ActionIcon color="grape" onClick={() => dispatch(showNewInvoiceForm())}>
+            <ActionIcon color="grape" onClick={handleGeneralFormClick}>
               <IconFileInvoice size={18} />
             </ActionIcon>
           </Tooltip>
 
           <Tooltip label="Filtros">
-            <ActionIcon color="yellow" onClick={filterToggle}>
-              {filterOpened ? <IconAdjustmentsOff size={18} /> : <IconAdjustmentsHorizontal size={18} />}
+            <ActionIcon color="yellow" onClick={handleFilterClick}>
+              {filtersIsOpen ? <IconAdjustmentsOff size={18} /> : <IconAdjustmentsHorizontal size={18} />}
             </ActionIcon>
           </Tooltip>
         </div>
       </div>
 
-      <Collapse in={filterOpened}>
+      <Collapse in={filtersIsOpen}>
         <SegmentedControl
           size="xs"
           value={filter}

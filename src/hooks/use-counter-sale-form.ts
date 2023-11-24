@@ -1,13 +1,11 @@
 import dayjs from 'dayjs';
 import { useEffect, useMemo, useState } from 'react';
-import type { IInvoiceStoreData, INewInvoiceItem } from '@/types';
-
-import { hideCounterSaleForm, invoicePageSelector, storeNewInvoice } from '@/features/InvoicePage';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { useConfigStore } from '@/store/config-store';
 import { useAuthStore } from '@/store/auth-store';
-
 import { addNewItemToList } from '@/logic/invoices-form';
+import { useInvoicePageStore } from '@/store/invoices-page.store';
+import { useCreateInvoice } from './react-query/invoices.hooks';
+import type { IInvoiceStoreData, INewInvoiceItem } from '@/types';
 import { type IInvoiceCustomer } from '@/components/InvoicePage/InvoiceForm';
 
 const defaulCustomer: IInvoiceCustomer = {
@@ -20,15 +18,13 @@ const defaulCustomer: IInvoiceCustomer = {
 };
 
 export function useCounterSaleForm() {
-  const {
-    counterSaleFormOpened: opened,
-    storeLoading: loading,
-    storeError: error,
-    storeSuccess: success,
-  } = useAppSelector(invoicePageSelector);
   const user = useAuthStore(state => state.user);
   const store = useConfigStore(state => state.premiseStore);
-  const dispatch = useAppDispatch();
+  const isOpen = useInvoicePageStore(state => state.counterFormIsOpen);
+  const hideForm = useInvoicePageStore(state => state.hideCounterForm);
+  const showPrinterModal = useInvoicePageStore(state => state.showPrinterModal);
+
+  const { mutate: createNewInvoice, isPending, isSuccess, data, error } = useCreateInvoice();
 
   const [items, setItems] = useState<INewInvoiceItem[]>([]);
 
@@ -57,10 +53,10 @@ export function useCounterSaleForm() {
     }
   };
 
-  const close = () => {
-    if (loading) return;
+  const closeForm = () => {
+    if (isPending) return;
 
-    dispatch(hideCounterSaleForm());
+    hideForm();
     resetBox();
   };
 
@@ -103,10 +99,10 @@ export function useCounterSaleForm() {
   };
 
   const checkIn = () => {
-    if (loading || amount <= 0) return;
+    if (isPending || amount <= 0) return;
 
     const invoiceData = getData();
-    dispatch(storeNewInvoice(invoiceData));
+    createNewInvoice(invoiceData);
   };
 
   // --------------------------------------------------------------------------
@@ -119,17 +115,19 @@ export function useCounterSaleForm() {
   useEffect(resetBox, [store]);
 
   useEffect(() => {
-    if (success) {
-      setItems([]);
-      setCustomer(defaulCustomer);
-      setRegisterWithOtherData(false);
-      close();
-    }
-  }, [success]);
+    if (!isSuccess) return;
+
+    setItems([]);
+    setCustomer(defaulCustomer);
+    setRegisterWithOtherData(false);
+    closeForm();
+
+    if (data) showPrinterModal(data.id);
+  }, [isSuccess]);
 
   return {
-    isOpen: opened,
-    isLoading: loading,
+    isOpen,
+    isLoading: isPending,
     items,
     isEnabled: amount > 0,
     registerWithOtherData,
@@ -146,6 +144,6 @@ export function useCounterSaleForm() {
     addNewItem,
     removeItem,
     checkIn,
-    closeForm: close,
+    closeForm,
   };
 }

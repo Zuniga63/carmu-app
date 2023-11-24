@@ -1,13 +1,12 @@
-import { Button, Checkbox, Modal, Select, Textarea } from '@mantine/core';
-import { IconBox } from '@tabler/icons-react';
 import dayjs from 'dayjs';
-import React, { FormEvent, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
-import { cancelInvoicePayment, hideCancelPaymentForm, invoicePageSelector } from '@/features/InvoicePage';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import type { IBox, IInvoiceFull, IInvoicePayment } from '@/types';
+import { FormEvent, useEffect, useState } from 'react';
 import { currencyFormat } from '@/utils';
-import { IBox } from '@/types';
 import { useGetAllBoxes } from '@/hooks/react-query/boxes.hooks';
+import { useCancelInvoicePayment } from '@/hooks/react-query/invoices.hooks';
+
+import { IconBox } from '@tabler/icons-react';
+import { Button, Checkbox, Modal, Select, Textarea } from '@mantine/core';
 
 export interface ICancelPaymentData {
   invoiceId: string;
@@ -17,20 +16,18 @@ export interface ICancelPaymentData {
   cashboxId?: string;
 }
 
-const CancelInvoicePaymentForm = () => {
-  const {
-    paymentToCancel: payment,
-    selectedInvoice: invoice,
-    cancelPaymentFormOpened: opened,
-    cancelPaymentIsSuccess: isSuccess,
-    cancelPaymentLoading: loading,
-    cancelPaymentError: error,
-  } = useAppSelector(invoicePageSelector);
+type Props = {
+  isOpen: boolean;
+  invoice?: IInvoiceFull;
+  payment?: IInvoicePayment;
+  onCloseModal: () => void;
+};
 
+const CancelInvoicePaymentForm = ({ isOpen, invoice, payment, onCloseModal }: Props) => {
   const { data: boxesResponse } = useGetAllBoxes();
   const boxes: IBox[] = boxesResponse?.boxes || [];
 
-  const dispatch = useAppDispatch();
+  const { mutate: cancelPayment, isPending, isSuccess } = useCancelInvoicePayment();
 
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
@@ -58,23 +55,22 @@ const CancelInvoicePaymentForm = () => {
 
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (isPending) return;
+
     const data = getData();
-    if (data) {
-      dispatch(cancelInvoicePayment(data));
-    }
+    if (data) cancelPayment(data);
   };
 
   const reset = () => {
-    dispatch(hideCancelPaymentForm());
     setMessage('');
     setRegisterTransaction(true);
     setBoxId(null);
   };
 
-  const onClose = () => {
-    if (!loading) {
-      reset();
-    }
+  const handleClose = () => {
+    if (isPending) return;
+    onCloseModal();
+    reset();
   };
 
   useEffect(() => {
@@ -82,20 +78,12 @@ const CancelInvoicePaymentForm = () => {
   }, [invoice]);
 
   useEffect(() => {
-    if (isSuccess) {
-      toast.success('¡Pago anulado!');
-      reset();
-    }
+    if (!isSuccess) return;
+    handleClose();
   }, [isSuccess]);
 
-  useEffect(() => {
-    if (error) {
-      toast.error(error);
-    }
-  }, [error]);
-
   return (
-    <Modal opened={opened} onClose={onClose} title={title}>
+    <Modal opened={isOpen} onClose={handleClose} title={title}>
       <form onSubmit={onSubmit}>
         {payment ? (
           <div className="mb-4 flex items-center justify-around gap-x-2 rounded border border-purple-500 p-2">
@@ -151,7 +139,7 @@ const CancelInvoicePaymentForm = () => {
         </div>
 
         <footer className="flex justify-end">
-          <Button color="red" type="submit" loading={loading}>
+          <Button color="red" type="submit" loading={isPending}>
             Anular Pago
           </Button>
         </footer>

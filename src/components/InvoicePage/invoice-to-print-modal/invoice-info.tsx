@@ -1,21 +1,21 @@
 import type { InvoicePrintSize } from '@/hooks/use-invoice-to-print-modal';
-import type { IInvoiceBase } from '@/types';
-import dayjs from 'dayjs';
+import type { IInvoiceFull } from '@/types';
+import { type Dayjs } from 'dayjs';
 
 type Props = {
   size: InvoicePrintSize;
-  invoice?: IInvoiceBase;
+  invoice?: IInvoiceFull;
 };
 
 export default function InvoiceInfo({ size, invoice }: Props) {
-  const formatDate = (date?: string) => {
+  const formatDate = (date?: Dayjs) => {
     const format = size === 'lg' ? 'DD-MM-YYYY hh:mm a' : 'DD-MM-YYYY';
-    return dayjs(date).format(format);
+    return date ? date.format(format) : '';
   };
 
-  const formatTime = (date?: string) => {
+  const formatTime = (date?: Dayjs) => {
     const format = 'hh:mm a';
-    return dayjs(date).format(format);
+    return date ? date.format(format) : '';
   };
   return (
     <div className="mb-2 border-b-4 border-double border-dark pb-2">

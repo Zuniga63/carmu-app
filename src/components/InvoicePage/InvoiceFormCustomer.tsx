@@ -1,11 +1,12 @@
+import { forwardRef, useEffect } from 'react';
+import type { ICustomer } from '@/types';
+import { currencyFormat, normalizeText } from '@/utils';
+import { useGetAllCustomers } from '@/hooks/react-query/customers.hooks';
+
 import { Checkbox, Select, SelectItem, TextInput } from '@mantine/core';
 import { IconHome, IconPhone, IconSearch } from '@tabler/icons-react';
-import React, { forwardRef, useEffect } from 'react';
-import { ICustomer } from '@/types';
-import { currencyFormat, normalizeText } from '@/utils';
 import { IInvoiceCustomer } from './InvoiceForm';
 import InvoiceFormGroup from './InvoiceFormGroup';
-import { useGetAllCustomers } from '@/hooks/react-query/customers.hooks';
 
 interface Props {
   customer: IInvoiceCustomer;
@@ -47,7 +48,6 @@ const InvoiceFormCustomer = ({
   setRegisterWithOtherData,
   className,
 }: Props) => {
-  // const { customers } = useAppSelector(customerPageSelector);
   const { data: customers } = useGetAllCustomers({ staleTime: Infinity });
 
   const buildSelectCustomerData = (customer: ICustomer): ICustomerSelectProps => {

@@ -1,36 +1,24 @@
 import { NextPage } from 'next';
 import Layout from '@/components/Layout';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { useEffect } from 'react';
 import InvoiceList from '@/components/InvoicePage/InvoiceList';
 import InvoiceForm from '@/components/InvoicePage/InvoiceForm';
-import InvoicePaymentForm from '@/components/InvoicePage/InvoicePaymentForm';
 import InvoiceCardModal from '@/components/InvoicePage/InvoiceCardModal';
 import WeeklyInvoiceChart from '@/components/InvoicePage/WeeklyInvoiceChart';
 
 import CounterSaleForm from '@/components/InvoicePage/CounterSaleForm';
-import { fetchInvoiceData, invoicePageSelector, refreshInvoices } from '@/features/InvoicePage';
-import CancelInvoicePaymentForm from '@/components/InvoicePage/CancelInvoicePaymentForm';
-import CancelInvoiceForm from '@/components/InvoicePage/CancelInvoiceForm';
-import { useAuthStore } from '@/store/auth-store';
+import { useEffect } from 'react';
+import { useInvoicePageStore } from '@/store/invoices-page.store';
+
 import InvoiceToPrintModal from '@/components/InvoicePage/invoice-to-print-modal';
 
 const InvoicePage: NextPage = () => {
-  const isAuth = useAuthStore(state => state.isAuth);
-  const isAdmin = useAuthStore(state => state.isAdmin);
-
-  const { firstLoading } = useAppSelector(invoicePageSelector);
-  const dispatch = useAppDispatch();
+  const resetState = useInvoicePageStore(state => state.resetState);
 
   useEffect(() => {
-    if (isAuth && isAdmin) {
-      if (firstLoading) {
-        dispatch(fetchInvoiceData());
-      } else {
-        dispatch(refreshInvoices());
-      }
-    }
-  }, [isAuth, isAdmin]);
+    return () => {
+      resetState();
+    };
+  }, []);
 
   return (
     <Layout title="Facturación">
@@ -41,11 +29,8 @@ const InvoicePage: NextPage = () => {
         </div>
       </div>
       <InvoiceForm />
-      <InvoiceCardModal />
-      <InvoicePaymentForm />
       <CounterSaleForm />
-      <CancelInvoicePaymentForm />
-      <CancelInvoiceForm />
+      <InvoiceCardModal />
       <InvoiceToPrintModal />
     </Layout>
   );
