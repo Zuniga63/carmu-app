@@ -3,7 +3,7 @@ import { MouseEventHandler, useState } from 'react';
 import type { IInvoice } from '@/types';
 
 import { Button, Collapse } from '@mantine/core';
-import { IconFileInvoice } from '@tabler/icons-react';
+import { IconFileInvoice, IconPrinter } from '@tabler/icons-react';
 import InvoiceCardHeader from './InvoiceCardHeader';
 import InvoiceCardBody from './InvoiceCardBody';
 
@@ -14,12 +14,18 @@ interface Props {
 export default function InvoiceCard({ invoice }: Props) {
   const [opened, setOpened] = useState(false);
   const mountInvoiceToShow = useInvoicePageStore(state => state.mountInvoiceToShow);
+  const showPrinterModal = useInvoicePageStore(state => state.showPrinterModal);
 
   const isToday = invoice.expeditionDate.isToday();
 
   const showInvoice: MouseEventHandler<HTMLButtonElement> = event => {
     event.stopPropagation();
     mountInvoiceToShow(invoice.id);
+  };
+
+  const handlePrinterClick: MouseEventHandler<HTMLButtonElement> = event => {
+    event.stopPropagation();
+    showPrinterModal(invoice.id);
   };
 
   return (
@@ -38,7 +44,10 @@ export default function InvoiceCard({ invoice }: Props) {
       <Collapse in={opened}>
         <InvoiceCardBody invoice={invoice} />
 
-        <footer className="flex justify-end px-4 py-3">
+        <footer className="flex justify-between px-4 py-3">
+          <Button size="xs" color="dark" leftIcon={<IconPrinter size={16} />} onClick={handlePrinterClick}>
+            Imprimir
+          </Button>
           <Button size="xs" leftIcon={<IconFileInvoice size={16} />} onClick={showInvoice}>
             Ver detalles
           </Button>
