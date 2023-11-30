@@ -77,6 +77,9 @@ const ProductTable = ({ allProducts, openForm, mountProduct, onSelectProductToDe
                 Categorías
               </th>
               <th scope="col" className="whitespace-nowrap px-4 py-3 text-center uppercase tracking-wide">
+                Talla
+              </th>
+              <th scope="col" className="whitespace-nowrap px-4 py-3 text-center uppercase tracking-wide">
                 Stock
               </th>
               <th scope="col" className="px-4 py-3 text-center uppercase tracking-wide">

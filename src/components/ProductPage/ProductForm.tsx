@@ -1,7 +1,5 @@
 import { Button, Checkbox, Drawer, NumberInput, Select, Textarea, TextInput } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import DrawerBody from '@/components/DrawerBody';
-import DrawerHeader from '@/components/DrawerHeader';
 import React, { FormEvent, useEffect, useState } from 'react';
 import type { IProductWithCategories, IValidationErrors } from '@/types';
 import { useGetAllCategories } from '@/hooks/react-query/categories.hooks';
@@ -25,6 +23,7 @@ const ProductForm = ({ product, opened, loading, errors, close, store, update }:
   const [ref, setRef] = useState('');
   const [barcode, setBarcode] = useState('');
   const [description, setDescription] = useState('');
+  const [size, setSize] = useState('');
   const [price, setPrice] = useState<number | undefined>(undefined);
   const [hasDiscount, setHasDiscount] = useState(false);
   const [priceWithDiscount, setPriceWithDiscount] = useState<number | undefined>(undefined);
@@ -46,6 +45,7 @@ const ProductForm = ({ product, opened, loading, errors, close, store, update }:
     setRef('');
     setBarcode('');
     setDescription('');
+    setSize('');
     setPrice(undefined);
     setHasDiscount(false);
     setPriceWithDiscount(undefined);
@@ -71,6 +71,7 @@ const ProductForm = ({ product, opened, loading, errors, close, store, update }:
     if (ref) formData.append('ref', ref);
     if (barcode) formData.append('barcode', barcode);
     if (description) formData.append('description', description);
+    if (size) formData.append('productSize', size);
     formData.append('price', String(price));
     if (hasDiscount && priceWithDiscount) {
       formData.append('hasDiscount', String(hasDiscount));
@@ -128,53 +129,52 @@ const ProductForm = ({ product, opened, loading, errors, close, store, update }:
     <Drawer
       opened={opened}
       onClose={close}
-      padding={0}
+      padding="xs"
       size={largeScreen ? 'xl' : '100%'}
-      withCloseButton={false}
-      position="left"
+      position="right"
+      title={formTitle}
     >
-      <DrawerHeader title={formTitle} onClose={close} />
-      <DrawerBody>
-        <form onSubmit={onSubmitHandler}>
-          <div className="mx-auto mb-4 w-11/12">
-            {/* PRODUCT NAME */}
+      <form onSubmit={onSubmitHandler}>
+        <div className="mx-auto mb-4 w-11/12">
+          {/* PRODUCT NAME */}
+          <TextInput
+            label={<span className="font-sans dark:text-light">Nombre</span>}
+            className="mb-2"
+            placeholder="Escribe el nombre aquí."
+            id="productName"
+            required
+            value={name}
+            onChange={({ target }) => setName(target.value)}
+            disabled={loading}
+            error={errors?.name?.message}
+          />
+
+          {/* PRODUCT REF AND BARCODE */}
+          <div className="mb-2 grid grid-cols-1 gap-2 md:grid-cols-2">
+            {/* REF */}
             <TextInput
-              label={<span className="font-sans dark:text-light">Nombre</span>}
-              className="mb-2"
-              placeholder="Escribe el nombre aquí."
-              id="productName"
-              required
-              value={name}
-              onChange={({ target }) => setName(target.value)}
+              label={<span className="font-sans dark:text-light">Ref</span>}
+              placeholder="Escribe la referencia aquí."
+              id="productRef"
+              value={ref}
+              onChange={({ target }) => setRef(target.value)}
               disabled={loading}
-              error={errors?.name?.message}
+              error={errors?.reference?.message}
             />
 
-            {/* PRODUCT REF AND BARCODE */}
-            <div className="mb-2 grid grid-cols-1 gap-2 md:grid-cols-2">
-              {/* REF */}
-              <TextInput
-                label={<span className="font-sans dark:text-light">Ref</span>}
-                placeholder="Escribe la referencia aquí."
-                id="productRef"
-                value={ref}
-                onChange={({ target }) => setRef(target.value)}
-                disabled={loading}
-                error={errors?.reference?.message}
-              />
+            {/* BARCODE */}
+            <TextInput
+              label={<span className="font-sans dark:text-light">Codigo</span>}
+              placeholder="Escribe el codigo aquí."
+              id="productBarcode"
+              value={barcode}
+              onChange={({ target }) => setBarcode(target.value)}
+              disabled={loading}
+              error={errors?.barcode?.message}
+            />
+          </div>
 
-              {/* BARCODE */}
-              <TextInput
-                label={<span className="font-sans dark:text-light">Codigo</span>}
-                placeholder="Escribe el codigo aquí."
-                id="productBarcode"
-                value={barcode}
-                onChange={({ target }) => setBarcode(target.value)}
-                disabled={loading}
-                error={errors?.barcode?.message}
-              />
-            </div>
-
+          <div className="mb-2 grid grid-cols-1 gap-2 md:grid-cols-2">
             {/* CATEGORY */}
             <Select
               label={<span className="font-sans dark:text-light">Categoría</span>}
@@ -190,117 +190,128 @@ const ProductForm = ({ product, opened, loading, errors, close, store, update }:
               error={errors?.['categoryIds.0']?.message}
             />
 
-            {/* DESCRIPTION */}
-            <Textarea
-              label={<span className="font-sans dark:text-light">Descripción</span>}
-              id="productDescription"
-              placeholder="Describe el producto aquí."
-              className="mb-2"
-              value={description}
-              onChange={({ target }) => setDescription(target.value)}
-              error={errors?.description?.message}
+            {/* BARCODE */}
+            <TextInput
+              label={<span className="font-sans dark:text-light">Talla</span>}
+              placeholder="XL, L, M, S, etc.."
+              id="productSize"
+              value={size}
+              onChange={({ target }) => setSize(target.value)}
               disabled={loading}
+              error={errors?.productSize?.message}
             />
+          </div>
 
-            {/* PRODUCT PRICE AND PRICE WITH DISCOUNT */}
-            <div className="mb-4 grid grid-cols-1 gap-2 md:grid-cols-2">
-              {/* PRICE AND CHECK */}
-              <div className=" flex flex-col">
-                <NumberInput
-                  label={<span className="font-sans dark:text-light">Precio</span>}
-                  id="productPrice"
-                  required
-                  placeholder="Escribe el precio aquí."
-                  className="mb-2"
-                  hideControls
-                  min={0}
-                  step={100}
-                  value={price}
-                  onChange={value => setPrice(value)}
-                  onFocus={({ target }) => target.select()}
-                  error={errors?.price?.message}
-                  parser={value => value?.replace(/\$\s?|(,*)/g, '')}
-                  formatter={formater}
-                  disabled={loading}
-                />
+          {/* DESCRIPTION */}
+          <Textarea
+            label={<span className="font-sans dark:text-light">Descripción</span>}
+            id="productDescription"
+            placeholder="Describe el producto aquí."
+            className="mb-2"
+            value={description}
+            onChange={({ target }) => setDescription(target.value)}
+            error={errors?.description?.message}
+            disabled={loading}
+          />
 
-                {/* HAS DISCOUNT */}
-                <Checkbox
-                  label={<span className="font-sans dark:text-light">Tiene descuento</span>}
-                  size="xs"
-                  checked={hasDiscount}
-                  onChange={({ currentTarget }) => setHasDiscount(currentTarget.checked)}
-                  disabled={loading}
-                />
-              </div>
-
-              {/* PRICE WITH DISCOUNT */}
+          {/* PRODUCT PRICE AND PRICE WITH DISCOUNT */}
+          <div className="mb-4 grid grid-cols-1 gap-2 md:grid-cols-2">
+            {/* PRICE AND CHECK */}
+            <div className=" flex flex-col">
               <NumberInput
-                label={<span className="font-sans dark:text-light">Precio con descuento</span>}
-                id="productPriceWithDiscount"
+                label={<span className="font-sans dark:text-light">Precio</span>}
+                id="productPrice"
                 required
                 placeholder="Escribe el precio aquí."
+                className="mb-2"
                 hideControls
                 min={0}
                 step={100}
-                max={price || undefined}
-                value={priceWithDiscount}
-                onChange={value => setPriceWithDiscount(value)}
+                value={price}
+                onChange={value => setPrice(value)}
                 onFocus={({ target }) => target.select()}
-                error={errors?.priceWithDiscount?.message}
+                error={errors?.price?.message}
                 parser={value => value?.replace(/\$\s?|(,*)/g, '')}
                 formatter={formater}
-                disabled={loading || !hasDiscount}
+                disabled={loading}
+              />
+
+              {/* HAS DISCOUNT */}
+              <Checkbox
+                label={<span className="font-sans dark:text-light">Tiene descuento</span>}
+                size="xs"
+                checked={hasDiscount}
+                onChange={({ currentTarget }) => setHasDiscount(currentTarget.checked)}
+                disabled={loading}
               />
             </div>
 
-            {/* STOCK */}
+            {/* PRICE WITH DISCOUNT */}
             <NumberInput
-              label={<span className="font-sans dark:text-light">Unidades en stock</span>}
-              id="productStock"
-              placeholder="Escribe las unidades en stock"
-              className="mb-4"
+              label={<span className="font-sans dark:text-light">Precio con descuento</span>}
+              id="productPriceWithDiscount"
+              required
+              placeholder="Escribe el precio aquí."
+              hideControls
               min={0}
-              step={1}
-              value={stock}
-              onChange={value => setStock(value)}
+              step={100}
+              max={price || undefined}
+              value={priceWithDiscount}
+              onChange={value => setPriceWithDiscount(value)}
               onFocus={({ target }) => target.select()}
-              error={errors?.stock?.message}
+              error={errors?.priceWithDiscount?.message}
+              parser={value => value?.replace(/\$\s?|(,*)/g, '')}
+              formatter={formater}
+              disabled={loading || !hasDiscount}
+            />
+          </div>
+
+          {/* STOCK */}
+          <NumberInput
+            label={<span className="font-sans dark:text-light">Unidades en stock</span>}
+            id="productStock"
+            placeholder="Escribe las unidades en stock"
+            className="mb-4"
+            min={0}
+            step={1}
+            value={stock}
+            onChange={value => setStock(value)}
+            onFocus={({ target }) => target.select()}
+            error={errors?.stock?.message}
+            disabled={loading}
+          />
+
+          {/* PUBLISHED, INVENTORIABLE & IS NEW */}
+          <div className="mb-4 flex gap-x-4">
+            <Checkbox
+              label={<span className="font-sans dark:text-light">Nuevo</span>}
+              checked={published}
+              onChange={({ currentTarget }) => setPublished(currentTarget.checked)}
               disabled={loading}
             />
 
-            {/* PUBLISHED, INVENTORIABLE & IS NEW */}
-            <div className="mb-4 flex gap-x-4">
-              <Checkbox
-                label={<span className="font-sans dark:text-light">Nuevo</span>}
-                checked={published}
-                onChange={({ currentTarget }) => setPublished(currentTarget.checked)}
-                disabled={loading}
-              />
+            <Checkbox
+              label={<span className="font-sans dark:text-light">Publicar</span>}
+              checked={productIsNew}
+              onChange={({ currentTarget }) => setProductIsNew(currentTarget.checked)}
+              disabled={loading}
+            />
 
-              <Checkbox
-                label={<span className="font-sans dark:text-light">Publicar</span>}
-                checked={productIsNew}
-                onChange={({ currentTarget }) => setProductIsNew(currentTarget.checked)}
-                disabled={loading}
-              />
-
-              <Checkbox
-                label={<span className="font-sans dark:text-light">Es inventariable</span>}
-                checked={isInventoriable}
-                onChange={({ currentTarget }) => setIsInventoriable(currentTarget.checked)}
-                disabled={loading}
-              />
-            </div>
+            <Checkbox
+              label={<span className="font-sans dark:text-light">Es inventariable</span>}
+              checked={isInventoriable}
+              onChange={({ currentTarget }) => setIsInventoriable(currentTarget.checked)}
+              disabled={loading}
+            />
           </div>
+        </div>
 
-          <footer className="mx-auto flex w-11/12 justify-end">
-            <Button loading={loading} disabled={!name} type="submit">
-              {btnMessage}
-            </Button>
-          </footer>
-        </form>
-      </DrawerBody>
+        <footer className="mx-auto flex w-11/12 justify-end">
+          <Button loading={loading} disabled={!name} type="submit">
+            {btnMessage}
+          </Button>
+        </footer>
+      </form>
     </Drawer>
   );
 };

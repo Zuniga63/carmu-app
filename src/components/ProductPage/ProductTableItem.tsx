@@ -35,6 +35,7 @@ const ProductTableItem = ({ product, mount, onDelete }: Props) => {
           <p key={category.id}>{category.name}</p>
         ))}
       </td>
+      <td className="whitespace-nowrap px-3 py-2 text-right">{product.productSize}</td>
       <td className="px-3 py-2 text-center text-sm">{product.stock}</td>
       <td className="whitespace-nowrap px-3 py-2 text-right">
         <div>

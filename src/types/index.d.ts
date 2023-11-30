@@ -120,6 +120,7 @@ export interface IProduct {
   ref?: string;
   barcode?: string;
   description?: string;
+  productSize?: string;
   image?: IImage;
   images?: string[];
   isInventoriable: boolean;
