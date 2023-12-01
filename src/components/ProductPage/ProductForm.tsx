@@ -107,6 +107,7 @@ const ProductForm = ({ product, opened, loading, errors, close, store, update }:
         setBarcode(product.barcode || '');
         if (product.categories.length > 0) setProductCategory(product.categories[0].id);
         setDescription(product.description || '');
+        setSize(product.productSize || '');
         setPrice(product.price);
         setHasDiscount(Boolean(product.hasDiscount));
         setPriceWithDiscount(product.priceWithDiscount);
