@@ -33,11 +33,11 @@ const ProductTable = ({ allProducts, openForm, mountProduct, onSelectProductToDe
   const { value: search, loading: searchLoading, updateValue: updateSearch } = useTextInputChange();
   const { value: size, loading: sizeLoading, updateValue: updateSize } = useTextInputChange();
   const { value: productRef, loading: productRefIsLoading, updateValue: updateProductRef } = useTextInputChange();
-  const { value: barcode, loading: barcodeIsLoading, updateValue: updateBarcode } = useTextInputChange();
+  const { value: category, loading: categoryIsLoading, updateValue: updateCategory } = useTextInputChange();
   const formRef = useRef<HTMLFormElement>(null);
 
   const products = useMemo(() => {
-    if (!search && !size && !productRef && !barcode) return allProducts;
+    if (!search && !size && !productRef && !category) return allProducts;
 
     let result: IProductWithCategories[] = [];
 
@@ -51,17 +51,22 @@ const ProductTable = ({ allProducts, openForm, mountProduct, onSelectProductToDe
 
     if (productRef) {
       result = allProducts.filter(item => {
-        if (!item.ref || item.ref.length === 0) return false;
-        const text = normalizeText(item.ref);
+        const refText = [item.ref || '', item.barcode || ''].join(' ').trim();
+        if (!refText || refText.length === 0) return false;
+        const text = normalizeText(refText);
         return text.includes(normalizeText(productRef));
       });
     }
 
-    if (barcode) {
+    if (category) {
       result = allProducts.filter(item => {
-        if (!item.barcode || item.barcode.length === 0) return false;
-        const text = normalizeText(item.barcode);
-        return text.includes(normalizeText(barcode));
+        const categoryText = item.categories
+          .map(c => c.name)
+          .join(' ')
+          .trim();
+        if (!categoryText || categoryText.length === 0) return false;
+        const text = normalizeText(categoryText);
+        return text.includes(normalizeText(category));
       });
     }
 
@@ -73,13 +78,13 @@ const ProductTable = ({ allProducts, openForm, mountProduct, onSelectProductToDe
     }
 
     return result;
-  }, [allProducts, search, size, productRef, barcode]);
+  }, [allProducts, search, size, productRef, category]);
 
   const handleClearFilters = () => {
     updateSearch('');
     updateSize('');
     updateProductRef('');
-    updateBarcode('');
+    updateCategory('');
     formRef.current?.reset();
   };
 
@@ -97,6 +102,19 @@ const ProductTable = ({ allProducts, openForm, mountProduct, onSelectProductToDe
                 role="search"
                 className="col-span-3 flex-grow lg:col-span-4"
                 onChange={({ target }) => updateSearch(target.value)}
+                onFocus={({ target }) => {
+                  target.select();
+                }}
+              />
+
+              <TextInput
+                size="xs"
+                type="search"
+                icon={categoryIsLoading ? <Loader size={14} variant="dots" /> : <IconSearch size={14} stroke={1.5} />}
+                placeholder="Por Categoría"
+                role="search"
+                className="col-span-3 flex-grow lg:col-span-3"
+                onChange={({ target }) => updateCategory(target.value)}
                 onFocus={({ target }) => {
                   target.select();
                 }}
@@ -123,19 +141,6 @@ const ProductTable = ({ allProducts, openForm, mountProduct, onSelectProductToDe
                 role="search"
                 className="col-span-3 flex-grow lg:col-span-3"
                 onChange={({ target }) => updateProductRef(target.value)}
-                onFocus={({ target }) => {
-                  target.select();
-                }}
-              />
-
-              <TextInput
-                size="xs"
-                type="search"
-                icon={barcodeIsLoading ? <Loader size={14} variant="dots" /> : <IconSearch size={14} stroke={1.5} />}
-                placeholder="Por codigo de barras"
-                role="search"
-                className="col-span-3 flex-grow lg:col-span-3"
-                onChange={({ target }) => updateBarcode(target.value)}
                 onFocus={({ target }) => {
                   target.select();
                 }}
