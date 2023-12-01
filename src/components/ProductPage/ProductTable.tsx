@@ -37,9 +37,7 @@ const ProductTable = ({ allProducts, openForm, mountProduct, onSelectProductToDe
   const formRef = useRef<HTMLFormElement>(null);
 
   const products = useMemo(() => {
-    if (!search && !size && !productRef && !category) return allProducts;
-
-    let result: IProductWithCategories[] = [];
+    let result: IProductWithCategories[] = allProducts.slice();
 
     if (search) {
       result = result.filter(item => {
@@ -49,7 +47,7 @@ const ProductTable = ({ allProducts, openForm, mountProduct, onSelectProductToDe
     }
 
     if (category) {
-      result = allProducts.filter(item => {
+      result = result.filter(item => {
         const categoryText = item.categories
           .map(c => c.name)
           .join(' ')
@@ -61,7 +59,7 @@ const ProductTable = ({ allProducts, openForm, mountProduct, onSelectProductToDe
     }
 
     if (size) {
-      result = allProducts.filter(item => {
+      result = result.filter(item => {
         if (!item.productSize || item.productSize.length === 0) return false;
         const text = normalizeText(item.productSize);
         return text.includes(normalizeText(size));
@@ -69,7 +67,7 @@ const ProductTable = ({ allProducts, openForm, mountProduct, onSelectProductToDe
     }
 
     if (productRef) {
-      result = allProducts.filter(item => {
+      result = result.filter(item => {
         const refText = [item.ref || '', item.barcode || ''].join(' ').trim();
         if (!refText || refText.length === 0) return false;
         const text = normalizeText(refText);
