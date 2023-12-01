@@ -41,20 +41,10 @@ const ProductTable = ({ allProducts, openForm, mountProduct, onSelectProductToDe
 
     let result: IProductWithCategories[] = [];
 
-    if (size) {
-      result = allProducts.filter(item => {
-        if (!item.productSize || item.productSize.length === 0) return false;
-        const text = normalizeText(item.productSize);
-        return text.includes(normalizeText(size));
-      });
-    }
-
-    if (productRef) {
-      result = allProducts.filter(item => {
-        const refText = [item.ref || '', item.barcode || ''].join(' ').trim();
-        if (!refText || refText.length === 0) return false;
-        const text = normalizeText(refText);
-        return text.includes(normalizeText(productRef));
+    if (search) {
+      result = result.filter(item => {
+        const text = normalizeText([item.name, item.description || ''].join(' ').trim());
+        return text.includes(normalizeText(search));
       });
     }
 
@@ -70,10 +60,20 @@ const ProductTable = ({ allProducts, openForm, mountProduct, onSelectProductToDe
       });
     }
 
-    if (search) {
-      result = result.filter(item => {
-        const text = normalizeText([item.name, item.description || ''].join(' ').trim());
-        return text.includes(normalizeText(search));
+    if (size) {
+      result = allProducts.filter(item => {
+        if (!item.productSize || item.productSize.length === 0) return false;
+        const text = normalizeText(item.productSize);
+        return text.includes(normalizeText(size));
+      });
+    }
+
+    if (productRef) {
+      result = allProducts.filter(item => {
+        const refText = [item.ref || '', item.barcode || ''].join(' ').trim();
+        if (!refText || refText.length === 0) return false;
+        const text = normalizeText(refText);
+        return text.includes(normalizeText(productRef));
       });
     }
 
