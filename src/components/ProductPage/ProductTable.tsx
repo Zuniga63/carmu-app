@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Button, Loader, ScrollArea, TextInput } from '@mantine/core';
-import { IconSearch, IconWriting } from '@tabler/icons-react';
+import React, { useMemo, useRef, useState } from 'react';
+import { ActionIcon, Loader, ScrollArea, TextInput } from '@mantine/core';
+import { IconSearch, IconWriting, IconX } from '@tabler/icons-react';
 import { IProductWithCategories } from '@/types';
 import ProductTableItem from './ProductTableItem';
 import { normalizeText } from '@/utils';
@@ -12,55 +12,144 @@ interface Props {
   onSelectProductToDelete(product: IProductWithCategories): void;
 }
 
-const ProductTable = ({ allProducts, openForm, mountProduct, onSelectProductToDelete }: Props) => {
-  const [search, setSearch] = useState<string | undefined>(undefined);
+export function useTextInputChange() {
+  const [value, setValue] = useState('');
   const [loading, setLoading] = useState(false);
-  const [products, setProducts] = useState<IProductWithCategories[]>([]);
   const debounceInterval = useRef<undefined | NodeJS.Timeout>(undefined);
 
-  const updateSearch = (value: string) => {
+  const updateValue = (value: string) => {
     if (debounceInterval.current) clearTimeout(debounceInterval.current);
     setLoading(true);
     debounceInterval.current = setTimeout(() => {
       setLoading(false);
-      setSearch(value);
-    }, 500);
+      setValue(value);
+    }, 350);
   };
 
-  const updateProductList = () => {
-    let result = allProducts.slice();
+  return { value, loading, updateValue };
+}
+
+const ProductTable = ({ allProducts, openForm, mountProduct, onSelectProductToDelete }: Props) => {
+  const { value: search, loading: searchLoading, updateValue: updateSearch } = useTextInputChange();
+  const { value: size, loading: sizeLoading, updateValue: updateSize } = useTextInputChange();
+  const { value: productRef, loading: productRefIsLoading, updateValue: updateProductRef } = useTextInputChange();
+  const { value: barcode, loading: barcodeIsLoading, updateValue: updateBarcode } = useTextInputChange();
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const products = useMemo(() => {
+    if (!search && !size && !productRef && !barcode) return allProducts;
+
+    let result: IProductWithCategories[] = [];
+
+    if (size) {
+      result = allProducts.filter(item => {
+        if (!item.productSize || item.productSize.length === 0) return false;
+        const text = normalizeText(item.productSize);
+        return text.includes(normalizeText(size));
+      });
+    }
+
+    if (productRef) {
+      result = allProducts.filter(item => {
+        if (!item.ref || item.ref.length === 0) return false;
+        const text = normalizeText(item.ref);
+        return text.includes(normalizeText(productRef));
+      });
+    }
+
+    if (barcode) {
+      result = allProducts.filter(item => {
+        if (!item.barcode || item.barcode.length === 0) return false;
+        const text = normalizeText(item.barcode);
+        return text.includes(normalizeText(barcode));
+      });
+    }
+
     if (search) {
       result = result.filter(item => {
-        const text = normalizeText(
-          [item.name, item.description || '', item.ref || '', item.barcode || ''].join(' ').trim(),
-        );
+        const text = normalizeText([item.name, item.description || ''].join(' ').trim());
         return text.includes(normalizeText(search));
       });
     }
 
-    setProducts(result);
-  };
+    return result;
+  }, [allProducts, search, size, productRef, barcode]);
 
-  useEffect(() => {
-    updateProductList();
-  }, [allProducts, search]);
+  const handleClearFilters = () => {
+    updateSearch('');
+    updateSize('');
+    updateProductRef('');
+    updateBarcode('');
+    formRef.current?.reset();
+  };
 
   return (
     <div className="mx-auto w-11/12 pt-4 dark:text-light">
       <header className="rounded-t-md bg-gray-300 px-6 py-2 dark:bg-header">
-        <div className="grid grid-cols-3">
-          <TextInput
-            size="xs"
-            type="search"
-            icon={loading ? <Loader size={14} variant="dots" /> : <IconSearch size={14} stroke={1.5} />}
-            placeholder="Buscar producto"
-            role="search"
-            className="col-span-3 flex-grow lg:col-span-1"
-            onChange={({ target }) => updateSearch(target.value)}
-            onFocus={({ target }) => {
-              target.select();
-            }}
-          />
+        <div className="flex items-center gap-x-2">
+          <div className="flex-grow">
+            <form onSubmit={e => e.preventDefault} ref={formRef} className="grid grid-cols-12 gap-x-2">
+              <TextInput
+                size="xs"
+                type="search"
+                icon={searchLoading ? <Loader size={14} variant="dots" /> : <IconSearch size={14} stroke={1.5} />}
+                placeholder="Buscar por nombre y descripcion"
+                role="search"
+                className="col-span-3 flex-grow lg:col-span-4"
+                onChange={({ target }) => updateSearch(target.value)}
+                onFocus={({ target }) => {
+                  target.select();
+                }}
+              />
+
+              <TextInput
+                size="xs"
+                type="search"
+                icon={sizeLoading ? <Loader size={14} variant="dots" /> : <IconSearch size={14} stroke={1.5} />}
+                placeholder="Buscar por talla"
+                role="search"
+                className="col-span-3 flex-grow lg:col-span-2"
+                onChange={({ target }) => updateSize(target.value)}
+                onFocus={({ target }) => {
+                  target.select();
+                }}
+              />
+
+              <TextInput
+                size="xs"
+                type="search"
+                icon={productRefIsLoading ? <Loader size={14} variant="dots" /> : <IconSearch size={14} stroke={1.5} />}
+                placeholder="Por referencia"
+                role="search"
+                className="col-span-3 flex-grow lg:col-span-3"
+                onChange={({ target }) => updateProductRef(target.value)}
+                onFocus={({ target }) => {
+                  target.select();
+                }}
+              />
+
+              <TextInput
+                size="xs"
+                type="search"
+                icon={barcodeIsLoading ? <Loader size={14} variant="dots" /> : <IconSearch size={14} stroke={1.5} />}
+                placeholder="Por codigo de barras"
+                role="search"
+                className="col-span-3 flex-grow lg:col-span-3"
+                onChange={({ target }) => updateBarcode(target.value)}
+                onFocus={({ target }) => {
+                  target.select();
+                }}
+              />
+            </form>
+          </div>
+          <div className="flex gap-x-1">
+            <ActionIcon variant="filled" size="lg" color="red" onClick={handleClearFilters}>
+              <IconX size={20} />
+            </ActionIcon>
+            <ActionIcon variant="filled" size="lg" color="blue" onClick={() => openForm()}>
+              <IconWriting size={20} />
+            </ActionIcon>
+          </div>
         </div>
       </header>
       <ScrollArea className="relative h-[26rem] overflow-y-auto border border-y-0 border-x-gray-300 dark:border-x-header 3xl:h-[70vh]">
@@ -103,9 +192,7 @@ const ProductTable = ({ allProducts, openForm, mountProduct, onSelectProductToDe
         </table>
       </ScrollArea>
       <footer className="flex justify-end rounded-b-md bg-gray-300 px-6 py-2 dark:bg-header">
-        <Button leftIcon={<IconWriting />} onClick={() => openForm()}>
-          Agregar Producto
-        </Button>
+        <span>Productos: {allProducts.length} </span>
       </footer>
     </div>
   );
