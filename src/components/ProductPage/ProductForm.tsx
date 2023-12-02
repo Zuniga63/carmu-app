@@ -1,21 +1,18 @@
 import { Button, Checkbox, Drawer, NumberInput, Select, Textarea, TextInput } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import React, { FormEvent, useEffect, useState } from 'react';
+import React, { FormEvent, useCallback, useEffect, useState } from 'react';
 import type { IProductWithCategories, IValidationErrors } from '@/types';
 import { useGetAllCategories } from '@/hooks/react-query/categories.hooks';
+import { useProductPageStore } from '@/store/product-page.store';
+import { useCreateProduct, useGetAllProducts, useUpdateProduct } from '@/hooks/react-query/product.hooks';
+import { AxiosError } from 'axios';
+import { toast } from 'react-toastify';
 
-interface Props {
-  product?: IProductWithCategories | null;
-  opened: boolean;
-  loading: boolean;
-  errors: IValidationErrors | null | undefined;
-  close(): void;
-  store(formData: unknown): Promise<void>;
-  update(formData: unknown): Promise<void>;
-}
+export function useProductForm() {
+  const isOpen = useProductPageStore(state => state.formIsOpen);
+  const productId = useProductPageStore(state => state.productToEditId);
+  const closeForm = useProductPageStore(state => state.hideForm);
 
-const ProductForm = ({ product, opened, loading, errors, close, store, update }: Props) => {
-  const { data: categories = [] } = useGetAllCategories();
   const [formTitle, setFormTitle] = useState('Registrar Producto');
   const [btnMessage, setBtnMessage] = useState('Guardar');
   const [productCategory, setProductCategory] = useState<string | null>(null);
@@ -32,11 +29,45 @@ const ProductForm = ({ product, opened, loading, errors, close, store, update }:
   const [published, setPublished] = useState(false);
   const [isInventoriable, setIsInventoriable] = useState(false);
 
-  const largeScreen = useMediaQuery('(min-width: 768px)');
+  const isLargeScreen = useMediaQuery('(min-width: 768px)');
 
-  //---------------------------------------------------------------------------
-  // FUNCTIONALITY
-  //---------------------------------------------------------------------------
+  const [errors, setErrors] = useState<IValidationErrors | null>(null);
+
+  const { data: categories = [] } = useGetAllCategories();
+  const { data: products = [] } = useGetAllProducts();
+
+  const mountProduct = useCallback((product: IProductWithCategories) => {
+    setFormTitle('Actualizar Producto');
+    setBtnMessage('Actualizar');
+    setName(product.name);
+    setRef(product.ref || '');
+    setBarcode(product.barcode || '');
+    if (product.categories.length > 0) setProductCategory(product.categories[0].id);
+    setDescription(product.description || '');
+    setSize(product.productSize || '');
+    setPrice(product.price);
+    setHasDiscount(Boolean(product.hasDiscount));
+    setPriceWithDiscount(product.priceWithDiscount);
+    setStock(product.stock);
+    setIsInventoriable(product.isInventoriable);
+    setProductIsNew(Boolean(product.productIsNew));
+    setPublished(Boolean(product.published));
+  }, []);
+
+  const {
+    mutate: createProduct,
+    isPending: createIsPending,
+    isSuccess: createIsSusscess,
+    error: createError,
+  } = useCreateProduct();
+
+  const {
+    mutate: updateProduct,
+    isPending: updateIsPending,
+    isSuccess: updateIsSusscess,
+    error: updateError,
+  } = useUpdateProduct();
+
   const reset = () => {
     setFormTitle('Registrar Producto');
     setBtnMessage('Guardar');
@@ -55,17 +86,10 @@ const ProductForm = ({ product, opened, loading, errors, close, store, update }:
     setStock(undefined);
   };
 
-  const formater = (value: string | undefined) => {
-    let result = '$ ';
-    if (value && !Number.isNaN(parseFloat(value))) {
-      result = `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    }
-
-    return result;
-  };
-
   const getFormData = () => {
     const formData = new FormData();
+    const product = products.find(p => p.id === productId);
+
     formData.append('name', name);
     formData.append('categoryIds', productCategory || '');
     if (ref) formData.append('ref', ref);
@@ -85,57 +109,122 @@ const ProductForm = ({ product, opened, loading, errors, close, store, update }:
     return formData;
   };
 
-  const onSubmitHandler = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (name && price) {
-      const formData = getFormData();
-      if (!product) store(formData);
-      else update(formData);
-    }
+    if (!name || !price || createIsPending || updateIsPending) return;
+
+    const formData = getFormData();
+    if (!productId) createProduct(formData);
+    else updateProduct({ formData, id: productId });
   };
 
-  //---------------------------------------------------------------------------
-  // EFFECTS
-  //---------------------------------------------------------------------------
-  useEffect(() => {
-    if (opened) {
-      setFormTitle(product ? 'Actualizar Producto' : 'Registrar Producto');
-      setBtnMessage(product ? 'Actualizar' : 'Guardar');
-      if (product) {
-        setName(product.name);
-        setRef(product.ref || '');
-        setBarcode(product.barcode || '');
-        if (product.categories.length > 0) setProductCategory(product.categories[0].id);
-        setDescription(product.description || '');
-        setSize(product.productSize || '');
-        setPrice(product.price);
-        setHasDiscount(Boolean(product.hasDiscount));
-        setPriceWithDiscount(product.priceWithDiscount);
-        setStock(product.stock);
-        setIsInventoriable(product.isInventoriable);
-        setProductIsNew(Boolean(product.productIsNew));
-        setPublished(Boolean(product.published));
-      }
-    } else {
-      reset();
-    }
-  }, [opened]);
+  const handleClose = () => {
+    const isPendign = createIsPending || updateIsPending;
+    if (isPendign) return;
+
+    closeForm();
+  };
 
   useEffect(() => {
-    if (loading) setBtnMessage(product ? 'Actualizando...' : 'Guardando...');
-    else setBtnMessage(product ? 'Actualizar' : 'Guardar');
-  }, [loading]);
+    if (!isOpen) return;
+
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
+
+    mountProduct(product);
+  }, [isOpen, productId]);
+
+  useEffect(() => {
+    const isPendign = createIsPending || updateIsPending;
+    if (productId) setBtnMessage(isPendign ? 'Actualizando...' : 'Actualizar');
+    else setBtnMessage(isPendign ? 'Guardando...' : 'Guardar');
+  }, [createIsPending, updateIsPending]);
+
+  useEffect(() => {
+    const isSuccessful = createIsSusscess || updateIsSusscess;
+    if (!isSuccessful) return;
+
+    reset();
+    closeForm();
+  }, [createIsSusscess, updateIsSusscess]);
+
+  useEffect(() => {
+    const error = createError || updateError;
+    if (!error) return;
+
+    if (error instanceof AxiosError) {
+      const { response } = error;
+      setErrors(response?.data.validationErrors);
+      toast.error(response?.data.message);
+    } else {
+      console.log(error);
+    }
+  }, [createError, updateError]);
+
+  return {
+    isOpen,
+    isLargeScreen,
+    categories,
+    isLoading: createIsPending || updateIsPending,
+    form: {
+      title: formTitle,
+      btnMessage,
+      productCategory,
+      name,
+      ref,
+      barcode,
+      description,
+      size,
+      price,
+      hasDiscount,
+      priceWithDiscount,
+      stock,
+      productIsNew,
+      published,
+      isInventoriable,
+      setProductCategory,
+      setName,
+      setRef,
+      setBarcode,
+      setDescription,
+      setSize,
+      setPrice,
+      setHasDiscount,
+      setPriceWithDiscount,
+      setStock,
+      setProductIsNew,
+      setPublished,
+      setIsInventoriable,
+      reset,
+      handleSubmit,
+    },
+    errors,
+    handleClose,
+  };
+}
+
+export default function ProductForm() {
+  const { isOpen, isLargeScreen, isLoading, errors, categories, form, handleClose } = useProductForm();
+
+  const formater = (value: string | undefined) => {
+    let result = '$ ';
+    if (value && !Number.isNaN(parseFloat(value))) {
+      result = `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    return result;
+  };
 
   return (
     <Drawer
-      opened={opened}
-      onClose={close}
+      opened={isOpen}
+      onClose={handleClose}
       padding="xs"
-      size={largeScreen ? 'xl' : '100%'}
+      size={isLargeScreen ? 'xl' : '100%'}
       position="right"
-      title={formTitle}
+      title={form.title}
     >
-      <form onSubmit={onSubmitHandler}>
+      <form onSubmit={form.handleSubmit}>
         <div className="mx-auto mb-4 w-11/12">
           {/* PRODUCT NAME */}
           <TextInput
@@ -144,9 +233,9 @@ const ProductForm = ({ product, opened, loading, errors, close, store, update }:
             placeholder="Escribe el nombre aquí."
             id="productName"
             required
-            value={name}
-            onChange={({ target }) => setName(target.value)}
-            disabled={loading}
+            value={form.name}
+            onChange={({ target }) => form.setName(target.value)}
+            disabled={isLoading}
             error={errors?.name?.message}
           />
 
@@ -157,9 +246,9 @@ const ProductForm = ({ product, opened, loading, errors, close, store, update }:
               label={<span className="font-sans dark:text-light">Ref</span>}
               placeholder="Escribe la referencia aquí."
               id="productRef"
-              value={ref}
-              onChange={({ target }) => setRef(target.value)}
-              disabled={loading}
+              value={form.ref}
+              onChange={({ target }) => form.setRef(target.value)}
+              disabled={isLoading}
               error={errors?.reference?.message}
             />
 
@@ -168,9 +257,9 @@ const ProductForm = ({ product, opened, loading, errors, close, store, update }:
               label={<span className="font-sans dark:text-light">Codigo</span>}
               placeholder="Escribe el codigo aquí."
               id="productBarcode"
-              value={barcode}
-              onChange={({ target }) => setBarcode(target.value)}
-              disabled={loading}
+              value={form.barcode}
+              onChange={({ target }) => form.setBarcode(target.value)}
+              disabled={isLoading}
               error={errors?.barcode?.message}
             />
           </div>
@@ -181,9 +270,9 @@ const ProductForm = ({ product, opened, loading, errors, close, store, update }:
               label={<span className="font-sans dark:text-light">Categoría</span>}
               placeholder="Selecciona una"
               className="mb-2"
-              value={productCategory}
+              value={form.productCategory}
               clearable
-              onChange={setProductCategory}
+              onChange={form.setProductCategory}
               data={categories.map(category => ({
                 value: category.id,
                 label: category.name,
@@ -196,9 +285,9 @@ const ProductForm = ({ product, opened, loading, errors, close, store, update }:
               label={<span className="font-sans dark:text-light">Talla</span>}
               placeholder="XL, L, M, S, etc.."
               id="productSize"
-              value={size}
-              onChange={({ target }) => setSize(target.value)}
-              disabled={loading}
+              value={form.size}
+              onChange={({ target }) => form.setSize(target.value)}
+              disabled={isLoading}
               error={errors?.productSize?.message}
             />
           </div>
@@ -209,10 +298,10 @@ const ProductForm = ({ product, opened, loading, errors, close, store, update }:
             id="productDescription"
             placeholder="Describe el producto aquí."
             className="mb-2"
-            value={description}
-            onChange={({ target }) => setDescription(target.value)}
+            value={form.description}
+            onChange={({ target }) => form.setDescription(target.value)}
             error={errors?.description?.message}
-            disabled={loading}
+            disabled={isLoading}
           />
 
           {/* PRODUCT PRICE AND PRICE WITH DISCOUNT */}
@@ -228,22 +317,22 @@ const ProductForm = ({ product, opened, loading, errors, close, store, update }:
                 hideControls
                 min={0}
                 step={100}
-                value={price}
-                onChange={value => setPrice(value)}
+                value={form.price}
+                onChange={value => form.setPrice(value)}
                 onFocus={({ target }) => target.select()}
                 error={errors?.price?.message}
                 parser={value => value?.replace(/\$\s?|(,*)/g, '')}
                 formatter={formater}
-                disabled={loading}
+                disabled={isLoading}
               />
 
               {/* HAS DISCOUNT */}
               <Checkbox
                 label={<span className="font-sans dark:text-light">Tiene descuento</span>}
                 size="xs"
-                checked={hasDiscount}
-                onChange={({ currentTarget }) => setHasDiscount(currentTarget.checked)}
-                disabled={loading}
+                checked={form.hasDiscount}
+                onChange={({ currentTarget }) => form.setHasDiscount(currentTarget.checked)}
+                disabled={isLoading}
               />
             </div>
 
@@ -256,14 +345,14 @@ const ProductForm = ({ product, opened, loading, errors, close, store, update }:
               hideControls
               min={0}
               step={100}
-              max={price || undefined}
-              value={priceWithDiscount}
-              onChange={value => setPriceWithDiscount(value)}
+              max={form.price || undefined}
+              value={form.priceWithDiscount}
+              onChange={value => form.setPriceWithDiscount(value)}
               onFocus={({ target }) => target.select()}
               error={errors?.priceWithDiscount?.message}
               parser={value => value?.replace(/\$\s?|(,*)/g, '')}
               formatter={formater}
-              disabled={loading || !hasDiscount}
+              disabled={isLoading || !form.hasDiscount}
             />
           </div>
 
@@ -275,46 +364,44 @@ const ProductForm = ({ product, opened, loading, errors, close, store, update }:
             className="mb-4"
             min={0}
             step={1}
-            value={stock}
-            onChange={value => setStock(value)}
+            value={form.stock}
+            onChange={value => form.setStock(value)}
             onFocus={({ target }) => target.select()}
             error={errors?.stock?.message}
-            disabled={loading}
+            disabled={isLoading}
           />
 
           {/* PUBLISHED, INVENTORIABLE & IS NEW */}
           <div className="mb-4 flex gap-x-4">
             <Checkbox
               label={<span className="font-sans dark:text-light">Nuevo</span>}
-              checked={published}
-              onChange={({ currentTarget }) => setPublished(currentTarget.checked)}
-              disabled={loading}
+              checked={form.published}
+              onChange={({ currentTarget }) => form.setPublished(currentTarget.checked)}
+              disabled={isLoading}
             />
 
             <Checkbox
               label={<span className="font-sans dark:text-light">Publicar</span>}
-              checked={productIsNew}
-              onChange={({ currentTarget }) => setProductIsNew(currentTarget.checked)}
-              disabled={loading}
+              checked={form.productIsNew}
+              onChange={({ currentTarget }) => form.setProductIsNew(currentTarget.checked)}
+              disabled={isLoading}
             />
 
             <Checkbox
               label={<span className="font-sans dark:text-light">Es inventariable</span>}
-              checked={isInventoriable}
-              onChange={({ currentTarget }) => setIsInventoriable(currentTarget.checked)}
-              disabled={loading}
+              checked={form.isInventoriable}
+              onChange={({ currentTarget }) => form.setIsInventoriable(currentTarget.checked)}
+              disabled={isLoading}
             />
           </div>
         </div>
 
         <footer className="mx-auto flex w-11/12 justify-end">
-          <Button loading={loading} disabled={!name} type="submit">
-            {btnMessage}
+          <Button loading={isLoading} disabled={!form.name} type="submit">
+            {form.btnMessage}
           </Button>
         </footer>
       </form>
     </Drawer>
   );
-};
-
-export default ProductForm;
+}

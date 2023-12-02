@@ -1,50 +1,32 @@
-import { CATEGORY_BASE_URL, PRODUCT_BASE_URL } from '@/config/constants';
-import type { IInvoiceProduct, IProductPageInitialData, IProductWithCategories } from '@/types';
+import type { IInvoiceProduct, IProductWithCategories } from '@/types';
 import axios from 'axios';
 
-export const productApi = axios.create({ baseURL: PRODUCT_BASE_URL });
-
-export async function getProductPageInititalData(token?: string) {
-  const headers = { Authorization: `Bearer ${token}` };
-
-  const result: IProductPageInitialData = {
-    products: [],
-    categories: [],
-  };
-
-  if (!token) return result;
-
-  try {
-    const [produtRes, categoryRes] = await Promise.all([
-      fetch(PRODUCT_BASE_URL, { headers, cache: 'no-cache' }),
-      fetch(CATEGORY_BASE_URL, { headers, cache: 'no-cache' }),
-    ]);
-
-    const productResData = await produtRes.json();
-    const categoryResData = await categoryRes.json();
-
-    result.products = productResData;
-    result.categories = categoryResData.categories;
-  } catch (error) {
-    console.log(error);
-  }
-
-  return result;
-}
+export const productApi = axios.create({ baseURL: `${process.env.NEXT_PUBLIC_URL_API}/products` });
+const headers = { 'Content-Type': 'multipart/form-data' };
 
 export async function getAllProducts() {
-  const res = await axios.get<IProductWithCategories[]>(PRODUCT_BASE_URL);
+  const res = await productApi.get<IProductWithCategories[]>('');
   return res.data;
 }
 
 export async function getAllLiteProducts() {
-  const res = await axios.get<IInvoiceProduct[]>(PRODUCT_BASE_URL, {
+  const res = await productApi.get<IInvoiceProduct[]>('', {
     params: { forList: true },
   });
   return res.data;
 }
 
+export async function createProduct(formData: FormData) {
+  const res = await productApi.post<{ product: IProductWithCategories }>('', formData, { headers });
+  return res.data.product;
+}
+
+export async function updateProduct({ id, formData }: { id: string; formData: FormData }) {
+  const res = await productApi.put<{ product: IProductWithCategories }>(`/${id}`, formData, { headers });
+  return res.data.product;
+}
+
 export async function removePropduct(id: string) {
-  const res = await axios.delete(`${PRODUCT_BASE_URL}/${id}`);
+  const res = await productApi.delete(`/${id}`);
   return res.data;
 }

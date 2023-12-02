@@ -143,11 +143,6 @@ export interface IProductWithCategories extends IProduct {
   }[];
 }
 
-export type IProductPageInitialData = {
-  products: IProductWithCategories[];
-  categories: ICategory[];
-};
-
 export interface ISaleHistory {
   id: string;
   operationDate: string;

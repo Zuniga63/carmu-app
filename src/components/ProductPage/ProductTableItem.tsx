@@ -2,14 +2,19 @@ import { IconEdit, IconTrash } from '@tabler/icons-react';
 import React from 'react';
 import { IProductWithCategories } from '@/types';
 import { currencyFormat } from '@/utils';
+import { useProductPageStore } from '@/store/product-page.store';
 
 interface Props {
   product: IProductWithCategories;
-  mount(product: IProductWithCategories): void;
-  onDelete(product: IProductWithCategories): void;
 }
 
-const ProductTableItem = ({ product, mount, onDelete }: Props) => {
+const ProductTableItem = ({ product }: Props) => {
+  const mountToEdit = useProductPageStore(state => state.showForm);
+  const mountToDelete = useProductPageStore(state => state.showDeleteDialog);
+
+  const handleToEdit = () => mountToEdit(product.id);
+  const handleToDelete = () => mountToDelete(product.id);
+
   return (
     <tr className="text-gray-dark dark:text-light">
       <td className="whitespace-nowrap px-3 py-2 lg:whitespace-normal">
@@ -49,14 +54,14 @@ const ProductTableItem = ({ product, mount, onDelete }: Props) => {
         <div className="flex justify-end gap-x-2">
           <button
             className="rounded-full border-2 border-blue-600 border-opacity-50 p-2 text-blue-600 text-opacity-50 transition-colors hover:border-opacity-80 hover:text-opacity-80 active:border-opacity-100 active:text-opacity-100"
-            onClick={() => mount(product)}
+            onClick={handleToEdit}
           >
             <IconEdit size={16} stroke={3} />
           </button>
 
           <button
             className="rounded-full border-2 border-red-600 border-opacity-50 p-2 text-red-600 text-opacity-50 transition-colors hover:border-opacity-80 hover:text-opacity-80 active:border-opacity-100 active:text-opacity-100"
-            onClick={() => onDelete(product)}
+            onClick={handleToDelete}
           >
             <IconTrash size={16} stroke={3} />
           </button>

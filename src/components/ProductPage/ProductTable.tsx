@@ -1,19 +1,15 @@
-import React, { useMemo, useRef, useState } from 'react';
-import { ActionIcon, Loader, ScrollArea, TextInput } from '@mantine/core';
-import { IconSearch, IconWriting, IconX } from '@tabler/icons-react';
+import { useMemo, useRef, useState } from 'react';
+import { ScrollArea } from '@mantine/core';
 import { IProductWithCategories } from '@/types';
 import ProductTableItem from './ProductTableItem';
 import { normalizeText } from '@/utils';
+import { ProductPageFilter, useProductPageStore } from '@/store/product-page.store';
+import ProductTableHeader from './ProductTableHeader';
+import { useGetAllProducts } from '@/hooks/react-query/product.hooks';
 
-interface Props {
-  allProducts: IProductWithCategories[];
-  openForm(): void;
-  mountProduct(product: IProductWithCategories): void;
-  onSelectProductToDelete(product: IProductWithCategories): void;
-}
+export function useUpdateProductFilter({ filter }: { filter?: ProductPageFilter } = {}) {
+  const updateFilter = useProductPageStore(state => state.updateFilter);
 
-export function useTextInputChange() {
-  const [value, setValue] = useState('');
   const [loading, setLoading] = useState(false);
   const debounceInterval = useRef<undefined | NodeJS.Timeout>(undefined);
 
@@ -22,19 +18,20 @@ export function useTextInputChange() {
     setLoading(true);
     debounceInterval.current = setTimeout(() => {
       setLoading(false);
-      setValue(value);
+      if (filter) updateFilter(filter, value);
     }, 350);
   };
 
-  return { value, loading, updateValue };
+  return { loading, updateValue };
 }
 
-const ProductTable = ({ allProducts, openForm, mountProduct, onSelectProductToDelete }: Props) => {
-  const { value: search, loading: searchLoading, updateValue: updateSearch } = useTextInputChange();
-  const { value: size, loading: sizeLoading, updateValue: updateSize } = useTextInputChange();
-  const { value: productRef, loading: productRefIsLoading, updateValue: updateProductRef } = useTextInputChange();
-  const { value: category, loading: categoryIsLoading, updateValue: updateCategory } = useTextInputChange();
-  const formRef = useRef<HTMLFormElement>(null);
+const ProductTable = () => {
+  const search = useProductPageStore(state => state.search);
+  const size = useProductPageStore(state => state.productSize);
+  const productRef = useProductPageStore(state => state.productRef);
+  const category = useProductPageStore(state => state.category);
+
+  const { data: allProducts = [], isLoading, isRefetching, refetch } = useGetAllProducts();
 
   const products = useMemo(() => {
     let result: IProductWithCategories[] = allProducts.slice();
@@ -78,83 +75,9 @@ const ProductTable = ({ allProducts, openForm, mountProduct, onSelectProductToDe
     return result;
   }, [allProducts, search, size, productRef, category]);
 
-  const handleClearFilters = () => {
-    updateSearch('');
-    updateSize('');
-    updateProductRef('');
-    updateCategory('');
-    formRef.current?.reset();
-  };
-
   return (
     <div className="mx-auto w-11/12 pt-4 dark:text-light">
-      <header className="rounded-t-md bg-gray-300 px-6 py-2 dark:bg-header">
-        <div className="flex items-center gap-x-2">
-          <div className="flex-grow">
-            <form onSubmit={e => e.preventDefault} ref={formRef} className="grid grid-cols-12 gap-x-2">
-              <TextInput
-                size="xs"
-                type="search"
-                icon={searchLoading ? <Loader size={14} variant="dots" /> : <IconSearch size={14} stroke={1.5} />}
-                placeholder="Buscar por nombre y descripcion"
-                role="search"
-                className="col-span-3 flex-grow lg:col-span-4"
-                onChange={({ target }) => updateSearch(target.value)}
-                onFocus={({ target }) => {
-                  target.select();
-                }}
-              />
-
-              <TextInput
-                size="xs"
-                type="search"
-                icon={categoryIsLoading ? <Loader size={14} variant="dots" /> : <IconSearch size={14} stroke={1.5} />}
-                placeholder="Por Categoría"
-                role="search"
-                className="col-span-3 flex-grow lg:col-span-3"
-                onChange={({ target }) => updateCategory(target.value)}
-                onFocus={({ target }) => {
-                  target.select();
-                }}
-              />
-
-              <TextInput
-                size="xs"
-                type="search"
-                icon={sizeLoading ? <Loader size={14} variant="dots" /> : <IconSearch size={14} stroke={1.5} />}
-                placeholder="Buscar por talla"
-                role="search"
-                className="col-span-3 flex-grow lg:col-span-2"
-                onChange={({ target }) => updateSize(target.value)}
-                onFocus={({ target }) => {
-                  target.select();
-                }}
-              />
-
-              <TextInput
-                size="xs"
-                type="search"
-                icon={productRefIsLoading ? <Loader size={14} variant="dots" /> : <IconSearch size={14} stroke={1.5} />}
-                placeholder="Por referencia"
-                role="search"
-                className="col-span-3 flex-grow lg:col-span-3"
-                onChange={({ target }) => updateProductRef(target.value)}
-                onFocus={({ target }) => {
-                  target.select();
-                }}
-              />
-            </form>
-          </div>
-          <div className="flex gap-x-1">
-            <ActionIcon variant="filled" size="lg" color="red" onClick={handleClearFilters}>
-              <IconX size={20} />
-            </ActionIcon>
-            <ActionIcon variant="filled" size="lg" color="blue" onClick={() => openForm()}>
-              <IconWriting size={20} />
-            </ActionIcon>
-          </div>
-        </div>
-      </header>
+      <ProductTableHeader isFetching={isLoading || isRefetching} refetch={refetch} />
       <ScrollArea className="relative h-[26rem] overflow-y-auto border border-y-0 border-x-gray-300 dark:border-x-header 3xl:h-[70vh]">
         <table className='class="relative mb-2" min-w-full table-auto'>
           <thead className="sticky top-0 bg-gray-400 dark:bg-dark">
@@ -184,18 +107,15 @@ const ProductTable = ({ allProducts, openForm, mountProduct, onSelectProductToDe
           </thead>
           <tbody className="divide-y divide-gray-400">
             {products.map(product => (
-              <ProductTableItem
-                product={product}
-                key={product.id}
-                mount={mountProduct}
-                onDelete={onSelectProductToDelete}
-              />
+              <ProductTableItem product={product} key={product.id} />
             ))}
           </tbody>
         </table>
       </ScrollArea>
       <footer className="flex justify-end rounded-b-md bg-gray-300 px-6 py-2 dark:bg-header">
-        <span>Productos: {allProducts.length} </span>
+        <span>
+          Productos: {products.length}/{allProducts.length}
+        </span>
       </footer>
     </div>
   );
