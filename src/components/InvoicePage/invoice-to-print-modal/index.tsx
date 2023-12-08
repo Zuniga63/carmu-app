@@ -10,6 +10,7 @@ import InvoiceItemContainer from './invoice-item-container';
 import InvoiceResume from './invoice-resume';
 import InvoicePayment from './invoice-payment';
 import InvoiceFooter from './invoice-footer';
+import { cn } from '@/utils';
 
 export default function InvoiceToPrintModal() {
   const { isOpen, size, printRef, invoice, isError, isLoading, closeModal, handlePrint, changeInvoiceSize } =
@@ -20,18 +21,30 @@ export default function InvoiceToPrintModal() {
       <InvoiceContainer size={size} ref={printRef} isLoading={isLoading} hasError={isError}>
         <InvoiceHeader size={size} isSeparate={invoice?.isSeparate} invoiceNumber={invoice?.prefixNumber} />
 
-        <InvoiceInfo size={size} invoice={invoice} />
+        <div className={cn('grid grid-cols-1 items-start gap-x-2', { 'grid-cols-3 gap-x-4': size === 'lg' })}>
+          <div>
+            <InvoiceInfo size={size} invoice={invoice} />
+            <InvoicePayment
+              size={size}
+              payments={invoice?.payments}
+              cash={invoice?.cash}
+              cashChange={invoice?.cashChange}
+              balance={invoice?.balance}
+              className={size !== 'lg' ? 'hidden' : 'block'}
+            />
+          </div>
 
-        <InvoiceItemContainer>
-          <InvoiceItemList size={size} items={invoice?.items} />
+          <InvoiceItemContainer size={size}>
+            <InvoiceItemList items={invoice?.items} />
 
-          <InvoiceResume
-            size={size}
-            subtotal={invoice?.subtotal}
-            discount={invoice?.discount}
-            totalAmount={invoice?.amount}
-          />
-        </InvoiceItemContainer>
+            <InvoiceResume
+              size={size}
+              subtotal={invoice?.subtotal}
+              discount={invoice?.discount}
+              totalAmount={invoice?.amount}
+            />
+          </InvoiceItemContainer>
+        </div>
 
         <InvoicePayment
           size={size}
@@ -39,9 +52,15 @@ export default function InvoiceToPrintModal() {
           cash={invoice?.cash}
           cashChange={invoice?.cashChange}
           balance={invoice?.balance}
+          className={size !== 'lg' ? 'block' : 'hidden'}
         />
 
-        <InvoiceFooter sellerName={invoice?.sellerName} />
+        <InvoiceFooter
+          size={size}
+          sellerName={invoice?.sellerName}
+          invoice={invoice}
+          christmasTicket={invoice?.christmasTicket}
+        />
       </InvoiceContainer>
 
       <PrintButtons onClick={changeInvoiceSize} size={size} />

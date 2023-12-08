@@ -76,6 +76,7 @@ export interface IInvoiceBase {
   cancelMessage?: string;
   items?: IInvoiceItemBase[];
   payments?: IInvoicePaymentBase[];
+  christmasTicket?: number;
   createdAt: strig;
   updatedAt: string;
 }

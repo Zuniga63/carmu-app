@@ -1,4 +1,4 @@
-import { currencyFormat } from '@/utils';
+import { cn, currencyFormat } from '@/utils';
 import type { IInvoicePayment } from '@/types';
 import { type InvoicePrintSize } from '@/hooks/use-invoice-to-print-modal';
 import { type Dayjs } from 'dayjs';
@@ -9,19 +9,18 @@ import { type Dayjs } from 'dayjs';
 type OnlyCashPaymentProps = {
   cash?: number;
   cashChange?: number;
-  size: InvoicePrintSize;
 };
 
-const OnlyCashPayment = ({ cash, cashChange, size }: OnlyCashPaymentProps) => {
+const OnlyCashPayment = ({ cash, cashChange }: OnlyCashPaymentProps) => {
   return (
-    <div className="flex justify-end gap-x-4">
+    <div className="flex justify-end gap-x-4 text-xs">
       <div className="flex flex-col items-end">
-        <p className={size === 'sm' ? 'text-xs' : 'text-sm'}>Efectivo:</p>
-        <p className={size === 'sm' ? 'text-xs' : 'text-sm'}>Cambio:</p>
+        <p>Efectivo:</p>
+        <p>Cambio:</p>
       </div>
-      <div className="flex flex-col items-end">
-        <p className={size === 'sm' ? 'text-xs' : 'text-sm'}>{currencyFormat(cash)}</p>
-        <p className={size === 'sm' ? 'text-xs' : 'text-sm'}>{currencyFormat(cashChange)}</p>
+      <div className="flex flex-col items-end font-bold">
+        <p>{currencyFormat(cash)}</p>
+        <p>{currencyFormat(cashChange)}</p>
       </div>
     </div>
   );
@@ -31,26 +30,20 @@ const OnlyCashPayment = ({ cash, cashChange, size }: OnlyCashPaymentProps) => {
 // PAYMENT LIST
 //-----------------------------------------------------------------------------
 type PaymentListProps = {
-  size: InvoicePrintSize;
   payments?: IInvoicePayment[];
 };
-const PaymentList = ({ size, payments = [] }: PaymentListProps) => {
+const PaymentList = ({ payments = [] }: PaymentListProps) => {
   const formatDate = (date?: Dayjs) => {
-    const format = size === 'lg' ? 'dddd DD-MM-YYYY hh:mm a' : 'DD-MM-YY';
+    const format = 'DD-MM-YY';
     return date ? date.format(format) : '';
   };
   return (
-    <div className={`${size === 'lg' && 'col-span-2'}`}>
+    <div className="space-y-2 text-xs">
       {payments.map(payment => (
-        <div
-          key={payment.id}
-          className={`flex items-center justify-evenly gap-x-1 divide-x ${
-            size === 'sm' ? 'text-xs' : 'gap-x-2 text-sm'
-          }`}
-        >
-          <p className="flex-shrink-0 px-2">{formatDate(payment.paymentDate)}</p>
-          <p className="line-clamp-1 flex-grow px-2">{payment.description}</p>
-          <p className="flex-shrink-0 px-2">{currencyFormat(payment.amount)}</p>
+        <div key={payment.id} className="flex items-center justify-evenly gap-x-1 divide-x ">
+          <p className="flex-shrink-0 pr-1">{formatDate(payment.paymentDate)}</p>
+          <p className="line-clamp-2 flex-grow px-2">{payment.description}</p>
+          <p className="flex-shrink-0 pl-2 text-right">{currencyFormat(payment.amount)}</p>
         </div>
       ))}
     </div>
@@ -70,13 +63,13 @@ const InvoiceBalance = ({ size, balance }: InvoiceBalanceProps) => {
 
   return (
     <div
-      className={`${
-        size === 'sm'
-          ? 'w-fit border-4 border-gray-dark p-2 text-sm'
-          : 'w-full overflow-hidden bg-gray-100 p-4 text-base'
-      } mx-auto my-4 rounded-lg `}
+      className={cn('mx-auto my-4 w-full rounded-lg border-4 border-neutral-400 p-2 text-sm', {
+        'overflow-hidden border-none bg-gray-100 p-4': size === 'lg',
+      })}
     >
-      <h3 className="mb-2 border-b-8 border-double border-gray-dark text-center tracking-wider text-dark">Saldo</h3>
+      <h3 className="mb-2 border-b-8 border-double border-neutral-600 text-center font-bold tracking-wider text-dark">
+        Saldo
+      </h3>
       <p className="text-center font-bold tracking-widest text-gray-dark">{currencyFormat(balance)}</p>
     </div>
   );
@@ -91,20 +84,15 @@ type Props = {
   cashChange?: number;
   balance?: number;
   payments?: IInvoicePayment[];
+  className?: string;
 };
-export default function InvoicePayment({ size, cash, cashChange, payments = [], balance }: Props) {
+export default function InvoicePayment({ size, cash, cashChange, payments = [], balance, className }: Props) {
   const isOnlyCash = Boolean(cashChange);
 
   return (
-    <div className="">
-      <h3 className={size === 'sm' ? 'mb-2 text-center text-sm font-bold' : 'mb-2 text-center text-lg font-bold'}>
-        Forma de pago
-      </h3>
-      {isOnlyCash ? (
-        <OnlyCashPayment size={size} cash={cash} cashChange={cashChange} />
-      ) : (
-        <PaymentList payments={payments} size={size} />
-      )}
+    <div className={className}>
+      <h3 className="mb-2 text-center text-sm font-bold">Forma de pago</h3>
+      {isOnlyCash ? <OnlyCashPayment cash={cash} cashChange={cashChange} /> : <PaymentList payments={payments} />}
       <InvoiceBalance size={size} balance={balance} />
     </div>
   );
