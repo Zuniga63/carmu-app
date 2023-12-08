@@ -55,12 +55,7 @@ export default function InvoiceToPrintModal() {
           className={size !== 'lg' ? 'block' : 'hidden'}
         />
 
-        <InvoiceFooter
-          size={size}
-          sellerName={invoice?.sellerName}
-          invoice={invoice}
-          christmasTicket={invoice?.christmasTicket}
-        />
+        <InvoiceFooter size={size} invoice={invoice} />
       </InvoiceContainer>
 
       <PrintButtons onClick={changeInvoiceSize} size={size} />

@@ -4,19 +4,18 @@ import { IInvoiceFull } from '@/types';
 import { cn } from '@/utils';
 
 type Props = {
-  sellerName?: string;
-  christmasTicket?: number;
   size: InvoicePrintSize;
   invoice?: IInvoiceFull;
 };
 
-export default function InvoiceFooter({ sellerName, christmasTicket, size, invoice }: Props) {
+export default function InvoiceFooter({ size, invoice }: Props) {
   const premiseStore = useConfigStore(state => state.premiseStore);
+  const { christmasTicket, sellerName } = invoice || {};
 
   return (
     <div className={cn('mt-5 grid gap-y-5', { 'grid-cols-2 gap-x-4': size === 'lg' })}>
-      <div>
-        <p className="text-center text-sm">
+      <div className={cn({ 'col-span-2': size === 'lg' && !christmasTicket })}>
+        <p className={cn('text-center text-sm')}>
           Vendedor: <span className="font-bold">{sellerName}</span>
         </p>
         <p className="text-center text-xs font-bold">{premiseStore ? premiseStore.name : 'Tienda Carmú'}</p>
