@@ -1,11 +1,11 @@
-import { ReactNode } from 'react';
 import Head from 'next/head';
 import Header from './Header';
-import { ScrollArea } from '@mantine/core';
+import LayoutBody from './LayoutBody';
+import LayoutContent from './LayoutContent';
 
 interface Props {
   title?: string;
-  children?: ReactNode;
+  children?: React.ReactNode;
 }
 
 export default function Layout({ title, children }: Props) {
@@ -18,14 +18,10 @@ export default function Layout({ title, children }: Props) {
         <title>{TITLE}</title>
       </Head>
 
-      <div className="relative xl:h-screen xl:overflow-hidden">
+      <LayoutBody>
         <Header title={title} />
-        <div className="h-[calc(100vh-62px)]">
-          <ScrollArea className="h-full">
-            <main>{children}</main>
-          </ScrollArea>
-        </div>
-      </div>
+        <LayoutContent>{children}</LayoutContent>
+      </LayoutBody>
     </>
   );
 }
