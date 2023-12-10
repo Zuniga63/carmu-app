@@ -58,7 +58,6 @@ const CreateTransactionForm = () => {
             {/* Time */}
             <TimeInput
               label="Hora"
-              placeholder="Ingresala aquí."
               value={form.time.value}
               onChange={form.time.onChange}
               className="mb-2 md:col-span-2 md:mb-0"
