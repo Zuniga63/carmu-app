@@ -2,6 +2,7 @@ import { InvoicePrintSize } from '@/hooks/use-invoice-to-print-modal';
 import { useConfigStore } from '@/store/config-store';
 import { IInvoiceFull } from '@/types';
 import { cn } from '@/utils';
+import dayjs from 'dayjs';
 
 type Props = {
   size: InvoicePrintSize;
@@ -22,21 +23,34 @@ export default function InvoiceFooter({ size, invoice }: Props) {
       </div>
 
       {christmasTicket && (
-        <div className="mx-1 h-[3cm] w-full max-w-[9cm] rounded border-4 py-2 ">
-          <div className="mx-auto w-11/12 text-xs">
-            <p className="line-clamp-2 text-center text-sm font-bold">{invoice?.customer?.fullName}</p>
-            <p className="line-clamp-1 text-center font-bold">
-              C.C: <span className="font-bold -tracking-widest">{invoice?.customer?.documentNumber}</span>
-            </p>
-            <p className="text-xs">
-              Ticket # <span className="font-bold">{christmasTicket}</span>
-            </p>
-            <p>
-              Factura: #<span className="font-bold">{invoice?.prefixNumber}</span>{' '}
-            </p>
-            <p>
-              Tel: <span className="tracking-widest">{invoice?.customerPhone}</span>{' '}
-            </p>
+        <div className="mx-1 h-[3cm] w-full max-w-[9cm] rounded border-4 py-2 font-display">
+          <div className="mx-auto flex h-full w-11/12 flex-col text-xs">
+            <div className="flex justify-between gap-x-2">
+              <p className="text-xs">
+                Ticket # <span className="font-bold">{christmasTicket}</span>
+              </p>
+              <p>
+                Factura: #<span className="font-bold">{invoice?.prefixNumber}</span>{' '}
+              </p>
+            </div>
+
+            <div className="flex flex-grow flex-col justify-center">
+              <p className="line-clamp-2 text-center text-sm font-bold">{invoice?.customer?.fullName}</p>
+
+              {invoice?.customer?.documentNumber && (
+                <p className="line-clamp-1 text-center font-bold">
+                  C.C: <span className="font-bold tracking-widest">{invoice?.customer?.documentNumber}</span>
+                </p>
+              )}
+
+              {invoice?.customerPhone && (
+                <p className="text-center text-neutral-600">
+                  Tel: <span className="tracking-widest">{invoice?.customerPhone}</span>{' '}
+                </p>
+              )}
+            </div>
+
+            <p className="text-right italic">Fecha: {dayjs(invoice?.expeditionDate).format('DD-MM-YY hh:mm a')}</p>
           </div>
         </div>
       )}
