@@ -1,4 +1,4 @@
-import brandLogo from 'public/images/logo_62601199d793d.png';
+import brandLogo from '@/../public/images/logo_62601199d793d.png';
 import Image from 'next/image';
 
 export default function LoginHeader() {
