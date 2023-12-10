@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import brandLogo from 'public/images/logo_62601199d793d.png';
+import brandLogo from '@/../public/images/logo_62601199d793d.png';
 import Link from 'next/link';
 
 export default function BrandLogo() {

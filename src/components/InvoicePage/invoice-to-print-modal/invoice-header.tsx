@@ -2,7 +2,7 @@ import type { InvoicePrintSize } from '@/hooks/use-invoice-to-print-modal';
 import { useConfigStore } from '@/store/config-store';
 import { IconBrandWhatsapp, IconMapPin } from '@tabler/icons-react';
 import Image from 'next/image';
-import brandLogo from 'public/images/logo_62601199d793d.png';
+import brandLogo from '@/../public/images/logo_62601199d793d.png';
 
 type Props = {
   size: InvoicePrintSize;
