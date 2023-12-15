@@ -95,9 +95,9 @@
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-neutral-50;
+  @apply bg-neutral-50 dark:bg-neutral-900;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply rounded bg-neutral-300 hover:bg-neutral-400;
+  @apply rounded bg-neutral-300 hover:bg-neutral-400 dark:bg-neutral-600 dark:hover:bg-neutral-800;
 }
