@@ -21,6 +21,7 @@ const ProductTableItem = ({ product }: Props) => {
         <div className="text-center lg:text-left">
           <p className="text-sm font-bold uppercase">{product.name}</p>
           <p className="text-xs text-gray-400">{product.description}</p>
+          {product.isInventoriable && <p className="text-xs italic">Es inventariable</p>}
         </div>
       </td>
       <td className="whitespace-nowrap px-3 py-2 text-center text-xs">

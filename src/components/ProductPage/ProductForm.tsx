@@ -121,7 +121,7 @@ export function useProductForm() {
   const handleClose = () => {
     const isPendign = createIsPending || updateIsPending;
     if (isPendign) return;
-
+    reset();
     closeForm();
   };
 
@@ -144,7 +144,6 @@ export function useProductForm() {
     const isSuccessful = createIsSusscess || updateIsSusscess;
     if (!isSuccessful) return;
 
-    reset();
     closeForm();
   }, [createIsSusscess, updateIsSusscess]);
 
