@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from 'react';
 import { ScrollArea } from '@mantine/core';
 import { IProductWithCategories } from '@/types';
 import ProductTableItem from './ProductTableItem';
-import { normalizeText } from '@/utils';
+import { normalizeText } from '@/lib/utils';
 import { ProductPageFilter, useProductPageStore } from '@/store/product-page.store';
 import ProductTableHeader from './ProductTableHeader';
 import { useGetAllProducts } from '@/hooks/react-query/product.hooks';

@@ -1,5 +1,5 @@
 import type { IInvoicePayment } from '@/types';
-import { currencyFormat } from '@/utils';
+import { currencyFormat } from '@/lib/utils';
 
 import { ActionIcon, Tooltip } from '@mantine/core';
 import { IconX } from '@tabler/icons-react';

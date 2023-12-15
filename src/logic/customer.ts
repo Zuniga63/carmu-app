@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { ICustomer } from '@/types';
-import { normalizeText } from '@/utils';
+import { normalizeText } from '@/lib/utils';
 
 export const getCustomerWithBalance = (customers: ICustomer[]) => {
   return customers.filter(c => c.balance && c.balance > 0);

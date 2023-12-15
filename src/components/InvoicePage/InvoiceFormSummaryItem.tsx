@@ -1,5 +1,5 @@
 import React from 'react';
-import { currencyFormat } from '@/utils';
+import { currencyFormat } from '@/lib/utils';
 
 interface Props {
   title?: string;

@@ -4,7 +4,7 @@ import { useCounterSaleItemForm } from '@/hooks/use-counter-sale-item-form';
 import { IconCategory, IconPlus, IconTrash } from '@tabler/icons-react';
 import { Button, NumberInput, Select, TextInput } from '@mantine/core';
 import ProductSelect from './ProductSelect';
-import { currencyFormat } from '@/utils';
+import { currencyFormat } from '@/lib/utils';
 
 type Props = {
   onAddItem: (newItem: INewInvoiceItem) => void;

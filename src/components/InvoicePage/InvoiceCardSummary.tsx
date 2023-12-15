@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { IInvoiceFull } from '@/types';
-import { currencyFormat } from '@/utils';
+import { currencyFormat } from '@/lib/utils';
 
 interface Props {
   invoice: IInvoiceFull;

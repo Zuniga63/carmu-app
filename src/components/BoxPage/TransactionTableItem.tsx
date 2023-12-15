@@ -1,7 +1,7 @@
 import { ActionIcon } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
 import { IMainTransaction, ITransaction } from '@/types';
-import { currencyFormat } from '@/utils';
+import { currencyFormat } from '@/lib/utils';
 import { useBoxesPageStore } from '@/store/boxes-page-store';
 
 interface Props {

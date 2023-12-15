@@ -1,5 +1,5 @@
 import React from 'react';
-import { currencyFormat } from '@/utils';
+import { currencyFormat } from '@/lib/utils';
 import type { ICustomer } from '@/types';
 
 type Props = {

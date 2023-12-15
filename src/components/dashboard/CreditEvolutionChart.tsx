@@ -8,7 +8,7 @@ import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
 import { ICreditEvolutionReport } from '@/types';
-import { ChartPeriod, CHART_COLORS, currencyFormat, MONTHS, transparentize } from '@/utils';
+import { ChartPeriod, CHART_COLORS, currencyFormat, MONTHS, transparentize } from '@/lib/utils';
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);

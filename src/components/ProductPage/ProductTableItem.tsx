@@ -1,7 +1,7 @@
 import { IconEdit, IconTrash } from '@tabler/icons-react';
 import React from 'react';
 import { IProductWithCategories } from '@/types';
-import { currencyFormat } from '@/utils';
+import { currencyFormat } from '@/lib/utils';
 import { useProductPageStore } from '@/store/product-page.store';
 
 interface Props {

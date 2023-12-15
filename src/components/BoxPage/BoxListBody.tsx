@@ -1,6 +1,6 @@
 import { ScrollArea } from '@mantine/core';
 import React from 'react';
-import normalizeBox from '@/utils/normalizeBox';
+import normalizeBox from '@/lib/utils/normalizeBox';
 import BoxListItem from './BoxListItem';
 import { useGetAllBoxes } from '@/hooks/react-query/boxes.hooks';
 

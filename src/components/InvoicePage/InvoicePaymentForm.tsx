@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import { useGetAllBoxes } from '@/hooks/react-query/boxes.hooks';
-import { currencyFormat } from '@/utils';
+import { currencyFormat } from '@/lib/utils';
 import { useCreateInvoicePayment } from '@/hooks/react-query/invoices.hooks';
 import { FormEvent, useEffect, useState } from 'react';
 import type { IBox, IInvoiceFull, IInvoicePaymentData, IValidationErrors } from '@/types';

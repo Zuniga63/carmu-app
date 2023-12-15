@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { IInvoiceItemBase } from '@/types';
-import { currencyFormat } from '@/utils';
+import { currencyFormat } from '@/lib/utils';
 import { useGetAllCategories } from '@/hooks/react-query/categories.hooks';
 
 interface Props {

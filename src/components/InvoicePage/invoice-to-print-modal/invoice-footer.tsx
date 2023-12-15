@@ -1,7 +1,7 @@
 import { InvoicePrintSize } from '@/hooks/use-invoice-to-print-modal';
 import { useConfigStore } from '@/store/config-store';
 import { IInvoiceFull } from '@/types';
-import { cn } from '@/utils';
+import { cn } from '@/lib/utils';
 import dayjs from 'dayjs';
 
 type Props = {

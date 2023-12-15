@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Select, Skeleton } from '@mantine/core';
 import dayjs from 'dayjs';
-import { ChartPeriod, CHART_DATA_PERIODS, MONTHS } from '@/utils';
+import { ChartPeriod, CHART_DATA_PERIODS, MONTHS } from '@/lib/utils';
 import { toast } from 'react-toastify';
 import CreditEvolutionChart from './CreditEvolutionChart';
 import CreditEvolutionChartAux from './CreditEvolutionChartAux';

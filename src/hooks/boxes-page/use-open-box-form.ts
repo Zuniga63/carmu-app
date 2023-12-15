@@ -1,7 +1,7 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { IBox, IValidationErrors } from '@/types';
-import { currencyFormat } from '@/utils';
+import { currencyFormat } from '@/lib/utils';
 import { useBoxesPageStore } from '@/store/boxes-page-store';
 import { useGetAllBoxes, useOpenBox } from '@/hooks/react-query/boxes.hooks';
 import axios from 'axios';

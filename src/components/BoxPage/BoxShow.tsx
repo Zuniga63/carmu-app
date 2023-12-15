@@ -2,7 +2,7 @@ import { ActionIcon, Button, ScrollArea, Tooltip } from '@mantine/core';
 import { DateRangePicker } from '@mantine/dates';
 import { IconFileDescription, IconWriting } from '@tabler/icons-react';
 import dayjs from 'dayjs';
-import { currencyFormat } from '@/utils';
+import { currencyFormat } from '@/lib/utils';
 import TransactionReport from './TransactionReport';
 import TransactionTable from './TransactionTable';
 import WaitingBox from './WaitingBox';

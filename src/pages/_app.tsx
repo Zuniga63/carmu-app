@@ -9,7 +9,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import { rootConfig } from '@/config/root-config';
 import ThemeProvider from '@/context/CustomThemeProvider';
-import { emCache } from '@/utils/emotionCache';
+import { emCache } from '@/lib/utils/emotionCache';
 import { inter, poppins } from '@/config/fonts.config';
 
 rootConfig();

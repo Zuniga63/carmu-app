@@ -4,7 +4,7 @@ import { IconBox, IconCalendar, IconCash } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import React, { FormEvent } from 'react';
 
-import { currencyFormat } from '@/utils';
+import { currencyFormat } from '@/lib/utils';
 import { useCustomerPaymentModal } from '@/hooks/customer-page/use-customer-payment-modal';
 
 const CustomerPaymentModal = () => {
