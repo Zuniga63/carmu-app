@@ -76,47 +76,55 @@ const ProductTable = () => {
   }, [allProducts, search, size, productRef, category]);
 
   return (
-    <div className="mx-auto w-11/12 pt-4 dark:text-light">
-      <ProductTableHeader isFetching={isLoading || isRefetching} refetch={refetch} />
-      <ScrollArea className="relative h-[26rem] overflow-y-auto border border-y-0 border-x-gray-300 dark:border-x-header 3xl:h-[70vh]">
-        <table className='class="relative mb-2" min-w-full table-auto'>
-          <thead className="sticky top-0 bg-gray-400 dark:bg-dark">
-            <tr className="text-dark dark:text-gray-300">
-              <th scope="col" className="px-4 py-3 text-center uppercase tracking-wide">
-                Producto
-              </th>
-              <th scope="col" className="px-4 py-3 text-center uppercase tracking-wide">
-                Referencias
-              </th>
-              <th scope="col" className="whitespace-nowrap px-4 py-3 text-center uppercase tracking-wide">
-                Categorías
-              </th>
-              <th scope="col" className="whitespace-nowrap px-4 py-3 text-center uppercase tracking-wide">
-                Talla
-              </th>
-              <th scope="col" className="whitespace-nowrap px-4 py-3 text-center uppercase tracking-wide">
-                Stock
-              </th>
-              <th scope="col" className="px-4 py-3 text-center uppercase tracking-wide">
-                Precio
-              </th>
-              <th scope="col" className="relative px-6 py-3">
-                <span className="sr-only">Actions</span>
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-400">
-            {products.map(product => (
-              <ProductTableItem product={product} key={product.id} />
-            ))}
-          </tbody>
-        </table>
-      </ScrollArea>
-      <footer className="flex justify-end rounded-b-md bg-gray-300 px-6 py-2 dark:bg-header">
-        <span>
-          Productos: {products.length}/{allProducts.length}
-        </span>
-      </footer>
+    <div className="mx-auto flex h-full w-11/12 flex-col pb-2 pt-4 dark:text-light">
+      <div className="flex h-full w-full flex-col">
+        <ProductTableHeader isFetching={isLoading || isRefetching} refetch={refetch} />
+
+        <div className="relative flex-grow">
+          <div className="relative h-full">
+            <div className="absolute inset-0 overflow-y-auto border border-y-0 border-x-gray-300 dark:border-x-header">
+              <table className="min-w-full table-auto">
+                <thead className="sticky top-0 bg-gray-400 dark:bg-dark">
+                  <tr className="text-dark dark:text-gray-300">
+                    <th scope="col" className="px-4 py-3 text-center uppercase tracking-wide">
+                      Producto
+                    </th>
+                    <th scope="col" className="px-4 py-3 text-center uppercase tracking-wide">
+                      Referencias
+                    </th>
+                    <th scope="col" className="whitespace-nowrap px-4 py-3 text-center uppercase tracking-wide">
+                      Categorías
+                    </th>
+                    <th scope="col" className="whitespace-nowrap px-4 py-3 text-center uppercase tracking-wide">
+                      Talla
+                    </th>
+                    <th scope="col" className="whitespace-nowrap px-4 py-3 text-center uppercase tracking-wide">
+                      Stock
+                    </th>
+                    <th scope="col" className="px-4 py-3 text-center uppercase tracking-wide">
+                      Precio
+                    </th>
+                    <th scope="col" className="relative px-6 py-3">
+                      <span className="sr-only">Actions</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-400">
+                  {products.map(product => (
+                    <ProductTableItem product={product} key={product.id} />
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <footer className="flex justify-end rounded-b-md bg-gray-300 px-6 py-2 dark:bg-header">
+          <span>
+            Productos: {products.length}/{allProducts.length}
+          </span>
+        </footer>
+      </div>
     </div>
   );
 };
