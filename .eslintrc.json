@@ -1,14 +1,8 @@
 {
-  "extends": [
-    "next/core-web-vitals",
-    "plugin:@typescript-eslint/recommended",
-    "prettier",
-    "plugin:@tanstack/eslint-plugin-query/recommended"
-  ],
+  "extends": ["next/core-web-vitals", "plugin:@tanstack/eslint-plugin-query/recommended", "prettier"],
   "plugins": ["prettier"],
   "rules": {
     "prettier/prettier": "warn",
-    "@typescript-eslint/no-unused-vars": ["error", { "args": "none" }],
     "react-hooks/exhaustive-deps": "off"
   }
 }
