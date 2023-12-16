@@ -5,7 +5,7 @@ import isLeapYear from 'dayjs/plugin/isLeapYear';
 
 import { Bar, Line } from 'react-chartjs-2';
 import { IAnnualReport } from '@/types';
-import { ChartPeriod, CHART_COLORS, COLORS, currencyFormat, MONTHS, transparentize } from '@/utils';
+import { ChartPeriod, CHART_COLORS, COLORS, currencyFormat, MONTHS, transparentize } from '@/lib/utils';
 
 dayjs.extend(isLeapYear);
 

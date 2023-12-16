@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import type { IBox, IInvoiceFull, IInvoicePayment } from '@/types';
 import { FormEvent, useEffect, useState } from 'react';
-import { currencyFormat } from '@/utils';
+import { currencyFormat } from '@/lib/utils';
 import { useGetAllBoxes } from '@/hooks/react-query/boxes.hooks';
 import { useCancelInvoicePayment } from '@/hooks/react-query/invoices.hooks';
 

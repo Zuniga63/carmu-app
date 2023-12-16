@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import React, { useEffect, useMemo } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { ISaleHistory } from '@/types';
-import { CHART_COLORS, currencyFormat, transparentize } from '@/utils';
+import { CHART_COLORS, currencyFormat, transparentize } from '@/lib/utils';
 import AnnualReportStatistics from '../dashboard/AnnualReportStatistics';
 import WeeklyHistory from './WeeklyHistory';
 import AverageChart from './PremiseStoreComparative/AverageChart';

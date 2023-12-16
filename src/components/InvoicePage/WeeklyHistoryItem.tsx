@@ -3,7 +3,7 @@ import { ISaleHistory } from '@/types';
 import dayjs from 'dayjs';
 import isToday from 'dayjs/plugin/isToday';
 import isYesterday from 'dayjs/plugin/isYesterday';
-import { currencyFormat } from '@/utils';
+import { currencyFormat } from '@/lib/utils';
 
 dayjs.extend(isToday);
 dayjs.extend(isYesterday);

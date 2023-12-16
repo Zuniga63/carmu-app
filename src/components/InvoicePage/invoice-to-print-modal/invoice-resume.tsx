@@ -1,5 +1,5 @@
 import { InvoicePrintSize } from '@/hooks/use-invoice-to-print-modal';
-import { currencyFormat } from '@/utils';
+import { currencyFormat } from '@/lib/utils';
 
 type Props = {
   size: InvoicePrintSize;

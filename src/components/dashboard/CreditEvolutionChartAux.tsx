@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 
 import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
-import { ChartPeriod, CHART_COLORS, currencyFormat } from '@/utils';
+import { ChartPeriod, CHART_COLORS, currencyFormat } from '@/lib/utils';
 
 import { ICreditEvolutionReport } from '@/types';
 

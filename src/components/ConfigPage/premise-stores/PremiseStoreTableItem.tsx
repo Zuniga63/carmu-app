@@ -10,7 +10,7 @@ import {
   IconTrash,
 } from '@tabler/icons-react';
 import type { IPremiseStore } from '@/types';
-import { currencyFormat } from '@/utils';
+import { currencyFormat } from '@/lib/utils';
 import { useConfigStore } from '@/store/config-store';
 
 interface Props {

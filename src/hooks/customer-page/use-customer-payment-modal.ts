@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import type { ICustomer, IInvoicePaymentData, IValidationErrors } from '@/types';
-import { currencyFormat } from '@/utils';
+import { currencyFormat } from '@/lib/utils';
 import { useGetAllBoxes } from '@/hooks/react-query/boxes.hooks';
 import { useCustomerPageStore } from '@/store/customer-store';
 import { useAddCustomerPayment, useGetAllCustomers } from '@/hooks/react-query/customers.hooks';

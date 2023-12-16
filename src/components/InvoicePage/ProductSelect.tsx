@@ -2,7 +2,7 @@ import { Select, SelectItem } from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
 import React, { forwardRef, KeyboardEvent } from 'react';
 import { IImage, IInvoiceProduct } from '@/types';
-import { normalizeText } from '@/utils';
+import { normalizeText } from '@/lib/utils';
 
 interface Props {
   products: IInvoiceProduct[];

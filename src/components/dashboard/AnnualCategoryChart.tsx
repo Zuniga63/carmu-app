@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
-import { CHART_COLORS, currencyFormat } from '@/utils';
+import { CHART_COLORS, currencyFormat } from '@/lib/utils';
 import { IAnnualReport, ICategoryReport } from '@/types';
 import { Button, Select } from '@mantine/core';
 import { IconChartDonut, IconX } from '@tabler/icons-react';

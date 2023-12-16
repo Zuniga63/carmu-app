@@ -11,7 +11,7 @@ import type {
   IInvoicePaymentData,
   IInvoiceStoreData,
 } from '@/types';
-import { createInvoiceDates, createInvoiceSearchProp } from '@/utils';
+import { createInvoiceDates, createInvoiceSearchProp } from '@/lib/utils';
 
 export const invoiceApi = axios.create({ baseURL: `${process.env.NEXT_PUBLIC_URL_API}/invoices` });
 

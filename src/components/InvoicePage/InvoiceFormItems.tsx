@@ -4,7 +4,7 @@ import { IconCategory, IconPlus, IconTrash } from '@tabler/icons-react';
 import ProductSelect from './ProductSelect';
 import InvoiceFormGroup from './InvoiceFormGroup';
 import { IInvoiceSummary, INewInvoiceItem } from '@/types';
-import { currencyFormat } from '@/utils';
+import { currencyFormat } from '@/lib/utils';
 import InvoiceFormItemList from './InvoiceFormItemList';
 import { useGetAllLiteProducts } from '@/hooks/react-query/product.hooks';
 import { useGetAllCategories } from '@/hooks/react-query/categories.hooks';

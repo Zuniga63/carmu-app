@@ -10,7 +10,7 @@ import {
   IconLockOpen,
   IconTrash,
 } from '@tabler/icons-react';
-import { currencyFormat } from '@/utils';
+import { currencyFormat } from '@/lib/utils';
 import { Collapse, Divider, Tooltip } from '@mantine/core';
 import { useBoxesPageStore } from '@/store/boxes-page-store';
 

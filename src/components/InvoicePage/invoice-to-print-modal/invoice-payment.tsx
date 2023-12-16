@@ -1,4 +1,4 @@
-import { cn, currencyFormat } from '@/utils';
+import { cn, currencyFormat } from '@/lib/utils';
 import type { IInvoicePayment } from '@/types';
 import { type InvoicePrintSize } from '@/hooks/use-invoice-to-print-modal';
 import { type Dayjs } from 'dayjs';

@@ -15,7 +15,7 @@ import {
 import dayjs from 'dayjs';
 import React, { useMemo } from 'react';
 import { ICustomer } from '@/types';
-import { currencyFormat } from '@/utils';
+import { currencyFormat } from '@/lib/utils';
 import { useCustomerPageStore } from '@/store/customer-store';
 import { useIsFetching } from '@tanstack/react-query';
 import { ServerStateKeysEnum } from '@/config/server-state-key.enum';

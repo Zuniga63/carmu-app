@@ -1,7 +1,7 @@
 import { useGetAllCategories } from '@/hooks/react-query/categories.hooks';
 import { getItemCategory } from '@/logic/invoices-form';
 import type { INewInvoiceItem } from '@/types';
-import { currencyFormat } from '@/utils';
+import { currencyFormat } from '@/lib/utils';
 import { Table } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
 import { useMemo } from 'react';

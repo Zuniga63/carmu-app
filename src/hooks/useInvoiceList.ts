@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { normalizeText } from '@/utils';
+import { normalizeText } from '@/lib/utils';
 import { useGetAllInvoices } from './react-query/invoices.hooks';
 import { useInvoicePageStore } from '@/store/invoices-page.store';
 

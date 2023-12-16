@@ -1,6 +1,6 @@
 import dayjs, { type Dayjs } from 'dayjs';
 import { useEffect, useState } from 'react';
-import { CHART_COLORS, currencyFormat } from '@/utils';
+import { CHART_COLORS, currencyFormat } from '@/lib/utils';
 import { useGetAllPremiseStore } from '@/hooks/react-query/premise-store.hooks';
 import { useGetAllInvoices } from '@/hooks/react-query/invoices.hooks';
 

@@ -10,7 +10,7 @@ import InvoiceItemContainer from './invoice-item-container';
 import InvoiceResume from './invoice-resume';
 import InvoicePayment from './invoice-payment';
 import InvoiceFooter from './invoice-footer';
-import { cn } from '@/utils';
+import { cn } from '@/lib/utils';
 
 export default function InvoiceToPrintModal() {
   const { isOpen, size, printRef, invoice, isError, isLoading, closeModal, handlePrint, changeInvoiceSize } =

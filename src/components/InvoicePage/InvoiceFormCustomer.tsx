@@ -1,6 +1,6 @@
 import { forwardRef, useEffect } from 'react';
 import type { ICustomer } from '@/types';
-import { currencyFormat, normalizeText } from '@/utils';
+import { currencyFormat, normalizeText } from '@/lib/utils';
 import { useGetAllCustomers } from '@/hooks/react-query/customers.hooks';
 
 import { Checkbox, Select, SelectItem, TextInput } from '@mantine/core';

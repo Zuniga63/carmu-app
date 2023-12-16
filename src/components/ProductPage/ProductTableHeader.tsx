@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react';
-import { ActionIcon, Loader, TextInput } from '@mantine/core';
-import { IconReload, IconSearch, IconWriting, IconX } from '@tabler/icons-react';
+import { IconLoader2, IconReload, IconWriting, IconX } from '@tabler/icons-react';
 import { ProductPageFilter, useProductPageStore } from '@/store/product-page.store';
+import SearchInput from '../ui/SearchInput';
+import { Button } from '../ui/Button';
 
 export function useUpdateProductFilter({ filter }: { filter?: ProductPageFilter } = {}) {
   const updateFilter = useProductPageStore(state => state.updateFilter);
@@ -52,52 +53,40 @@ export default function ProductTableHeader({ isFetching, refetch }: Props = {}) 
       <div className="flex items-center gap-x-2">
         <div className="flex-grow">
           <form onSubmit={e => e.preventDefault} ref={formRef} className="grid grid-cols-12 gap-x-2">
-            <TextInput
-              size="xs"
-              type="search"
-              icon={searchLoading ? <Loader size={14} variant="dots" /> : <IconSearch size={14} stroke={1.5} />}
+            <SearchInput
               placeholder="Buscar por nombre y descripcion"
-              role="search"
               className="col-span-3 flex-grow lg:col-span-4"
-              onChange={({ target }) => updateSearch(target.value)}
+              isLoading={searchLoading}
+              onChange={({ currentTarget }) => updateSearch(currentTarget.value)}
               onFocus={({ target }) => {
                 target.select();
               }}
             />
 
-            <TextInput
-              size="xs"
-              type="search"
-              icon={categoryIsLoading ? <Loader size={14} variant="dots" /> : <IconSearch size={14} stroke={1.5} />}
+            <SearchInput
               placeholder="Por Categoría"
-              role="search"
               className="col-span-3 flex-grow lg:col-span-3"
+              isLoading={categoryIsLoading}
               onChange={({ target }) => updateCategory(target.value)}
               onFocus={({ target }) => {
                 target.select();
               }}
             />
 
-            <TextInput
-              size="xs"
-              type="search"
-              icon={sizeLoading ? <Loader size={14} variant="dots" /> : <IconSearch size={14} stroke={1.5} />}
+            <SearchInput
               placeholder="Buscar por talla"
-              role="search"
               className="col-span-3 flex-grow lg:col-span-2"
+              isLoading={sizeLoading}
               onChange={({ target }) => updateSize(target.value)}
               onFocus={({ target }) => {
                 target.select();
               }}
             />
 
-            <TextInput
-              size="xs"
-              type="search"
-              icon={productRefIsLoading ? <Loader size={14} variant="dots" /> : <IconSearch size={14} stroke={1.5} />}
+            <SearchInput
               placeholder="Por referencia"
-              role="search"
               className="col-span-3 flex-grow lg:col-span-3"
+              isLoading={productRefIsLoading}
               onChange={({ target }) => updateProductRef(target.value)}
               onFocus={({ target }) => {
                 target.select();
@@ -106,15 +95,17 @@ export default function ProductTableHeader({ isFetching, refetch }: Props = {}) 
           </form>
         </div>
         <div className="flex gap-x-1">
-          <ActionIcon variant="filled" size="lg" color="red" onClick={handleClearFilters}>
+          <Button variant={'destructive'} size={'icon'} onClick={handleClearFilters}>
             <IconX size={20} />
-          </ActionIcon>
-          <ActionIcon variant="filled" size="lg" color="green" onClick={handleShowForm}>
+          </Button>
+
+          <Button variant={'green'} size={'icon'} onClick={handleShowForm}>
             <IconWriting size={20} />
-          </ActionIcon>
-          <ActionIcon loading={isFetching} variant="filled" size="lg" color="blue" onClick={refetch}>
-            <IconReload size={20} />
-          </ActionIcon>
+          </Button>
+
+          <Button variant={'outline'} size={'icon'} onClick={refetch}>
+            {isFetching ? <IconLoader2 size={20} className="animate-spin" /> : <IconReload size={20} />}
+          </Button>
         </div>
       </div>
     </header>

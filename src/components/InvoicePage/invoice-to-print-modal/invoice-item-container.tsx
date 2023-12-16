@@ -1,5 +1,5 @@
 import { InvoicePrintSize } from '@/hooks/use-invoice-to-print-modal';
-import { cn } from '@/utils';
+import { cn } from '@/lib/utils';
 import { ReactNode } from 'react';
 
 type Props = {

@@ -1,7 +1,7 @@
 import { FormEvent } from 'react';
 import { Button, Checkbox, Modal, NumberInput, Textarea } from '@mantine/core';
 import { IconCalendar, IconClock, IconDeviceFloppy, IconX } from '@tabler/icons-react';
-import { currencyFormat } from '@/utils';
+import { currencyFormat } from '@/lib/utils';
 import { DatePicker, TimeInput } from '@mantine/dates';
 import { useCreateTransactionForm } from '@/hooks/boxes-page/use-create-transaction-form';
 

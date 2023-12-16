@@ -1,6 +1,6 @@
 import { Button, Modal, NumberInput, Textarea } from '@mantine/core';
 import { IconLock } from '@tabler/icons-react';
-import { currencyFormat } from '@/utils';
+import { currencyFormat } from '@/lib/utils';
 import { useCloseBoxForm } from '@/hooks/boxes-page/use-close-box-form';
 
 function CloseBoxForm() {

@@ -1,7 +1,7 @@
 import { ActionIcon, Tooltip } from '@mantine/core';
 import { IconBox, IconLock, IconLockOpen, IconWorld } from '@tabler/icons-react';
 import { useMemo } from 'react';
-import { currencyFormat } from '@/utils';
+import { currencyFormat } from '@/lib/utils';
 import { useGetAllBoxes } from '@/hooks/react-query/boxes.hooks';
 import { useBoxesPageStore } from '@/store/boxes-page-store';
 

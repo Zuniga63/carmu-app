@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
 import { Chart } from 'react-chartjs-2';
-import { ChartPeriod, CHART_COLORS, currencyFormat, MONTHS } from '@/utils';
+import { ChartPeriod, CHART_COLORS, currencyFormat, MONTHS } from '@/lib/utils';
 import { IAnnualReport } from '@/types';
 
 interface Props {

@@ -2,7 +2,7 @@ import { Collapse } from '@mantine/core';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { IInvoiceBaseFull } from '@/types';
-import { currencyFormat } from '@/utils';
+import { currencyFormat } from '@/lib/utils';
 
 interface Props {
   invoice: IInvoiceBaseFull;
