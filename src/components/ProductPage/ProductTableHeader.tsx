@@ -104,7 +104,7 @@ export default function ProductTableHeader({ isFetching, refetch }: Props = {}) 
           </Button>
 
           <Button variant={'outline'} size={'icon'} onClick={refetch}>
-            {isFetching ? <IconLoader2 size={20} /> : <IconReload size={20} />}
+            {isFetching ? <IconLoader2 size={20} className="animate-spin" /> : <IconReload size={20} />}
           </Button>
         </div>
       </div>
