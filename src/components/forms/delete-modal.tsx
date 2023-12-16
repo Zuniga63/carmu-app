@@ -1,10 +1,9 @@
 import { Button, Modal } from '@mantine/core';
 import { IconAlertCircle } from '@tabler/icons-react';
-import { ReactNode } from 'react';
 
 type Props = {
   title: string;
-  children?: ReactNode;
+  children?: React.ReactNode;
   isOpen: boolean;
   isLoading?: boolean;
   onClose: () => void;
