@@ -5,7 +5,9 @@ import { normalizeText } from '@/lib/utils';
 import { ProductPageFilter, useProductPageStore } from '@/store/product-page.store';
 import ProductTableHeader from './ProductTableHeader';
 import { useGetAllProducts } from '@/hooks/react-query/product.hooks';
-import { Table, TableBody, TableHead, TableHeader, TableRow } from '../ui/Table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/Table';
+import { Skeleton } from '../ui/skeleton';
+import TableSkeleton from './table-skeleton';
 
 export function useUpdateProductFilter({ filter }: { filter?: ProductPageFilter } = {}) {
   const updateFilter = useProductPageStore(state => state.updateFilter);
@@ -81,7 +83,7 @@ const ProductTable = () => {
         <ProductTableHeader isFetching={isLoading || isRefetching} refetch={refetch} />
 
         <div className="relative flex-grow">
-          <Table position={'absolute'} inset={0} className="border border-y-0 border-x-gray-300 dark:border-x-header">
+          <Table position={'absolute'} inset={0} borderX>
             <TableHeader className="sticky top-0 bg-background">
               <TableRow>
                 <TableHead className="uppercase">Producto</TableHead>
@@ -96,6 +98,7 @@ const ProductTable = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
+              <TableSkeleton isLoading={isLoading} />
               {products.map(product => (
                 <ProductTableItem product={product} key={product.id} />
               ))}
