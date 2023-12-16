@@ -11,6 +11,7 @@ import { rootConfig } from '@/config/root-config';
 import ThemeProvider from '@/context/CustomThemeProvider';
 import { emCache } from '@/lib/utils/emotionCache';
 import { inter, poppins } from '@/config/fonts.config';
+import { Toaster } from '@/components/ui/toaster';
 
 rootConfig();
 
@@ -25,6 +26,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         </div>
       </ThemeProvider>
       <ReactQueryDevtools initialIsOpen={false} />
+      <Toaster />
     </QueryClientProvider>
   );
 }
