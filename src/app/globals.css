@@ -15,5 +15,5 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply rounded bg-primary-300 hover:bg-primary-400;
+  @apply rounded bg-neutral-300 hover:bg-neutral-400;
 }
