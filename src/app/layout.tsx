@@ -1,5 +1,5 @@
 import { Providers } from './providers';
-import './globals.css';
+import '@/styles/globals.css';
 import { Metadata } from 'next';
 import { inter, poppins } from '@/config/fonts.config';
 

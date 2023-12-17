@@ -1,5 +1,6 @@
 import React from 'react';
-import { Burger } from '@mantine/core';
+import { Button } from '../ui/Button';
+import { IconMenu2, IconX } from '@tabler/icons-react';
 
 interface Props {
   opened: boolean;
@@ -9,5 +10,9 @@ interface Props {
 export default function BurgerToggle({ opened, onClick }: Props) {
   const title = opened ? 'Close navigation' : 'Open navigation';
 
-  return <Burger opened={opened} onClick={onClick} title={title} className="xl:hidden" />;
+  return (
+    <Button size={'icon'} variant={'ghost'} onClick={onClick} title={title} className="xl:hidden">
+      {opened ? <IconX size={20} /> : <IconMenu2 size={20} />}
+    </Button>
+  );
 }
