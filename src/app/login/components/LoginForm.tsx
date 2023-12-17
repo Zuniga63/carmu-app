@@ -1,10 +1,9 @@
 'use client';
 import { FormEvent } from 'react';
-import EmailInput from '@/components/forms/EmailInput';
-import PasswordInput from '@/components/forms/PasswordInput';
-import { Button } from '@chakra-ui/react';
+import { Button } from '@/components/ui/Button';
 import { IconLogin } from '@tabler/icons-react';
 import { useLogin } from '../hooks/useLogin';
+import { Input } from '@/components/ui/Input';
 
 export default function LoginForm() {
   const { email, password, updateEmail, updatePassword, loading: isLoading, loginUser: login } = useLogin();
@@ -17,25 +16,28 @@ export default function LoginForm() {
   return (
     <form onSubmit={handleSubmit}>
       <div className="mb-8 flex flex-col gap-y-4 xl:mb-14 xl:gap-y-6">
-        <EmailInput value={email} onChange={updateEmail} label="Correo Electronico" isRequired />
-        <PasswordInput
+        <Input
+          type="email"
+          value={email}
+          onChange={({ currentTarget }) => updateEmail(currentTarget.value)}
+          required
+          className="bg-background"
+          placeholder="ejemplo@ejemplo.com"
+        />
+
+        <Input
+          type="password"
           value={password}
-          onChange={updatePassword}
-          label="Contraseña"
-          isRequired
-          placeholder="Contraseña"
+          onChange={({ currentTarget }) => updatePassword(currentTarget.value)}
+          required
+          className="bg-background"
+          placeholder="contraseña"
         />
       </div>
 
       <footer className="mx-auto flex w-full items-center justify-end xl:w-10/12">
-        <Button
-          className="flex-grow"
-          colorScheme="blue"
-          type="submit"
-          isLoading={isLoading}
-          loadingText="Iniciando Sesión..."
-          rightIcon={<IconLogin size={20} className="rotate-180 transform" />}
-        >
+        <Button className="flex-grow" type="submit">
+          <IconLogin size={20} className="mr-4 rotate-180 transform" />
           Iniciar Sesión
         </Button>
       </footer>

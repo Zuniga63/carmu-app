@@ -1,20 +1,18 @@
 import { authenticateUser, validateToken } from '@/services/auth-service';
 import { useAuthStore } from '@/store/auth-store';
-import { useToast } from '@chakra-ui/react';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 
 export function useAuthenticateUser() {
-  const toast = useToast({ position: 'top-left' });
+  // const { toast } = useToast();
   const saveCredentials = useAuthStore(state => state.saveCredentials);
 
   return useMutation({
     mutationFn: authenticateUser,
     onSuccess: ({ user, token }) => {
-      toast({
-        title: `¡Bienvenido ${user?.name}!`,
-        status: 'success',
-      });
+      // toast({
+      //   description: `¡Bienvenido ${user?.name}!`,
+      // });
 
       if (user && token) saveCredentials({ user, token });
     },
@@ -29,11 +27,11 @@ export function useAuthenticateUser() {
         errorMessage ||= error?.message;
       }
 
-      toast({
-        title: '¡Opps, algo salio mal!',
-        description: errorMessage,
-        status: 'error',
-      });
+      // toast({
+      //   title: '¡Opps, algo salio mal!',
+      //   description: errorMessage,
+      //   status: 'error',
+      // });
     },
   });
 }

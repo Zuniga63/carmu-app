@@ -7,12 +7,6 @@ import isYesterday from 'dayjs/plugin/isYesterday';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 
-import { setDefaultLocale, registerLocale } from 'react-datepicker';
-import es from 'date-fns/locale/es';
-
-registerLocale('es', es);
-setDefaultLocale('es');
-
 dayjs.locale('es-do');
 dayjs.extend(relativeTime);
 dayjs.extend(isLeapYear);
