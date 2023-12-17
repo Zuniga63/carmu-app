@@ -1,11 +1,13 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { IProductWithCategories } from '@/types';
 import ProductTableItem from './ProductTableItem';
-import { normalizeText } from '@/lib/utils';
+import { cn, normalizeText } from '@/lib/utils';
 import { ProductPageFilter, useProductPageStore } from '@/store/product-page.store';
 import ProductTableHeader from './ProductTableHeader';
 import { useGetAllProducts } from '@/hooks/react-query/product.hooks';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '../ui/Table';
+import TableSkeleton from './table-skeleton';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 export function useUpdateProductFilter({ filter }: { filter?: ProductPageFilter } = {}) {
   const updateFilter = useProductPageStore(state => state.updateFilter);
@@ -33,7 +35,11 @@ const ProductTable = () => {
 
   const { data: allProducts = [], isLoading, isRefetching, refetch } = useGetAllProducts();
 
-  const products = useMemo(() => {
+  const [page, setPage] = useState<string>('1');
+  const [pages, setPages] = useState(1);
+  const maxItems = 25;
+
+  const productFiltered = useMemo(() => {
     let result: IProductWithCategories[] = allProducts.slice();
 
     if (search) {
@@ -75,13 +81,29 @@ const ProductTable = () => {
     return result;
   }, [allProducts, search, size, productRef, category]);
 
+  const products = useMemo(() => {
+    const pageValue = isNaN(parseInt(page)) ? 1 : parseInt(page);
+    return productFiltered.slice((pageValue - 1) * maxItems, pageValue * maxItems);
+  }, [productFiltered, page]);
+
+  const pagMessage = useMemo(() => {
+    const fromItem = maxItems * (parseInt(page) - 1) + 1;
+    const toItem = Math.min(maxItems * parseInt(page), productFiltered.length);
+    return `Mostrando del ${fromItem} al ${toItem} de ${productFiltered.length} productos`;
+  }, [page, maxItems, productFiltered]);
+
+  useEffect(() => {
+    setPage('1');
+    setPages(Math.ceil(productFiltered.length / maxItems));
+  }, [productFiltered]);
+
   return (
     <div className="mx-auto flex h-full w-11/12 flex-col pb-2 pt-4 dark:text-light">
       <div className="flex h-full w-full flex-col">
         <ProductTableHeader isFetching={isLoading || isRefetching} refetch={refetch} />
 
         <div className="relative flex-grow">
-          <Table position={'absolute'} inset={0} className="border border-y-0 border-x-gray-300 dark:border-x-header">
+          <Table position={'absolute'} inset={0} borderX>
             <TableHeader className="sticky top-0 bg-background">
               <TableRow>
                 <TableHead className="uppercase">Producto</TableHead>
@@ -96,6 +118,7 @@ const ProductTable = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
+              <TableSkeleton isLoading={isLoading} />
               {products.map(product => (
                 <ProductTableItem product={product} key={product.id} />
               ))}
@@ -103,10 +126,28 @@ const ProductTable = () => {
           </Table>
         </div>
 
-        <footer className="flex justify-end rounded-b-md bg-gray-300 px-6 py-2 dark:bg-header">
-          <span>
-            Productos: {products.length}/{allProducts.length}
-          </span>
+        <footer className={cn('flex items-center justify-between rounded-b-md bg-gray-300 px-6 py-2 dark:bg-header')}>
+          <div className={cn('flex items-center gap-x-4')}>
+            <div className={cn('w-16', { hidden: pages <= 1 })}>
+              <Select value={page} onValueChange={setPage}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Pag" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Array(pages)
+                    .fill(null)
+                    .map((_, index) => (
+                      <SelectItem key={index} value={String(index + 1)}>
+                        {index + 1}
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <p className="text-sm italic text-neutral-400">{pagMessage}</p>
+          </div>
+          <span className="text-xs italic">Area reservada</span>
         </footer>
       </div>
     </div>

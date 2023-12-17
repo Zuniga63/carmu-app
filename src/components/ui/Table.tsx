@@ -21,6 +21,9 @@ const tableVariants = cva('w-full overflow-auto', {
       5: 'inset-5',
       none: '',
     },
+    borderX: {
+      true: 'border border-y-0 border-x-gray-300 dark:border-x-header',
+    },
   },
   defaultVariants: {
     position: 'relative',
@@ -29,11 +32,13 @@ const tableVariants = cva('w-full overflow-auto', {
 
 type TableProps = React.ComponentPropsWithRef<'table'> & VariantProps<typeof tableVariants>;
 
-const Table = React.forwardRef<HTMLTableElement, TableProps>(({ className, inset, position, ...props }, ref) => (
-  <div className={cn(tableVariants({ inset, position }))}>
-    <table ref={ref} className={cn('w-full caption-bottom text-sm', className)} {...props} />
-  </div>
-));
+const Table = React.forwardRef<HTMLTableElement, TableProps>(
+  ({ className, inset, position, borderX, ...props }, ref) => (
+    <div className={cn(tableVariants({ inset, position, borderX }))}>
+      <table ref={ref} className={cn('w-full caption-bottom text-sm', className)} {...props} />
+    </div>
+  ),
+);
 Table.displayName = 'Table';
 
 const TableHeader = React.forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>(
