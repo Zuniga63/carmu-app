@@ -139,31 +139,35 @@ const AnnualGeneralChart = ({ annualReports, period, monthSelected }: Props) => 
     annualReports.forEach(({ year, monthlyReports }, index) => {
       const color = CHART_COLORS[COLORS[index % COLORS.length] as keyof typeof CHART_COLORS];
 
-      const { dailyReports, fromDate, toDate } = monthlyReports[month];
-      const now = dayjs();
-      const data: number[] = [];
+      const monthlyReport = monthlyReports[month];
 
-      let accumulated = 0;
-      let date = dayjs(fromDate);
-      let endDate = dayjs(toDate);
+      if (monthlyReport) {
+        const { dailyReports, fromDate, toDate } = monthlyReports[month];
+        const now = dayjs();
+        const data: number[] = [];
 
-      if (date.isSame(now.startOf('month'))) endDate = now;
+        let accumulated = 0;
+        let date = dayjs(fromDate);
+        let endDate = dayjs(toDate);
 
-      while (date.isBefore(endDate)) {
-        const dailyReport = dailyReports.find(daily => dayjs(daily.fromDate).isSame(date));
-        if (dailyReport) accumulated += dailyReport.amount;
-        data.push(accumulated);
-        date = date.add(1, 'day');
+        if (date.isSame(now.startOf('month'))) endDate = now;
+
+        while (date.isBefore(endDate)) {
+          const dailyReport = dailyReports.find(daily => dayjs(daily.fromDate).isSame(date));
+          if (dailyReport) accumulated += dailyReport.amount;
+          data.push(accumulated);
+          date = date.add(1, 'day');
+        }
+
+        datasets.push({
+          label: String(year),
+          data: data,
+          borderColor: color,
+          fill: false,
+          tension: 0.2,
+          pointBorderWidth: 1,
+        });
       }
-
-      datasets.push({
-        label: String(year),
-        data: data,
-        borderColor: color,
-        fill: false,
-        tension: 0.2,
-        pointBorderWidth: 1,
-      });
     });
 
     return datasets;

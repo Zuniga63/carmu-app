@@ -109,38 +109,41 @@ const CategoryChart = ({ annualReport, period, month }: Props) => {
         const data: number[] = [];
         const colors = CHART_COLORS[COLORS[index % COLORS.length] as keyof typeof CHART_COLORS];
 
-        const { dailyReports, fromDate, toDate } = monthlyReports[month];
-        const now = dayjs();
+        const monthlyReport = monthlyReports[month];
+        if (monthlyReport) {
+          const { dailyReports, fromDate, toDate } = monthlyReport;
+          const now = dayjs();
 
-        let accumulated = 0;
-        let date = dayjs(fromDate);
-        let endDate = dayjs(toDate);
+          let accumulated = 0;
+          let date = dayjs(fromDate);
+          let endDate = dayjs(toDate);
 
-        if (date.isSame(now.startOf('month'))) endDate = now;
+          if (date.isSame(now.startOf('month'))) endDate = now;
 
-        while (date.isBefore(endDate)) {
-          const dailyReport = dailyReports.find(daily => dayjs(daily.fromDate).isSame(date));
-          if (dailyReport) {
-            const categoryReport = dailyReport.categories.find(report => report.category.id === category.id);
-            if (categoryReport) {
-              accumulated += categoryReport.amount;
+          while (date.isBefore(endDate)) {
+            const dailyReport = dailyReports.find(daily => dayjs(daily.fromDate).isSame(date));
+            if (dailyReport) {
+              const categoryReport = dailyReport.categories.find(report => report.category.id === category.id);
+              if (categoryReport) {
+                accumulated += categoryReport.amount;
+              }
             }
+            data.push(accumulated);
+            date = date.add(1, 'day');
           }
-          data.push(accumulated);
-          date = date.add(1, 'day');
-        }
 
-        datasets.push({
-          label: category.name,
-          data,
-          borderColor: colors,
-          borderWidth: 2,
-          backgroundColor: transparentize(colors, 0.6),
-          fill: false,
-          tension: 0.2,
-          pointBorderWidth: 1,
-          hidden: categories.length > 3 && category.pareto > 80,
-        });
+          datasets.push({
+            label: category.name,
+            data,
+            borderColor: colors,
+            borderWidth: 2,
+            backgroundColor: transparentize(colors, 0.6),
+            fill: false,
+            tension: 0.2,
+            pointBorderWidth: 1,
+            hidden: categories.length > 3 && category.pareto > 80,
+          });
+        }
       });
     }
 
