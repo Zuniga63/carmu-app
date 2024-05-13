@@ -16,7 +16,7 @@ class MyDocument extends Document {
             type="image/x-icon"
           />
         </Head>
-        <body className={`bg-light font-sans dark:bg-defaul-body`}>
+        <body className={`dark bg-light font-sans dark:bg-defaul-body`}>
           <Main />
           <NextScript />
         </body>

@@ -13,8 +13,6 @@ import { useInitialAuth } from '@/hooks/useInitialAuth';
 export default function ThemeProvider({ children }: { children: ReactNode }) {
   useInitialAuth();
 
-  const KEY_THEME = 'mantine-color-scheme';
-
   useEffect(() => {
     // NProgress
     // https://caspertheghost.me/blog/nprogress-next-js
