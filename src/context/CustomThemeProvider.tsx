@@ -1,8 +1,7 @@
 import 'react-toastify/dist/ReactToastify.css';
 import 'nprogress/nprogress.css';
 
-import { ColorScheme, ColorSchemeProvider, MantineProvider } from '@mantine/core';
-import { useHotkeys, useLocalStorage } from '@mantine/hooks';
+import { MantineProvider } from '@mantine/core';
 import { ReactNode, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 
@@ -16,36 +15,7 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
 
   const KEY_THEME = 'mantine-color-scheme';
 
-  const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
-    key: KEY_THEME,
-    defaultValue: 'dark',
-    getInitialValueInEffect: true,
-  });
-  useHotkeys([['mod+J', () => toggleColorScheme()]]);
-
-  const setGlobalDarkTheme = (value?: ColorScheme) => {
-    let theme: ColorScheme = value || 'dark';
-
-    if (!value && window) {
-      const localTheme = JSON.parse(localStorage[KEY_THEME] || null);
-      if (localTheme && localTheme === 'light') theme = 'light';
-    }
-
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  };
-
-  const toggleColorScheme = (value?: ColorScheme) => {
-    const theme = value || (colorScheme === 'dark' ? 'light' : 'dark');
-    setColorScheme(theme);
-    setGlobalDarkTheme(theme);
-  };
-
   useEffect(() => {
-    setGlobalDarkTheme();
     // NProgress
     // https://caspertheghost.me/blog/nprogress-next-js
     const handleRouteStart = () => NProgress.start();
@@ -64,12 +34,11 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
+    <>
       <MantineProvider
         withGlobalStyles
         theme={{
-          /** Put your mantine theme override here */
-          colorScheme,
+          colorScheme: 'dark',
           fontFamily: 'inherit',
           loader: 'oval',
         }}
@@ -79,7 +48,7 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
 
       <ToastContainer
         position="top-left"
-        theme={colorScheme}
+        theme={'dark'}
         autoClose={2000}
         hideProgressBar={false}
         newestOnTop={false}
@@ -89,6 +58,6 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
         draggable
         pauseOnHover
       />
-    </ColorSchemeProvider>
+    </>
   );
 }

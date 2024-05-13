@@ -1,6 +1,5 @@
 import BrandLogo from './BrandLogo';
 import BurgerToggle from './BurgerToggle';
-import DarkButtom from './DarkButton';
 import NavDrawer from './NavDrawer';
 import UserAvatar from './UserAvatar';
 import HeaderContainer from './HeaderContainer';
@@ -36,7 +35,6 @@ export default function Header({ title }: Props) {
         <HeaderDesktopNav />
 
         <HeaderBoundary>
-          <DarkButtom />
           <UserAvatar />
         </HeaderBoundary>
       </HeaderContainer>
