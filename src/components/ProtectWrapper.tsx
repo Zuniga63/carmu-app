@@ -1,7 +1,9 @@
-import { ActionIcon, Button, PasswordInput } from '@mantine/core';
 import { useId, KeyboardEvent } from 'react';
-import { useConfigStore } from '@/store/config-store';
 import { IconLockAccess } from '@tabler/icons-react';
+
+import { Button } from './ui/Button';
+import { Input } from './ui/Input';
+import { useConfigStore } from '@/store/config-store';
 
 type Props = {
   inputName?: string;
@@ -28,23 +30,27 @@ export default function ProtectWrapper({ children, inputName = 'content-password
   return showInformation ? (
     <div className="relative">
       <div className="absolute right-4 top-4 z-fixed">
-        <ActionIcon onClick={blockInformation}>
+        <Button variant={'outline'} size={'icon'} onClick={blockInformation}>
           <IconLockAccess />
-        </ActionIcon>
+        </Button>
       </div>
       {children}
     </div>
   ) : (
     <div className="flex h-96 flex-col items-center justify-center gap-y-8">
       <h2 className="text-lg font-bold">Contenido Bloqueado</h2>
-      <PasswordInput
+      <Input
         id={passwordInputId}
         name={inputName}
         placeholder="Escribe la contraseña"
         className="w-60"
         onKeyDown={handleKeyDown}
+        type="password"
+        role="security"
       />
-      <Button onClick={handleClick}>Desbloquear</Button>
+      <Button variant={'green'} onClick={handleClick}>
+        Desbloquear
+      </Button>
     </div>
   );
 }
