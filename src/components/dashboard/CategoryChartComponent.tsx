@@ -1,31 +1,30 @@
-import React from 'react';
-import { Tabs } from '@mantine/core';
-import { IconChartInfographic } from '@tabler/icons-react';
 import dayjs from 'dayjs';
+
 import { IAnnualReport } from '@/types';
 import CategoryChart from './CategoryChart';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/Tabs';
 
 interface Props {
   annualReports: IAnnualReport[];
-  period: string | null;
-  monthSelected: string | null;
+  period?: string;
+  monthSelected?: string;
 }
 
 const CategoryChartComponent = ({ annualReports, period, monthSelected }: Props) => {
   return (
     <Tabs defaultValue={String(dayjs().year())}>
-      <Tabs.List>
+      <TabsList>
         {annualReports.map(annualReport => (
-          <Tabs.Tab value={String(annualReport.year)} key={annualReport.year} icon={<IconChartInfographic size={14} />}>
+          <TabsTrigger value={String(annualReport.year)} key={annualReport.year}>
             {annualReport.year}
-          </Tabs.Tab>
+          </TabsTrigger>
         ))}
-      </Tabs.List>
+      </TabsList>
 
       {annualReports.map(annualReport => (
-        <Tabs.Panel value={String(annualReport.year)} key={annualReport.year} pt="xs">
+        <TabsContent value={String(annualReport.year)} key={annualReport.year}>
           <CategoryChart annualReport={annualReport} period={period} month={monthSelected} />
-        </Tabs.Panel>
+        </TabsContent>
       ))}
     </Tabs>
   );

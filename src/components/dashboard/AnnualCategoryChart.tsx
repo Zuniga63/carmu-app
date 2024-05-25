@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
-import { CHART_COLORS, currencyFormat } from '@/lib/utils';
-import { IAnnualReport, ICategoryReport } from '@/types';
-import { Button, Select } from '@mantine/core';
-import { IconChartDonut, IconX } from '@tabler/icons-react';
 import { Chart } from 'react-chartjs-2';
+import { useEffect, useState } from 'react';
+import { IconChartDonut } from '@tabler/icons-react';
+import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
+
+import { Button } from '../ui/Button';
+import { IAnnualReport, ICategoryReport } from '@/types';
+import { CHART_COLORS, currencyFormat } from '@/lib/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 interface Props {
   annualReports: IAnnualReport[];
@@ -54,7 +56,7 @@ const initalData: CategoryData = {
 const AnnualCategoryChart = ({ annualReports }: Props) => {
   const [chartData, setChartData] = useState<ChartData<'doughnut'> | null>(null);
   const [categoryData, setCategoryData] = useState(initalData);
-  const [yearSelected, selectYear] = useState<string | null>(null);
+  const [yearSelected, selectYear] = useState<string | undefined>(undefined);
   const [categoryReports, setCategoryReports] = useState<ICategoryReport[]>([]);
 
   const addCategory = (categoryId: string | null) => {
@@ -215,26 +217,37 @@ const AnnualCategoryChart = ({ annualReports }: Props) => {
         <p className="mb-2 text-center text-xs italic">Categorías</p>
         {/* Controllers */}
         <div className="flex justify-between gap-2">
-          <Select
-            value={yearSelected}
-            onChange={selectYear}
-            data={annualReports.map(report => String(report.year))}
-            size="xs"
-            placeholder="Año"
-          />
-          <Select
-            value={null}
-            onChange={addCategory}
-            data={[
-              ...categoryReports.map(report => ({
-                value: report.category.id,
-                label: report.category.name,
-              })),
-              { value: 'all', label: 'Agregar todas' },
-            ]}
-            size="xs"
-            placeholder="Categoría"
-          />
+          <Select onValueChange={selectYear} value={yearSelected}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Año" />
+            </SelectTrigger>
+            <SelectContent>
+              {annualReports.map((report, index) => (
+                <SelectItem key={report.year} value={report.year.toString()}>
+                  {report.year}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select onValueChange={addCategory}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Categoría" />
+            </SelectTrigger>
+            <SelectContent>
+              {[
+                ...categoryReports.map(report => ({
+                  value: report.category.id,
+                  label: report.category.name,
+                })),
+                { value: 'all', label: 'Agregar todas' },
+              ].map(({ value, label }, index) => (
+                <SelectItem key={`${value}-${index}`} value={value}>
+                  {label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </header>
 
@@ -254,22 +267,10 @@ const AnnualCategoryChart = ({ annualReports }: Props) => {
       </div>
 
       <footer className="rounded-b.md flex justify-between bg-gray-300 px-2 py-3 dark:bg-header">
-        <Button
-          leftIcon={<IconX size={16} />}
-          color="violet"
-          size="xs"
-          disabled={categoryData.categories.length <= 0}
-          onClick={removeCategory}
-        >
+        <Button variant={'destructive'} disabled={categoryData.categories.length <= 0} onClick={removeCategory}>
           Quitar Categoría
         </Button>
-        <Button
-          leftIcon={<IconX size={16} />}
-          color="red"
-          size="xs"
-          disabled={categoryData.annualReports.length <= 0}
-          onClick={removeYear}
-        >
+        <Button variant={'destructive'} disabled={categoryData.annualReports.length <= 0} onClick={removeYear}>
           Quitar Año
         </Button>
       </footer>

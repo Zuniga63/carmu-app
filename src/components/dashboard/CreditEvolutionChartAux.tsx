@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from 'react';
-
 import dayjs from 'dayjs';
-
-import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
-import { ChartPeriod, CHART_COLORS, currencyFormat } from '@/lib/utils';
+import { useEffect, useState } from 'react';
+import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
 
+import { ChartPeriod, CHART_COLORS, currencyFormat } from '@/lib/utils';
 import { ICreditEvolutionReport } from '@/types';
 
 interface Props {
   creditReport: ICreditEvolutionReport;
-  period: string | null;
-  monthSelected: string | null;
+  period?: string;
+  monthSelected?: string;
 }
 
 export const chartOptions: ChartOptions<'doughnut'> = {

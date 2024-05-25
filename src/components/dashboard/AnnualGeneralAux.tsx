@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
 import { Chart } from 'react-chartjs-2';
-import { ChartPeriod, CHART_COLORS, currencyFormat, MONTHS } from '@/lib/utils';
+import { useEffect, useState } from 'react';
+import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
+
 import { IAnnualReport } from '@/types';
+import { ChartPeriod, CHART_COLORS, currencyFormat, MONTHS } from '@/lib/utils';
 
 interface Props {
   title: string;
   description?: string;
   annualReports: IAnnualReport[];
-  period: string | null;
+  period?: string;
 }
 
 export const chartOptions: ChartOptions<'doughnut'> = {
@@ -44,7 +45,7 @@ const initialDoughnutData: ChartData<'doughnut'> = {
 const AnnualGeneralAux = ({ title, description, annualReports, period }: Props) => {
   const [chartData, setChartData] = useState(initialDoughnutData);
 
-  const getLabels = (period: string | null, annualReports: IAnnualReport[]) => {
+  const getLabels = (period?: string, annualReports: IAnnualReport[] = []) => {
     let labels: string[] = [];
     if (period && period === ChartPeriod.monthly) labels = MONTHS.map(month => month.slice(0, 3));
     else labels = annualReports.map(({ year }) => String(year));
@@ -52,7 +53,7 @@ const AnnualGeneralAux = ({ title, description, annualReports, period }: Props) 
     return labels;
   };
 
-  const getDatasets = (period: string | null, annualReports: IAnnualReport[]) => {
+  const getDatasets = (period: string | undefined, annualReports: IAnnualReport[]) => {
     const datasets: ChartDataset<'doughnut', number[]>[] = [];
 
     if (period && period === ChartPeriod.monthly) {

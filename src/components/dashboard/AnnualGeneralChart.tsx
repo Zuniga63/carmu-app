@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
 import dayjs from 'dayjs';
+import { useEffect, useState } from 'react';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
-
 import { Bar, Line } from 'react-chartjs-2';
+import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
+
 import { IAnnualReport } from '@/types';
 import { ChartPeriod, CHART_COLORS, COLORS, currencyFormat, MONTHS, transparentize } from '@/lib/utils';
 
@@ -92,8 +92,8 @@ export const lineOptions: ChartOptions<'line'> = {
 
 interface Props {
   annualReports: IAnnualReport[];
-  period: string | null;
-  monthSelected: string | null;
+  period?: string;
+  monthSelected?: string;
 }
 
 const AnnualGeneralChart = ({ annualReports, period, monthSelected }: Props) => {

@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react';
-
 import dayjs from 'dayjs';
+import { Line } from 'react-chartjs-2';
+import { useEffect, useState } from 'react';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
-
 import { ChartData, ChartDataset, ChartOptions } from 'chart.js';
-import { Line } from 'react-chartjs-2';
 
 import { ICreditEvolutionReport } from '@/types';
 import { ChartPeriod, CHART_COLORS, currencyFormat, MONTHS, transparentize } from '@/lib/utils';
@@ -15,8 +13,8 @@ dayjs.extend(isSameOrBefore);
 
 interface Props {
   creditReport: ICreditEvolutionReport;
-  period: string | null;
-  monthSelected: string | null;
+  period?: string;
+  monthSelected?: string;
 }
 
 export const lineOptions: ChartOptions<'line'> = {
