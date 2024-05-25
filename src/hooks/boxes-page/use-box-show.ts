@@ -1,8 +1,9 @@
-import { DateRangePickerValue } from '@mantine/dates';
 import dayjs from 'dayjs';
+import { DateRange } from 'react-day-picker';
 import { useEffect, useMemo, useState } from 'react';
-import type { IBox, ITransaction, ITransactionResponse } from '@/types';
+
 import { useBoxesPageStore } from '@/store/boxes-page-store';
+import type { IBox, ITransaction, ITransactionResponse } from '@/types';
 import { useGetAllBoxes, useGetMainTransactions, useGetMinorTransactions } from '@/hooks/react-query/boxes.hooks';
 
 export function useBoxShow() {
@@ -14,7 +15,7 @@ export function useBoxShow() {
 
   const [waiting, setWaiting] = useState(true);
   const [cashbox, setCashbox] = useState<IBox | null>(null);
-  const [rangeDate, setRangeDate] = useState<DateRangePickerValue>([null, null]);
+  const [rangeDate, setRangeDate] = useState<DateRange | undefined>();
   const [reportOpened, setReportOpened] = useState(false);
 
   const { data: boxData } = useGetAllBoxes();
@@ -40,7 +41,7 @@ export function useBoxShow() {
   const resetComponent = () => {
     setWaiting(true);
     setCashbox(null);
-    setRangeDate([null, null]);
+    setRangeDate(undefined);
   };
 
   const {
@@ -68,9 +69,9 @@ export function useBoxShow() {
       (mainBoxIsSelected ? mainTransactions : boxTransactions) || [],
     );
 
-    if (mainBoxIsSelected && rangeDate[0] && rangeDate[1]) {
+    if (mainBoxIsSelected && rangeDate?.to && rangeDate.from) {
       return allTransactions.filter(
-        t => t.transactionDate.isSameOrAfter(rangeDate[0]) && t.transactionDate.isSameOrBefore(rangeDate[1]),
+        t => t.transactionDate.isSameOrAfter(rangeDate.to) && t.transactionDate.isSameOrBefore(rangeDate.from),
       );
     } else if (mainBoxIsSelected) {
       return allTransactions.filter(t => t.transactionDate.isSameOrAfter(dayjs().startOf('month')));

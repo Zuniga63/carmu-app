@@ -1,5 +1,3 @@
-import React, { MouseEventHandler, useEffect, useState } from 'react';
-import { IBoxWithDayjs } from '@/types';
 import {
   IconAlertTriangle,
   IconAward,
@@ -10,8 +8,11 @@ import {
   IconLockOpen,
   IconTrash,
 } from '@tabler/icons-react';
+import { MouseEventHandler, useEffect, useState } from 'react';
+
+import { IBoxWithDayjs } from '@/types';
+import { Separator } from '../ui/Separator';
 import { currencyFormat } from '@/lib/utils';
-import { Collapse, Divider, Tooltip } from '@mantine/core';
 import { useBoxesPageStore } from '@/store/boxes-page-store';
 
 interface Props {
@@ -114,46 +115,38 @@ const BoxListItem = ({ box }: Props) => {
                 {box.openBox ? (
                   <>
                     {/* CERRAR CAJA */}
-                    <Tooltip label="Cerrar caja" color="orange">
-                      <button
-                        onClick={handleCloseBoxClick}
-                        className="rounded-full border border-gray-600 p-1 text-gray-600 transition-colors hover:border-orange-500 hover:text-orange-500 active:border-gray-600 active:text-gray-600"
-                      >
-                        <IconLock size={14} stroke={2} />
-                      </button>
-                    </Tooltip>
+                    <button
+                      onClick={handleCloseBoxClick}
+                      className="rounded-full border border-gray-600 p-1 text-gray-600 transition-colors hover:border-orange-500 hover:text-orange-500 active:border-gray-600 active:text-gray-600"
+                    >
+                      <IconLock size={14} stroke={2} />
+                    </button>
 
                     {/* VER TRANSACCIONES CAJA */}
-                    <Tooltip label="Ver transacciones" color="blue">
-                      <button
-                        onClick={handleShowInfoClick}
-                        className="rounded-full border border-gray-600 p-1 text-gray-600 transition-colors hover:border-blue-500 hover:text-blue-500 active:border-gray-600 active:text-gray-600"
-                      >
-                        <IconFolder size={14} stroke={2} />
-                      </button>
-                    </Tooltip>
+                    <button
+                      onClick={handleShowInfoClick}
+                      className="rounded-full border border-gray-600 p-1 text-gray-600 transition-colors hover:border-blue-500 hover:text-blue-500 active:border-gray-600 active:text-gray-600"
+                    >
+                      <IconFolder size={14} stroke={2} />
+                    </button>
                   </>
                 ) : (
                   <>
                     {/* OPEN BOX */}
-                    <Tooltip label="Abrir caja" color="green">
-                      <button
-                        onClick={handleOpenBoxClick}
-                        className="rounded-full border border-gray-600 p-1 text-gray-600 transition-colors hover:border-green-500 hover:text-green-500 active:border-gray-600 active:text-gray-600"
-                      >
-                        <IconLockOpen size={14} stroke={2} />
-                      </button>
-                    </Tooltip>
+                    <button
+                      onClick={handleOpenBoxClick}
+                      className="rounded-full border border-gray-600 p-1 text-gray-600 transition-colors hover:border-green-500 hover:text-green-500 active:border-gray-600 active:text-gray-600"
+                    >
+                      <IconLockOpen size={14} stroke={2} />
+                    </button>
 
                     {/* DELETE BOX */}
-                    <Tooltip label="Eliminar caja" color="red">
-                      <button
-                        onClick={handleDeleteClick}
-                        className="rounded-full border border-gray-600 p-1 text-gray-600 transition-colors hover:border-red-500 hover:text-red-500 active:border-gray-600 active:text-gray-600"
-                      >
-                        <IconTrash size={14} stroke={2} />
-                      </button>
-                    </Tooltip>
+                    <button
+                      onClick={handleDeleteClick}
+                      className="rounded-full border border-gray-600 p-1 text-gray-600 transition-colors hover:border-red-500 hover:text-red-500 active:border-gray-600 active:text-gray-600"
+                    >
+                      <IconTrash size={14} stroke={2} />
+                    </button>
                   </>
                 )}
               </div>
@@ -167,64 +160,51 @@ const BoxListItem = ({ box }: Props) => {
           )}
         </header>
         {/* Body */}
-        <Collapse in={opened || mouseIsOver}>
-          <div className="bg-gradient-to-b from-gray-200 to-indigo-300 px-4 py-2 dark:bg-none">
-            {!!box.openBox && (
-              <>
-                <div className="flex justify-between text-xs text-gray-dark dark:text-gray-400">
-                  <p>
-                    Base: <span className="font-bold">{currencyFormat(box.base)}</span>
-                  </p>
-                  <div className="flex items-center gap-x-2 ">
-                    <IconLockOpen size={18} />
-                    <span>{openFromNow}</span>
-                  </div>
+        <div className="bg-gradient-to-b from-gray-200 to-indigo-300 px-4 py-2 dark:bg-none">
+          {!!box.openBox && (
+            <>
+              <div className="flex justify-between text-xs text-gray-dark dark:text-gray-400">
+                <p>
+                  Base: <span className="font-bold">{currencyFormat(box.base)}</span>
+                </p>
+                <div className="flex items-center gap-x-2 ">
+                  <IconLockOpen size={18} />
+                  <span>{openFromNow}</span>
                 </div>
-              </>
-            )}
-            {box.closed && (
-              <div className="flex flex-col items-center gap-y-3 py-4 text-gray-dark dark:text-gray-400">
-                <IconLock size={30} stroke={2} />
-                <p className="text-xs">Cerrada {closedFronNow}</p>
               </div>
-            )}
-            {box.neverUsed && (
-              <div className="flex flex-col items-center gap-y-3 py-4 text-gray-dark dark:text-gray-400">
-                <IconAlertTriangle size={30} stroke={2} />
-                <p className="text-xs">¡Caja nunca usada!</p>
-              </div>
-            )}
-            <div className="mt-2 flex justify-between text-xs text-gray-dark dark:text-gray-400">
-              <div className="flex items-center gap-x-2">
-                <IconDeviceFloppy size={18} />
-                <span>{createdAt}</span>
-              </div>
-              {!box.createIsSameUpdate && (
-                <div className="flex items-center gap-x-2">
-                  <IconEditCircle size={18} />
-                  <span>{updatedAt}</span>
-                </div>
-              )}
+            </>
+          )}
+          {box.closed && (
+            <div className="flex flex-col items-center gap-y-3 py-4 text-gray-dark dark:text-gray-400">
+              <IconLock size={30} stroke={2} />
+              <p className="text-xs">Cerrada {closedFronNow}</p>
             </div>
+          )}
+          {box.neverUsed && (
+            <div className="flex flex-col items-center gap-y-3 py-4 text-gray-dark dark:text-gray-400">
+              <IconAlertTriangle size={30} stroke={2} />
+              <p className="text-xs">¡Caja nunca usada!</p>
+            </div>
+          )}
+          <div className="mt-2 flex justify-between text-xs text-gray-dark dark:text-gray-400">
+            <div className="flex items-center gap-x-2">
+              <IconDeviceFloppy size={18} />
+              <span>{createdAt}</span>
+            </div>
+            {!box.createIsSameUpdate && (
+              <div className="flex items-center gap-x-2">
+                <IconEditCircle size={18} />
+                <span>{updatedAt}</span>
+              </div>
+            )}
           </div>
-        </Collapse>
-        {!opened && box.openBox ? <Divider /> : null}
+        </div>
+        {!opened && box.openBox ? <Separator /> : null}
 
         {/* Footer */}
         {box.openBox ? (
           <footer className="bg-indigo-400 px-4 py-2 dark:bg-header">
-            <Tooltip
-              label={
-                <div className="flex flex-col items-center">
-                  <h4 className="text-sm">Saldo sin la base</h4>
-                  <p className="text-xs font-bold tracking-widest">{currencyFormat((box.balance || 0) - box.base)}</p>
-                </div>
-              }
-              withArrow
-              hidden={!box.base}
-            >
-              <p className="text-center text-xl font-bold tracking-wider">{currencyFormat(box.balance || 0)}</p>
-            </Tooltip>
+            <p className="text-center text-xl font-bold tracking-wider">{currencyFormat(box.balance || 0)}</p>
           </footer>
         ) : null}
       </div>

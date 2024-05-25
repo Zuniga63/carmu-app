@@ -1,8 +1,9 @@
-import { ActionIcon, Tooltip } from '@mantine/core';
-import { IconCirclePlus, IconRefresh } from '@tabler/icons-react';
 import { useIsFetching, useQueryClient } from '@tanstack/react-query';
-import { ServerStateKeysEnum } from '@/config/server-state-key.enum';
+import { IconCirclePlus, IconLoader, IconRefresh } from '@tabler/icons-react';
+
+import { Button } from '../ui/Button';
 import { useBoxesPageStore } from '@/store/boxes-page-store';
+import { ServerStateKeysEnum } from '@/config/server-state-key.enum';
 
 const BoxListHeader = () => {
   const queryClient = useQueryClient();
@@ -22,16 +23,13 @@ const BoxListHeader = () => {
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold tracking-wider">Cajas</h2>
         <div className="flex gap-x-2">
-          <Tooltip label="Actualizar" withArrow>
-            <ActionIcon onClick={handleReloadClick} loading={isFetching > 0} color="blue">
-              <IconRefresh size={18} />
-            </ActionIcon>
-          </Tooltip>
-          <Tooltip label="Agregar Caja" withArrow>
-            <ActionIcon onClick={handleCreateClick} color="green">
-              <IconCirclePlus size={18} />
-            </ActionIcon>
-          </Tooltip>
+          <Button size={'icon'} onClick={handleReloadClick} variant={'outline'} className="h-8 w-8">
+            {isFetching > 0 ? <IconLoader size={18} className="animate-spin" /> : <IconRefresh size={18} />}
+          </Button>
+
+          <Button size={'icon'} onClick={handleCreateClick} variant={'outline'} className="h-8 w-8">
+            <IconCirclePlus size={18} />
+          </Button>
         </div>
       </div>
     </header>

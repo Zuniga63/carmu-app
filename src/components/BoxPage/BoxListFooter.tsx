@@ -1,9 +1,10 @@
-import { ActionIcon, Tooltip } from '@mantine/core';
-import { IconBox, IconLock, IconLockOpen, IconWorld } from '@tabler/icons-react';
 import { useMemo } from 'react';
+import { IconBox, IconLock, IconLockOpen, IconWorld } from '@tabler/icons-react';
+
+import { Button } from '../ui/Button';
 import { currencyFormat } from '@/lib/utils';
-import { useGetAllBoxes } from '@/hooks/react-query/boxes.hooks';
 import { useBoxesPageStore } from '@/store/boxes-page-store';
+import { useGetAllBoxes } from '@/hooks/react-query/boxes.hooks';
 
 const BoxListFooter = () => {
   const mountMainBox = useBoxesPageStore(state => state.mountMainBoxToInfo);
@@ -42,56 +43,44 @@ const BoxListFooter = () => {
         {/* BOXES */}
         <div className="flex flex-col items-center gap-y-2">
           {/* ALL BOXES */}
-          <Tooltip label="Cajas">
-            <div className="flex gap-x-2 text-gray-dark dark:text-light">
-              <IconBox size={16} />
-              <span className="text-xs font-bold">{openBoxes + closeBoxes}</span>
-            </div>
-          </Tooltip>
+          <div className="flex gap-x-2 text-gray-dark dark:text-light" title="Cajas">
+            <IconBox size={16} />
+            <span className="text-xs font-bold">{openBoxes + closeBoxes}</span>
+          </div>
           {/* BOXES DETAILS */}
           <div className="flex gap-x-2 text-gray-dark dark:text-light">
-            <Tooltip label="Cajas abiertas">
-              <div className="flex gap-x-2 text-emerald-500">
-                <IconLockOpen size={16} />
-                <span className="text-xs font-bold">{openBoxes}</span>
-              </div>
-            </Tooltip>
+            <div className="flex gap-x-2 text-emerald-500" title="Cajas abiertas">
+              <IconLockOpen size={16} />
+              <span className="text-xs font-bold">{openBoxes}</span>
+            </div>
 
-            <Tooltip label="Cajas cerradas">
-              <div className="flex gap-x-2 text-red-500">
-                <IconLock size={16} />
-                <span className="text-xs font-bold">{closeBoxes}</span>
-              </div>
-            </Tooltip>
+            <div className="flex gap-x-2 text-red-500" title="Cajas cerradas">
+              <IconLock size={16} />
+              <span className="text-xs font-bold">{closeBoxes}</span>
+            </div>
           </div>
         </div>
 
         {/* GLOBAL BOX */}
         {boxesData?.mainBox ? (
-          <Tooltip
-            label={
-              <div className="flex flex-col items-center">
-                <span className="text-sm">{boxesData?.mainBox.name}</span>
-                <span className="text-xs font-bold tracking-widest">{currencyFormat(boxesData?.mainBox.balance)}</span>
-              </div>
-            }
-            withArrow
-            color="grape"
+          <Button
+            size={'icon'}
+            variant={'ghost'}
+            onClick={handleMainBoxToInfoClick}
+            title={`Saldo global: ${currencyFormat(boxesData?.mainBox.balance)}`}
           >
-            <ActionIcon size={40} color="grape" onClick={handleMainBoxToInfoClick}>
-              <IconWorld />
-            </ActionIcon>
-          </Tooltip>
+            <IconWorld />
+          </Button>
         ) : null}
 
         <div className="flex flex-col items-end justify-center">
-          <Tooltip label="Saldo">
-            <p className="text-xs font-bold tracking-widest">{currencyFormat(balance)}</p>
-          </Tooltip>
+          <p className="text-xs font-bold tracking-widest" title="Saldo">
+            {currencyFormat(balance)}
+          </p>
           {balance !== balanceWithoutBase ? (
-            <Tooltip label="Saldo sin la base">
-              <p className="text-xs font-bold tracking-widest">{currencyFormat(balanceWithoutBase)}</p>
-            </Tooltip>
+            <p className="text-xs font-bold tracking-widest" title="Saldo sin la base">
+              {currencyFormat(balanceWithoutBase)}
+            </p>
           ) : null}
         </div>
       </div>

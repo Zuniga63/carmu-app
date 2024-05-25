@@ -1,15 +1,17 @@
-import { ActionIcon, Modal, Table } from '@mantine/core';
-import { DateRangePickerValue } from '@mantine/dates';
-import { IconPrinter } from '@tabler/icons-react';
 import dayjs from 'dayjs';
-import React, { useEffect, useRef, useState } from 'react';
+import { Modal, Table } from '@mantine/core';
+import { DateRange } from 'react-day-picker';
 import { useReactToPrint } from 'react-to-print';
+import { IconPrinter } from '@tabler/icons-react';
+import { useEffect, useRef, useState } from 'react';
+
+import { Button } from '../ui/Button';
 import { ITransaction } from '@/types';
-import { currencyFormat } from '@/lib/utils';
 import BrandLogo from '../Layout/BrandLogo';
+import { currencyFormat } from '@/lib/utils';
 
 interface Props {
-  dates: DateRangePickerValue;
+  dates?: DateRange;
   transactions: ITransaction[];
   opened: boolean;
   setOpened: React.Dispatch<React.SetStateAction<boolean>>;
@@ -42,9 +44,9 @@ const TransactionReport = ({ dates, transactions, opened, setOpened }: Props) =>
   useEffect(() => {
     const today = dayjs();
     const dateFormat = 'DD [de] MMMM [del] YYYY';
-    if (dates[0] && dates[1]) {
-      setFromDate(dayjs(dates[0]).format(dateFormat));
-      setToDate(dayjs(dates[1]).format(dateFormat));
+    if (dates?.to && dates.from) {
+      setFromDate(dayjs(dates.to).format(dateFormat));
+      setToDate(dayjs(dates.from).format(dateFormat));
     } else {
       setFromDate(today.startOf('month').format(dateFormat));
       setToDate(today.format(dateFormat));
@@ -161,15 +163,15 @@ const TransactionReport = ({ dates, transactions, opened, setOpened }: Props) =>
           </div>
         </div>
         <footer className="mt-4 flex justify-end pr-8">
-          <ActionIcon
-            size="md"
-            color="green"
+          <Button
+            size="icon"
+            variant={'green'}
             onClick={() => {
               handlePrint();
             }}
           >
             <IconPrinter size={30} stroke={2} />
-          </ActionIcon>
+          </Button>
         </footer>
       </div>
     </Modal>

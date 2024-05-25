@@ -1,10 +1,9 @@
-import React from 'react';
-import { Loader } from '@mantine/core';
+import { IconLoader2 } from '@tabler/icons-react';
 
 const LoadinTransacctions = () => {
   return (
     <div className="flex items-center gap-x-2">
-      <Loader size="xs" />
+      <IconLoader2 size={24} className="animate-spin" />
       <p className="animate-pulse">Recuperando transacciones...</p>
     </div>
   );
