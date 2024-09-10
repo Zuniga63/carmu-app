@@ -1,6 +1,7 @@
 import { ActionIcon, Tooltip } from '@mantine/core';
 import {
   IconAlertCircle,
+  IconBrandWhatsapp,
   IconCash,
   IconCircleCheck,
   IconCircleX,
@@ -19,6 +20,7 @@ import { currencyFormat } from '@/lib/utils';
 import { useCustomerPageStore } from '@/store/customer-store';
 import { useIsFetching } from '@tanstack/react-query';
 import { ServerStateKeysEnum } from '@/config/server-state-key.enum';
+import { useGetAllPremiseStore } from '@/hooks/react-query/premise-store.hooks';
 
 interface Props {
   customer: ICustomer;
@@ -31,6 +33,7 @@ const CustomerTableItem = ({ customer }: Props) => {
   const showCustomerInfo = useCustomerPageStore(state => state.mountCustomerToInfo);
 
   const isFetching = useIsFetching({ queryKey: [ServerStateKeysEnum.Customers, customer.id] });
+  const { data: premiseStores } = useGetAllPremiseStore();
 
   const handleEditClick = () => {
     showEditForm(customer.id);
@@ -139,6 +142,25 @@ const CustomerTableItem = ({ customer }: Props) => {
       </td>
       <td className="py-2 pl-3 pr-6 text-sm">
         <div className="flex items-center justify-end gap-x-2">
+          {customer.contacts.length && customer.balance ? (
+            <Tooltip label="Enviar Mensaje" withArrow>
+              <ActionIcon size="lg" color="green" radius="xl">
+                <a
+                  href={`https://wa.me/57${
+                    customer.contacts[0].phone
+                  }?text=Hola,%0A%0ATe%20recordamos%20que%20tienes%20un%20saldo%20pendiente%20de%20${currencyFormat(
+                    customer.balance,
+                  )}%20con%20${premiseStores?.at(0)?.name || ''}.%0APuedes%20acercarte%20a%20nuestra%20sucursal%20(${
+                    premiseStores?.at(0)?.address || ''
+                  })%20para%20realizar%20el%20pago%20o%20un%20abono.%0A%0A¡Estamos%20aquí%20para%20ayudarte!%0AGracias%20por%20tu%20atención.`}
+                  target="_blank"
+                >
+                  <IconBrandWhatsapp size={18} stroke={2} />
+                </a>
+              </ActionIcon>
+            </Tooltip>
+          ) : null}
+
           {customer.balance ? (
             <Tooltip label="Hacer abono" withArrow>
               <ActionIcon size="lg" color="green" onClick={handlePaymentClick} radius="xl">
