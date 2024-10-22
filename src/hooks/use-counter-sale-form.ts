@@ -15,6 +15,7 @@ const defaulCustomer: IInvoiceCustomer = {
   documentType: 'CC',
   address: '',
   phone: '',
+  email: '',
 };
 
 export function useCounterSaleForm() {
@@ -82,6 +83,7 @@ export function useCounterSaleForm() {
       customerDocument: customer.document || undefined,
       customerDocumentType: customer.documentType || undefined,
       customerPhone: customer.phone || undefined,
+      customerEmail: customer.email || undefined,
       expeditionDate: dayjs().toDate(),
       expirationDate: dayjs().add(1, 'month').toDate(),
       cash: amount,

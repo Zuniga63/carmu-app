@@ -66,6 +66,12 @@ export default function InvoiceInfo({ size, invoice }: Props) {
           <p className="line-clamp-1 font-bold">{invoice.customerAddress}</p>
         </div>
       )}
+      {invoice?.customerEmail && (
+        <div className="flex justify-between text-xs">
+          <p>Email:</p>
+          <p className="line-clamp-1 font-bold">{invoice.customerEmail}</p>
+        </div>
+      )}
     </div>
   );
 }

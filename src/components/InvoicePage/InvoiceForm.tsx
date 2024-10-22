@@ -43,6 +43,7 @@ export interface IInvoiceCustomer {
   documentType: string;
   phone: string;
   address: string;
+  email: string;
 }
 
 const defaulCustomer: IInvoiceCustomer = {
@@ -52,6 +53,7 @@ const defaulCustomer: IInvoiceCustomer = {
   documentType: 'CC',
   address: '',
   phone: '',
+  email: '',
 };
 
 const InvoiceForm = () => {
@@ -82,6 +84,7 @@ const InvoiceForm = () => {
     documentType: 'CC',
     address: '',
     phone: '',
+    email: '',
   });
 
   const [registerWithOtherData, setRegisterWithOtherData] = useState(false);
@@ -125,6 +128,7 @@ const InvoiceForm = () => {
       customerDocument: customer.document || undefined,
       customerDocumentType: customer.documentType || undefined,
       customerPhone: customer.phone || undefined,
+      customerEmail: customer.email || undefined,
       sellerName: user?.name,
       expeditionDate: expeditionDate || undefined,
       expirationDate: expirationDate || undefined,

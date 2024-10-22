@@ -21,7 +21,7 @@ const InvoiceCard = ({ invoice, onPaymentCancel }: Props) => {
           <div className="rounded-lg bg-gray-dark bg-opacity-20 px-4 py-6">
             <div className="grid gap-4 lg:grid-cols-12">
               {/* CUSTOMER NAME */}
-              <div className="lg:col-span-8">
+              <div className="lg:col-span-12">
                 <InvoiceCardField title="Cliente">
                   <p className="italic">{invoice?.customer?.fullName || invoice?.customerName}</p>
                 </InvoiceCardField>
@@ -49,6 +49,13 @@ const InvoiceCard = ({ invoice, onPaymentCancel }: Props) => {
                 <InvoiceCardField title="Teléfono">
                   <p className="text-center italic">
                     <span className="font-bold">{invoice?.customerPhone || 'No reporta'}</span>
+                  </p>
+                </InvoiceCardField>
+              </div>
+              <div className="lg:col-span-8">
+                <InvoiceCardField title="Email">
+                  <p className="text-center italic tracking-widest">
+                    <span className="font-bold">{invoice?.customerEmail || 'No reporta'}</span>
                   </p>
                 </InvoiceCardField>
               </div>

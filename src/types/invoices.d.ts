@@ -62,6 +62,7 @@ export interface IInvoiceBase {
   customerPhone?: string;
   customerDocument?: string;
   customerDocumentType?: string;
+  customerEmail?: string;
   sellerName: string;
   expeditionDate: string;
   expirationDate: string;
@@ -119,6 +120,7 @@ export interface IInvoiceStoreData {
   customerPhone?: string;
   customerDocument?: string;
   customerDocumentType?: string;
+  customerEmail?: string;
   sellerName?: string;
   expeditionDate?: Date;
   expirationDate?: Date;

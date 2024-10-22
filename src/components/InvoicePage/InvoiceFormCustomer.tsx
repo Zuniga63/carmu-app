@@ -4,7 +4,7 @@ import { currencyFormat, normalizeText } from '@/lib/utils';
 import { useGetAllCustomers } from '@/hooks/react-query/customers.hooks';
 
 import { Checkbox, Select, SelectItem, TextInput } from '@mantine/core';
-import { IconHome, IconPhone, IconSearch } from '@tabler/icons-react';
+import { IconHome, IconMail, IconPhone, IconSearch } from '@tabler/icons-react';
 import { IInvoiceCustomer } from './InvoiceForm';
 import InvoiceFormGroup from './InvoiceFormGroup';
 
@@ -75,15 +75,16 @@ const InvoiceFormCustomer = ({
       documentType: customerData.documentType || current.documentType,
       phone: customerData.contacts.length ? customerData.contacts[0].phone : current.phone,
       address: customerData.address || current.address,
+      email: customerData.email || current.email,
     }));
   }, [customer.id]);
 
   return (
     <InvoiceFormGroup title="Cliente" className={className}>
-      <div className="grid gap-2 lg:grid-cols-2">
+      <div className="grid gap-2 lg:grid-cols-3">
         {/* SELECT CUSTOMER */}
         <Select
-          className="lg:col-span-2"
+          className="lg:col-span-3"
           value={customer.id}
           itemComponent={SelectItemCustomer}
           data={customers ? customers.map(buildSelectCustomerData) : []}
@@ -101,6 +102,7 @@ const InvoiceFormCustomer = ({
           label="Nombre completo"
           value={customer.name}
           placeholder="Nombre completo del cliente"
+          className="col-span-2"
           size="xs"
           onChange={({ target }) => onCustomerChange(current => ({ ...current, name: target.value }))}
         />
@@ -152,6 +154,15 @@ const InvoiceFormCustomer = ({
           value={customer.phone}
           onChange={({ target }) => onCustomerChange(current => ({ ...current, phone: target.value }))}
           type="tel"
+        />
+
+        <TextInput
+          placeholder="Correo Electronico"
+          size="xs"
+          icon={<IconMail size={15} />}
+          value={customer.email}
+          onChange={({ target }) => onCustomerChange(current => ({ ...current, email: target.value }))}
+          type="email"
         />
 
         <div className="lg:col-span-2">
