@@ -16,11 +16,12 @@ interface Props {
   className?: string;
 }
 
-interface ICustomerSelectProps extends SelectItem {
+interface ICustomerSelectProps {
   label: string;
   search: string;
   balance?: number;
   alias?: string;
+  value: string;
 }
 
 const SelectItemCustomer = forwardRef<HTMLDivElement, ICustomerSelectProps>(

@@ -11,13 +11,13 @@ import {
   IconTools,
   IconToolsKitchen,
   IconUsers,
-  TablerIconsProps,
+  IconProps,
 } from '@tabler/icons-react';
 
 interface ILink {
   name: string;
   url: string;
-  Icon?: (props: TablerIconsProps) => JSX.Element;
+  Icon?: React.ComponentType<IconProps>;
   isEnabled?: boolean;
   isAdminPage?: boolean;
   links?: ILink[];

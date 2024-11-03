@@ -1,4 +1,4 @@
-import { Select, SelectItem } from '@mantine/core';
+import { Select, type SelectItem } from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
 import React, { forwardRef, KeyboardEvent } from 'react';
 import { IImage, IInvoiceProduct } from '@/types';
