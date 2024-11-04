@@ -165,7 +165,7 @@ const TransactionReport = ({ dates, transactions, opened, setOpened }: Props) =>
         <footer className="mt-4 flex justify-end pr-8">
           <Button
             size="icon"
-            variant={'green'}
+            variant={'default'}
             onClick={() => {
               handlePrint();
             }}

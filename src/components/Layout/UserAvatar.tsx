@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { IconCategory, IconLogout, IconSettings, IconUser } from '@tabler/icons-react';
 
 import { useAuthStore } from '@/store/auth-store';
@@ -12,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
+import { signOut } from 'next-auth/react';
 
 export default function UserAvatar() {
   const user = useAuthStore(state => state.user);
@@ -23,11 +23,9 @@ export default function UserAvatar() {
     .map(name => name[0])
     .join('');
 
-  const router = useRouter();
-
   const logoutHandle = () => {
     clearCredentials();
-    router.push('/login');
+    signOut();
   };
 
   return (

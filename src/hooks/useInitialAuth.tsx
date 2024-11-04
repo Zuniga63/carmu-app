@@ -2,13 +2,14 @@ import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useAuthStore } from '@/store/auth-store';
 import { useAuthenticateToken } from './react-query/auth.hooks';
-import { getTokenFromCookies } from '@/logic/auth-logic';
 import { useGetAllPremiseStore } from './react-query/premise-store.hooks';
 import { PREMISE_STORE_KEY } from '@/config/constants';
 import { useConfigStore } from '@/store/config-store';
 import { IPremiseStore } from '@/types';
+import { useSession } from 'next-auth/react';
 
 export function useInitialAuth() {
+  const { data: session } = useSession();
   const isAuth = useAuthStore(state => state.isAuth);
   const user = useAuthStore(state => state.user);
 
@@ -18,9 +19,8 @@ export function useInitialAuth() {
   const { data: premiseStores } = useGetAllPremiseStore();
 
   useEffect(() => {
-    const token = getTokenFromCookies();
-    if (!isAuth) authenticate(token);
-  }, []);
+    if (session && !isAuth) authenticate(session?.oldAccessToken || '');
+  }, [session]);
 
   useEffect(() => {
     if (!isSuccess) return;

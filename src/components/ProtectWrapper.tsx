@@ -48,7 +48,7 @@ export default function ProtectWrapper({ children, inputName = 'content-password
         type="password"
         role="security"
       />
-      <Button variant={'green'} onClick={handleClick}>
+      <Button onClick={handleClick}>
         Desbloquear
       </Button>
     </div>

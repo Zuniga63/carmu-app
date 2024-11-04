@@ -1,7 +1,7 @@
 import { Providers } from './providers';
 import '@/styles/globals.css';
 import { Metadata } from 'next';
-import { inter, poppins } from '@/config/fonts.config';
+import { fontDisplay, fontSans } from '@/config/fonts.config';
 
 export const metadata: Metadata = {
   title: {
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${poppins.variable} bg-neutral-100 font-sans`}>
+      <body className={`${fontDisplay.variable} ${fontSans.variable} bg-neutral-100 font-sans`}>
         <Providers>{children}</Providers>
       </body>
     </html>

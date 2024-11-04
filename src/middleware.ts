@@ -1,31 +1,47 @@
+import { withAuth } from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import { AUTHENTICATE_PATH } from './services/auth-service';
 
-export async function middleware(request: NextRequest) {
-  const token = request.cookies.get('access_token');
-  let isAuthenticated = false;
-  const isLoginPage = request.nextUrl.pathname.startsWith('/login');
+import { isApiTokenValid } from './modules/auth/utils';
 
-  if (token) {
-    const apiUrl = process.env.NEXT_PUBLIC_URL_API;
-    const url = `${apiUrl}${AUTHENTICATE_PATH}`;
-    const headers = { Authorization: `Bearer ${token.value}` };
+export default withAuth(
+  function middleware(req) {
+    const { token } = req.nextauth;
+    const { pathname, origin } = req.nextUrl;
 
-    try {
-      const res = await fetch(url, { headers });
-      const data = await res.json();
-      isAuthenticated = !!data.ok;
-    } catch (error) {
-      console.log(error);
+    const isAuthenticated = !!token;
+    const isAuthPage = ['/auth/signin', '/auth/signup'].includes(pathname);
+
+    // Redirigir usuarios autenticados fuera de páginas de auth
+    if (isAuthPage && isAuthenticated) {
+      return NextResponse.redirect(`${origin}/`);
     }
-  }
 
-  if (isLoginPage && isAuthenticated) return NextResponse.redirect(new URL('/', request.url));
-  if ((isLoginPage && !isAuthenticated) || isAuthenticated) return NextResponse.next();
-  else return NextResponse.redirect(new URL('/login', request.url));
-}
+    return NextResponse.next();
+  },
+  {
+    callbacks: {
+      authorized: ({ token, req }) => {
+        const { pathname } = req.nextUrl;
+        const isAuthenticated = !!token;
+        const isAuthPage = ['/auth/signin', '/auth/signup'].includes(pathname);
+
+        // Lógica simplificada para páginas de autenticación
+        if (isAuthPage) return !isAuthenticated;
+
+        // Para todas las demás rutas, verificar autenticación y token
+        return isAuthenticated && isApiTokenValid(token.accessToken as string);
+      },
+    },
+    pages: {
+      signIn: '/auth/signin',
+      newUser: '/auth/signup',
+    },
+  },
+);
 
 export const config = {
-  matcher: ['/', '/login', '/admin/:path*'],
+  matcher: [
+    '/auth/signin',
+    '/auth/signup',
+    '/((?!api|_next/static|_next/image|favicon.ico|images).*)'],
 };

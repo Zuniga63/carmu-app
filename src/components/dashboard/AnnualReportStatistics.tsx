@@ -105,7 +105,7 @@ const AnnualReportStatistics = ({ title, description, type = 'sale' }: Props) =>
             </SelectContent>
           </Select>
           {/* ADD YEAR */}
-          <Button onClick={addAnnualReport} variant={'green'}>
+          <Button onClick={addAnnualReport} variant={'default'}>
             Agregar año
           </Button>
           {/* REMOVE YEAR */}

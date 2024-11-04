@@ -7,6 +7,7 @@ module.exports = {
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/modules/**/components/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     screens: {
@@ -32,8 +33,8 @@ module.exports = {
         sm: 'calc(var(--radius) - 4px)',
       },
       fontFamily: {
-        sans: ['var(--font-inter)', 'sans-serif', ...defaultTheme.fontFamily.sans],
-        display: ['var(--font-poppins)', 'cursive', ...defaultTheme.fontFamily.sans],
+        sans: ['var(--font-sans)', 'sans-serif', ...defaultTheme.fontFamily.sans],
+        display: ['var(--font-display)', 'cursive', ...defaultTheme.fontFamily.sans],
       },
       spacing: {
         header: 'var(--header-height)',

@@ -9,7 +9,7 @@ import { cn, currencyFormat } from '@/lib/utils';
 import TransactionTable from './TransactionTable';
 import TransactionReport from './TransactionReport';
 import { useBoxShow } from '@/hooks/boxes-page/use-box-show';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/Popover';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 
 const BoxShow = () => {
   const {
