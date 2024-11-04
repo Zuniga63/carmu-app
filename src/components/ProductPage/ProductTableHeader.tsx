@@ -122,7 +122,7 @@ export default function ProductTableHeader({ isFetching, refetch }: Props = {}) 
             <IconX size={20} />
           </Button>
 
-          <Button variant={'green'} size={'icon'} onClick={handleShowForm}>
+          <Button size={'icon'} onClick={handleShowForm}>
             <IconWriting size={20} />
           </Button>
 
