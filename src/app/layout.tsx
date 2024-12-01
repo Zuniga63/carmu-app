@@ -2,6 +2,8 @@ import { Providers } from './providers';
 import '@/styles/globals.css';
 import { Metadata } from 'next';
 import { fontDisplay, fontSans } from '@/config/fonts.config';
+import { authOptions } from '@/modules/auth/config';
+import { getServerSession } from 'next-auth';
 
 export const metadata: Metadata = {
   title: {
@@ -14,11 +16,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const session = await getServerSession(authOptions());
   return (
-    <html lang="en">
-      <body className={`${fontDisplay.variable} ${fontSans.variable} bg-neutral-100 font-sans`}>
-        <Providers>{children}</Providers>
+    <html lang="es">
+      <body className={`${fontDisplay.variable} ${fontSans.variable} min-h-screen bg-background font-sans antialiased dark`}>
+        <Providers session={session}>{children}</Providers>
       </body>
     </html>
   );
