@@ -1,4 +1,4 @@
-import { TableCell, TableRow } from '../ui/Table';
+import { TableCell, TableRow } from '../ui/TablePro';
 import { Skeleton } from '../ui/skeleton';
 
 type Props = {

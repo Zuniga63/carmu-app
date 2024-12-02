@@ -1,7 +1,7 @@
 import { TableCell } from '@/components/ui/table';
 import type { PremiseStore } from '../../interfaces';
 import { Button } from '@/components/ui/Button';
-import { IconBuilding, IconBuildingStore, IconMap2, IconPhone } from '@tabler/icons-react';
+import { IconBuildingStore, IconMap2, IconPhone } from '@tabler/icons-react';
 
 interface StoreInfoCellProps {
   premiseStore: PremiseStore;
