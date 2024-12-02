@@ -7,8 +7,12 @@ import ProductDeleteDialog from '@/components/ProductPage/ProductDeleteDialog';
 const ProductPage: NextPage = () => {
   return (
     <Layout title="Productos">
-      <ProductTable />
-      <ProductForm />
+      <div className="grid grid-cols-4 gap-x-4">
+        <div className="col-span-3 px-8">
+          <ProductTable />
+        </div>
+        <ProductForm />
+      </div>
       <ProductDeleteDialog />
     </Layout>
   );

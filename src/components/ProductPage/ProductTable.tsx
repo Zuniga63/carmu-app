@@ -5,7 +5,7 @@ import { cn, normalizeText } from '@/lib/utils';
 import { ProductPageFilter, useProductPageStore } from '@/store/product-page.store';
 import ProductTableHeader from './ProductTableHeader';
 import { useGetAllProducts } from '@/hooks/react-query/product.hooks';
-import { Table, TableBody, TableHead, TableHeader, TableRow } from '../ui/Table';
+import { Table, TableBody, TableHead, TableHeader, TableRow } from '../ui/TablePro';
 import TableSkeleton from './table-skeleton';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
@@ -98,7 +98,7 @@ const ProductTable = () => {
   }, [productFiltered]);
 
   return (
-    <div className="mx-auto flex h-full w-11/12 flex-col pb-2 pt-4 dark:text-light">
+    <div className="mx-auto flex h-full flex-col pb-2 pt-4 dark:text-light">
       <div className="flex h-full w-full flex-col">
         <ProductTableHeader isFetching={isLoading || isRefetching} refetch={refetch} />
 

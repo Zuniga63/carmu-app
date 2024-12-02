@@ -1,0 +1,1 @@
+export { PremiseStoreConfig } from './PremiseStoreConfig';

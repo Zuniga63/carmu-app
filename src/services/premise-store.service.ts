@@ -6,6 +6,7 @@ export const premiseStoreApi = axios.create({ baseURL: `${process.env.NEXT_PUBLI
 
 export async function getAllPremiseStore() {
   const res = await premiseStoreApi.get<IPremiseStore[]>('');
+  console.log(res.data);
   return res.data;
 }
 

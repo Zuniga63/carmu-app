@@ -13,7 +13,7 @@ const CardBody: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
 
 const CardFooter: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   return (
-    <footer className="sm: flex items-center justify-end gap-x-2 rounded-br-md bg-gray-dark px-4 py-3 text-right shadow shadow-gray-800 sm:rounded-bl-md sm:px-6">
+    <footer className="sm:flex items-center justify-end gap-x-2 rounded-br-md bg-gray-dark px-4 py-3 text-right shadow shadow-gray-800 sm:rounded-bl-md sm:px-6">
       {children}
     </footer>
   );

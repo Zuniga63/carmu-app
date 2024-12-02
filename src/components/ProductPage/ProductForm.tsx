@@ -7,6 +7,7 @@ import { useProductPageStore } from '@/store/product-page.store';
 import { useCreateProduct, useGetAllProducts, useUpdateProduct } from '@/hooks/react-query/product.hooks';
 import { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
+import { IconX } from '@tabler/icons-react';
 
 export function useProductForm() {
   const isOpen = useProductPageStore(state => state.formIsOpen);
@@ -215,14 +216,10 @@ export default function ProductForm() {
   };
 
   return (
-    <Drawer
-      opened={isOpen}
-      onClose={handleClose}
-      padding="xs"
-      size={isLargeScreen ? 'xl' : '100%'}
-      position="right"
-      title={form.title}
-    >
+    <section className="pt-4">
+      <header className="flex items-center justify-center">
+        <h3 className="text-center text-xl font-bold">{form.title}</h3>
+      </header>
       <form onSubmit={form.handleSubmit}>
         <div className="mx-auto mb-4 w-11/12">
           {/* PRODUCT NAME */}
@@ -306,7 +303,7 @@ export default function ProductForm() {
           {/* PRODUCT PRICE AND PRICE WITH DISCOUNT */}
           <div className="mb-4 grid grid-cols-1 gap-2 md:grid-cols-2">
             {/* PRICE AND CHECK */}
-            <div className=" flex flex-col">
+            <div className="flex flex-col">
               <NumberInput
                 label={<span className="font-sans dark:text-light">Precio</span>}
                 id="productPrice"
@@ -395,12 +392,16 @@ export default function ProductForm() {
           </div>
         </div>
 
-        <footer className="mx-auto flex w-11/12 justify-end">
+        <footer className="mx-auto flex w-11/12 justify-end gap-x-3">
+          <Button variant="outline" onClick={handleClose}>
+            Cancelar
+          </Button>
+
           <Button loading={isLoading} disabled={!form.name} type="submit">
             {form.btnMessage}
           </Button>
         </footer>
       </form>
-    </Drawer>
+    </section>
   );
 }

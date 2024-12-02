@@ -18,7 +18,7 @@ import {
 
 const ROUTES = {
   PROFILE: '/admin/profile',
-  CONFIG: '/admin/config',
+  CONFIG: '/app-config',
   CATEGORIES: '/admin/categories',
 } as const;
 
