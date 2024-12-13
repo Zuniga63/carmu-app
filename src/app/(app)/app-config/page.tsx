@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 
-import { PremiseStoreConfig } from '@/modules/premise-store/components/premise-store-config';
+import { PremiseStoreConfig, CreateNewPremiseStore } from '@/modules/premise-store/components';
 
 export const metadata: Metadata = {
   title: 'Configuración de la aplicación',
@@ -10,6 +10,7 @@ export default function AppConfigPage() {
   return (
     <div className="min-h-screen">
       <PremiseStoreConfig />
+      <CreateNewPremiseStore />
     </div>
   );
 }
