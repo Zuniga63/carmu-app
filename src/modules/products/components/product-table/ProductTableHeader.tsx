@@ -1,46 +1,30 @@
 import { useRef, useState } from 'react';
 import { IconLoader2, IconReload, IconWriting, IconX } from '@tabler/icons-react';
-import { ProductPageFilter, useProductPageStore } from '@/store/product-page.store';
-import SearchInput from '../ui/SearchInput';
-import { Button } from '../ui/Button';
+import SearchInput from '@/components/ui/SearchInput';
+import { Button } from '@/components/ui/Button';
 import { useGetAllCategories } from '@/hooks/react-query/categories.hooks';
-import { Select, SelectContent, SelectValue, SelectItem, SelectTrigger } from '../ui/select';
+import { Select, SelectContent, SelectValue, SelectItem, SelectTrigger } from '@/components/ui/select';
+import { useUpdateProductFilter } from '@/modules/products/hooks/use-update-product-filter';
+import { useProductPageStore } from '@/modules/products/stores/product-page.store';
+import { cn } from '@/utils/cn';
 
-export function useUpdateProductFilter({ filter }: { filter?: ProductPageFilter } = {}) {
-  const updateFilter = useProductPageStore(state => state.updateFilter);
-
-  const [loading, setLoading] = useState(false);
-  const debounceInterval = useRef<undefined | NodeJS.Timeout>(undefined);
-
-  const updateValue = (value: string) => {
-    if (debounceInterval.current) clearTimeout(debounceInterval.current);
-    setLoading(true);
-    debounceInterval.current = setTimeout(() => {
-      setLoading(false);
-      if (filter) updateFilter(filter, value);
-    }, 350);
-  };
-
-  return { loading, updateValue };
-}
 
 type Props = {
   isFetching?: boolean;
   refetch?: () => void;
+  className?: string;
 };
 
-export default function ProductTableHeader({ isFetching, refetch }: Props = {}) {
+export function ProductTableHeader({ isFetching, refetch, className }: Props = {}) {
   const formRef = useRef<HTMLFormElement>(null);
   const clearFilters = useProductPageStore(state => state.clearFilters);
   const showForm = useProductPageStore(state => state.showForm);
   const updateFilter = useProductPageStore(state => state.updateFilter);
   const category = useProductPageStore(state => state.category);
 
-  const { loading: searchLoading, updateValue: updateSearch } = useUpdateProductFilter({ filter: 'search' });
-  const { loading: sizeLoading, updateValue: updateSize } = useUpdateProductFilter({ filter: 'productSize' });
-  const { loading: productRefIsLoading, updateValue: updateProductRef } = useUpdateProductFilter({
-    filter: 'productRef',
-  });
+  const searchUpdater = useUpdateProductFilter('search');
+  const sizeUpdater = useUpdateProductFilter('productSize');
+  const productRefUpdater = useUpdateProductFilter('productRef');
 
   const { data: categories = [] } = useGetAllCategories();
   // ? This is a hack to force the select to update when the categories change
@@ -56,15 +40,15 @@ export default function ProductTableHeader({ isFetching, refetch }: Props = {}) 
   };
 
   return (
-    <header className="rounded-t-md bg-gray-300 px-6 py-2 dark:bg-header">
+    <header className={cn('bg-gray-300 px-6 py-2 dark:bg-header', className)}>
       <div className="flex items-center gap-x-2">
         <div className="flex-grow">
           <form onSubmit={e => e.preventDefault} ref={formRef} className="grid grid-cols-12 items-center gap-x-2">
             <SearchInput
               placeholder="Buscar por nombre y descripcion"
               className="col-span-3 flex-grow lg:col-span-4"
-              isLoading={searchLoading}
-              onChange={({ currentTarget }) => updateSearch(currentTarget.value)}
+              isLoading={searchUpdater.isLoading}
+              onChange={({ currentTarget }) => searchUpdater.updateValue(currentTarget.value)}
               onFocus={({ target }) => {
                 target.select();
               }}
@@ -99,8 +83,8 @@ export default function ProductTableHeader({ isFetching, refetch }: Props = {}) 
             <SearchInput
               placeholder="Buscar por talla"
               className="col-span-3 flex-grow lg:col-span-2"
-              isLoading={sizeLoading}
-              onChange={({ target }) => updateSize(target.value)}
+              isLoading={sizeUpdater.isLoading}
+              onChange={({ target }) => sizeUpdater.updateValue(target.value)}
               onFocus={({ target }) => {
                 target.select();
               }}
@@ -109,8 +93,8 @@ export default function ProductTableHeader({ isFetching, refetch }: Props = {}) 
             <SearchInput
               placeholder="Por referencia"
               className="col-span-3 flex-grow lg:col-span-3"
-              isLoading={productRefIsLoading}
-              onChange={({ target }) => updateProductRef(target.value)}
+              isLoading={productRefUpdater.isLoading}
+              onChange={({ target }) => productRefUpdater.updateValue(target.value)}
               onFocus={({ target }) => {
                 target.select();
               }}

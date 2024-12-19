@@ -1,11 +1,11 @@
-import { TableCell, TableRow } from '../ui/TablePro';
-import { Skeleton } from '../ui/skeleton';
+import { TableCell, TableRow } from '@/components/ui/TablePro';
+import { Skeleton } from '@/components/ui/skeleton';
 
 type Props = {
   isLoading: boolean;
 };
 
-export default function TableSkeleton({ isLoading = false }: Props) {
+export function TableSkeleton({ isLoading = false }: Props) {
   if (!isLoading) return null;
   return (
     <>

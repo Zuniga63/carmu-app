@@ -10,6 +10,7 @@ type ProductPageState = {
   formIsOpen: boolean;
   productToEditId?: string;
   productToDeleteId?: string;
+  productToQrId?: string;
 };
 
 type ProductPageActions = {
@@ -19,9 +20,10 @@ type ProductPageActions = {
   hideForm: () => void;
   showDeleteDialog: (productToDeleteId: string) => void;
   hideDeleteDialog: () => void;
+  mountQrDialog: (productToQrId?: string) => void;
 };
 
-export const useProductPageStore = create<ProductPageState & ProductPageActions>((set, get) => ({
+export const useProductPageStore = create<ProductPageState & ProductPageActions>()((set, get) => ({
   search: undefined,
   category: undefined,
   productSize: undefined,
@@ -48,5 +50,8 @@ export const useProductPageStore = create<ProductPageState & ProductPageActions>
   },
   hideDeleteDialog() {
     set({ productToDeleteId: undefined });
+  },
+  mountQrDialog(productToQrId) {
+    set({ productToQrId });
   },
 }));

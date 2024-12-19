@@ -4,7 +4,7 @@ import { categoryApi } from '@/services/categories.service';
 import { customerApi } from '@/services/customers.service';
 import { invoiceApi } from '@/services/invoices.service';
 import { premiseStoreApi } from '@/services/premise-store.service';
-import { productApi } from '@/services/product.service';
+import { productApi } from '@/modules/products/services';
 import axios from 'axios';
 
 /**

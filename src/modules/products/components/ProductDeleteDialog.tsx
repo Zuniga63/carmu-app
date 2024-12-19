@@ -1,5 +1,5 @@
 import { MouseEventHandler, useEffect, useMemo } from 'react';
-import { useProductPageStore } from '@/store/product-page.store';
+import { useProductPageStore } from '@/modules/products/stores/product-page.store';
 import { useGetAllProducts, useRemoveProduct } from '@/hooks/react-query/product.hooks';
 import {
   AlertDialog,
@@ -10,11 +10,11 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '../ui/AlertDialog';
+} from '@/components/ui/AlertDialog';
 import { IconLoader2 } from '@tabler/icons-react';
 import { useToast } from '@/hooks/ui/use-toast';
 
-export default function ProductDeleteDialog() {
+export function ProductDeleteDialog() {
   const productId = useProductPageStore(state => state.productToDeleteId);
   const closeDialog = useProductPageStore(state => state.hideDeleteDialog);
 

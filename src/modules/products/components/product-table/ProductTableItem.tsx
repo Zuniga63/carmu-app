@@ -1,21 +1,22 @@
-import { IconEdit, IconTrash } from '@tabler/icons-react';
-import React from 'react';
-import { IProductWithCategories } from '@/types';
+import { IconEdit, IconQrcode, IconTrash } from '@tabler/icons-react';
+
 import { currencyFormat } from '@/lib/utils';
-import { useProductPageStore } from '@/store/product-page.store';
-import { TableCell, TableRow } from '../ui/TablePro';
-import { Button } from '../ui/Button';
+import { Button } from '@/components/ui/Button';
+import { type IProductWithCategories } from '@/types';
+import { TableCell, TableRow } from '@/components/ui/TablePro';
+import { useProductPageStore } from '@/modules/products/stores/product-page.store';
 
 interface Props {
   product: IProductWithCategories;
 }
 
-const ProductTableItem = ({ product }: Props) => {
+export function ProductTableItem({ product }: Props) {
   const mountToEdit = useProductPageStore(state => state.showForm);
   const mountToDelete = useProductPageStore(state => state.showDeleteDialog);
 
   const handleToEdit = () => mountToEdit(product.id);
   const handleToDelete = () => mountToDelete(product.id);
+  const mountQrDialog = useProductPageStore(state => state.mountQrDialog);
 
   return (
     <TableRow className="text-gray-dark dark:text-light">
@@ -63,6 +64,12 @@ const ProductTableItem = ({ product }: Props) => {
             <IconEdit size={20} stroke={2} className="text-blue-600" />
           </Button>
 
+          {product.ref && (
+            <Button size={'icon'} variant={'ghost'} onClick={() => mountQrDialog(product.ref)}>
+              <IconQrcode size={20} stroke={2} className="text-blue-600" />
+            </Button>
+          )}
+
           <Button size={'icon'} variant={'ghost'} onClick={handleToDelete}>
             <IconTrash size={16} stroke={2} className="text-red-600" />
           </Button>
@@ -70,6 +77,4 @@ const ProductTableItem = ({ product }: Props) => {
       </TableCell>
     </TableRow>
   );
-};
-
-export default ProductTableItem;
+}

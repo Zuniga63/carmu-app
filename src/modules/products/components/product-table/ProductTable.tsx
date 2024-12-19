@@ -1,13 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { IProductWithCategories } from '@/types';
-import ProductTableItem from './ProductTableItem';
 import { cn, normalizeText } from '@/lib/utils';
-import { ProductPageFilter, useProductPageStore } from '@/store/product-page.store';
-import ProductTableHeader from './ProductTableHeader';
+import { ProductPageFilter, useProductPageStore } from '@/modules/products/stores/product-page.store';
+import { ProductTableHeader } from '@/modules/products/components/product-table/ProductTableHeader';
 import { useGetAllProducts } from '@/hooks/react-query/product.hooks';
-import { Table, TableBody, TableHead, TableHeader, TableRow } from '../ui/TablePro';
-import TableSkeleton from './table-skeleton';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/TablePro';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { ProductTableContainer } from '@/modules/products/components/product-table/ProductTableContainer';
+import { ProductTableItem } from '@/modules/products/components/product-table/ProductTableItem';
+import { TableSkeleton } from './table-skeleton';
+
 
 export function useUpdateProductFilter({ filter }: { filter?: ProductPageFilter } = {}) {
   const updateFilter = useProductPageStore(state => state.updateFilter);
@@ -27,7 +29,11 @@ export function useUpdateProductFilter({ filter }: { filter?: ProductPageFilter 
   return { loading, updateValue };
 }
 
-const ProductTable = () => {
+interface Props {
+  className?: string;
+}
+
+export function ProductTable({ className }: Props) {
   const search = useProductPageStore(state => state.search);
   const size = useProductPageStore(state => state.productSize);
   const productRef = useProductPageStore(state => state.productRef);
@@ -98,60 +104,56 @@ const ProductTable = () => {
   }, [productFiltered]);
 
   return (
-    <div className="mx-auto flex h-full flex-col pb-2 pt-4 dark:text-light">
-      <div className="flex h-full w-full flex-col">
-        <ProductTableHeader isFetching={isLoading || isRefetching} refetch={refetch} />
+    <ProductTableContainer className={className}>
+      <ProductTableHeader isFetching={isLoading || isRefetching} refetch={refetch} />
 
-        <div className="relative flex-grow">
-          <Table position={'absolute'} inset={0} borderX>
-            <TableHeader className="sticky top-0 bg-background">
-              <TableRow>
-                <TableHead className="uppercase">Producto</TableHead>
-                <TableHead className="uppercase">Referencias</TableHead>
-                <TableHead className="uppercase">Categorías</TableHead>
-                <TableHead className="text-center uppercase">Talla</TableHead>
-                <TableHead className="text-center uppercase">Stock</TableHead>
-                <TableHead className="text-right uppercase">Precio</TableHead>
-                <TableHead className="relative">
-                  <span className="sr-only">Actions</span>
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableSkeleton isLoading={isLoading} />
-              {products.map(product => (
-                <ProductTableItem product={product} key={product.id} />
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-
-        <footer className={cn('flex items-center justify-between rounded-b-md bg-gray-300 px-6 py-2 dark:bg-header')}>
-          <div className={cn('flex items-center gap-x-4')}>
-            <div className={cn('w-16', { hidden: pages <= 1 })}>
-              <Select value={page} onValueChange={setPage}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Pag" />
-                </SelectTrigger>
-                <SelectContent>
-                  {Array(pages)
-                    .fill(null)
-                    .map((_, index) => (
-                      <SelectItem key={index} value={String(index + 1)}>
-                        {index + 1}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <p className="text-sm italic text-neutral-400">{pagMessage}</p>
-          </div>
-          <span className="text-xs italic">Area reservada</span>
-        </footer>
+      <div className="relative flex-grow">
+        <Table position={'absolute'} inset={0} borderX>
+          <TableHeader className="sticky top-0 bg-background">
+            <TableRow>
+              <TableHead className="uppercase">Producto</TableHead>
+              <TableHead className="uppercase">Referencias</TableHead>
+              <TableHead className="uppercase">Categorías</TableHead>
+              <TableHead className="text-center uppercase">Talla</TableHead>
+              <TableHead className="text-center uppercase">Stock</TableHead>
+              <TableHead className="text-right uppercase">Precio</TableHead>
+              <TableHead className="relative">
+                <span className="sr-only">Actions</span>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableSkeleton isLoading={isLoading} />
+            {products.map(product => (
+              <ProductTableItem product={product} key={product.id} />
+            ))}
+          </TableBody>
+        </Table>
       </div>
-    </div>
-  );
-};
 
-export default ProductTable;
+      <footer className={cn('flex items-center justify-between bg-gray-300 px-6 py-2 dark:bg-header')}>
+        <div className={cn('flex items-center gap-x-4')}>
+          <div className={cn('w-16', { hidden: pages <= 1 })}>
+            <Select value={page} onValueChange={setPage}>
+              <SelectTrigger>
+                <SelectValue placeholder="Pag" />
+              </SelectTrigger>
+              <SelectContent>
+                {Array(pages)
+                  .fill(null)
+                  .map((_, index) => (
+                    <SelectItem key={index} value={String(index + 1)}>
+                      {index + 1}
+                    </SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <p className="text-sm italic text-neutral-400">{pagMessage}</p>
+        </div>
+        <span className="text-xs italic">Area reservada</span>
+      </footer>
+    </ProductTableContainer>
+  );
+}

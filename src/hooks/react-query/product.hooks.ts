@@ -5,7 +5,7 @@ import {
   getAllProducts,
   removePropduct,
   updateProduct,
-} from '@/services/product.service';
+} from '@/modules/products/services';
 import { useAuthStore } from '@/store/auth-store';
 import type { IProductWithCategories } from '@/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';

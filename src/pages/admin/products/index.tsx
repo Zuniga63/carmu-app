@@ -1,19 +1,22 @@
 import { NextPage } from 'next';
 import Layout from '@/components/Layout';
-import ProductTable from '@/components/ProductPage/ProductTable';
-import ProductForm from '@/components/ProductPage/ProductForm';
-import ProductDeleteDialog from '@/components/ProductPage/ProductDeleteDialog';
+import { ProductForm } from '@/modules/products/components/ProductForm';
+import { ProductDeleteDialog } from '@/modules/products/components/ProductDeleteDialog';
+import { ProductPageContainer } from '@/modules/products/components/ProductPageContainer';
+import ProductTable from '@/modules/products/components/product-table';
+import { ProductQRGenerator } from '@/modules/products/components/ProductQRGenerator';
 
 const ProductPage: NextPage = () => {
   return (
     <Layout title="Productos">
-      <div className="grid grid-cols-4 gap-x-4">
-        <div className="col-span-3 px-8">
-          <ProductTable />
+      <ProductPageContainer>
+        <ProductTable className="col-span-3" />
+        <div className="col-span-1 bg-neutral-900 p-2">
+          <ProductForm />
         </div>
-        <ProductForm />
-      </div>
+      </ProductPageContainer>
       <ProductDeleteDialog />
+      <ProductQRGenerator />
     </Layout>
   );
 };
