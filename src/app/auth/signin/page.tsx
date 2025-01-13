@@ -34,9 +34,10 @@ export default function LoginPage({ searchParams }: Props) {
           description="Introduzca su correo electrónico y contraseña para acceder a su cuenta."
         />
         <SignInForm callbackUrl={searchParams?.callbackUrl} />
-        <AuthError message={searchParams?.error} />
+        <AuthError
+          message={searchParams?.error === 'Callback' ? 'Error al autenticar, intente nuevamente' : searchParams?.error}
+        />
       </AuthContainer>
     </AuthLayout>
-  
   );
 }

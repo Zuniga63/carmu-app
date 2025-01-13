@@ -13,13 +13,13 @@ import { IInvoice } from '@/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
-export function useGetAllInvoices() {
+export function useGetAllInvoices({ search, invoiceNumber }: { search?: string; invoiceNumber?: string } = {}) {
   const isAuth = useAuthStore(state => state.isAuth);
   const isAdmin = useAuthStore(state => state.isAdmin);
 
   return useQuery({
-    queryKey: [ServerStateKeysEnum.Invoices],
-    queryFn: getAllInvoices,
+    queryKey: [ServerStateKeysEnum.Invoices, search, invoiceNumber],
+    queryFn: () => getAllInvoices({ search, invoiceNumber }),
     enabled: isAuth && isAdmin,
   });
 }

@@ -44,13 +44,15 @@ export function createInvoiceFullAdapter(invoice: IInvoiceBaseFull): IInvoiceFul
   };
 }
 
-export async function getAllInvoices() {
+export async function getAllInvoices({ search, invoiceNumber }: { search?: string; invoiceNumber?: string }) {
   const date1 = dayjs().subtract(1, 'week').endOf('day').toDate();
   const date2 = dayjs(date1).add(1, 'day').startOf('day').toDate();
 
   const [res1, res2] = await Promise.all([
-    invoiceApi.get<IInvoicePageData>('', { params: { to: date1 } }),
-    invoiceApi.get<IInvoicePageData>('', { params: { from: date2, withPayments: true, withItems: true } }),
+    invoiceApi.get<IInvoicePageData>('', { params: { to: date1, search, invoiceNumber } }),
+    invoiceApi.get<IInvoicePageData>('', {
+      params: { from: date2, withPayments: true, withItems: true, search, invoiceNumber },
+    }),
   ]);
 
   return [...res1.data.invoices, ...res2.data.invoices].map(createInvoiceAdapter);

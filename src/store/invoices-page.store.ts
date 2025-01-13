@@ -2,6 +2,7 @@ import { create } from 'zustand';
 
 type InvoicePageState = {
   search?: string;
+  invoiceNumber?: string;
   filter: 'all' | 'paid' | 'pending' | 'separated' | 'canceled';
   filtersIsOpen: boolean;
   generalFormIsOpen: boolean;
@@ -23,6 +24,7 @@ type InvoicePageActions = {
   unmountInvoiceToShow: () => void;
   showPrinterModal: (invoiceId: string) => void;
   hidePrinterModal: () => void;
+  updateInvoiceNumber: (invoiceNumber?: string) => void;
 };
 
 export const useInvoicePageStore = create<InvoicePageState & InvoicePageActions>((set, get) => ({
@@ -32,6 +34,7 @@ export const useInvoicePageStore = create<InvoicePageState & InvoicePageActions>
   generalFormIsOpen: false,
   counterFormIsOpen: false,
   invoiceIdToShow: undefined,
+  invoiceNumber: undefined,
   updateSearch(search) {
     set({ search });
   },
@@ -68,5 +71,8 @@ export const useInvoicePageStore = create<InvoicePageState & InvoicePageActions>
   },
   hidePrinterModal() {
     set({ invoiceIdToPrint: undefined });
+  },
+  updateInvoiceNumber(invoiceNumber) {
+    set({ invoiceNumber });
   },
 }));
