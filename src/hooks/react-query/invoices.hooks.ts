@@ -9,7 +9,6 @@ import {
   getInvoiceById,
 } from '@/services/invoices.service';
 import { useAuthStore } from '@/store/auth-store';
-import { IInvoice } from '@/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
@@ -30,7 +29,7 @@ export function useCreateInvoice() {
   return useMutation({
     mutationFn: createInvoice,
     onSuccess(data, variables, context) {
-      queryClient.setQueryData([ServerStateKeysEnum.Invoices], (oldData: IInvoice[]) => [...oldData, data]);
+      queryClient.invalidateQueries({ queryKey: [ServerStateKeysEnum.Invoices] });
       queryClient.invalidateQueries({ queryKey: [ServerStateKeysEnum.InvoiceWeeklyHistory] });
     },
   });
@@ -55,15 +54,7 @@ export function useCreateInvoicePayment() {
     onSuccess(data, variables, context) {
       queryClient.setQueryData([ServerStateKeysEnum.InvoiceId, variables.invoiceId], data.invoice);
       queryClient.invalidateQueries({ queryKey: [ServerStateKeysEnum.InvoiceWeeklyHistory] });
-      queryClient.setQueryData([ServerStateKeysEnum.Invoices], (oldData: IInvoice[]) => {
-        const index = oldData.findIndex(invoice => invoice.id === data.invoice.id);
-        if (index !== -1) {
-          const newData = [...oldData];
-          newData[index] = data.invoice as unknown as IInvoice;
-          return newData;
-        }
-        return oldData;
-      });
+      queryClient.invalidateQueries({ queryKey: [ServerStateKeysEnum.Invoices] });
     },
   });
 }
@@ -76,15 +67,8 @@ export function useCancelInvoicePayment() {
     onSuccess(data, variables, context) {
       queryClient.setQueryData([ServerStateKeysEnum.InvoiceId, variables.invoiceId], data);
       queryClient.invalidateQueries({ queryKey: [ServerStateKeysEnum.InvoiceWeeklyHistory] });
-      queryClient.setQueryData([ServerStateKeysEnum.Invoices], (oldData: IInvoice[]) => {
-        const index = oldData.findIndex(invoice => invoice.id === data.id);
-        if (index !== -1) {
-          const newData = [...oldData];
-          newData[index] = data as unknown as IInvoice;
-          return newData;
-        }
-        return oldData;
-      });
+      queryClient.invalidateQueries({ queryKey: [ServerStateKeysEnum.Invoices] });
+
       toast.success('¡Pago anulado!');
     },
     onError(error, variables, context) {
@@ -106,15 +90,7 @@ export function useCancelInvoice() {
     onSuccess(data, variables, context) {
       queryClient.setQueryData([ServerStateKeysEnum.InvoiceId, variables.invoiceId], data);
       queryClient.invalidateQueries({ queryKey: [ServerStateKeysEnum.InvoiceWeeklyHistory] });
-      queryClient.setQueryData([ServerStateKeysEnum.Invoices], (oldData: IInvoice[]) => {
-        const index = oldData.findIndex(invoice => invoice.id === data.id);
-        if (index !== -1) {
-          const newData = [...oldData];
-          newData[index] = data as unknown as IInvoice;
-          return newData;
-        }
-        return oldData;
-      });
+      queryClient.invalidateQueries({ queryKey: [ServerStateKeysEnum.Invoices] });
       toast.success('¡Factura Anulada!');
     },
     onError(error, variables, context) {

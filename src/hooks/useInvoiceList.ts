@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react';
-import { normalizeText } from '@/lib/utils';
 import { useGetAllInvoices } from './react-query/invoices.hooks';
 import { useInvoicePageStore } from '@/store/invoices-page.store';
 
@@ -24,14 +23,7 @@ export function useInvoiceList() {
     else if (filter === 'separated') result = invoices.filter(invoice => invoice.isSeparate && invoice.balance);
     else if (filter === 'canceled') result = invoices.filter(invoice => invoice.cancel);
 
-    console.log(search);
-
-    // if (search && search.trim().length > 0) {
-    //   const text = normalizeText(search);
-    //   result = result.filter(invoice => invoice.search.includes(text));
-    // }
-
-    result.reverse();
+    // result.reverse();
     return result;
   }, [invoices, filter, search]);
 
