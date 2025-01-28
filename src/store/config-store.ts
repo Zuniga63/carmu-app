@@ -1,4 +1,4 @@
-import { PREMISE_STORE_KEY } from '@/config/constants';
+import { GRAPH_PASSWORD, PREMISE_STORE_KEY } from '@/config/constants';
 import { IPremiseStore } from '@/types';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { shallow } from 'zustand/shallow';
@@ -45,7 +45,7 @@ export const useConfigStore = createWithEqualityFn<IConfigState & IConfigActions
       set(state => ({ showSensitiveInformation: false }));
     },
     unlockSensitiveInformation(password) {
-      set(state => ({ showSensitiveInformation: password === 'contraseña' }));
+      set(state => ({ showSensitiveInformation: password === GRAPH_PASSWORD }));
     },
   }),
   shallow,

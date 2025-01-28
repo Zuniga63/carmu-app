@@ -13,6 +13,7 @@ import { useGetAllPremiseStore } from '@/hooks/react-query/premise-store.hooks';
 import { useGetWeeklyInvoiceHistory } from '@/hooks/react-query/dashboard.hooks';
 import { useQueryClient } from '@tanstack/react-query';
 import { ServerStateKeysEnum } from '@/config/server-state-key.enum';
+import ProtectWrapper from '../ProtectWrapper';
 
 export const barOptions: ChartOptions<'bar'> = {
   responsive: true,
@@ -180,13 +181,13 @@ const WeeklyInvoiceChart = () => {
   }, []);
 
   return (
-    <Tabs defaultValue="chart" color="blue">
+    <Tabs defaultValue="history" color="blue">
       <Tabs.List>
-        <Tabs.Tab value="chart" color="blue" icon={<IconChartBar size={14} />}>
-          Reporte Semanal
-        </Tabs.Tab>
         <Tabs.Tab value="history" icon={<IconTable size={14} />}>
           Historial
+        </Tabs.Tab>
+        <Tabs.Tab value="chart" color="blue" icon={<IconChartBar size={14} />}>
+          Reporte Semanal
         </Tabs.Tab>
         <Tabs.Tab value="annualChart" color="blue" icon={<IconChartBar size={14} />}>
           Reporte Anual
@@ -199,28 +200,30 @@ const WeeklyInvoiceChart = () => {
       </Tabs.List>
 
       <Tabs.Panel value="chart">
-        <div className="mb-16">
-          <div className="relative mb-4 h-96 w-full 3xl:h-[60vh]">
-            <Bar options={barOptions} data={chartData} />
-          </div>
+        <ProtectWrapper>
+          <div className="mb-16">
+            <div className="relative mb-4 h-96 w-full 3xl:h-[60vh]">
+              <Bar options={barOptions} data={chartData} />
+            </div>
 
-          <ul className="mx-auto w-10/12 text-sm">
-            <li className="mb-4 rounded-lg bg-gray-300 px-4 py-2 dark:bg-header">
-              <span className="font-bold text-indigo-600">Facturado</span>: Corresponde a la suma de los valores de
-              todas las facturas tanto por <strong className="font-bold text-emerald-500">venta directa</strong> y{' '}
-              <strong className="font-bold text-red-600">créditos</strong> junto con los pagos individuales de cada uno
-              de los <strong className="font-bold text-cyan-500">apartados</strong>.
-            </li>
-            <li className="rounded-lg bg-gray-300 px-4 py-2 dark:bg-header">
-              <span className="font-bold text-emerald-600">Efectivo</span>: Es la suma de los{' '}
-              <strong className="font-bold">importes</strong> en efectivo de cada una de las facturas,{' '}
-              <span className="underline">los pagos iniciales</span> de los{' '}
-              <strong className="font-bold text-red-600">créditos</strong>,{' '}
-              <span className="underline">los pagos iniciales</span> y abonos de los{' '}
-              <strong className="font-bold text-cyan-500">apartados</strong>.
-            </li>
-          </ul>
-        </div>
+            <ul className="mx-auto w-10/12 text-sm">
+              <li className="mb-4 rounded-lg bg-gray-300 px-4 py-2 dark:bg-header">
+                <span className="font-bold text-indigo-600">Facturado</span>: Corresponde a la suma de los valores de
+                todas las facturas tanto por <strong className="font-bold text-emerald-500">venta directa</strong> y{' '}
+                <strong className="font-bold text-red-600">créditos</strong> junto con los pagos individuales de cada
+                uno de los <strong className="font-bold text-cyan-500">apartados</strong>.
+              </li>
+              <li className="rounded-lg bg-gray-300 px-4 py-2 dark:bg-header">
+                <span className="font-bold text-emerald-600">Efectivo</span>: Es la suma de los{' '}
+                <strong className="font-bold">importes</strong> en efectivo de cada una de las facturas,{' '}
+                <span className="underline">los pagos iniciales</span> de los{' '}
+                <strong className="font-bold text-red-600">créditos</strong>,{' '}
+                <span className="underline">los pagos iniciales</span> y abonos de los{' '}
+                <strong className="font-bold text-cyan-500">apartados</strong>.
+              </li>
+            </ul>
+          </div>
+        </ProtectWrapper>
       </Tabs.Panel>
 
       <Tabs.Panel value="history" pt={4}>

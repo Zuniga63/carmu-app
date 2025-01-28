@@ -9,7 +9,7 @@ type Props = {
   inputName?: string;
   children?: React.ReactNode;
 };
-export default function ProtectWrapper({ children, inputName = 'content-password' }: Props) {
+export default function ProtectWrapper({ children, inputName = 'sensitive-information-guard' }: Props) {
   const showInformation = useConfigStore(state => state.showSensitiveInformation);
   const blockInformation = useConfigStore(state => state.blockSesitiveInformation);
   const unlockInformation = useConfigStore(state => state.unlockSensitiveInformation);
