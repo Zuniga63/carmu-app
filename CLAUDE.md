@@ -12,7 +12,6 @@ Sistema POS (Point of Sale) built with Next.js 14. Manages customer accounts, ca
 - **Dev server**: `pnpm dev`
 - **Build**: `pnpm build`
 - **Lint**: `pnpm lint` (ESLint), `pnpm lint:prettier` (Prettier), `pnpm lint:ts` (TypeScript check)
-- **Pre-commit hook**: Husky runs `pnpm lint-staged` which executes TypeScript check, ESLint fix, and Prettier on staged files
 
 ## Architecture
 
