@@ -6,7 +6,7 @@ import * as z from 'zod';
 export const signUpFormSchema = z
   .object({
     username: z
-      .string({ required_error: 'Nombre de usuario es requerido' })
+      .string({ error: 'Nombre de usuario es requerido' })
       .min(3, { message: 'El nombre de usuario debe tener minimo tres caracteres.' })
       .max(90, { message: 'El nombre de usuario debe ser menor a 90 caracteres' }),
     email: z.string().email({ message: 'Escribe un correo válido' }),
