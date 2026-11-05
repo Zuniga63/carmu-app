@@ -15,13 +15,14 @@ export const metadata: Metadata = {
 };
 
 interface Props {
-  searchParams?: {
+  searchParams?: Promise<{
     error?: string;
     callbackUrl?: string;
-  };
+  }>;
 }
 
-export default function SignUpPage({ searchParams }: Props) {
+export default async function SignUpPage(props: Props) {
+  const searchParams = await props.searchParams;
   const callbackUrl = searchParams?.callbackUrl ? `?callbackUrl=${encodeURIComponent(searchParams.callbackUrl)}` : '';
 
   return (

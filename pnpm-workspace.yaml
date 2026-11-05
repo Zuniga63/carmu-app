@@ -1,0 +1,6 @@
+# Overrides to patch transitive vulnerabilities pinned by parent packages.
+overrides:
+  # next@15.5.x pins postcss@8.4.31 (GHSA: XSS, path traversal, file read)
+  'next>postcss': 8.5.32
+  # @typescript-eslint/typescript-estree depends on minimatch@10 (ReDoS), dev-only
+  'minimatch@10': ^11.0.1
